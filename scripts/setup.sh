@@ -22,6 +22,7 @@ script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd) || exit 1
 repo_root=$(CDPATH= cd "$script_dir/.." && pwd) || exit 1
 marketplace=$repo_root/.agents/plugins/marketplace.json
 manifest=$repo_root/plugins/project-pilot/.codex-plugin/plugin.json
+agent_installer=$repo_root/plugins/project-pilot/scripts/install-agents.sh
 mode=install
 
 case "$#" in
@@ -48,10 +49,12 @@ esac
 
 [ -f "$marketplace" ] || fail "marketplace file is missing: $marketplace"
 [ -f "$manifest" ] || fail "plugin manifest is missing: $manifest"
+[ -f "$agent_installer" ] || fail "agent installer is missing: $agent_installer"
 
 if [ "$mode" = dry-run ]; then
   printf '%s\n' 'DRY RUN: no Codex configuration will change.'
   printf 'codex plugin marketplace add "%s"\n' "$repo_root"
+  printf 'sh "%s"\n' "$agent_installer"
   printf '%s\n' 'codex plugin add project-pilot@project-pilot'
   exit 0
 fi
@@ -62,10 +65,11 @@ if [ "$mode" = install ]; then
   codex plugin marketplace add "$repo_root"
 fi
 
+sh "$agent_installer"
 codex plugin add project-pilot@project-pilot
 
 printf '%s\n' \
   '' \
-  'Project Pilot is installed.' \
-  'Start a new Codex task, then say:' \
-  'Use Project Pilot to complete this request and verify the result.'
+  'Project Pilot and its three model-routed agents are installed.' \
+  'Start a new Codex task with gpt-5.6-sol and High reasoning, then say:' \
+  'Use Project Pilot to orchestrate this request and verify every lane.'

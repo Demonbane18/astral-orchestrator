@@ -1,7 +1,7 @@
 {
   "name": "project-pilot",
-  "version": "1.0.0",
-  "description": "Beginner-friendly, risk-aware workflow for planning, implementing, verifying, and reviewing project work in Codex.",
+  "version": "2.0.0",
+  "description": "Beginner-friendly, model-routed orchestration for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Project Pilot Contributors"
   },
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "Project Pilot",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Project Pilot turns an everyday request into a clear outcome, chooses the right level of care, completes the work, verifies the actual result, and explains what happened in plain language. It works without special models or extra services and can optionally use native agents when they are available.",
+    "longDescription": "Project Pilot turns an everyday request into a clear outcome, keeps Sol High in charge, routes bounded work to pinned Luna XHigh or Terra XHigh agents, verifies the actual result, and uses a fresh Sol High reviewer before handoff.",
     "developerName": "Project Pilot Contributors",
     "category": "Productivity",
     "capabilities": [
