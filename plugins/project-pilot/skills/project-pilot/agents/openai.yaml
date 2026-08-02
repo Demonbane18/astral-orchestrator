@@ -1,4 +1,0 @@
-interface:
-  display_name: "Project Pilot"
-  short_description: "Sol-led, model-routed delivery for any project"
-  default_prompt: "Use $project-pilot to orchestrate this request with the pinned lanes and verify the result."

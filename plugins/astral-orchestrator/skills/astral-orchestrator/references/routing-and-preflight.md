@@ -8,15 +8,15 @@ used the intended lanes, not merely to request them.
 | Role | Agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
 | Orchestrator | Primary session | `gpt-5.6-sol` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
-| Focused worker | `project_pilot_luna_implementer` | `gpt-5.6-luna` | `xhigh` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
-| Context worker | `project_pilot_terra_implementer` | `gpt-5.6-terra` | `xhigh` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
-| Reviewer | `project_pilot_sol_reviewer` | `gpt-5.6-sol` | `high` | Fresh final review; requests a read-only sandbox |
+| Focused worker | `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `xhigh` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
+| Context worker | `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `xhigh` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
+| Reviewer | `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Fresh final review; requests a read-only sandbox |
 
 Do not silently substitute a built-in agent, a different custom role, model, or effort.
 The main session owns lane selection and remains accountable for the combined result.
 
 The effective values come from
-`${CODEX_HOME:-~/.codex}/project-pilot/effort-levels.toml`. When the file is absent,
+`${CODEX_HOME:-~/.codex}/astral-orchestrator/effort-levels.toml`. When the file is absent,
 use the defaults in the table. Supported setting names are `minimal`, `low`, `medium`,
 `high`, `xhigh`, `max`, and `ultra`; the last two are model- and account-dependent.
 Never silently downgrade a value that Codex rejects.
@@ -44,7 +44,7 @@ Before Guided or Careful execution, additionally:
 
 If the primary route is neither observable nor explicitly user-confirmed, or if step 5
 or 6 fails, stop before implementation. Explain the missing item and the smallest
-corrective action: run `sh scripts/setup.sh --refresh` from the Project Pilot repository
+corrective action: run `sh scripts/setup.sh --refresh` from the Astral Orchestrator repository
 when profiles are missing or different, then start a new task with Sol and the configured
 orchestrator effort. Do not fall back to another route.
 
@@ -75,7 +75,7 @@ are unsettled. Sol may settle the decision, then issue bounded execution to Luna
 ## Choose the execution mechanism
 
 Prefer a native custom agent only when the collaboration tool exposes an explicit
-`agent_type` field, the exact Project Pilot role, and its native profile effort matches
+`agent_type` field, the exact Astral Orchestrator role, and its native profile effort matches
 the configured value. Do not treat a task name as an agent type; current hosts can
 otherwise create a default Sol agent under a Luna-looking name. A custom effort that
 differs from the native profile always uses the exact-process mechanism.
@@ -99,7 +99,7 @@ the process exits. A non-zero exit blocks the lane.
 
 For a native lane, immediately record the epoch seconds, choose a unique lowercase task
 name, and spawn the exact `agent_type` with `fork_turns: "none"`. For an exact-process
-lane, launch a new process for every packet and capture its `PROJECT_PILOT_ROUTE` header,
+lane, launch a new process for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header,
 Codex startup header, session id, final response, and exit status. Both mechanisms use a
 complete standalone packet and forbid downstream delegation.
 

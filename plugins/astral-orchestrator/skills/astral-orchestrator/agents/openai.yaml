@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astral Orchestrator"
+  short_description: "Sol-led, model-routed delivery for any project"
+  default_prompt: "Use $astral-orchestrator to orchestrate this request with the pinned lanes and verify the result."

@@ -1,14 +1,14 @@
 {
-  "name": "project-pilot",
+  "name": "astral-orchestrator",
   "interface": {
-    "displayName": "Project Pilot"
+    "displayName": "Astral Orchestrator"
   },
   "plugins": [
     {
-      "name": "project-pilot",
+      "name": "astral-orchestrator",
       "source": {
         "source": "local",
-        "path": "./plugins/project-pilot"
+        "path": "./plugins/astral-orchestrator"
       },
       "policy": {
         "installation": "AVAILABLE",

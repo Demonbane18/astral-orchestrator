@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Show or change Project Pilot reasoning-effort settings."""
+"""Show or change Astral Orchestrator reasoning-effort settings."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def fail(message: str) -> NoReturn:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Show or change Project Pilot effort levels."
+        description="Show or change Astral Orchestrator effort levels."
     )
     parser.add_argument(
         "--settings-file",
@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--reset",
         action="store_true",
-        help="Restore all four effort levels to Project Pilot defaults.",
+        help="Restore all four effort levels to Astral Orchestrator defaults.",
     )
     parser.add_argument(
         "--json",
@@ -86,7 +86,7 @@ def print_result(
         )
         return
 
-    heading = "Project Pilot effort levels"
+    heading = "Astral Orchestrator effort levels"
     print(f"{heading} ({'saved' if file_present else 'defaults'}):")
     for lane in LANES:
         default_note = " (default)" if efforts[lane] == DEFAULT_EFFORTS[lane] else ""

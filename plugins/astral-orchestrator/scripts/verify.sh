@@ -11,10 +11,10 @@ script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd) || exit 1
 plugin_dir=$(CDPATH= cd "$script_dir/.." && pwd) || exit 1
 repo_root=$(CDPATH= cd "$plugin_dir/../.." && pwd) || exit 1
 manifest=$plugin_dir/.codex-plugin/plugin.json
-skill=$plugin_dir/skills/project-pilot/SKILL.md
-modes=$plugin_dir/skills/project-pilot/references/modes-and-risk.md
-templates=$plugin_dir/skills/project-pilot/references/work-templates.md
-routing=$plugin_dir/skills/project-pilot/references/routing-and-preflight.md
+skill=$plugin_dir/skills/astral-orchestrator/SKILL.md
+modes=$plugin_dir/skills/astral-orchestrator/references/modes-and-risk.md
+templates=$plugin_dir/skills/astral-orchestrator/references/work-templates.md
+routing=$plugin_dir/skills/astral-orchestrator/references/routing-and-preflight.md
 agent_dir=$plugin_dir/agents
 installer=$plugin_dir/scripts/install-agents.sh
 inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
@@ -42,16 +42,21 @@ manifest_path, skill_path, modes_path, templates_path, routing_path, agent_dir, 
 )
 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-if manifest.get("name") != "project-pilot":
-    raise SystemExit("manifest name must be project-pilot")
-if not str(manifest.get("version", "")).startswith("2."):
-    raise SystemExit("manifest version must be Project Pilot v2")
+if manifest.get("name") != "astral-orchestrator":
+    raise SystemExit("manifest name must be astral-orchestrator")
+if manifest.get("version") != "3.0.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.0.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
     raise SystemExit("manifest license must be MIT")
-if manifest.get("interface", {}).get("displayName") != "Project Pilot":
-    raise SystemExit("manifest display name must be Project Pilot")
+if manifest.get("interface", {}).get("displayName") != "Astral Orchestrator":
+    raise SystemExit("manifest display name must be Astral Orchestrator")
+if manifest.get("homepage") != "https://github.com/Demonbane18/astral-orchestrator":
+    raise SystemExit("manifest homepage must be the Astral Orchestrator repository")
+repository = manifest.get("repository")
+if not isinstance(repository, dict) or repository.get("url") != "https://github.com/Demonbane18/astral-orchestrator.git":
+    raise SystemExit("manifest repository metadata is invalid")
 
 prompts = manifest.get("interface", {}).get("defaultPrompt")
 if not isinstance(prompts, list) or not 1 <= len(prompts) <= 3:
@@ -60,16 +65,16 @@ if any(not isinstance(prompt, str) or len(prompt) > 128 for prompt in prompts):
     raise SystemExit("starter prompts must be strings no longer than 128 characters")
 
 skill = skill_path.read_text(encoding="utf-8")
-if not skill.startswith("---\nname: project-pilot\n"):
+if not skill.startswith("---\nname: astral-orchestrator\n"):
     raise SystemExit("skill frontmatter name is invalid")
 for required_text in (
     "Quick",
     "Guided (default)",
     "Careful",
     "Sol High",
-    "project_pilot_luna_implementer",
-    "project_pilot_terra_implementer",
-    "project_pilot_sol_reviewer",
+    "astral_orchestrator_luna_implementer",
+    "astral_orchestrator_terra_implementer",
+    "astral_orchestrator_sol_reviewer",
     "verification",
 ):
     if required_text not in skill:
@@ -97,25 +102,25 @@ for required_text in (
         raise SystemExit(f"routing contract is missing: {required_text}")
 
 expected_agents = {
-    "project-pilot-luna-implementer.toml": {
-        "name": "project_pilot_luna_implementer",
+    "astral-orchestrator-luna-implementer.toml": {
+        "name": "astral_orchestrator_luna_implementer",
         "model": "gpt-5.6-luna",
         "model_reasoning_effort": "xhigh",
     },
-    "project-pilot-terra-implementer.toml": {
-        "name": "project_pilot_terra_implementer",
+    "astral-orchestrator-terra-implementer.toml": {
+        "name": "astral_orchestrator_terra_implementer",
         "model": "gpt-5.6-terra",
         "model_reasoning_effort": "xhigh",
     },
-    "project-pilot-sol-reviewer.toml": {
-        "name": "project_pilot_sol_reviewer",
+    "astral-orchestrator-sol-reviewer.toml": {
+        "name": "astral_orchestrator_sol_reviewer",
         "model": "gpt-5.6-sol",
         "model_reasoning_effort": "high",
         "sandbox_mode": "read-only",
     },
 }
 if {path.name for path in agent_dir.glob("*.toml")} != set(expected_agents):
-    raise SystemExit("agent profile set does not match the v2 routing contract")
+    raise SystemExit("agent profile set does not match the v3 routing contract")
 for filename, expected in expected_agents.items():
     profile = tomllib.loads((agent_dir / filename).read_text(encoding="utf-8"))
     for field, value in expected.items():
@@ -124,11 +129,11 @@ for filename, expected in expected_agents.items():
 
 if marketplace_path.is_file():
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
-    if marketplace.get("name") != "project-pilot":
-        raise SystemExit("marketplace name must be project-pilot")
+    if marketplace.get("name") != "astral-orchestrator":
+        raise SystemExit("marketplace name must be astral-orchestrator")
     entries = marketplace.get("plugins", [])
-    if len(entries) != 1 or entries[0].get("name") != "project-pilot":
-        raise SystemExit("marketplace must contain exactly one project-pilot entry")
+    if len(entries) != 1 or entries[0].get("name") != "astral-orchestrator":
+        raise SystemExit("marketplace must contain exactly one astral-orchestrator entry")
 
 for path in (manifest_path, skill_path, modes_path, templates_path, routing_path, *agent_dir.glob("*.toml")):
     text = path.read_text(encoding="utf-8")
@@ -143,4 +148,4 @@ sh -n "$effort_wrapper"
 python3 "$launcher" --help >/dev/null
 python3 "$effort_configurator" --help >/dev/null
 
-printf '%s\n' 'Project Pilot verification passed.'
+printf '%s\n' 'Astral Orchestrator verification passed.'

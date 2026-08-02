@@ -1,16 +1,16 @@
-# Project Pilot repository guide
+# Astral Orchestrator repository guide
 
 ## Purpose
 
-This repository packages Project Pilot as a shareable Codex marketplace plugin.
+This repository packages Astral Orchestrator as a shareable Codex marketplace plugin.
 Keep the installed experience simple for people who do not write code.
 
 ## Commands
 
 - Test: `python3 -m unittest discover -s tests -v`
-- Verify package: `sh plugins/project-pilot/scripts/verify.sh`
-- Validate skill: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
-- Validate plugin: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
+- Verify package: `sh plugins/astral-orchestrator/scripts/verify.sh`
+- Validate skill: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/astral-orchestrator/skills/astral-orchestrator`
+- Validate plugin: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/astral-orchestrator`
 
 ## Conventions
 

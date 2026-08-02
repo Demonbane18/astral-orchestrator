@@ -1,4 +1,4 @@
-"""Read and write Project Pilot reasoning-effort settings."""
+"""Read and write Astral Orchestrator reasoning-effort settings."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def default_settings_path() -> Path:
         if configured_home
         else Path.home() / ".codex"
     )
-    return codex_home / "project-pilot" / "effort-levels.toml"
+    return codex_home / "astral-orchestrator" / "effort-levels.toml"
 
 
 def _validate_efforts(efforts: dict[str, object]) -> dict[str, str]:

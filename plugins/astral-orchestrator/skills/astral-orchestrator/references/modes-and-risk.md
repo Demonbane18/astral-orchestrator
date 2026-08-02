@@ -1,6 +1,6 @@
 # Modes and risk guide
 
-Use this guide when choosing a Project Pilot mode or deciding whether work needs user
+Use this guide when choosing an Astral Orchestrator mode or deciding whether work needs user
 confirmation or a fresh review.
 
 ## Mode summary
@@ -11,7 +11,7 @@ confirmation or a fresh review.
 | Guided | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
 | Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with observed read-only isolation |
 
-Guided is the default. A user can simply say “Use Project Pilot” without learning the
+Guided is the default. A user can simply say “Use Astral Orchestrator” without learning the
 mode system.
 
 ## Risk levels

@@ -1,46 +1,47 @@
-# Implementation Plan: Project Pilot v2
+# Implementation Plan: Astral Orchestrator v3
 
 ## Goal
 
-Upgrade Project Pilot into a real model-routed orchestrator with Sol High in charge,
-Luna XHigh and Terra XHigh implementation lanes, and a fresh Sol High reviewer.
+Deliver Astral Orchestrator as a shareable Codex marketplace plugin with Sol High in
+charge, Luna XHigh and Terra XHigh implementation lanes, configurable reasoning effort,
+strict route proof, and a fresh Sol High reviewer.
 
 ## Dependency order
 
-```text
-Failing v2 contract tests
+~~~text
+Rebrand contract tests
         |
-Pinned agent profiles + safe installer
+Namespaced profiles and safe installer
         |
-Strict routing skill + runtime evidence
+Strict routing and route evidence
         |
-Beginner setup, removal, and documentation
+Beginner setup, configuration, removal, and documentation
         |
-Validation + local installation + new-task forward test
-```
+Validation
+~~~
 
 ## Checkpoints
 
-### Contract
+### Identity
 
-- [x] Replace v1 fallback tests with exact route and profile tests.
-- [x] Confirm the new tests fail for missing v2 behavior.
+- [x] Rename the product, plugin, marketplace, skill, profiles, and launcher evidence
+  prefix to Astral Orchestrator.
+- [x] Move persistent effort settings into the astral-orchestrator namespace.
+- [x] Release v3.0.0 with a clear former-name migration note and real repository metadata.
 
 ### Runtime
 
-- [x] Add namespaced Luna XHigh, Terra XHigh, and Sol High reviewer profiles.
-- [x] Add conflict-safe install, exact-check, and safe-remove behavior.
-- [x] Add allowlisted runtime evidence without an extra JSON package.
-- [x] Route work by complexity with strict no-substitution behavior.
+- [x] Preserve namespaced Luna XHigh, Terra XHigh, and Sol High reviewer profiles.
+- [x] Preserve conflict-safe install, exact-check, and safe-remove behavior.
+- [x] Preserve allowlisted runtime evidence without an extra JSON package.
+- [x] Preserve configurable effort settings and strict no-substitution routing.
 
 ### Handoff
 
-- [x] Update the setup helper and beginner documentation.
-- [x] Update specification, attribution, comparison, and changelog.
-- [x] Run repository tests, package verification, and official validators.
-- [x] Install v2 locally and confirm exact cached profiles.
-- [x] Forward-test the workflow from new tasks; reject generic native routing and prove
-  the exact-process Luna, Terra, and reviewer fallback.
+- [x] Put Quick Install immediately near the README top and document the complete
+  beginner journey.
+- [x] Update specifications, attribution, comparison, and contributor guidance.
+- [x] Run repository tests, package verification, setup dry-run, and whitespace checks.
 
 ## Risks
 
@@ -48,7 +49,7 @@ Validation + local installation + new-task forward test
 |---|---|
 | Recipient lacks one required model | Preflight stops with a plain corrective action |
 | Existing custom profile shares a filename | Namespaced filenames and no-overwrite installer |
-| Host broadens reviewer sandbox | Inspect effective route and block Careful `ship` claims |
+| Host broadens reviewer sandbox | Inspect effective route and block Careful ship claims |
 | Runtime metadata format changes | Reject missing fields; never guess model identity |
 | Native spawn lacks exact custom-agent selection | Use a separately pinned Codex process and verify its runtime metadata |
 | Parallel workers conflict | Exact non-overlapping ownership or serial execution |

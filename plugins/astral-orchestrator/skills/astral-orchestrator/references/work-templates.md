@@ -1,4 +1,4 @@
-# Project Pilot work templates
+# Astral Orchestrator work templates
 
 Load only the template needed for the next action. Replace every angle-bracketed field.
 
@@ -25,7 +25,7 @@ CHECKS
 
 ```text
 ROLE
-<project_pilot_luna_implementer or project_pilot_terra_implementer>
+<astral_orchestrator_luna_implementer or astral_orchestrator_terra_implementer>
 Implement the bounded work card below. Surface material ambiguity instead of expanding
 scope or redesigning settled decisions. The orchestrator selected this lane because:
 <one concrete routing reason>

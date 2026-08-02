@@ -1,0 +1,38 @@
+{
+  "name": "astral-orchestrator",
+  "version": "3.0.0",
+  "description": "Beginner-friendly, model-routed orchestration for planning, delegating, verifying, and reviewing project work in Codex.",
+  "author": {
+    "name": "Demonbane18"
+  },
+  "homepage": "https://github.com/Demonbane18/astral-orchestrator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Demonbane18/astral-orchestrator.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "project-management",
+    "implementation",
+    "verification",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Astral Orchestrator",
+    "shortDescription": "Simple, risk-aware delivery for any project.",
+    "longDescription": "Astral Orchestrator turns an everyday request into a clear outcome, keeps the Sol model in charge, routes bounded work to pinned Luna or Terra models at their configured efforts, verifies the actual result, and uses a fresh Sol reviewer before handoff.",
+    "developerName": "Astral Orchestrator Contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use Astral Orchestrator to complete this request and verify the result.",
+      "Use Astral Orchestrator in Quick mode for this small change.",
+      "Use Astral Orchestrator in Careful mode for this risky change."
+    ]
+  }
+}

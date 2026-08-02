@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch one exact Project Pilot lane as a separate Codex process."""
+"""Launch one exact Astral Orchestrator lane as a separate Codex process."""
 
 from __future__ import annotations
 
@@ -28,22 +28,22 @@ from effort_settings import (  # noqa: E402
 
 ROLE_CONTRACTS = {
     "luna": {
-        "filename": "project-pilot-luna-implementer.toml",
-        "agent_name": "project_pilot_luna_implementer",
+        "filename": "astral-orchestrator-luna-implementer.toml",
+        "agent_name": "astral_orchestrator_luna_implementer",
         "model": "gpt-5.6-luna",
         "effort": "xhigh",
         "sandbox": "workspace-write",
     },
     "terra": {
-        "filename": "project-pilot-terra-implementer.toml",
-        "agent_name": "project_pilot_terra_implementer",
+        "filename": "astral-orchestrator-terra-implementer.toml",
+        "agent_name": "astral_orchestrator_terra_implementer",
         "model": "gpt-5.6-terra",
         "effort": "xhigh",
         "sandbox": "workspace-write",
     },
     "reviewer": {
-        "filename": "project-pilot-sol-reviewer.toml",
-        "agent_name": "project_pilot_sol_reviewer",
+        "filename": "astral-orchestrator-sol-reviewer.toml",
+        "agent_name": "astral_orchestrator_sol_reviewer",
         "model": "gpt-5.6-sol",
         "effort": "high",
         "sandbox": "read-only",
@@ -104,7 +104,7 @@ def read_prompt(path: Path) -> bytes:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run one model-pinned Project Pilot worker or reviewer."
+        description="Run one model-pinned Astral Orchestrator worker or reviewer."
     )
     parser.add_argument("--role", required=True, choices=sorted(ROLE_CONTRACTS))
     parser.add_argument("--workdir", required=True)
@@ -205,7 +205,7 @@ def main() -> int:
     ]
 
     print(
-        "PROJECT_PILOT_ROUTE "
+        "ASTRAL_ORCHESTRATOR_ROUTE "
         + json.dumps(evidence, separators=(",", ":"), sort_keys=True),
         flush=True,
     )

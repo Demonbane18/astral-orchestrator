@@ -1,13 +1,10 @@
-# Project Pilot v2 tasks
+# Astral Orchestrator v3 tasks
 
-- [x] Define exact Sol/Luna/Terra route contracts in failing tests.
-- [x] Add the three model-pinned custom-agent profiles.
-- [x] Add safe profile installation, checking, and removal.
-- [x] Add allowlisted route inspection.
-- [x] Update the skill for strict preflight, routing, verification, and fresh review.
-- [x] Update non-technical install, use, update, share, remove, and troubleshooting docs.
-- [x] Run all repository and official validators.
-- [x] Perform fresh-context adversarial review and forward tests.
-- [x] Install the release candidate to the current Codex profile.
-- [x] Forward-test new tasks, reject the native generic-route mismatch, and prove the
-  exact-process fallback.
+- [x] Rename the plugin, marketplace, skill, profiles, scripts, tests, and documentation.
+- [x] Change route evidence to ASTRAL_ORCHESTRATOR_ROUTE.
+- [x] Move effort settings to ~/.codex/astral-orchestrator/effort-levels.toml.
+- [x] Set package version 3.0.0 and add real repository/homepage metadata.
+- [x] Add a beginner README with top-level Quick Install, routing, safety, lifecycle, and
+  attribution guidance.
+- [x] Preserve the original Sol Advisor MIT notice and LICENSE.
+- [x] Run all required local checks.

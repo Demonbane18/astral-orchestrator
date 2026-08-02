@@ -14,4 +14,4 @@ python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1
   exit 1
 }
 
-exec python3 "$repo_root/plugins/project-pilot/scripts/configure-effort.py" "$@"
+exec python3 "$repo_root/plugins/astral-orchestrator/scripts/configure-effort.py" "$@"

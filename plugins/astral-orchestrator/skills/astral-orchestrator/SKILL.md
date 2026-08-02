@@ -1,9 +1,9 @@
 ---
-name: project-pilot
-description: "Orchestrate project work with a Sol lead, model-pinned Luna and Terra implementation lanes, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Project Pilot, asks for real multi-agent delegation, wants to change Project Pilot effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
+name: astral-orchestrator
+description: "Orchestrate project work with a Sol lead, model-pinned Luna and Terra implementation lanes, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation, wants to change Astral Orchestrator effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
 ---
 
-# Project Pilot
+# Astral Orchestrator
 
 Own the result from request to verified handoff. Keep the Sol primary at its configured
 effort accountable for planning, routing, integration, and final decisions; use pinned
@@ -34,12 +34,12 @@ without permission.
 
 ## 2. Prove the orchestration preflight
 
-Project Pilot v2 uses these exact models. Their default efforts are:
+Astral Orchestrator v3 uses these exact models. Their default efforts are:
 
 - main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
-- focused worker: `project_pilot_luna_implementer` (Luna XHigh);
-- context-heavy worker: `project_pilot_terra_implementer` (Terra XHigh);
-- fresh reviewer: `project_pilot_sol_reviewer` (Sol High, requested read-only).
+- focused worker: `astral_orchestrator_luna_implementer` (Luna XHigh);
+- context-heavy worker: `astral_orchestrator_terra_implementer` (Terra XHigh);
+- fresh reviewer: `astral_orchestrator_sol_reviewer` (Sol High, requested read-only).
 
 Resolve the bundled `../../scripts/configure-effort.py` and run it with `--show --json`
 to obtain the effective effort for all four lanes. Missing settings mean the defaults
@@ -126,7 +126,7 @@ pinned lane, rerun affected checks, and inspect the result again.
 
 - **Quick:** Sol self-review at the configured orchestrator effort using the actual
   change and evidence.
-- **Guided:** use a new `project_pilot_sol_reviewer` native lane or reviewer process after
+- **Guided:** use a new `astral_orchestrator_sol_reviewer` native lane or reviewer process after
   every worker-produced change. For a no-change or answer-only request with no worker,
   label primary-session Sol self-review plainly.
 - **Careful:** always use the exact Sol reviewer lane, and require observed read-only

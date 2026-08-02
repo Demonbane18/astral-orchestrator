@@ -14,12 +14,12 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKETPLACE = ROOT / ".agents/plugins/marketplace.json"
-PLUGIN = ROOT / "plugins/project-pilot"
+PLUGIN = ROOT / "plugins/astral-orchestrator"
 MANIFEST = PLUGIN / ".codex-plugin/plugin.json"
-SKILL = PLUGIN / "skills/project-pilot/SKILL.md"
-MODES = PLUGIN / "skills/project-pilot/references/modes-and-risk.md"
-TEMPLATES = PLUGIN / "skills/project-pilot/references/work-templates.md"
-ROUTING = PLUGIN / "skills/project-pilot/references/routing-and-preflight.md"
+SKILL = PLUGIN / "skills/astral-orchestrator/SKILL.md"
+MODES = PLUGIN / "skills/astral-orchestrator/references/modes-and-risk.md"
+TEMPLATES = PLUGIN / "skills/astral-orchestrator/references/work-templates.md"
+ROUTING = PLUGIN / "skills/astral-orchestrator/references/routing-and-preflight.md"
 AGENTS = PLUGIN / "agents"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
@@ -40,18 +40,18 @@ def load_json(path: Path):
 
 
 class MarketplaceTests(unittest.TestCase):
-    def test_marketplace_exposes_one_local_project_pilot_plugin(self):
+    def test_marketplace_exposes_one_local_astral_orchestrator_plugin(self):
         marketplace = load_json(MARKETPLACE)
 
-        self.assertEqual(marketplace["name"], "project-pilot")
-        self.assertEqual(marketplace["interface"]["displayName"], "Project Pilot")
+        self.assertEqual(marketplace["name"], "astral-orchestrator")
+        self.assertEqual(marketplace["interface"]["displayName"], "Astral Orchestrator")
         self.assertEqual(len(marketplace["plugins"]), 1)
 
         entry = marketplace["plugins"][0]
-        self.assertEqual(entry["name"], "project-pilot")
+        self.assertEqual(entry["name"], "astral-orchestrator")
         self.assertEqual(
             entry["source"],
-            {"source": "local", "path": "./plugins/project-pilot"},
+            {"source": "local", "path": "./plugins/astral-orchestrator"},
         )
         self.assertEqual(entry["policy"]["installation"], "AVAILABLE")
         self.assertEqual(entry["policy"]["authentication"], "ON_INSTALL")
@@ -60,12 +60,20 @@ class MarketplaceTests(unittest.TestCase):
     def test_manifest_is_minimal_and_shareable(self):
         manifest = load_json(MANIFEST)
 
-        self.assertEqual(manifest["name"], "project-pilot")
-        self.assertRegex(manifest["version"], r"^2\.\d+\.\d+$")
+        self.assertEqual(manifest["name"], "astral-orchestrator")
+        self.assertEqual(manifest["version"], "3.0.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
-        self.assertEqual(manifest["interface"]["displayName"], "Project Pilot")
+        self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
         self.assertEqual(manifest["interface"]["category"], "Productivity")
+        self.assertEqual(
+            manifest["homepage"],
+            "https://github.com/Demonbane18/astral-orchestrator",
+        )
+        self.assertEqual(
+            manifest["repository"]["url"],
+            "https://github.com/Demonbane18/astral-orchestrator.git",
+        )
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
@@ -92,9 +100,9 @@ class SkillContractTests(unittest.TestCase):
 
         for required in (
             "sol high",
-            "project_pilot_luna_implementer",
-            "project_pilot_terra_implementer",
-            "project_pilot_sol_reviewer",
+            "astral_orchestrator_luna_implementer",
+            "astral_orchestrator_terra_implementer",
+            "astral_orchestrator_sol_reviewer",
         ):
             self.assertIn(required, skill)
 
@@ -111,18 +119,18 @@ class SkillContractTests(unittest.TestCase):
 
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
-            "project-pilot-luna-implementer.toml": {
-                "name": "project_pilot_luna_implementer",
+            "astral-orchestrator-luna-implementer.toml": {
+                "name": "astral_orchestrator_luna_implementer",
                 "model": "gpt-5.6-luna",
                 "model_reasoning_effort": "xhigh",
             },
-            "project-pilot-terra-implementer.toml": {
-                "name": "project_pilot_terra_implementer",
+            "astral-orchestrator-terra-implementer.toml": {
+                "name": "astral_orchestrator_terra_implementer",
                 "model": "gpt-5.6-terra",
                 "model_reasoning_effort": "xhigh",
             },
-            "project-pilot-sol-reviewer.toml": {
-                "name": "project_pilot_sol_reviewer",
+            "astral-orchestrator-sol-reviewer.toml": {
+                "name": "astral_orchestrator_sol_reviewer",
                 "model": "gpt-5.6-sol",
                 "model_reasoning_effort": "high",
                 "sandbox_mode": "read-only",
@@ -167,7 +175,7 @@ class SkillContractTests(unittest.TestCase):
                     template.read_bytes(),
                 )
 
-            conflict = target / "project-pilot-luna-implementer.toml"
+            conflict = target / "astral-orchestrator-luna-implementer.toml"
             conflict.write_text("user-owned = true\n", encoding="utf-8")
             refused = subprocess.run(
                 ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
@@ -180,7 +188,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("will not be overwritten", refused.stderr)
             self.assertEqual(conflict.read_text(encoding="utf-8"), "user-owned = true\n")
 
-    def test_agent_installer_removes_only_exact_project_pilot_profiles(self):
+    def test_agent_installer_removes_only_exact_astral_orchestrator_profiles(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "agents"
             install = subprocess.run(
@@ -203,7 +211,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertTrue(target.is_dir())
             self.assertFalse(any(target.iterdir()))
 
-            protected = target / "project-pilot-luna-implementer.toml"
+            protected = target / "astral-orchestrator-luna-implementer.toml"
             protected.write_text("user-owned = true\n", encoding="utf-8")
             refused = subprocess.run(
                 ["sh", str(INSTALL_AGENTS), "--target-dir", str(target), "--remove"],
@@ -256,7 +264,7 @@ class SkillContractTests(unittest.TestCase):
                                     "id": thread_id,
                                     "parent_thread_id": "parent",
                                     "agent_nickname": "Atlas",
-                                    "agent_path": "/profiles/project-pilot-luna-implementer.toml",
+                                    "agent_path": "/profiles/astral-orchestrator-luna-implementer.toml",
                                     "model_provider": "openai",
                                 },
                             }
@@ -299,7 +307,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(evidence["agent_nickname"], "Atlas")
             self.assertTrue(
                 evidence["agent_path"].endswith(
-                    "/project-pilot-luna-implementer.toml"
+                    "/astral-orchestrator-luna-implementer.toml"
                 )
             )
             self.assertNotIn("agent_role", evidence)
@@ -309,7 +317,7 @@ class SkillContractTests(unittest.TestCase):
     def test_runtime_inspector_resolves_the_task_path_returned_by_spawn(self):
         thread_id = "87654321-4321-4321-4321-cba987654321"
         descendant_id = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
-        agent_path = "/root/pilot_luna_unique"
+        agent_path = "/root/astral_luna_unique"
         with tempfile.TemporaryDirectory() as directory:
             sessions = Path(directory)
             direct = sessions / f"rollout-direct-{thread_id}.jsonl"
@@ -369,19 +377,19 @@ class SkillContractTests(unittest.TestCase):
     def test_process_launcher_maps_every_role_to_exact_runtime_settings(self):
         expected = {
             "luna": (
-                "project_pilot_luna_implementer",
+                "astral_orchestrator_luna_implementer",
                 "gpt-5.6-luna",
                 "xhigh",
                 "workspace-write",
             ),
             "terra": (
-                "project_pilot_terra_implementer",
+                "astral_orchestrator_terra_implementer",
                 "gpt-5.6-terra",
                 "xhigh",
                 "workspace-write",
             ),
             "reviewer": (
-                "project_pilot_sol_reviewer",
+                "astral_orchestrator_sol_reviewer",
                 "gpt-5.6-sol",
                 "high",
                 "read-only",
@@ -429,7 +437,7 @@ class SkillContractTests(unittest.TestCase):
                 self.assertNotIn("developer_instructions", evidence)
 
     def test_process_launcher_constructs_and_runs_every_exact_route(self):
-        spec = importlib.util.spec_from_file_location("project_pilot_run_agent", RUN_AGENT)
+        spec = importlib.util.spec_from_file_location("astral_orchestrator_run_agent", RUN_AGENT)
         self.assertIsNotNone(spec)
         self.assertIsNotNone(spec.loader)
         launcher = importlib.util.module_from_spec(spec)
@@ -503,13 +511,13 @@ class SkillContractTests(unittest.TestCase):
                     config_overrides,
                 )
                 route_header = output.getvalue()
-                self.assertIn("PROJECT_PILOT_ROUTE ", route_header)
+                self.assertIn("ASTRAL_ORCHESTRATOR_ROUTE ", route_header)
                 self.assertNotIn(prompt_text.strip(), route_header)
                 self.assertNotIn(profile["developer_instructions"], route_header)
 
     def test_effort_configurator_round_trips_partial_changes_and_reset(self):
         with tempfile.TemporaryDirectory() as directory:
-            settings = Path(directory) / "project-pilot" / "effort-levels.toml"
+            settings = Path(directory) / "astral-orchestrator" / "effort-levels.toml"
 
             configured = subprocess.run(
                 [
@@ -723,7 +731,7 @@ reviewer = "xhigh"
 
     def test_skill_metadata_has_no_placeholder_fields(self):
         skill = read(SKILL)
-        self.assertTrue(skill.startswith("---\nname: project-pilot\n"))
+        self.assertTrue(skill.startswith("---\nname: astral-orchestrator\n"))
         self.assertNotIn("[TODO", skill)
         self.assertNotIn("YOUR-NAME", skill)
 
@@ -733,30 +741,40 @@ class UserExperienceTests(unittest.TestCase):
         readme = read(ROOT / "README.md").lower()
 
         for topic in (
-            "what project pilot does",
-            "install",
-            "try it",
-            "choose a mode",
-            "update",
-            "share",
-            "remove",
+            "quick install",
+            "what astral orchestrator does",
+            "requirements",
+            "installation",
+            "first use",
+            "modes",
+            "configurable effort levels",
+            "how routing and verification work",
+            "safety and privacy",
+            "updating and the 3.0 migration",
+            "uninstalling",
             "troubleshooting",
+            "frequently asked questions",
+            "sharing",
+            "contributor commands",
+            "license",
+            "sol advisor attribution",
         ):
             self.assertIn(topic, readme)
-        self.assertIn("use project pilot", readme)
-        self.assertIn("no additional api key", readme)
+        self.assertIn("use astral orchestrator", readme)
+        self.assertIn("no api key", readme)
         self.assertIn("sol high", readme)
         self.assertIn("luna xhigh", readme)
         self.assertIn("terra xhigh", readme)
-        self.assertIn("three agent profiles", readme)
+        self.assertIn("three companion profiles", readme)
         self.assertIn("--remove", readme)
-        self.assertIn("cannot grant model access", readme)
-        self.assertIn("codex plugin list --marketplace project-pilot", readme)
-        self.assertIn("tune the effort levels", readme)
+        self.assertIn("cannot grant access to models", readme)
+        self.assertIn("codex plugin list --marketplace astral-orchestrator", readme)
+        self.assertIn("configurable effort levels", readme)
         self.assertIn("configure-effort.sh", readme)
         self.assertIn("minimal", readme)
         self.assertIn("ultra", readme)
         self.assertIn("model-dependent", readme)
+        self.assertIn("https://github.com/demonbane18/astral-orchestrator", readme)
 
     def test_effort_tools_are_packaged_and_routing_respects_custom_values(self):
         self.assertTrue(CONFIGURE_EFFORT.is_file())
@@ -795,7 +813,7 @@ class UserExperienceTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("codex plugin marketplace add", result.stdout)
-        self.assertIn("codex plugin add project-pilot@project-pilot", result.stdout)
+        self.assertIn("codex plugin add astral-orchestrator@astral-orchestrator", result.stdout)
         self.assertIn("install-agents.sh", result.stdout)
         self.assertIn("DRY RUN", result.stdout)
         self.assertIn("command -v python3", setup_text)
@@ -823,7 +841,7 @@ class VerificationTests(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("Project Pilot verification passed", result.stdout)
+        self.assertIn("Astral Orchestrator verification passed", result.stdout)
 
 
 if __name__ == "__main__":

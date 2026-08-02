@@ -6,7 +6,7 @@ usage() {
   printf '%s\n' \
     'Usage: sh scripts/setup.sh [--dry-run | --refresh | --help]' \
     '' \
-    'Install Project Pilot from this local repository.' \
+    'Install Astral Orchestrator from this local repository.' \
     '' \
     '  --dry-run  Show the install commands without changing Codex.' \
     '  --refresh  Reinstall the plugin after updating this registered checkout.' \
@@ -21,8 +21,8 @@ fail() {
 script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd) || exit 1
 repo_root=$(CDPATH= cd "$script_dir/.." && pwd) || exit 1
 marketplace=$repo_root/.agents/plugins/marketplace.json
-manifest=$repo_root/plugins/project-pilot/.codex-plugin/plugin.json
-agent_installer=$repo_root/plugins/project-pilot/scripts/install-agents.sh
+manifest=$repo_root/plugins/astral-orchestrator/.codex-plugin/plugin.json
+agent_installer=$repo_root/plugins/astral-orchestrator/scripts/install-agents.sh
 mode=install
 
 case "$#" in
@@ -55,7 +55,7 @@ if [ "$mode" = dry-run ]; then
   printf '%s\n' 'DRY RUN: no Codex configuration will change.'
   printf 'codex plugin marketplace add "%s"\n' "$repo_root"
   printf 'sh "%s"\n' "$agent_installer"
-  printf '%s\n' 'codex plugin add project-pilot@project-pilot'
+  printf '%s\n' 'codex plugin add astral-orchestrator@astral-orchestrator'
   exit 0
 fi
 
@@ -68,12 +68,12 @@ if [ "$mode" = install ]; then
 fi
 
 sh "$agent_installer"
-codex plugin add project-pilot@project-pilot
+codex plugin add astral-orchestrator@astral-orchestrator
 
 printf '%s\n' \
   '' \
-  'Project Pilot and its three model-routed agents are installed.' \
+  'Astral Orchestrator and its three model-routed agents are installed.' \
   'Start a new Codex task with gpt-5.6-sol and your configured effort (High by default), then say:' \
-  'Use Project Pilot to orchestrate this request and verify every lane.' \
+  'Use Astral Orchestrator to orchestrate this request and verify every lane.' \
   '' \
   'Optional: run sh scripts/configure-effort.sh --show to view effort settings.'

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install Project Pilot's custom-agent profiles without overwriting user-owned files.
+# Install Astral Orchestrator's custom-agent profiles without overwriting user-owned files.
 
 set -eu
 
@@ -7,13 +7,13 @@ usage() {
   printf '%s\n' \
     'Usage: sh install-agents.sh [--target-dir PATH] [--check | --remove]' \
     '' \
-    'Install the three Project Pilot agent profiles.' \
+    'Install the three Astral Orchestrator agent profiles.' \
     'The default destination is $CODEX_HOME/agents when CODEX_HOME is set,' \
     'otherwise $HOME/.codex/agents.' \
     '' \
     '  --target-dir PATH  Use an explicit destination (useful for testing).' \
     '  --check            Verify exact installed copies without changing anything.' \
-    '  --remove           Remove only exact, unmodified Project Pilot profiles.' \
+    '  --remove           Remove only exact, unmodified Astral Orchestrator profiles.' \
     '  --help             Show this help.'
 }
 
@@ -70,7 +70,7 @@ esac
 
 [ "$target_dir" != "/" ] || fail "refusing to use the filesystem root as the target."
 
-agent_files='project-pilot-luna-implementer.toml project-pilot-terra-implementer.toml project-pilot-sol-reviewer.toml'
+agent_files='astral-orchestrator-luna-implementer.toml astral-orchestrator-terra-implementer.toml astral-orchestrator-sol-reviewer.toml'
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
@@ -121,16 +121,16 @@ if [ "$remove_only" -eq 1 ]; then
     destination=$target_dir/$agent_file
     if [ -f "$destination" ] && [ ! -L "$destination" ]; then
       cmp -s "$template" "$destination" || fail "destination changed after preflight and will not be removed: $destination"
-      rm -f "$destination" || fail "could not remove exact Project Pilot profile: $destination"
+      rm -f "$destination" || fail "could not remove exact Astral Orchestrator profile: $destination"
       printf '%s\n' "REMOVED: $destination"
     fi
   done
-  printf '%s\n' "REMOVE PASSED: exact Project Pilot agent profiles are absent."
+  printf '%s\n' "REMOVE PASSED: exact Astral Orchestrator agent profiles are absent."
   exit 0
 fi
 
 if [ "$check_only" -eq 1 ]; then
-  printf '%s\n' "CHECK PASSED: all Project Pilot agent profiles match exactly."
+  printf '%s\n' "CHECK PASSED: all Astral Orchestrator agent profiles match exactly."
   exit 0
 fi
 
@@ -150,7 +150,7 @@ for agent_file in $agent_files; do
     fail "destination changed after preflight and will not be overwritten: $destination"
   fi
 
-  staged=$(mktemp "$target_dir/.project-pilot-agent.XXXXXX") || fail "could not stage profile: $destination"
+  staged=$(mktemp "$target_dir/.astral-orchestrator-agent.XXXXXX") || fail "could not stage profile: $destination"
   if ! cp "$template" "$staged"; then
     rm -f "$staged"
     fail "could not stage profile: $destination"
@@ -174,4 +174,4 @@ for agent_file in $agent_files; do
   cmp -s "$template_dir/$agent_file" "$target_dir/$agent_file" || fail "post-install check failed: $target_dir/$agent_file"
 done
 
-printf '%s\n' "INSTALL PASSED: all Project Pilot agent profiles match exactly."
+printf '%s\n' "INSTALL PASSED: all Astral Orchestrator agent profiles match exactly."
