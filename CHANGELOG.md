@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.1 — 2026-08-02
+
+### Changed
+
+- Added the Astral Orchestrator brand mark to the plugin interface, with small and
+  large icon metadata pointing at the packaged logo asset.
+
 ## 3.1.0 — 2026-08-02
 
 ### Added

@@ -45,8 +45,8 @@ manifest_path, skill_path, modes_path, templates_path, routing_path, agent_dir, 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.1.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.1.0")
+if manifest.get("version") != "3.1.1":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.1.1")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
