@@ -25,8 +25,10 @@ CHECKS
 
 ```text
 ROLE
+<project_pilot_luna_implementer or project_pilot_terra_implementer>
 Implement the bounded work card below. Surface material ambiguity instead of expanding
-scope or redesigning settled decisions.
+scope or redesigning settled decisions. The orchestrator selected this lane because:
+<one concrete routing reason>
 
 OUTCOME
 <Paste the work-card outcome.>
@@ -53,6 +55,7 @@ CHECKS
 
 RETURN
 - Status: complete, partial, or blocked
+- Route: observed agent role, model, effort, and task id
 - Changes: file-by-file summary from the actual change set
 - Checks: exact commands and observed results
 - Decisions: material judgment calls, or none
@@ -93,6 +96,7 @@ Return exactly one:
 
 REPORT
 - Verdict: ship, fix-first, or rethink
+- Route: observed agent role, model, effort, sandbox, and task id
 - Reason: decisive evidence-based reason
 - Findings: precise references and required fixes, or none
 - Residual risk: most important remaining risk, or none

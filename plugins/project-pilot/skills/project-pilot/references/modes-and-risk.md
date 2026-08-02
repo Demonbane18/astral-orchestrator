@@ -5,11 +5,11 @@ confirmation or a fresh review.
 
 ## Mode summary
 
-| Mode | Best for | Planning | Agents | Review |
+| Mode | Best for | Planning | Agent route | Review |
 |---|---|---|---|---|
-| Quick | Small, obvious, reversible work | Mental or one sentence | Usually none | Self-review |
-| Guided | Normal project work | Compact work card | Optional when useful | Risk-based |
-| Careful | Consequential or explicitly thorough work | Visible plan | Optional implementation help | Fresh review required when available |
+| Quick | Small, obvious, reversible work | Mental or one sentence | Sol High only | Sol High self-review |
+| Guided | Normal project work | Compact work card | Luna XHigh or Terra XHigh for bounded execution | Fresh Sol High review after meaningful implementation |
+| Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes | Fresh Sol High review with observed read-only isolation |
 
 Guided is the default. A user can simply say “Use Project Pilot” without learning the
 mode system.
@@ -67,18 +67,18 @@ that depends on it.
 Planning, local edits, tests, previews, dry runs, and read-only inspection do not need an
 extra confirmation when they are already within the request.
 
-## Review availability
+## Review availability and route failure
 
 Fresh review means a separate agent context that did not implement the change and is
 instructed to remain behaviorally read-only.
 
-- When available, use it for Careful work and meaningful Guided work.
-- When unavailable, Guided work may proceed with a clearly labeled self-review unless the
-  user required independence.
-- When unavailable for Careful work, implementation and verification may be reported, but
-  independent review remains incomplete. Do not convert self-review into a ship verdict.
-- If hard read-only isolation is required but cannot be established, stop the review and
-  report the limitation.
+- Use the pinned Sol reviewer for Careful work and meaningful Guided implementation.
+- If the exact reviewer role, model, or effort cannot be proven, stop and report the
+  independent review as incomplete. Do not silently substitute self-review.
+- If Careful mode requires hard read-only isolation and it cannot be observed, stop the
+  review and report the limitation.
+- Quick work and truly trivial answer-only Guided work may use a clearly labeled Sol High
+  self-review because no independent implementation was performed.
 
 ## Proportionality checks
 

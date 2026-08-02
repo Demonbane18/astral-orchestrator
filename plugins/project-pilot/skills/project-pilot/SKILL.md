@@ -1,120 +1,132 @@
 ---
 name: project-pilot
-description: "Turn project requests into clear, proportionate delivery: define the outcome, choose Quick, Guided, or Careful mode, implement or coordinate the work, verify the actual result, and report it in plain language. Use when the user invokes Project Pilot, asks to build or change something with end-to-end ownership, wants risk-aware implementation, requests a work plan plus execution, or asks for a verified or independently reviewed deliverable."
+description: "Orchestrate project work with a Sol High lead, pinned Luna XHigh and Terra XHigh implementation lanes, and a fresh Sol High reviewer. Use when the user invokes Project Pilot, asks for real multi-agent delegation, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
 ---
 
 # Project Pilot
 
-Own the result from request to verified handoff. Keep the process understandable to a
-non-technical user and scale ceremony with risk instead of making every task heavy.
+Own the result from request to verified handoff. Keep Sol High accountable for planning,
+routing, integration, and final decisions; use pinned workers for bounded execution; and
+keep the process understandable to a non-technical user.
 
-Read [references/modes-and-risk.md](references/modes-and-risk.md) when selecting a mode,
-classifying risk, or handling a consequential action. Read
-[references/work-templates.md](references/work-templates.md) before delegating work or
-requesting a fresh review.
+Read [references/modes-and-risk.md](references/modes-and-risk.md) for mode, risk, and
+confirmation decisions. Before spawning any lane, read
+[references/routing-and-preflight.md](references/routing-and-preflight.md). Before
+delegating or reviewing, read
+[references/work-templates.md](references/work-templates.md).
 
 ## 1. Choose the mode and risk
 
-- **Quick** — small, reversible, low-risk work with an obvious solution.
+- **Quick** — tiny, reversible, low-risk work with an obvious solution. Sol High works
+  directly and self-reviews; no worker is spawned.
 - **Guided (default)** — normal feature, fix, content, configuration, or project work.
+  Sol High routes bounded execution to Luna XHigh or Terra XHigh and integrates it.
 - **Careful** — high-impact, hard-to-reverse, security-sensitive, financial, privacy,
-  production, migration, or explicitly thorough work.
+  production, migration, or explicitly thorough work. Use visible planning, strict
+  confirmation gates, pinned implementation lanes, and a fresh Sol High review.
 
 Honor an explicit mode unless its safeguards are too weak for the observed risk. Raise
-the safeguards when necessary and explain the reason in one sentence. Do not lower a
-user-selected Careful mode without permission.
+the safeguards when necessary and explain why in one sentence. Never lower Careful
+without permission.
 
-## 2. Frame the work
+## 2. Prove the orchestration preflight
 
-Inspect the relevant workspace, rules, existing patterns, and available verification
-commands before changing anything. Turn the request into a compact work card:
+Project Pilot v2 uses these exact roles:
+
+- main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
+- focused worker: `project_pilot_luna_implementer` (Luna XHigh);
+- context-heavy worker: `project_pilot_terra_implementer` (Terra XHigh);
+- fresh reviewer: `project_pilot_sol_reviewer` (Sol High, requested read-only).
+
+Before Guided or Careful execution, verify that the primary session is Sol High and
+that the three named custom roles are exposed. If the primary model or effort is not
+observable, do not guess. Tell the user to select `gpt-5.6-sol` with High reasoning and
+start a new task. If roles are missing, tell them to rerun Project Pilot setup and start
+a new task. A blocking preflight ends the current turn.
+
+Do not silently substitute a built-in or differently configured agent. After every
+spawn, prove the role, model, and effort from launch metadata or the bundled runtime
+inspector before accepting its work. The routing guide defines the exact evidence and
+failure behavior.
+
+## 3. Frame and decompose the work
+
+Inspect the workspace rules, relevant files, existing patterns, and available checks.
+Turn the request into a compact work card:
 
 - **Outcome:** the observable result and why it matters.
-- **Done when:** specific acceptance checks.
+- **Done when:** specific acceptance conditions.
 - **Boundaries:** in-scope files or systems, exclusions, and safety limits.
-- **Checks:** exact tests, inspections, or other evidence that can prove success.
+- **Checks:** exact tests or inspections that can prove success.
 
-Ask a question only when the missing answer would materially change the outcome or make
-proceeding unsafe. Otherwise state the smallest reasonable assumption and continue.
-A blocking clarification or confirmation ends the current turn: make no dependent
-change and return one direct question as the user-facing response. Do not wait silently
-for an answer inside the same turn.
+Ask only when a missing answer materially changes the outcome or makes proceeding
+unsafe. Otherwise state the smallest reasonable assumption and continue. A blocking
+clarification or confirmation ends the current turn: make no dependent change and
+return one direct question immediately. Do not wait silently in the same turn.
 
-## 3. Execute proportionally
+For Guided or Careful work, split execution into the fewest useful non-overlapping work
+cards. Keep requirements, architecture, task decomposition, acceptance decisions, and
+cross-lane integration in the Sol High primary session.
 
-### Quick
+## 4. Route bounded execution
 
-Work in the primary session. Make the smallest complete change, run the relevant checks,
-inspect the final change set, and report the result. Do not add coordination overhead.
+Select each lane by the work, never by prestige:
 
-### Guided
+- Use Luna XHigh for narrow, repeatable, fully specified, or mechanical work.
+- Use Terra XHigh for normal implementation that is context-heavy, integration-heavy,
+  moderately ambiguous, or judgment-sensitive inside a settled architecture.
+- Keep work in Sol High when it changes requirements, architecture, safety boundaries,
+  or acceptance decisions. Settle those decisions before delegating execution.
 
-Work in the primary session for compact tasks. For substantial, clearly separable work,
-use one general implementation agent when available. Give it a bounded objective, exact
-ownership, interfaces, boundaries, and checks from the work template. The primary
-session remains accountable for inspecting and verifying the result.
+Give every worker the complete implementation contract from the template: outcome,
+ownership, done-when conditions, interfaces and boundaries, and exact checks. State
+that it is not alone in the codebase and must preserve unrelated edits.
 
-### Careful
+Parallelize only independent cards with non-overlapping ownership. Run dependent work
+or shared-file edits serially. Do not spawn agents merely to make the run look busy.
+Guided and Careful implementation must use at least one pinned worker whenever bounded
+execution exists; answer-only, planning-only, and blocked requests need no worker.
 
-Show a concise plan before implementation. Obtain user confirmation before any required
-destructive, irreversible, credential-related, external publishing, or production action.
-Use bounded implementation delegation when available, verify independently in the
-primary session, and require a fresh review before claiming the work is complete.
+## 5. Integrate and verify
 
-If a required confirmation cannot be obtained in the current context, make no guarded
-change and return one concrete confirmation question immediately. Do not wait silently,
-continue adjacent work that depends on the answer, or imply that approval was granted.
+Treat every worker report as a claim, not proof:
 
-Never require a particular model, private runtime log, separately installed custom role,
-external service, or extra package merely to use this workflow.
+1. Inspect the actual files and complete accumulated change set.
+2. Confirm every change stays within its work card and preserves user-owned edits.
+3. Resolve cross-lane interfaces in the primary session.
+4. Run the relevant tests, lint, build, validators, or artifact inspections.
+5. Compare observed evidence with every **Done when** item.
 
-## 4. Use optional agents safely
+Never claim a check passed if it was not run. Fix failures through the appropriate
+pinned lane, rerun affected checks, and inspect the result again.
 
-Use native implementation or review agents only when their tools and suitable general
-roles are exposed in the current session. For each implementation agent:
+## 6. Require the right review
 
-1. Assign one non-overlapping file set or bounded responsibility.
-2. State that other people or agents may be working concurrently.
-3. Require preservation of unrelated edits and actual check output.
-4. Inspect the resulting files and change set yourself.
+- **Quick:** Sol High self-review of the actual change and evidence.
+- **Guided:** use `project_pilot_sol_reviewer` after meaningful implementation. For a
+  truly trivial no-change or answer-only request, label Sol High self-review plainly.
+- **Careful:** always use `project_pilot_sol_reviewer`, and require observed read-only
+  isolation before accepting its independent review.
 
-If agents are unavailable, continue in the primary session and retain the same checks.
-If the user requested independent review, hard isolation, or Careful mode requires a
-fresh reviewer, report that review as unavailable or incomplete. Do not claim independent
-review when only self-review occurred.
+Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
+change set, and verification evidence. Accept exactly one verdict: **ship**,
+**fix-first**, or **rethink**. A fix invalidates the old verdict; verify again and request
+a new fresh review. A `rethink` verdict returns architecture or scope decisions to Sol
+High and may require user direction.
 
-## 5. Verify the actual result
-
-Treat all implementation reports as claims, not proof:
-
-1. Inspect the actual changed files and complete change set.
-2. Confirm the work stayed inside the agreed boundaries.
-3. Run the most relevant available tests, lint, build, validation, or artifact checks.
-4. Compare evidence with every **Done when** item.
-5. Fix failures and rerun affected checks before reporting success.
-
-Never say a check passed if it was not run. State why a check could not run and what risk
-remains.
-
-## 6. Review according to risk
-
-- **Quick:** self-review the changed files and evidence.
-- **Guided:** use a fresh review when the change is meaningful, cross-cutting, or easy to
-  get subtly wrong; otherwise perform an explicit self-review.
-- **Careful:** require a fresh, behaviorally read-only review when available. Give the
-  reviewer only the goal, boundaries, complete change set, and verification evidence.
-
-Accept only one review verdict: **ship**, **fix-first**, or **rethink**. A fix invalidates
-the old verdict; verify again and request a new review when the mode requires it.
+If the reviewer route or required isolation cannot be proven, stop and report review
+as incomplete. Do not replace it with self-review or claim an independent review.
 
 ## 7. Hand off plainly
 
 Lead with the outcome. Then state:
 
-- what changed, in everyday language;
-- which checks ran and their concrete result;
-- whether review was independent or self-review;
+- what changed in everyday language;
+- which lane handled each bounded part;
+- the observed role, model, and effort evidence;
+- which checks ran and their concrete results;
+- the fresh review verdict or clearly labeled self-review;
 - any limitation, remaining risk, or user action.
 
-Do not bury a failed check, missing review, assumption, or uncompleted item behind a
-general completion claim.
+Do not bury a failed check, missing route proof, incomplete review, assumption, or
+unfinished item behind a general completion claim.
