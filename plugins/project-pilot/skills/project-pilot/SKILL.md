@@ -38,16 +38,19 @@ Project Pilot v2 uses these exact roles:
 - context-heavy worker: `project_pilot_terra_implementer` (Terra XHigh);
 - fresh reviewer: `project_pilot_sol_reviewer` (Sol High, requested read-only).
 
-Before Guided or Careful execution, verify that the primary session is Sol High and
-that the three named custom roles are exposed. If the primary model or effort is not
-observable, do not guess. Tell the user to select `gpt-5.6-sol` with High reasoning and
-start a new task. If roles are missing, tell them to rerun Project Pilot setup and start
-a new task. A blocking preflight ends the current turn.
+For every mode, verify that the primary session is Sol High. Prefer observable runtime
+metadata. If the host does not expose it, ask the user once to confirm that this task was
+started with `gpt-5.6-sol` and High reasoning; record that as **user-confirmed**, not
+observed evidence. For Guided and Careful work, also run the bundled profile installer's
+exact `--check` and confirm that the three named custom roles are exposed. If roles are
+missing or profiles differ, tell the user to rerun Project Pilot setup and start a new
+task. A blocking preflight ends the current turn.
 
-Do not silently substitute a built-in or differently configured agent. After every
-spawn, prove the role, model, and effort from launch metadata or the bundled runtime
-inspector before accepting its work. The routing guide defines the exact evidence and
-failure behavior.
+Do not silently substitute a built-in or differently configured agent. Spawn every
+worker and reviewer with `fork_turns: "none"` and a complete standalone work packet.
+After every spawn, combine the exact requested custom `agent_type`, the returned task id,
+the byte-exact profile check, and observed model/effort runtime evidence before accepting
+its work. The routing guide defines the exact evidence and failure behavior.
 
 ## 3. Frame and decompose the work
 
@@ -73,14 +76,16 @@ cross-lane integration in the Sol High primary session.
 Select each lane by the work, never by prestige:
 
 - Use Luna XHigh for narrow, repeatable, fully specified, or mechanical work.
-- Use Terra XHigh for normal implementation that is context-heavy, integration-heavy,
-  moderately ambiguous, or judgment-sensitive inside a settled architecture.
+- Use Terra XHigh for normal implementation that is context-heavy, implements a
+  component or external integration, is moderately ambiguous, or needs judgment inside
+  a settled architecture.
 - Keep work in Sol High when it changes requirements, architecture, safety boundaries,
   or acceptance decisions. Settle those decisions before delegating execution.
 
 Give every worker the complete implementation contract from the template: outcome,
 ownership, done-when conditions, interfaces and boundaries, and exact checks. State
-that it is not alone in the codebase and must preserve unrelated edits.
+that it is not alone in the codebase, must preserve unrelated edits, must do the work
+directly, and must not spawn or delegate further.
 
 Parallelize only independent cards with non-overlapping ownership. Run dependent work
 or shared-file edits serially. Do not spawn agents merely to make the run look busy.
@@ -103,16 +108,17 @@ pinned lane, rerun affected checks, and inspect the result again.
 ## 6. Require the right review
 
 - **Quick:** Sol High self-review of the actual change and evidence.
-- **Guided:** use `project_pilot_sol_reviewer` after meaningful implementation. For a
-  truly trivial no-change or answer-only request, label Sol High self-review plainly.
+- **Guided:** use a newly spawned `project_pilot_sol_reviewer` after every change made by
+  a worker. For a no-change or answer-only request with no worker, label Sol High
+  self-review plainly.
 - **Careful:** always use `project_pilot_sol_reviewer`, and require observed read-only
   isolation before accepting its independent review.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
 change set, and verification evidence. Accept exactly one verdict: **ship**,
 **fix-first**, or **rethink**. A fix invalidates the old verdict; verify again and request
-a new fresh review. A `rethink` verdict returns architecture or scope decisions to Sol
-High and may require user direction.
+a new fresh reviewer, never a follow-up to the earlier reviewer. A `rethink` verdict
+returns architecture or scope decisions to Sol High and may require user direction.
 
 If the reviewer route or required isolation cannot be proven, stop and report review
 as incomplete. Do not replace it with self-review or claim an independent review.

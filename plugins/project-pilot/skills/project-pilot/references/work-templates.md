@@ -39,6 +39,7 @@ You own only:
 
 You are not alone in the codebase. Preserve concurrent and unrelated edits, do not
 revert work you do not own, and adapt to changes already present.
+Perform this assignment directly. Do not spawn or delegate to another agent.
 
 DONE WHEN
 - <Acceptance condition.>
@@ -55,7 +56,7 @@ CHECKS
 
 RETURN
 - Status: complete, partial, or blocked
-- Route: observed agent role, model, effort, and task id
+- Route: observed agent path, model, effort, and task id
 - Changes: file-by-file summary from the actual change set
 - Checks: exact commands and observed results
 - Decisions: material judgment calls, or none
@@ -67,7 +68,7 @@ RETURN
 ```text
 ROLE
 Perform a fresh review. Remain behaviorally read-only: do not edit, format, delete, or
-implement files.
+implement files. Perform the review directly; do not spawn or delegate to another agent.
 
 OUTCOME
 <The user's requested result.>
@@ -96,7 +97,7 @@ Return exactly one:
 
 REPORT
 - Verdict: ship, fix-first, or rethink
-- Route: observed agent role, model, effort, sandbox, and task id
+- Route: observed agent path, model, effort, sandbox, and task id
 - Reason: decisive evidence-based reason
 - Findings: precise references and required fixes, or none
 - Residual risk: most important remaining risk, or none

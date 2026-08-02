@@ -94,6 +94,9 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("do not silently substitute", routing)
         self.assertIn("runtime evidence", routing)
         self.assertIn("stop", routing)
+        self.assertIn("fork_turns", routing)
+        self.assertIn("none", routing)
+        self.assertIn("--check", routing)
 
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
@@ -121,6 +124,11 @@ class SkillContractTests(unittest.TestCase):
             for field, value in fields.items():
                 self.assertEqual(profile.get(field), value, f"{filename}: {field}")
             self.assertIn("developer_instructions", profile)
+            self.assertIn(
+                "do not spawn",
+                profile["developer_instructions"].lower(),
+                filename,
+            )
 
     def test_agent_installer_is_idempotent_and_conflict_safe(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -161,6 +169,42 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("will not be overwritten", refused.stderr)
             self.assertEqual(conflict.read_text(encoding="utf-8"), "user-owned = true\n")
 
+    def test_agent_installer_removes_only_exact_project_pilot_profiles(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "agents"
+            install = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+
+            remove = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target), "--remove"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(remove.returncode, 0, remove.stdout + remove.stderr)
+            self.assertTrue(target.is_dir())
+            self.assertFalse(any(target.iterdir()))
+
+            protected = target / "project-pilot-luna-implementer.toml"
+            protected.write_text("user-owned = true\n", encoding="utf-8")
+            refused = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target), "--remove"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("will not be removed", refused.stderr)
+            self.assertEqual(protected.read_text(encoding="utf-8"), "user-owned = true\n")
+
     def test_runtime_inspector_emits_only_allowlisted_route_evidence(self):
         thread_id = "12345678-1234-1234-1234-123456789abc"
         with tempfile.TemporaryDirectory() as directory:
@@ -173,12 +217,36 @@ class SkillContractTests(unittest.TestCase):
                             {
                                 "type": "session_meta",
                                 "payload": {
-                                    "id": thread_id,
-                                    "parent_thread_id": "parent",
-                                    "agent_role": "project_pilot_luna_implementer",
-                                    "agent_path": "project-pilot-luna-implementer.toml",
+                                    "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                                    "agent_nickname": "Parent",
+                                    "agent_path": None,
                                     "model_provider": "openai",
                                     "secret": "must-not-leak",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "turn_context",
+                                "payload": {
+                                    "model": "gpt-5.6-sol",
+                                    "effort": "high",
+                                    "sandbox_policy": {"type": "workspace-write"},
+                                    "permission_profile": {"type": "managed"},
+                                    "cwd": str(ROOT),
+                                    "prompt": "must-not-leak",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "session_meta",
+                                "payload": {
+                                    "id": thread_id,
+                                    "parent_thread_id": "parent",
+                                    "agent_nickname": "Atlas",
+                                    "agent_path": "/profiles/project-pilot-luna-implementer.toml",
+                                    "model_provider": "openai",
                                 },
                             }
                         ),
@@ -191,7 +259,6 @@ class SkillContractTests(unittest.TestCase):
                                     "sandbox_policy": {"type": "workspace-write"},
                                     "permission_profile": {"type": "managed"},
                                     "cwd": str(ROOT),
-                                    "prompt": "must-not-leak",
                                 },
                             }
                         ),
@@ -218,11 +285,75 @@ class SkillContractTests(unittest.TestCase):
             evidence = json.loads(result.stdout)
             self.assertEqual(evidence["model"], "gpt-5.6-luna")
             self.assertEqual(evidence["effort"], "xhigh")
-            self.assertEqual(
-                evidence["agent_role"], "project_pilot_luna_implementer"
+            self.assertEqual(evidence["agent_nickname"], "Atlas")
+            self.assertTrue(
+                evidence["agent_path"].endswith(
+                    "/project-pilot-luna-implementer.toml"
+                )
             )
+            self.assertNotIn("agent_role", evidence)
             self.assertNotIn("secret", evidence)
             self.assertNotIn("prompt", evidence)
+
+    def test_runtime_inspector_resolves_the_task_path_returned_by_spawn(self):
+        thread_id = "87654321-4321-4321-4321-cba987654321"
+        descendant_id = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+        agent_path = "/root/pilot_luna_unique"
+        with tempfile.TemporaryDirectory() as directory:
+            sessions = Path(directory)
+            direct = sessions / f"rollout-direct-{thread_id}.jsonl"
+            inherited = sessions / f"rollout-descendant-{descendant_id}.jsonl"
+            records = (
+                {
+                    "type": "session_meta",
+                    "payload": {
+                        "id": thread_id,
+                        "agent_nickname": "Nova",
+                        "agent_path": agent_path,
+                        "model_provider": "openai",
+                    },
+                },
+                {
+                    "type": "turn_context",
+                    "payload": {
+                        "model": "gpt-5.6-luna",
+                        "effort": "xhigh",
+                        "sandbox_policy": {"type": "workspace-write"},
+                        "permission_profile": {"type": "managed"},
+                        "cwd": str(ROOT),
+                    },
+                },
+            )
+            direct.write_text(
+                "\n".join(json.dumps(record) for record in records) + "\n",
+                encoding="utf-8",
+            )
+            inherited.write_text(
+                json.dumps(records[0]) + "\n",
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                [
+                    "sh",
+                    str(INSPECT_RUNTIME),
+                    "--sessions-dir",
+                    str(sessions),
+                    "--since-epoch",
+                    "0",
+                    "--agent-path",
+                    agent_path,
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            evidence = json.loads(result.stdout)
+            self.assertEqual(evidence["thread_id"], thread_id)
+            self.assertEqual(evidence["agent_path"], agent_path)
+            self.assertEqual(evidence["model"], "gpt-5.6-luna")
 
     def test_risk_and_destructive_actions_are_gated(self):
         skill = read(SKILL).lower()
@@ -282,9 +413,17 @@ class UserExperienceTests(unittest.TestCase):
             self.assertIn(topic, readme)
         self.assertIn("use project pilot", readme)
         self.assertIn("no api key", readme)
+        self.assertIn("sol high", readme)
+        self.assertIn("luna xhigh", readme)
+        self.assertIn("terra xhigh", readme)
+        self.assertIn("three agent profiles", readme)
+        self.assertIn("--remove", readme)
+        self.assertIn("cannot grant model access", readme)
+        self.assertIn("codex plugin list --marketplace project-pilot", readme)
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"
+        setup_text = read(setup)
         result = subprocess.run(
             ["sh", str(setup), "--dry-run"],
             cwd=ROOT,
@@ -298,6 +437,7 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("codex plugin add project-pilot@project-pilot", result.stdout)
         self.assertIn("install-agents.sh", result.stdout)
         self.assertIn("DRY RUN", result.stdout)
+        self.assertIn("command -v python3", setup_text)
 
     def test_original_license_and_attribution_are_preserved(self):
         license_text = read(ROOT / "LICENSE")

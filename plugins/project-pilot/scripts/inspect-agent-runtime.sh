@@ -6,8 +6,9 @@ set -eu
 usage() {
   printf '%s\n' \
     'Usage: sh inspect-agent-runtime.sh [--sessions-dir PATH] THREAD_ID' \
+    '       sh inspect-agent-runtime.sh [--sessions-dir PATH] [--since-epoch N] --agent-path PATH' \
     '' \
-    'Return a small JSON object containing only role, model, effort, sandbox,' \
+    'Return a small JSON object containing only identity, model, effort, sandbox,' \
     'permission, and working-directory evidence for one subagent task.'
 }
 
@@ -17,22 +18,55 @@ fail() {
 }
 
 sessions_dir=''
-case "$#" in
-  1) thread_id=$1 ;;
-  3)
-    [ "$1" = "--sessions-dir" ] || {
-      usage >&2
-      exit 2
-    }
-    [ -n "$2" ] || fail "--sessions-dir requires a non-empty path."
-    sessions_dir=$2
-    thread_id=$3
-    ;;
-  *)
-    usage >&2
-    exit 2
-    ;;
-esac
+since_epoch=0
+selector_kind=''
+selector_value=''
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --sessions-dir)
+      [ "$#" -ge 2 ] || fail "--sessions-dir requires a path."
+      [ -n "$2" ] || fail "--sessions-dir requires a non-empty path."
+      sessions_dir=$2
+      shift 2
+      ;;
+    --since-epoch)
+      [ "$#" -ge 2 ] || fail "--since-epoch requires whole seconds."
+      since_epoch=$2
+      shift 2
+      ;;
+    --thread-id)
+      [ "$#" -ge 2 ] || fail "--thread-id requires a lowercase UUID."
+      [ -z "$selector_kind" ] || fail "choose only one task selector."
+      selector_kind=thread_id
+      selector_value=$2
+      shift 2
+      ;;
+    --agent-path)
+      [ "$#" -ge 2 ] || fail "--agent-path requires the canonical spawned task path."
+      [ -z "$selector_kind" ] || fail "choose only one task selector."
+      selector_kind=agent_path
+      selector_value=$2
+      shift 2
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --*) fail "unknown option: $1" ;;
+    *)
+      [ -z "$selector_kind" ] || fail "choose only one task selector."
+      selector_kind=thread_id
+      selector_value=$1
+      shift
+      ;;
+  esac
+done
+
+[ -n "$selector_kind" ] || fail "a THREAD_ID or --agent-path selector is required."
+if ! printf '%s\n' "$since_epoch" | LC_ALL=C grep -Eq '^[0-9]+$'; then
+  fail "--since-epoch must be zero or positive whole seconds."
+fi
 
 if [ -z "$sessions_dir" ]; then
   if [ -n "${CODEX_HOME-}" ]; then
@@ -46,7 +80,7 @@ fi
 [ -d "$sessions_dir" ] || fail "sessions directory is unavailable: $sessions_dir"
 command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for route inspection."
 
-python3 - "$sessions_dir" "$thread_id" <<'PY'
+python3 - "$sessions_dir" "$selector_kind" "$selector_value" "$since_epoch" <<'PY'
 import json
 import re
 import sys
@@ -59,12 +93,47 @@ def fail(message):
 
 
 sessions_dir = Path(sys.argv[1])
-thread_id = sys.argv[2]
-if not re.fullmatch(
-    r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-    thread_id,
-):
-    fail("THREAD_ID must be a lowercase UUID.")
+selector_kind = sys.argv[2]
+selector_value = sys.argv[3]
+since_epoch = int(sys.argv[4])
+uuid_pattern = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+
+if selector_kind == "thread_id":
+    if not re.fullmatch(uuid_pattern, selector_value):
+        fail("THREAD_ID must be a lowercase UUID.")
+    thread_id = selector_value
+elif selector_kind == "agent_path":
+    if not re.fullmatch(r"/[A-Za-z0-9_./-]+", selector_value):
+        fail("--agent-path must be a canonical task path.")
+    matching_ids = set()
+    for candidate in sessions_dir.rglob("rollout-*.jsonl"):
+        try:
+            if not candidate.is_file() or candidate.stat().st_mtime < since_epoch:
+                continue
+            with candidate.open(encoding="utf-8") as handle:
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    item = json.loads(line)
+                    payload = item.get("payload")
+                    if (
+                        item.get("type") == "session_meta"
+                        and isinstance(payload, dict)
+                        and payload.get("agent_path") == selector_value
+                        and isinstance(payload.get("id"), str)
+                        and re.fullmatch(uuid_pattern, payload["id"])
+                    ):
+                        matching_ids.add(payload["id"])
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            continue
+    if len(matching_ids) != 1:
+        fail(
+            "expected one task id for the returned agent path since the supplied time; "
+            f"found {len(matching_ids)}."
+        )
+    thread_id = next(iter(matching_ids))
+else:
+    fail("unsupported task selector.")
 
 matches = [
     path
@@ -83,48 +152,62 @@ try:
 except (OSError, UnicodeError, json.JSONDecodeError):
     fail("the matched rollout is unreadable or contains invalid JSON.")
 
-sessions = [item.get("payload") for item in records if item.get("type") == "session_meta"]
-turns = [item.get("payload") for item in records if item.get("type") == "turn_context"]
-if len(sessions) != 1 or not isinstance(sessions[0], dict):
-    fail("session metadata is missing or ambiguous.")
-if not turns or not all(isinstance(turn, dict) for turn in turns):
-    fail("turn context is missing or invalid.")
+sessions = [
+    item.get("payload")
+    for item in records
+    if item.get("type") == "session_meta"
+    and isinstance(item.get("payload"), dict)
+    and item["payload"].get("id") == thread_id
+]
+turns = [
+    item.get("payload")
+    for item in records
+    if item.get("type") == "turn_context" and isinstance(item.get("payload"), dict)
+]
+if len(sessions) != 1:
+    fail("metadata for the requested task is missing or ambiguous.")
+if not turns:
+    fail("turn context is missing.")
 
 session = sessions[0]
-if session.get("id") != thread_id:
-    fail("session metadata does not identify the requested task.")
+# Forked rollout snapshots can contain inherited parent contexts with different routes.
+# The final turn_context is the effective context last observed for this task.
+turn = turns[-1]
 
 
-def one_value(label, values):
-    if any(not isinstance(value, str) or not value for value in values):
+def required_string(label, value):
+    if not isinstance(value, str) or not value:
         fail(f"{label} is missing.")
-    unique = set(values)
-    if len(unique) != 1:
-        fail(f"{label} is inconsistent across turns.")
-    return values[0]
+    return value
 
 
-agent_role = session.get("agent_role")
-if not isinstance(agent_role, str) or not agent_role:
-    fail("agent role is missing.")
+def optional_string(label, value):
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        fail(f"{label} is invalid.")
+    return value
+
+
+sandbox = turn.get("sandbox_policy")
+permission = turn.get("permission_profile")
+if not isinstance(sandbox, dict):
+    fail("sandbox policy is missing.")
+if not isinstance(permission, dict):
+    fail("permission profile is missing.")
 
 evidence = {
     "thread_id": thread_id,
-    "parent_thread_id": session.get("parent_thread_id") if isinstance(session.get("parent_thread_id"), str) else None,
-    "agent_role": agent_role,
-    "agent_path": session.get("agent_path") if isinstance(session.get("agent_path"), str) else None,
-    "model_provider": session.get("model_provider") if isinstance(session.get("model_provider"), str) else None,
-    "model": one_value("model", [turn.get("model") for turn in turns]),
-    "effort": one_value("effort", [turn.get("effort") for turn in turns]),
-    "sandbox_policy_type": one_value(
-        "sandbox policy",
-        [turn.get("sandbox_policy", {}).get("type") for turn in turns],
-    ),
-    "permission_profile_type": one_value(
-        "permission profile",
-        [turn.get("permission_profile", {}).get("type") for turn in turns],
-    ),
-    "cwd": one_value("working directory", [turn.get("cwd") for turn in turns]),
+    "parent_thread_id": optional_string("parent task id", session.get("parent_thread_id")),
+    "forked_from_id": optional_string("fork source id", session.get("forked_from_id")),
+    "agent_nickname": optional_string("agent nickname", session.get("agent_nickname")),
+    "agent_path": optional_string("agent path", session.get("agent_path")),
+    "model_provider": optional_string("model provider", session.get("model_provider")),
+    "model": required_string("model", turn.get("model")),
+    "effort": required_string("effort", turn.get("effort")),
+    "sandbox_policy_type": required_string("sandbox policy type", sandbox.get("type")),
+    "permission_profile_type": required_string("permission profile type", permission.get("type")),
+    "cwd": required_string("working directory", turn.get("cwd")),
 }
 print(json.dumps(evidence, separators=(",", ":"), sort_keys=True))
 PY

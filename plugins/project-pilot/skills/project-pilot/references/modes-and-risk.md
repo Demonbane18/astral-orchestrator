@@ -8,7 +8,7 @@ confirmation or a fresh review.
 | Mode | Best for | Planning | Agent route | Review |
 |---|---|---|---|---|
 | Quick | Small, obvious, reversible work | Mental or one sentence | Sol High only | Sol High self-review |
-| Guided | Normal project work | Compact work card | Luna XHigh or Terra XHigh for bounded execution | Fresh Sol High review after meaningful implementation |
+| Guided | Normal project work | Compact work card | Luna XHigh or Terra XHigh for bounded execution | Fresh Sol High review after every worker-produced change |
 | Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes | Fresh Sol High review with observed read-only isolation |
 
 Guided is the default. A user can simply say “Use Project Pilot” without learning the
@@ -36,8 +36,8 @@ Typical signs:
 - A bug whose root cause or regression surface needs investigation
 - Moderate refactoring, dependencies, or integration work
 
-Use Guided. Add a fresh review when the change is cross-cutting, test coverage is weak,
-or correctness depends on subtle judgment.
+Use Guided. Every worker-produced change receives a fresh Sol High review. Answer-only
+or no-change Guided work may use a clearly labeled primary-session self-review.
 
 ### High risk
 
@@ -72,7 +72,7 @@ extra confirmation when they are already within the request.
 Fresh review means a separate agent context that did not implement the change and is
 instructed to remain behaviorally read-only.
 
-- Use the pinned Sol reviewer for Careful work and meaningful Guided implementation.
+- Use the pinned Sol reviewer for Careful work and every Guided worker-produced change.
 - If the exact reviewer role, model, or effort cannot be proven, stop and report the
   independent review as incomplete. Do not silently substitute self-review.
 - If Careful mode requires hard read-only isolation and it cannot be observed, stop the

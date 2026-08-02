@@ -14,26 +14,33 @@ manifest=$plugin_dir/.codex-plugin/plugin.json
 skill=$plugin_dir/skills/project-pilot/SKILL.md
 modes=$plugin_dir/skills/project-pilot/references/modes-and-risk.md
 templates=$plugin_dir/skills/project-pilot/references/work-templates.md
+routing=$plugin_dir/skills/project-pilot/references/routing-and-preflight.md
+agent_dir=$plugin_dir/agents
+installer=$plugin_dir/scripts/install-agents.sh
+inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
 marketplace=$repo_root/.agents/plugins/marketplace.json
 
-for required in "$manifest" "$skill" "$modes" "$templates"; do
+for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
 command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for repository verification."
 
-python3 - "$manifest" "$skill" "$modes" "$templates" "$marketplace" <<'PY'
+python3 - "$manifest" "$skill" "$modes" "$templates" "$routing" "$agent_dir" "$marketplace" <<'PY'
 import json
 import sys
+import tomllib
 from pathlib import Path
 
-manifest_path, skill_path, modes_path, templates_path, marketplace_path = map(
+manifest_path, skill_path, modes_path, templates_path, routing_path, agent_dir, marketplace_path = map(
     Path, sys.argv[1:]
 )
 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "project-pilot":
     raise SystemExit("manifest name must be project-pilot")
+if not str(manifest.get("version", "")).startswith("2."):
+    raise SystemExit("manifest version must be Project Pilot v2")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -54,8 +61,10 @@ for required_text in (
     "Quick",
     "Guided (default)",
     "Careful",
-    "primary session",
-    "independent review",
+    "Sol High",
+    "project_pilot_luna_implementer",
+    "project_pilot_terra_implementer",
+    "project_pilot_sol_reviewer",
     "verification",
 ):
     if required_text not in skill:
@@ -71,6 +80,43 @@ for required_text in ("Work card", "Implementation delegation", "Fresh review"):
     if required_text not in templates:
         raise SystemExit(f"work templates are missing: {required_text}")
 
+routing = routing_path.read_text(encoding="utf-8")
+for required_text in (
+    "gpt-5.6-sol",
+    "gpt-5.6-luna",
+    "gpt-5.6-terra",
+    "Do not silently substitute",
+    "runtime evidence",
+):
+    if required_text not in routing:
+        raise SystemExit(f"routing contract is missing: {required_text}")
+
+expected_agents = {
+    "project-pilot-luna-implementer.toml": {
+        "name": "project_pilot_luna_implementer",
+        "model": "gpt-5.6-luna",
+        "model_reasoning_effort": "xhigh",
+    },
+    "project-pilot-terra-implementer.toml": {
+        "name": "project_pilot_terra_implementer",
+        "model": "gpt-5.6-terra",
+        "model_reasoning_effort": "xhigh",
+    },
+    "project-pilot-sol-reviewer.toml": {
+        "name": "project_pilot_sol_reviewer",
+        "model": "gpt-5.6-sol",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only",
+    },
+}
+if {path.name for path in agent_dir.glob("*.toml")} != set(expected_agents):
+    raise SystemExit("agent profile set does not match the v2 routing contract")
+for filename, expected in expected_agents.items():
+    profile = tomllib.loads((agent_dir / filename).read_text(encoding="utf-8"))
+    for field, value in expected.items():
+        if profile.get(field) != value:
+            raise SystemExit(f"{filename} must set {field} to {value}")
+
 if marketplace_path.is_file():
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
     if marketplace.get("name") != "project-pilot":
@@ -79,12 +125,14 @@ if marketplace_path.is_file():
     if len(entries) != 1 or entries[0].get("name") != "project-pilot":
         raise SystemExit("marketplace must contain exactly one project-pilot entry")
 
-for path in (manifest_path, skill_path, modes_path, templates_path):
+for path in (manifest_path, skill_path, modes_path, templates_path, routing_path, *agent_dir.glob("*.toml")):
     text = path.read_text(encoding="utf-8")
     if "[TODO" in text or "YOUR-NAME" in text:
         raise SystemExit(f"placeholder remains in {path}")
 PY
 
 sh -n "$0"
+sh -n "$installer"
+sh -n "$inspector"
 
 printf '%s\n' 'Project Pilot verification passed.'

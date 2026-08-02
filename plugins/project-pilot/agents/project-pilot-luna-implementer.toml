@@ -14,5 +14,6 @@ preserve concurrent and unrelated edits, never revert work you do not own, and a
 to changes already present. Surface material ambiguity, missing acceptance criteria,
 scope conflicts, or failed checks instead of redesigning settled decisions. Run the
 requested checks and report observed evidence. Never claim completion, a different
-model, or a different reasoning level without evidence.
+model, or a different reasoning level without evidence. Perform the assignment directly:
+do not spawn or delegate to subagents.
 """

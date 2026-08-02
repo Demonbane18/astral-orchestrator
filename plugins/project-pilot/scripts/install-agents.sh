@@ -5,7 +5,7 @@ set -eu
 
 usage() {
   printf '%s\n' \
-    'Usage: sh install-agents.sh [--target-dir PATH] [--check]' \
+    'Usage: sh install-agents.sh [--target-dir PATH] [--check | --remove]' \
     '' \
     'Install the three Project Pilot agent profiles.' \
     'The default destination is $CODEX_HOME/agents when CODEX_HOME is set,' \
@@ -13,6 +13,7 @@ usage() {
     '' \
     '  --target-dir PATH  Use an explicit destination (useful for testing).' \
     '  --check            Verify exact installed copies without changing anything.' \
+    '  --remove           Remove only exact, unmodified Project Pilot profiles.' \
     '  --help             Show this help.'
 }
 
@@ -32,6 +33,7 @@ else
 fi
 
 check_only=0
+remove_only=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --target-dir)
@@ -44,7 +46,13 @@ while [ "$#" -gt 0 ]; do
       shift 2
       ;;
     --check)
+      [ "$remove_only" -eq 0 ] || fail "--check and --remove cannot be combined."
       check_only=1
+      shift
+      ;;
+    --remove)
+      [ "$check_only" -eq 0 ] || fail "--check and --remove cannot be combined."
+      remove_only=1
       shift
       ;;
     --help|-h)
@@ -83,11 +91,20 @@ for agent_file in $agent_files; do
 
   if [ -e "$destination" ] || [ -L "$destination" ]; then
     if [ ! -f "$destination" ] || [ -L "$destination" ]; then
-      printf '%s\n' "ERROR: destination is not a regular file and will not be replaced: $destination" >&2
+      if [ "$remove_only" -eq 1 ]; then
+        printf '%s\n' "ERROR: destination is not a regular file and will not be removed: $destination" >&2
+      else
+        printf '%s\n' "ERROR: destination is not a regular file and will not be replaced: $destination" >&2
+      fi
       preflight_failed=1
     elif ! cmp -s "$template" "$destination"; then
-      printf '%s\n' "ERROR: destination differs and will not be overwritten: $destination" >&2
-      printf '%s\n' "       Review both files and resolve the conflict deliberately." >&2
+      if [ "$remove_only" -eq 1 ]; then
+        printf '%s\n' "ERROR: destination differs and will not be removed: $destination" >&2
+        printf '%s\n' "       This may be user-owned or customized; remove it deliberately if desired." >&2
+      else
+        printf '%s\n' "ERROR: destination differs and will not be overwritten: $destination" >&2
+        printf '%s\n' "       Review both files and resolve the conflict deliberately." >&2
+      fi
       preflight_failed=1
     fi
   elif [ "$check_only" -eq 1 ]; then
@@ -97,6 +114,20 @@ for agent_file in $agent_files; do
 done
 
 [ "$preflight_failed" -eq 0 ] || exit 1
+
+if [ "$remove_only" -eq 1 ]; then
+  for agent_file in $agent_files; do
+    template=$template_dir/$agent_file
+    destination=$target_dir/$agent_file
+    if [ -f "$destination" ] && [ ! -L "$destination" ]; then
+      cmp -s "$template" "$destination" || fail "destination changed after preflight and will not be removed: $destination"
+      rm -f "$destination" || fail "could not remove exact Project Pilot profile: $destination"
+      printf '%s\n' "REMOVED: $destination"
+    fi
+  done
+  printf '%s\n' "REMOVE PASSED: exact Project Pilot agent profiles are absent."
+  exit 0
+fi
 
 if [ "$check_only" -eq 1 ]; then
   printf '%s\n' "CHECK PASSED: all Project Pilot agent profiles match exactly."

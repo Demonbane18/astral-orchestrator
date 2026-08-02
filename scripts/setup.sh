@@ -60,6 +60,7 @@ if [ "$mode" = dry-run ]; then
 fi
 
 command -v codex >/dev/null 2>&1 || fail "the codex command is unavailable; install or update Codex first."
+command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for safe model-route inspection."
 
 if [ "$mode" = install ]; then
   codex plugin marketplace add "$repo_root"
