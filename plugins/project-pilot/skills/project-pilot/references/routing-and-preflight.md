@@ -31,7 +31,8 @@ Before Guided or Careful execution, additionally:
 
 5. Resolve `../../scripts/install-agents.sh` relative to this skill and run it with
    `--check` so the installed profiles byte-match the shipped profiles.
-6. Confirm the collaboration tool exposes all three exact Project Pilot agent types.
+6. Confirm either the collaboration tool exposes an exact custom `agent_type` selector,
+   or the bundled `../../scripts/run-agent.py` passes a dry-run for the needed role.
 
 If the primary route is neither observable nor explicitly user-confirmed, or if step 5
 or 6 fails, stop before implementation. Explain the missing item and the smallest
@@ -63,27 +64,48 @@ Keep the decision in Sol High when requirements, architecture, safety boundaries
 public interfaces, or acceptance criteria are unsettled. Sol may settle the decision,
 then issue bounded execution to Luna or Terra.
 
+## Choose the execution mechanism
+
+Prefer a native custom agent when the collaboration tool exposes an explicit
+`agent_type` field and the exact Project Pilot role. Do not treat a task name as an agent
+type; current hosts can otherwise create a default Sol agent under a Luna-looking name.
+
+When native selection is unavailable, use the **exact-process** mechanism. Resolve
+`../../scripts/run-agent.py` relative to this skill, write the complete standalone work
+packet to a private temporary regular file, then run:
+
+```text
+python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt-file <packet>
+```
+
+The launcher reads the shipped profile, pins its model and effort on `codex exec`, injects
+the profile's developer instructions that forbid further delegation, and selects
+workspace-write for workers or read-only for the reviewer. Remove only the exact
+temporary packet after the process exits. A non-zero exit blocks the lane.
+
 ## Spawn and runtime evidence
 
-Immediately before spawning, record the current epoch seconds. Choose a unique lowercase
-task name. Spawn the exact `agent_type` with `fork_turns: "none"`; do not rely on
-inherited history or prose asking a general worker to act like the lane. Give the agent
-a complete, standalone implementation or review packet. Instruct it to perform the
-assignment directly and never spawn or delegate to another agent.
+For a native lane, immediately record the epoch seconds, choose a unique lowercase task
+name, and spawn the exact `agent_type` with `fork_turns: "none"`. For an exact-process
+lane, launch a new process for every packet and capture its `PROJECT_PILOT_ROUTE` header,
+Codex startup header, session id, final response, and exit status. Both mechanisms use a
+complete standalone packet and forbid downstream delegation.
 
 After launch, collect runtime evidence showing:
 
-- the spawn request used the exact custom `agent_type` and returned task id;
-- `agent_path` identifies that spawned task rather than a different task;
+- the native spawn used the exact custom `agent_type`, or the launcher header names the
+  exact role;
+- the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
 - `effort` equals the role's required effort;
 - for the reviewer, the sandbox policy is `read-only` when Careful mode requires hard
   isolation.
 
-Use trustworthy launch metadata when it exposes all fields. If it omits a field, resolve
+Use trustworthy launch or startup metadata when it exposes all fields. If it omits a field, resolve
 the bundled `../../scripts/inspect-agent-runtime.sh` relative to this skill. When spawn
 returns a lowercase UUID, pass it with `--thread-id`. When it returns a canonical task
 path, pass that value with `--agent-path` and the recorded time with `--since-epoch`.
+For an exact-process lane, pass the Codex startup header's session id with `--thread-id`.
 The script emits only allowlisted routing fields; it does not emit prompts, messages,
 tool arguments, secrets, or file contents.
 Forked rollout snapshots can contain inherited parent records, so the inspector selects
@@ -113,8 +135,8 @@ The orchestrator inspects every returned change before another lane builds on it
 
 ## Review isolation
 
-The reviewer profile requests a read-only sandbox, but the host controls the effective
-sandbox. In Guided mode, record the observed sandbox and never overstate isolation. In
-Careful mode, observed non-read-only access makes the required independent review
-incomplete; stop before a `ship` claim. After any fix, spawn a new reviewer with
-`fork_turns: "none"`; never reuse or follow up with the previous reviewer.
+The reviewer profile requests a read-only sandbox, and the exact-process launcher passes
+that mode explicitly. The host still controls the effective sandbox. Record the observed
+sandbox and never overstate isolation. In Careful mode, observed non-read-only access
+makes review incomplete. After any fix, create a new native reviewer with
+`fork_turns: "none"` or a new reviewer process; never reuse the previous review context.

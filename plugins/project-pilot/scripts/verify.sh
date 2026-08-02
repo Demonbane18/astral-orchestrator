@@ -18,9 +18,10 @@ routing=$plugin_dir/skills/project-pilot/references/routing-and-preflight.md
 agent_dir=$plugin_dir/agents
 installer=$plugin_dir/scripts/install-agents.sh
 inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
+launcher=$plugin_dir/scripts/run-agent.py
 marketplace=$repo_root/.agents/plugins/marketplace.json
 
-for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector"; do
+for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
@@ -135,5 +136,6 @@ PY
 sh -n "$0"
 sh -n "$installer"
 sh -n "$inspector"
+python3 "$launcher" --help >/dev/null
 
 printf '%s\n' 'Project Pilot verification passed.'

@@ -42,15 +42,17 @@ For every mode, verify that the primary session is Sol High. Prefer observable r
 metadata. If the host does not expose it, ask the user once to confirm that this task was
 started with `gpt-5.6-sol` and High reasoning; record that as **user-confirmed**, not
 observed evidence. For Guided and Careful work, also run the bundled profile installer's
-exact `--check` and confirm that the three named custom roles are exposed. If roles are
-missing or profiles differ, tell the user to rerun Project Pilot setup and start a new
-task. A blocking preflight ends the current turn.
+exact `--check`. Prefer the three named native custom roles when the collaboration tool
+exposes an `agent_type` selector. Otherwise use the bundled exact-process launcher,
+which starts the same pinned models and role instructions as separate Codex processes.
+If profiles differ or neither route can run, tell the user to rerun setup. A blocking
+preflight ends the current turn.
 
-Do not silently substitute a built-in or differently configured agent. Spawn every
-worker and reviewer with `fork_turns: "none"` and a complete standalone work packet.
-After every spawn, combine the exact requested custom `agent_type`, the returned task id,
-the byte-exact profile check, and observed model/effort runtime evidence before accepting
-its work. The routing guide defines the exact evidence and failure behavior.
+Do not silently substitute a built-in or differently configured agent. Give every lane
+a complete standalone work packet. For a native lane, use `fork_turns: "none"`. For an
+exact-process lane, use the bundled launcher with the matching role. Combine the
+byte-exact profile check, requested route, task or session id, and observed model/effort
+evidence before accepting its work. The routing guide defines the exact behavior.
 
 ## 3. Frame and decompose the work
 
@@ -108,10 +110,10 @@ pinned lane, rerun affected checks, and inspect the result again.
 ## 6. Require the right review
 
 - **Quick:** Sol High self-review of the actual change and evidence.
-- **Guided:** use a newly spawned `project_pilot_sol_reviewer` after every change made by
-  a worker. For a no-change or answer-only request with no worker, label Sol High
-  self-review plainly.
-- **Careful:** always use `project_pilot_sol_reviewer`, and require observed read-only
+- **Guided:** use a new `project_pilot_sol_reviewer` native lane or reviewer process after
+  every worker-produced change. For a no-change or answer-only request with no worker,
+  label Sol High self-review plainly.
+- **Careful:** always use the exact Sol reviewer lane, and require observed read-only
   isolation before accepting its independent review.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete

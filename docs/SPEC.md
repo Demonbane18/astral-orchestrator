@@ -19,8 +19,10 @@ requested orchestration.
 3. Recipients have access to `gpt-5.6-luna`, `gpt-5.6-terra`, and `gpt-5.6-sol`.
 4. Custom agents are installed to Codex's personal `agents` directory and discovered in
    a newly started task.
-5. Publishing is outside scope until the user chooses a GitHub destination.
-6. The MIT-licensed Sol Advisor source may be adapted with preserved notice.
+5. When a host lacks native custom-agent selection, a bundled launcher may start an
+   exact pinned Codex process for the same lane.
+6. Publishing is outside scope until the user chooses a GitHub destination.
+7. The MIT-licensed Sol Advisor source may be adapted with preserved notice.
 
 ## Route Contract
 
@@ -41,8 +43,10 @@ exists.
 - Markdown Codex skill and one-level reference files
 - Codex custom-agent TOML profiles
 - POSIX shell for setup, exact-copy installation, and verification
-- Python 3.11+ standard library for tests and allowlisted runtime evidence
-- No API key, external service, analytics, network call, or background process
+- Python 3.11+ standard library for tests, exact-process launching, and allowlisted
+  runtime evidence
+- No additional API key, external service beyond Codex, analytics, direct network client,
+  or background process
 
 ## Commands
 

@@ -1,10 +1,15 @@
+import importlib.util
+import io
 import json
 import re
 import subprocess
+import sys
 import tempfile
 import tomllib
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +23,7 @@ ROUTING = PLUGIN / "skills/project-pilot/references/routing-and-preflight.md"
 AGENTS = PLUGIN / "agents"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
+RUN_AGENT = PLUGIN / "scripts/run-agent.py"
 
 
 def read(path: Path) -> str:
@@ -97,6 +103,8 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("fork_turns", routing)
         self.assertIn("none", routing)
         self.assertIn("--check", routing)
+        self.assertIn("run-agent.py", routing)
+        self.assertIn("exact-process", routing)
 
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
@@ -355,6 +363,143 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(evidence["agent_path"], agent_path)
             self.assertEqual(evidence["model"], "gpt-5.6-luna")
 
+    def test_process_launcher_maps_every_role_to_exact_runtime_settings(self):
+        expected = {
+            "luna": (
+                "project_pilot_luna_implementer",
+                "gpt-5.6-luna",
+                "xhigh",
+                "workspace-write",
+            ),
+            "terra": (
+                "project_pilot_terra_implementer",
+                "gpt-5.6-terra",
+                "xhigh",
+                "workspace-write",
+            ),
+            "reviewer": (
+                "project_pilot_sol_reviewer",
+                "gpt-5.6-sol",
+                "high",
+                "read-only",
+            ),
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            workdir = Path(directory) / "work"
+            workdir.mkdir()
+            prompt = Path(directory) / "packet.txt"
+            prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+
+            for role, values in expected.items():
+                result = subprocess.run(
+                    [
+                        "python3",
+                        str(RUN_AGENT),
+                        "--role",
+                        role,
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--dry-run",
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                evidence = json.loads(result.stdout)
+                self.assertEqual(
+                    (
+                        evidence["agent_name"],
+                        evidence["model"],
+                        evidence["effort"],
+                        evidence["sandbox"],
+                    ),
+                    values,
+                )
+                self.assertEqual(evidence["prompt_bytes"], prompt.stat().st_size)
+                self.assertNotIn("prompt", evidence)
+                self.assertNotIn("developer_instructions", evidence)
+
+    def test_process_launcher_constructs_and_runs_every_exact_route(self):
+        spec = importlib.util.spec_from_file_location("project_pilot_run_agent", RUN_AGENT)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        launcher = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(launcher)
+
+        with tempfile.TemporaryDirectory() as directory:
+            workdir = Path(directory) / "work"
+            workdir.mkdir()
+            prompt = Path(directory) / "packet.txt"
+            prompt_text = "standalone packet with private details\n"
+            prompt.write_text(prompt_text, encoding="utf-8")
+
+            for role, contract in launcher.ROLE_CONTRACTS.items():
+                captured = {}
+                prompt.write_text(prompt_text, encoding="utf-8")
+
+                def fake_run(command, *, input, check):
+                    prompt.write_text("replacement that must not be forwarded\n", encoding="utf-8")
+                    captured["command"] = command
+                    captured["prompt"] = input
+                    captured["check"] = check
+                    return subprocess.CompletedProcess(command, 23)
+
+                output = io.StringIO()
+                argv = [
+                    str(RUN_AGENT),
+                    "--role",
+                    role,
+                    "--workdir",
+                    str(workdir),
+                    "--prompt-file",
+                    str(prompt),
+                ]
+                with (
+                    mock.patch.object(sys, "argv", argv),
+                    mock.patch.object(launcher.shutil, "which", return_value="/test/codex"),
+                    mock.patch.object(launcher.subprocess, "run", side_effect=fake_run),
+                    redirect_stdout(output),
+                ):
+                    return_code = launcher.main()
+
+                profile = tomllib.loads(read(AGENTS / contract["filename"]))
+                command = captured["command"]
+                config_overrides = [
+                    command[index + 1]
+                    for index, value in enumerate(command)
+                    if value == "-c"
+                ]
+
+                self.assertEqual(return_code, 23)
+                self.assertEqual(captured["prompt"], prompt_text.encode())
+                self.assertFalse(captured["check"])
+                self.assertEqual(command[0:2], ["/test/codex", "exec"])
+                self.assertEqual(command[command.index("--model") + 1], contract["model"])
+                self.assertEqual(
+                    command[command.index("--sandbox") + 1], contract["sandbox"]
+                )
+                self.assertEqual(
+                    command[command.index("--cd") + 1], str(workdir.resolve())
+                )
+                self.assertEqual(command[-1], "-")
+                self.assertIn(
+                    f"model_reasoning_effort={json.dumps(contract['effort'])}",
+                    config_overrides,
+                )
+                self.assertIn(
+                    "developer_instructions="
+                    + json.dumps(profile["developer_instructions"]),
+                    config_overrides,
+                )
+                route_header = output.getvalue()
+                self.assertIn("PROJECT_PILOT_ROUTE ", route_header)
+                self.assertNotIn(prompt_text.strip(), route_header)
+                self.assertNotIn(profile["developer_instructions"], route_header)
+
     def test_risk_and_destructive_actions_are_gated(self):
         skill = read(SKILL).lower()
         modes = read(MODES).lower()
@@ -412,7 +557,7 @@ class UserExperienceTests(unittest.TestCase):
         ):
             self.assertIn(topic, readme)
         self.assertIn("use project pilot", readme)
-        self.assertIn("no api key", readme)
+        self.assertIn("no additional api key", readme)
         self.assertIn("sol high", readme)
         self.assertIn("luna xhigh", readme)
         self.assertIn("terra xhigh", readme)

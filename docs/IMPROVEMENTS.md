@@ -39,6 +39,9 @@ is missing.
    while Guided and Careful use exact pinned routes.
 6. **Honest host boundary.** The reviewer requests read-only access, but Project Pilot
    records the effective sandbox and does not overclaim host-enforced isolation.
+7. **Host-compatible exact routing.** When a Codex build cannot select native custom
+   agents, a bundled launcher starts a fresh process with the same pinned model, effort,
+   role instructions, and sandbox instead of falling back to a generic worker.
 
 ## Tradeoffs
 

@@ -5,10 +5,15 @@ is a beginner-friendly, model-routed adaptation of
 [Sol Advisor](https://github.com/DannyMac180/sol-advisor), designed for people who do
 not want to manage agent roles, model tiers, or developer tooling by hand.
 
-There is no API key, paid service, or background server. The setup helper installs the
-plugin plus three agent profiles: Luna XHigh for focused work, Terra XHigh for
-context-heavy work, and Sol High for fresh review. You start the task with Sol High as
-the main orchestrator.
+Project Pilot needs no additional API key, paid service, or background server beyond
+Codex. The setup helper installs the plugin plus three agent profiles: Luna XHigh for
+focused work, Terra XHigh for context-heavy work, and Sol High for fresh review. You
+start the task with Sol High as the main orchestrator.
+
+When Codex exposes native custom-agent selection, Project Pilot uses it. On Codex builds
+that expose only generic subagents, the bundled launcher starts separate Codex processes
+with the same exact Luna, Terra, or reviewer model, effort, role instructions, and
+sandbox. A task name alone is never accepted as proof of a model route.
 
 ## What Project Pilot does
 
@@ -27,8 +32,11 @@ workspace-based projects.
 
 Guided and Careful modes require actual access to Sol, Luna, and Terra. Setup installs
 their profiles but cannot grant model access to an account. Quick mode still requires
-the task to be started with Sol High. Setup also checks for Python 3.11 or newer, which
-Project Pilot uses locally to read only the routing fields needed for verification.
+the task to be started with Sol High. Setup also checks for Python 3.11 or newer. Python
+runs locally to validate the profiles, read the temporary work packet, pass that packet
+directly to the selected Codex process, and inspect only the routing fields needed for
+verification. Project Pilot does not send the packet to another service or keep a
+separate copy; the selected Codex process uses your existing Codex session normally.
 
 ### Easiest: ask Codex to install it
 
