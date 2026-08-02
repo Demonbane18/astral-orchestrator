@@ -21,10 +21,11 @@ inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
 launcher=$plugin_dir/scripts/run-agent.py
 effort_settings=$plugin_dir/scripts/effort_settings.py
 effort_configurator=$plugin_dir/scripts/configure-effort.py
+benchmark_scorecard=$plugin_dir/scripts/benchmark-scorecard.py
 effort_wrapper=$repo_root/scripts/configure-effort.sh
 marketplace=$repo_root/.agents/plugins/marketplace.json
 
-for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher" "$effort_settings" "$effort_configurator" "$effort_wrapper"; do
+for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
@@ -44,8 +45,8 @@ manifest_path, skill_path, modes_path, templates_path, routing_path, agent_dir, 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.0.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.0.0")
+if manifest.get("version") != "3.1.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.1.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -147,5 +148,6 @@ sh -n "$inspector"
 sh -n "$effort_wrapper"
 python3 "$launcher" --help >/dev/null
 python3 "$effort_configurator" --help >/dev/null
+python3 "$benchmark_scorecard" --help >/dev/null
 
 printf '%s\n' 'Astral Orchestrator verification passed.'

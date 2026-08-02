@@ -27,6 +27,9 @@ RUN_AGENT = PLUGIN / "scripts/run-agent.py"
 CONFIGURE_EFFORT = PLUGIN / "scripts/configure-effort.py"
 EFFORT_SETTINGS = PLUGIN / "scripts/effort_settings.py"
 CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
+BENCHMARK_SCORECARD = PLUGIN / "scripts/benchmark-scorecard.py"
+BENCHMARK_GUIDE = ROOT / "benchmarks/README.md"
+SPEC = ROOT / "docs/SPEC.md"
 
 
 def read(path: Path) -> str:
@@ -61,7 +64,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.0.0")
+        self.assertEqual(manifest["version"], "3.1.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -77,6 +80,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.1"))
 
         prompts = manifest["interface"]["defaultPrompt"]
         self.assertGreaterEqual(len(prompts), 2)
@@ -800,6 +804,21 @@ class UserExperienceTests(unittest.TestCase):
             read(ROOT / "docs/IMPROVEMENTS.md").lower(),
         )
 
+    def test_readme_explains_heuristic_routing_and_the_local_benchmark(self):
+        readme = read(ROOT / "README.md").lower()
+
+        self.assertIn("mode determines whether to delegate", readme)
+        self.assertIn("work characteristics choose sol, luna, or terra", readme)
+        self.assertIn("not yet empirically benchmarked", readme)
+        self.assertGreaterEqual(readme.count("~~~mermaid"), 2)
+        self.assertIn("single-sol", readme)
+        self.assertIn("repeated trials", readme)
+        self.assertIn("identical acceptance checks", readme)
+        self.assertIn("benchmark-scorecard.py", readme)
+        self.assertIn("requested reasoning level/budget", readme)
+        self.assertIn("increase latency and usage", readme)
+        self.assertIn("do not guarantee a better answer", readme)
+
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"
         setup_text = read(setup)
@@ -827,6 +846,453 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("Copyright (c) 2026 Daniel McAteer", license_text)
         self.assertIn("DannyMac180/sol-advisor", notice)
         self.assertIn("MIT", notice)
+
+
+class BenchmarkScorecardTests(unittest.TestCase):
+    def test_scorecard_validates_and_aggregates_repeated_comparable_trials(self):
+        route = lambda role, model, task_id: {
+            "role": role,
+            "model": model,
+            "effort": "high" if model == "gpt-5.6-sol" else "xhigh",
+            "expected_effort": "high" if model == "gpt-5.6-sol" else "xhigh",
+            "task_id": task_id,
+        }
+        records = []
+        for case_id in ("search-box", "empty-state"):
+            for trial in (1, 2):
+                records.append(
+                    {
+                        "schema_version": 1,
+                        "trial_id": f"{case_id}-single-sol-{trial}",
+                        "case_id": case_id,
+                        "case_fingerprint": f"{case_id}-v1",
+                        "trial": trial,
+                        "strategy": "single-sol",
+                        "acceptance_checks": ["unit-tests", "manual-review"],
+                        "accepted": trial == 1,
+                        "first_pass_accepted": trial == 1,
+                        "rework_required": trial != 1,
+                        "wall_time_seconds": 40 + trial,
+                        "model_calls": 1,
+                        "input_tokens": 100,
+                        "output_tokens": 200,
+                        "quality_score": 80,
+                        "quality_score_blinded": True,
+                        "route_evidence": [
+                            route("single-sol", "gpt-5.6-sol", f"sol-{case_id}-{trial}")
+                        ],
+                    }
+                )
+                records.append(
+                    {
+                        "schema_version": 1,
+                        "trial_id": f"{case_id}-astral-{trial}",
+                        "case_id": case_id,
+                        "case_fingerprint": f"{case_id}-v1",
+                        "trial": trial,
+                        "strategy": "astral",
+                        "acceptance_checks": ["manual-review", "unit-tests"],
+                        "accepted": True,
+                        "first_pass_accepted": trial == 1,
+                        "rework_required": trial != 1,
+                        "wall_time_seconds": 60 + trial,
+                        "model_calls": 3,
+                        "input_tokens": 150,
+                        "output_tokens": 300,
+                        "quality_score": 90,
+                        "quality_score_blinded": True,
+                        "route_evidence": [
+                            route("orchestrator", "gpt-5.6-sol", f"lead-{case_id}-{trial}"),
+                            route("terra", "gpt-5.6-terra", f"worker-{case_id}-{trial}"),
+                            route("reviewer", "gpt-5.6-sol", f"review-{case_id}-{trial}"),
+                        ],
+                    }
+                )
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(
+                "\n".join(json.dumps(record) for record in records) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), "--format", "json", str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report["comparability"]["case_count"], 2)
+        self.assertEqual(report["comparability"]["paired_trial_count"], 4)
+        self.assertEqual(report["strategies"]["single-sol"]["success_rate"], 0.5)
+        self.assertEqual(report["strategies"]["astral"]["success_rate"], 1.0)
+        self.assertEqual(report["strategies"]["astral"]["route_correct_rate"], 1.0)
+        self.assertEqual(report["strategies"]["astral"]["mean_total_tokens"], 450.0)
+        self.assertEqual(
+            report["comparison"]["astral_minus_single_sol"]["success_rate_percentage_points"],
+            50.0,
+        )
+
+    def test_scorecard_rejects_incomparable_acceptance_checks(self):
+        def record(strategy, checks, route_evidence):
+            return {
+                "schema_version": 1,
+                "trial_id": f"case-1-{strategy}",
+                "case_id": "case-1",
+                "case_fingerprint": "case-1-v1",
+                "trial": 1,
+                "strategy": strategy,
+                "acceptance_checks": checks,
+                "accepted": True,
+                "first_pass_accepted": True,
+                "rework_required": False,
+                "wall_time_seconds": 10,
+                "model_calls": 1 if strategy == "single-sol" else 3,
+                "route_evidence": route_evidence,
+            }
+
+        route = lambda role, model, task_id: {
+            "role": role,
+            "model": model,
+            "effort": "high" if model == "gpt-5.6-sol" else "xhigh",
+            "expected_effort": "high" if model == "gpt-5.6-sol" else "xhigh",
+            "task_id": task_id,
+        }
+        records = [
+            record(
+                "single-sol",
+                ["unit-tests"],
+                [route("single-sol", "gpt-5.6-sol", "control")],
+            ),
+            record(
+                "astral",
+                ["manual-review"],
+                [
+                    route("orchestrator", "gpt-5.6-sol", "lead"),
+                    route("luna", "gpt-5.6-luna", "worker"),
+                    route("reviewer", "gpt-5.6-sol", "review"),
+                ],
+            ),
+        ]
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(
+                "\n".join(json.dumps(item) for item in records) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(BENCHMARK_SCORECARD),
+                    "--min-trials",
+                    "1",
+                    str(trials),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("acceptance checks differ", result.stderr.lower())
+
+    def test_scorecard_rejects_malformed_jsonl(self):
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text('{"schema_version": 1, bad-json}\n', encoding="utf-8")
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("line 1: invalid json", result.stderr.lower())
+
+    def test_scorecard_requires_rework_after_a_failed_first_pass_that_is_accepted(self):
+        record = {
+            "schema_version": 1,
+            "trial_id": "case-1-single-sol",
+            "case_id": "case-1",
+            "case_fingerprint": "case-1-v1",
+            "trial": 1,
+            "strategy": "single-sol",
+            "acceptance_checks": ["unit-tests"],
+            "accepted": True,
+            "first_pass_accepted": False,
+            "rework_required": False,
+            "wall_time_seconds": 10,
+            "model_calls": 1,
+            "route_evidence": [
+                {
+                    "role": "single-sol",
+                    "model": "gpt-5.6-sol",
+                    "effort": "high",
+                    "expected_effort": "high",
+                    "task_id": "control",
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(json.dumps(record) + "\n", encoding="utf-8")
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), "--min-trials", "1", str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("accepted is true", result.stderr.lower())
+        self.assertIn("rework_required", result.stderr)
+
+    def test_scorecard_rejects_route_settings_that_change_across_repetitions(self):
+        def route(role, model, effort, task_id):
+            return {
+                "role": role,
+                "model": model,
+                "effort": effort,
+                "expected_effort": effort,
+                "task_id": task_id,
+            }
+
+        records = []
+        for trial in (1, 2):
+            records.extend(
+                (
+                    {
+                        "schema_version": 1,
+                        "trial_id": f"control-{trial}",
+                        "case_id": "case-1",
+                        "case_fingerprint": "case-1-v1",
+                        "trial": trial,
+                        "strategy": "single-sol",
+                        "acceptance_checks": ["unit-tests"],
+                        "accepted": True,
+                        "first_pass_accepted": True,
+                        "rework_required": False,
+                        "wall_time_seconds": 10,
+                        "model_calls": 1,
+                        "route_evidence": [
+                            route("single-sol", "gpt-5.6-sol", "high", f"control-{trial}")
+                        ],
+                    },
+                    {
+                        "schema_version": 1,
+                        "trial_id": f"astral-{trial}",
+                        "case_id": "case-1",
+                        "case_fingerprint": "case-1-v1",
+                        "trial": trial,
+                        "strategy": "astral",
+                        "acceptance_checks": ["unit-tests"],
+                        "accepted": True,
+                        "first_pass_accepted": True,
+                        "rework_required": False,
+                        "wall_time_seconds": 20,
+                        "model_calls": 3,
+                        "route_evidence": [
+                            route("orchestrator", "gpt-5.6-sol", "high", f"lead-{trial}"),
+                            route(
+                                "terra",
+                                "gpt-5.6-terra",
+                                "xhigh" if trial == 1 else "high",
+                                f"worker-{trial}",
+                            ),
+                            route("reviewer", "gpt-5.6-sol", "high", f"review-{trial}"),
+                        ],
+                    },
+                )
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(
+                "\n".join(json.dumps(record) for record in records) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("expected_effort configuration changes", result.stderr)
+
+    def test_scorecard_rejects_route_task_ids_reused_across_trials(self):
+        def route(role, model, effort, task_id):
+            return {
+                "role": role,
+                "model": model,
+                "effort": effort,
+                "expected_effort": effort,
+                "task_id": task_id,
+            }
+
+        shared_task_id = "must-not-be-reused"
+        records = [
+            {
+                "schema_version": 1,
+                "trial_id": "control-1",
+                "case_id": "case-1",
+                "case_fingerprint": "case-1-v1",
+                "trial": 1,
+                "strategy": "single-sol",
+                "acceptance_checks": ["unit-tests"],
+                "accepted": True,
+                "first_pass_accepted": True,
+                "rework_required": False,
+                "wall_time_seconds": 10,
+                "model_calls": 1,
+                "route_evidence": [
+                    route("single-sol", "gpt-5.6-sol", "high", shared_task_id)
+                ],
+            },
+            {
+                "schema_version": 1,
+                "trial_id": "astral-1",
+                "case_id": "case-1",
+                "case_fingerprint": "case-1-v1",
+                "trial": 1,
+                "strategy": "astral",
+                "acceptance_checks": ["unit-tests"],
+                "accepted": True,
+                "first_pass_accepted": True,
+                "rework_required": False,
+                "wall_time_seconds": 20,
+                "model_calls": 3,
+                "route_evidence": [
+                    route("orchestrator", "gpt-5.6-sol", "high", shared_task_id),
+                    route("luna", "gpt-5.6-luna", "xhigh", "worker-1"),
+                    route("reviewer", "gpt-5.6-sol", "high", "review-1"),
+                ],
+            },
+        ]
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(
+                "\n".join(json.dumps(record) for record in records) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), "--min-trials", "1", str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate route task_id", result.stderr)
+
+    def test_scorecard_rejects_observed_route_effort_changes_across_repetitions(self):
+        guide = read(BENCHMARK_GUIDE)
+        example = re.search(r"```jsonl\n(.*?)\n```", guide, flags=re.DOTALL)
+        self.assertIsNotNone(example, "benchmark guide must include a JSONL example")
+        records = [json.loads(line) for line in example.group(1).splitlines()]
+        astral_trial = next(
+            record
+            for record in records
+            if record["strategy"] == "astral" and record["trial"] == 2
+        )
+        next(
+            route for route in astral_trial["route_evidence"] if route["role"] == "terra"
+        )["effort"] = "high"
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(
+                "\n".join(json.dumps(record) for record in records) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("observed route effort changes", result.stderr)
+
+    def test_scorecard_requires_at_least_one_model_call_per_route_evidence_item(self):
+        record = {
+            "schema_version": 1,
+            "trial_id": "control-1",
+            "case_id": "case-1",
+            "case_fingerprint": "case-1-v1",
+            "trial": 1,
+            "strategy": "single-sol",
+            "acceptance_checks": ["unit-tests"],
+            "accepted": True,
+            "first_pass_accepted": True,
+            "rework_required": False,
+            "wall_time_seconds": 10,
+            "model_calls": 1,
+            "route_evidence": [
+                {
+                    "role": "single-sol",
+                    "model": "gpt-5.6-sol",
+                    "effort": "high",
+                    "expected_effort": "high",
+                    "task_id": "control-1",
+                },
+                {
+                    "role": "reviewer",
+                    "model": "gpt-5.6-sol",
+                    "effort": "high",
+                    "expected_effort": "high",
+                    "task_id": "review-1",
+                },
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(json.dumps(record) + "\n", encoding="utf-8")
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), "--min-trials", "1", str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("model_calls", result.stderr)
+        self.assertIn("route_evidence", result.stderr)
+
+    def test_scorecard_accepts_the_jsonl_example_in_the_benchmark_guide(self):
+        guide = read(BENCHMARK_GUIDE)
+        example = re.search(r"```jsonl\n(.*?)\n```", guide, flags=re.DOTALL)
+        self.assertIsNotNone(example, "benchmark guide must include a JSONL example")
+
+        with tempfile.TemporaryDirectory() as directory:
+            trials = Path(directory) / "trials.jsonl"
+            trials.write_text(example.group(1) + "\n", encoding="utf-8")
+            result = subprocess.run(
+                ["python3", str(BENCHMARK_SCORECARD), str(trials)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Astral Orchestrator benchmark scorecard", result.stdout)
 
 
 class VerificationTests(unittest.TestCase):

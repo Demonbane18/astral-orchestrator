@@ -93,10 +93,34 @@ the default, so you only need to name a mode when you want a different level of 
 Astral Orchestrator raises safeguards when a request is riskier than the selected mode.
 It does not broaden the work you asked for.
 
+## How Astral chooses models and effort
+
+Three separate decisions keep the workflow predictable:
+
+1. **Mode determines whether to delegate.** Quick keeps a tiny change in the Sol primary;
+   Guided and Careful delegate bounded implementation when there is work that can safely
+   be handed off.
+2. **Work characteristics choose Sol, Luna, or Terra.** Sol retains requirements,
+   architecture, safety boundaries, and acceptance decisions. Luna receives narrow,
+   repeatable, fully specified work. Terra receives context-heavy implementation,
+   debugging, integrations, or moderate refactoring after Sol has settled the plan.
+3. **Each lane reads its effort from the per-lane settings file.** Effort is not
+   dynamically chosen from each prompt. Astral reads the configured orchestrator, Luna,
+   Terra, and reviewer values before it runs, then either uses the matching profile or
+   starts the exact pinned process. It stops if it cannot prove the requested model and
+   effort; it does not substitute another route.
+
+The route below is a documented **heuristic**, based on the type of work and the route
+contract. It is not yet empirically benchmarked for effectiveness or efficiency in this
+repository. The local benchmark scorecard described below is how to collect that evidence
+without pretending that a single anecdote proves a model choice.
+
 ## Configurable effort levels
 
-Reasoning effort is how much time a model spends thinking. Defaults stay intentionally
-unchanged: Sol High for the orchestrator and reviewer, Luna XHigh, and Terra XHigh.
+Reasoning effort is the requested reasoning level/budget for a lane. Higher values can
+increase latency and usage, and do not guarantee a better answer. Defaults stay
+intentionally unchanged: Sol High for the orchestrator and reviewer, Luna XHigh, and
+Terra XHigh.
 
 Show the effective settings:
 
@@ -126,15 +150,24 @@ CODEX_HOME when set), outside the plugin cache.
 
 ~~~mermaid
 flowchart TD
-  Request[Your request] --> Sol[Sol: plan, route, integrate]
-  Sol -->|Quick| SelfReview[Sol self-review]
-  Sol -->|Focused, bounded work| Luna[Luna at configured effort]
-  Sol -->|Context-heavy implementation| Terra[Terra at configured effort]
+  Request[Your request] --> Mode{Mode}
+  Mode -->|Quick: do not delegate| QuickSol[Sol primary and self-review]
+  QuickSol --> Handoff[Evidence-backed handoff]
+  Mode -->|Guided or Careful| Work{Work characteristics}
+  Work -->|Requirements or architecture unsettled| Sol[Sol settles the plan]
+  Sol --> Work
+  Work -->|Narrow and repeatable| Luna[Luna]
+  Work -->|Context-heavy implementation| Terra[Terra]
   Luna --> Checks[Inspect changes and run checks]
   Terra --> Checks
-  Checks --> Review[Fresh Sol review]
+  Checks --> Review[Fresh Sol reviewer]
   Review --> Handoff[Evidence-backed handoff]
 ~~~
+
+Sol uses `gpt-5.6-sol`; Luna uses `gpt-5.6-luna`; Terra uses `gpt-5.6-terra`; and the
+fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described above
+supply each lane's effort (Sol High, Luna XHigh, Terra XHigh, reviewer Sol High by
+default), rather than the prompt choosing a new effort at runtime.
 
 For Guided and Careful work, Astral Orchestrator first proves the installed profiles
 match exactly and confirms the route. It uses native custom-agent selection only when
@@ -145,6 +178,47 @@ instructions, secrets, or file contents.
 
 A task name is not proof of the route. Missing or mismatched role, model, effort, or
 review isolation blocks the lane and tells you the smallest corrective action.
+
+## Benchmarking Astral against a single-Sol control
+
+The repository includes a local, standard-library scorecard. It does not call Codex,
+send data anywhere, or manufacture a result: you run the same frozen task cases, record
+the trial facts in JSONL, then ask the scorecard to validate and summarize them.
+
+~~~mermaid
+flowchart LR
+  Cases[Same frozen task cases] --> Control[Single-Sol control]
+  Cases --> Astral[Astral multi-agent run]
+  Control --> Checks[Identical acceptance checks]
+  Astral --> Checks
+  Control --> Evidence[Observed route evidence]
+  Astral --> Evidence
+  Checks --> Scorecard[Local scorecard]
+  Evidence --> Scorecard
+  Scorecard --> Compare[Effectiveness and efficiency comparison]
+~~~
+
+Quick start: create at least two JSONL records for every task case under each strategy
+(the guide shows the exact schema), then run:
+
+~~~sh
+python3 plugins/astral-orchestrator/scripts/benchmark-scorecard.py benchmarks/trials.jsonl
+python3 plugins/astral-orchestrator/scripts/benchmark-scorecard.py --format json benchmarks/trials.jsonl
+~~~
+
+The scorecard requires the same case fingerprint, matching repeated trials, and identical
+acceptance checks for `single-sol` and `astral`. Within either strategy, its observed
+route role/model/effort settings must remain fixed across repetitions; the two strategies
+may intentionally differ. It reports success, first-pass acceptance, rework, route
+correctness, wall time, and model calls; input/output token counts and a 0–100 quality
+score are optional. Record quality scoring blind to strategy when practical. Read the
+[benchmark guide and JSONL schema](benchmarks/README.md) before collecting trials.
+
+The output can show what happened for the recorded cases and settings. It cannot prove
+that Astral is generally faster, better, or cheaper, establish causation from a small
+sample, or rescue a comparison with a wrong route or unequal acceptance checks. Treat a
+route-correctness warning, a non-blind quality score, or a small/unrepresentative case
+set as a reason to investigate before making a product claim.
 
 ## Safety and privacy
 
@@ -166,7 +240,7 @@ To update a downloaded checkout, replace it with the newer complete repository a
 sh scripts/setup.sh --refresh
 ~~~
 
-Version 3.0.0 is a breaking identity migration from the former name, Project Pilot.
+Version 3.0.0 was a breaking identity migration from the former name, Project Pilot.
 The plugin and marketplace IDs are now `astral-orchestrator`, profile filenames begin
 with `astral-orchestrator-`, TOML agent names begin with `astral_orchestrator_`, route
 evidence begins with `ASTRAL_ORCHESTRATOR_ROUTE`, and persistent settings live under

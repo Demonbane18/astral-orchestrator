@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.0 — 2026-08-02
+
+### Added
+
+- A local, standard-library benchmark scorecard for repeated Astral and single-Sol trial
+  records, with route evidence and comparable acceptance checks.
+
+### Changed
+
+- Explained the routing heuristic, configurable reasoning effort, and its limits in
+  plain language, with GitHub-rendered routing and benchmark diagrams.
+
 ## 3.0.0 — 2026-08-02
 
 ### Changed

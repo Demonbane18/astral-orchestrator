@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.0
+# Spec: Astral Orchestrator v3.1
 
 ## Objective
 
@@ -12,10 +12,17 @@ command installs the plugin and three namespaced profiles. When an exact route c
 proven, the workflow stops rather than claiming a generic fallback was the requested
 orchestration.
 
+Version 3.1 adds a local JSONL benchmark scorecard. It compares paired, repeated Astral
+and single-Sol trials only after validating frozen task fingerprints, identical
+acceptance checks, route evidence, and consistently available optional metrics. It
+summarizes supplied data without calling models or claiming a result that was not
+recorded.
+
 ## Identity and migration
 
-Astral Orchestrator is version 3.0.0 because the former Project Pilot identifiers are
-breaking changes. The normalized plugin, marketplace, skill, and profile prefix is
+Version 3.0.0 was the breaking identity migration from the former Project Pilot
+identifiers. The current product version is 3.1.0. The normalized plugin, marketplace,
+skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
 ~/.codex/astral-orchestrator/effort-levels.toml.
@@ -69,6 +76,7 @@ execution exists.
 - Test: python3 -B -m unittest discover -s tests -v
 - Verify package: sh plugins/astral-orchestrator/scripts/verify.sh
 - Check setup: sh scripts/setup.sh --dry-run
+- Score local trials: python3 plugins/astral-orchestrator/scripts/benchmark-scorecard.py benchmarks/trials.jsonl
 - Validate skill: uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/astral-orchestrator/skills/astral-orchestrator
 - Validate plugin: uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/astral-orchestrator
 
