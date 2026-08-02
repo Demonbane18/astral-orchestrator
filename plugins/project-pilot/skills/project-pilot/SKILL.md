@@ -36,6 +36,9 @@ commands before changing anything. Turn the request into a compact work card:
 
 Ask a question only when the missing answer would materially change the outcome or make
 proceeding unsafe. Otherwise state the smallest reasonable assumption and continue.
+A blocking clarification or confirmation ends the current turn: make no dependent
+change and return one direct question as the user-facing response. Do not wait silently
+for an answer inside the same turn.
 
 ## 3. Execute proportionally
 
@@ -57,6 +60,10 @@ Show a concise plan before implementation. Obtain user confirmation before any r
 destructive, irreversible, credential-related, external publishing, or production action.
 Use bounded implementation delegation when available, verify independently in the
 primary session, and require a fresh review before claiming the work is complete.
+
+If a required confirmation cannot be obtained in the current context, make no guarded
+change and return one concrete confirmation question immediately. Do not wait silently,
+continue adjacent work that depends on the answer, or imply that approval was granted.
 
 Never require a particular model, private runtime log, separately installed custom role,
 external service, or extra package merely to use this workflow.

@@ -109,6 +109,15 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("destructive", modes)
         self.assertIn("credentials", modes)
 
+    def test_unavailable_confirmation_returns_control_immediately(self):
+        skill = read(SKILL).lower()
+        modes = read(MODES).lower()
+
+        self.assertIn("ends the current turn", skill)
+        self.assertIn("make no changes", modes)
+        self.assertIn("return the question immediately", modes)
+        self.assertIn("do not wait", modes)
+
     def test_templates_cover_work_ownership_and_fresh_review(self):
         templates = read(TEMPLATES).lower()
 

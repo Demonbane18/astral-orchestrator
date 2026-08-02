@@ -59,6 +59,11 @@ Obtain user confirmation immediately before a destructive, irreversible, credent
 external publishing, or production action unless that exact action was already clearly
 authorized in the current request. First resolve the specific target and explain the effect.
 
+Ask one concrete question that names the target and effect. If confirmation cannot be
+obtained in the current context, make no changes behind the gate.
+Return the question immediately. Do not wait silently, assume approval, or continue work
+that depends on it.
+
 Planning, local edits, tests, previews, dry runs, and read-only inspection do not need an
 extra confirmation when they are already within the request.
 
