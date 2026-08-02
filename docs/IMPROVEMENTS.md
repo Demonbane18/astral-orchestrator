@@ -72,10 +72,22 @@ prefer trustworthy launch metadata when Codex exposes it directly.
 
 ## Validation evidence
 
-The repository contract tests cover exact profile pins, conflict-safe installation and
-removal, allowlisted runtime evidence, route selection language, user confirmation
-boundaries, and beginner documentation. Final command and forward-test results are
-recorded here after each release candidate is exercised.
+The 2026-08-02 release candidate passed 19 repository contract tests, package
+verification, setup dry-run, whitespace checks, and the official Codex skill and plugin
+validators. The tests cover exact profile pins, conflict-safe installation and removal,
+allowlisted runtime evidence, exact-process command construction, bounded prompt
+handling, route selection, confirmation boundaries, and beginner documentation.
+
+Forward testing on Codex CLI 0.144.5 showed why the compatibility route is necessary: a
+generic subagent given a Luna-looking task name still ran Sol High. Project Pilot rejected
+that result. Separate launcher sessions then proved Luna XHigh with workspace-write
+(`019fc049-9034-7b33-bf08-1619c8e6b053`), Terra XHigh with workspace-write
+(`019fc04c-42b7-7fc0-91df-2d6f10e36677`), and Sol High with read-only review. The final
+fresh Sol High review (`019fc05a-b89d-7fb2-91c9-2960cb3f3077`) returned `ship`.
+
+The locally installed cache is `2.0.0+codex.20260802025027`. Its launcher, skill, and
+routing guide byte-match the reviewed source; all three installed profiles also match
+their shipped files exactly.
 
 ## Source reviewed
 

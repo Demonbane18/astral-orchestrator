@@ -6,7 +6,8 @@
 - [x] Add allowlisted route inspection.
 - [x] Update the skill for strict preflight, routing, verification, and fresh review.
 - [x] Update non-technical install, use, update, share, remove, and troubleshooting docs.
-- [ ] Run all repository and official validators.
-- [ ] Perform fresh-context adversarial review and forward tests.
-- [ ] Install the release candidate to the current Codex profile.
-- [ ] Start a new task before expecting the new custom roles to appear.
+- [x] Run all repository and official validators.
+- [x] Perform fresh-context adversarial review and forward tests.
+- [x] Install the release candidate to the current Codex profile.
+- [x] Forward-test new tasks, reject the native generic-route mismatch, and prove the
+  exact-process fallback.

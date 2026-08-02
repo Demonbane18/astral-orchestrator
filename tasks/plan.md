@@ -37,9 +37,10 @@ Validation + local installation + new-task forward test
 
 - [x] Update the setup helper and beginner documentation.
 - [x] Update specification, attribution, comparison, and changelog.
-- [ ] Run repository tests, package verification, and official validators.
-- [ ] Install v2 locally and confirm exact cached profiles.
-- [ ] Forward-test the workflow from a new task that discovers the custom roles.
+- [x] Run repository tests, package verification, and official validators.
+- [x] Install v2 locally and confirm exact cached profiles.
+- [x] Forward-test the workflow from new tasks; reject generic native routing and prove
+  the exact-process Luna, Terra, and reviewer fallback.
 
 ## Risks
 
@@ -49,4 +50,5 @@ Validation + local installation + new-task forward test
 | Existing custom profile shares a filename | Namespaced filenames and no-overwrite installer |
 | Host broadens reviewer sandbox | Inspect effective route and block Careful `ship` claims |
 | Runtime metadata format changes | Reject missing fields; never guess model identity |
+| Native spawn lacks exact custom-agent selection | Use a separately pinned Codex process and verify its runtime metadata |
 | Parallel workers conflict | Exact non-overlapping ownership or serial execution |
