@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Beginner-friendly, model-routed orchestration for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
@@ -25,10 +25,13 @@
     "longDescription": "Astral Orchestrator turns an everyday request into a clear outcome, keeps the Sol model in charge, routes bounded work to pinned Luna or Terra models at their configured efforts, verifies the actual result, and uses a fresh Sol reviewer before handoff.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
+    "brandColor": "#0B1020",
     "capabilities": [
       "Interactive",
       "Write"
     ],
+    "composerIcon": "./skills/astral-orchestrator/assets/icon.png",
+    "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
       "Use Astral Orchestrator to complete this request and verify the result.",
       "Use Astral Orchestrator in Quick mode for this small change.",
