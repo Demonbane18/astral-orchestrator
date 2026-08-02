@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.2 — 2026-08-02
+
+### Changed
+
+- Added official plugin-directory icon metadata and brand color alongside the packaged
+  Astral Orchestrator logo.
+
 ## 3.1.1 — 2026-08-02
 
 ### Changed
