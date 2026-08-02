@@ -1,85 +1,52 @@
-# Implementation Plan: Project Pilot
+# Implementation Plan: Project Pilot v2
 
-## Overview
+## Goal
 
-Build a repository-local Codex marketplace containing one dependency-free plugin. The
-core skill will convert a request into a small work card, choose a proportional mode,
-perform or delegate the work, verify the result, and scale review depth with risk.
+Upgrade Project Pilot into a real model-routed orchestrator with Sol High in charge,
+Luna XHigh and Terra XHigh implementation lanes, and a fresh Sol High reviewer.
 
-## Architecture Decisions
-
-- Use `project-pilot` as neutral branding so recipients do not confuse this with the
-  original Sol Advisor project.
-- Preserve the original MIT notice and document the inspiration explicitly.
-- Replace hard model pins and separately installed custom agents with optional native
-  delegation and a compatible primary-session fallback.
-- Offer three human-readable modes: Quick, Guided (default), and Careful.
-- Keep the runtime skill concise; store detailed work/review templates in one-level references.
-- Test the plugin as data and behavior contracts rather than introducing a build system.
-
-## Dependency Order
+## Dependency order
 
 ```text
-Behavior contract tests
+Failing v2 contract tests
         |
-Marketplace + plugin scaffold
+Pinned agent profiles + safe installer
         |
-Core skill + reference templates
+Strict routing skill + runtime evidence
         |
-Setup/verification helpers
+Beginner setup, removal, and documentation
         |
-Plain-language docs + attribution
-        |
-Official validation + forward test
+Validation + local installation + new-task forward test
 ```
 
-## Task List
+## Checkpoints
 
-### Phase 1: Contract and scaffold
+### Contract
 
-- [x] Write failing tests for the required marketplace, manifest, workflow, safety, and docs contracts.
-- [x] Scaffold the repository marketplace and `project-pilot` plugin with the official helpers.
-- [x] Initialize the `project-pilot` skill with the official skill helper.
+- [x] Replace v1 fallback tests with exact route and profile tests.
+- [x] Confirm the new tests fail for missing v2 behavior.
 
-### Checkpoint: Foundation
+### Runtime
 
-- [x] The initial tests fail for missing implementation rather than test errors.
-- [x] Generated JSON parses and folder names match manifest names.
+- [x] Add namespaced Luna XHigh, Terra XHigh, and Sol High reviewer profiles.
+- [x] Add conflict-safe install, exact-check, and safe-remove behavior.
+- [x] Add allowlisted runtime evidence without an extra JSON package.
+- [x] Route work by complexity with strict no-substitution behavior.
 
-### Phase 2: Runtime workflow
+### Handoff
 
-- [x] Implement the concise core skill and mode/risk reference.
-- [x] Add work-card, delegation, verification, and fresh-review templates.
-- [x] Add dependency-free package verification.
+- [x] Update the setup helper and beginner documentation.
+- [x] Update specification, attribution, comparison, and changelog.
+- [ ] Run repository tests, package verification, and official validators.
+- [ ] Install v2 locally and confirm exact cached profiles.
+- [ ] Forward-test the workflow from a new task that discovers the custom roles.
 
-### Checkpoint: Runtime
+## Risks
 
-- [x] Tests pass for mode selection, safe fallback, and review honesty.
-- [x] Official skill and plugin validators pass.
-
-### Phase 3: Human handoff
-
-- [x] Add plain-language install, use, update, share, remove, and troubleshooting instructions.
-- [x] Add one-command local setup with a non-mutating dry run.
-- [x] Add attribution, license, design comparison, and improvement notes.
-- [x] Forward-test realistic Quick, Guided, and Careful requests in a fresh context.
-
-### Checkpoint: Complete
-
-- [x] Every success criterion in `docs/SPEC.md` is met.
-- [x] Tests and verification are clean from a fresh checkout layout.
-- [x] No placeholder metadata, secret, named-model dependency, or unexplained setup step remains.
-
-## Risks and Mitigations
-
-| Risk | Impact | Mitigation |
-|---|---|---|
-| Native agent types vary by Codex version | Medium | Detect availability and fall back without misrepresenting independence |
-| Simplification weakens the original's strict routing guarantees | Medium | State the tradeoff and retain risk-based verification/review gates |
-| Non-technical users still need an initial plugin install | Medium | Provide one setup command and a paste-ready install request for sharing |
-| Remote install commands need a future repository URL | Low | Keep local commands exact and mark publishing as the only remaining owner decision |
-| Derivative attribution is lost during sharing | High | Include the original copyright in `LICENSE` and a clear `NOTICE.md` |
-
-## Open Questions
-
-- No blocking questions. Publisher name and remote URL can be customized after the local package works.
+| Risk | Mitigation |
+|---|---|
+| Recipient lacks one required model | Preflight stops with a plain corrective action |
+| Existing custom profile shares a filename | Namespaced filenames and no-overwrite installer |
+| Host broadens reviewer sandbox | Inspect effective route and block Careful `ship` claims |
+| Runtime metadata format changes | Reject missing fields; never guess model identity |
+| Parallel workers conflict | Exact non-overlapping ownership or serial execution |

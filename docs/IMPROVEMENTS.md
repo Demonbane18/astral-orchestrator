@@ -2,92 +2,77 @@
 
 ## Executive assessment
 
-Sol Advisor has strong engineering discipline: explicit role ownership, verification
-of actual diffs, conflict-safe companion installation, and a fresh review gate. Its
-main weakness for broad sharing is operational weight. The workflow assumes specific
-model access, three separately installed custom-agent profiles, command-line tooling,
-runtime metadata inspection, and a final fresh review even for tiny changes.
+Project Pilot v2 now provides the core behavior the original Sol Advisor is built for:
+one strong orchestrator, two model-pinned implementation lanes, exact route evidence,
+bounded ownership, independent verification, and a fresh model-pinned reviewer.
 
-Project Pilot keeps the outcome-oriented parts and makes the guarantees proportional.
-That is easier to install, explain, and maintain, but it intentionally gives up strict
-proof that a particular model handled a particular role.
+The customization is mainly about usability. Project Pilot keeps Quick, Guided, and
+Careful language, uses namespaced profiles, gives non-technical users one setup command,
+and adds conflict-safe removal. It does not silently downgrade when the requested route
+is missing.
 
-## What changed
+## Route comparison
 
-| Area | Sol Advisor | Project Pilot | Why this is easier |
-|---|---|---|---|
-| Primary session | Requires a particular model and reasoning setting | Works with the current capable Codex session | No model picker prerequisite |
-| Implementation | Two pinned custom-agent profiles | Primary session or optional native implementation help | No companion files to install |
-| Review | A pinned custom reviewer for every deliverable | Risk-based fresh review; self-review is labeled honestly | Small work stays small |
-| Preflight | Exact file, role, model, effort, and runtime checks | Workspace, scope, risk, and verification check | Focuses on user-visible correctness |
-| Failure behavior | Stops when the required route cannot be proven | Falls back for routine work and clearly reports missing independence | More compatible across Codex versions |
-| Dependencies | Separate installer and command-line JSON processing | Plugin-only runtime; setup and checks use common local tools | Fewer failure points |
-| Language | Architecture and runtime terminology | Quick, Guided, Careful; Outcome, Done when, Boundaries, Checks | Explainable to non-technical users |
-| Review isolation | Attempts to observe host sandbox behavior | Requires behavioral read-only review and never overclaims it | Portable, with an explicit limitation |
+| Area | Sol Advisor | Project Pilot v2 |
+|---|---|---|
+| Main session | Sol with high reasoning | Sol High, verified before Guided/Careful work |
+| Focused lane | Luna with a pinned high reasoning setting | Luna XHigh for repeatable, fully specified work |
+| Context lane | Terra with a pinned high reasoning setting | Terra XHigh for context-heavy implementation |
+| Reviewer | Fresh Sol High, requested read-only | Fresh Sol High, requested read-only |
+| Routing proof | Native metadata plus allowlisted rollout inspection | Same guarantee with a Python standard-library inspector |
+| User controls | Architecture-oriented workflow | Quick, Guided, Careful modes |
+| Installation | Companion agent installer | Plugin setup plus conflict-safe profile installer |
+| Removal | Manual profile cleanup | `--remove` deletes only exact unmodified profiles |
+| Failure | Stop when strict preflight fails | Same; never silently substitute another lane |
 
-## Improvements made beyond simplification
+## Improvements beyond the original
 
-1. **Proportional modes.** The user can ask normally, choose a simple mode, or let risk
-   raise the safeguards automatically.
-2. **Explicit confirmation boundary.** Destructive, irreversible, credential-related,
-   external publishing, and production actions require clear authorization.
-3. **Honest fallback semantics.** Self-review is never presented as independent review;
-   Careful work remains review-incomplete when a fresh reviewer is unavailable.
-4. **Beginner-complete lifecycle.** The README covers install, first use, mode choice,
-   update, sharing, removal, and troubleshooting.
-5. **No fake metadata.** Publisher URLs are omitted until a real public location exists.
-6. **Portable contract tests.** Standard-library tests protect the packaging and safety
-   promises without introducing a project build system.
-7. **Clear derivative status.** The original copyright, license, source, and reviewed
-   revision are preserved and easy to find.
+1. **One beginner setup path.** `sh scripts/setup.sh` registers the marketplace,
+   installs all three profiles, and installs the plugin.
+2. **Safer lifecycle.** Existing different profiles are never overwritten, and modified
+   profiles are never removed automatically.
+3. **No extra JSON package.** The runtime inspector uses Python 3's standard library
+   instead of requiring `jq`.
+4. **Clear lane language.** Luna handles repeatable work; Terra handles context-heavy
+   work; Sol retains requirements, architecture, integration, and acceptance.
+5. **Proportional orchestration.** Quick intentionally avoids coordination overhead,
+   while Guided and Careful use exact pinned routes.
+6. **Honest host boundary.** The reviewer requests read-only access, but Project Pilot
+   records the effective sandbox and does not overclaim host-enforced isolation.
 
 ## Tradeoffs
 
-Project Pilot is the better default for general users, mixed Codex versions, and teams
-that value a low-friction workflow. Sol Advisor remains the stronger choice when exact
-model routing, reasoning settings, custom role files, and runtime-level routing evidence
-are themselves requirements.
+Strict routing requires recipients to have all three models and to start a new task after
+profile installation. That is less portable than Project Pilot v1's generic fallback,
+but it directly satisfies the requirement for a real model-routed orchestrator.
 
-Project Pilot does not prove model identity or operating-system-enforced review isolation.
-It proves what it can observe: the actual change set, verification output, review context,
-and whether the review was fresh or self-performed.
+Runtime rollout formats are host implementation details and may change. The inspector
+therefore rejects missing or inconsistent fields instead of guessing, and the skill can
+prefer trustworthy launch metadata when Codex exposes it directly.
 
 ## Recommended next improvements
 
 ### Before public sharing
 
 1. Choose the final publisher name and GitHub repository.
-2. Add the real repository and homepage fields to the plugin manifest.
-3. Test remote installation from a clean Codex profile, not only a local checkout.
-4. Tag the first release and keep version changes semantic.
+2. Test installation from a clean Codex profile and a remote GitHub checkout.
+3. Confirm all three models are available to the intended recipients.
+4. Tag v2.0.0 and keep future version changes semantic.
 
 ### Usability follow-up
 
-1. Observe three to five non-technical users installing and invoking the plugin.
-2. Record where they hesitate; shorten those steps rather than adding more explanation.
-3. Add a PowerShell setup helper if Windows users cannot rely on Codex-assisted install.
-4. Add an optional logo and screenshots only after the workflow itself tests well.
+1. Test setup and first use with three to five non-technical users.
+2. Add a PowerShell installer if Windows recipients need a terminal-free path.
+3. Add a small status command that explains missing profiles in plain language.
+4. Prefer public spawn metadata over rollout inspection when the host exposes every
+   required field consistently.
 
-### Advanced optional edition
+## Validation evidence
 
-If future plugin support can safely bundle custom roles, offer a separate advanced pack
-with strict role pins and stronger isolation checks. Keep it opt-in so the basic plugin
-does not regain the setup burden it was designed to remove.
-
-## Forward-test evidence
-
-The packaged skill was exercised in fresh agent contexts against disposable fixtures:
-
-1. **Quick:** corrected exactly two spelling errors, verified only those substitutions,
-   and labeled the handoff as self-reviewed.
-2. **Guided:** added a small Python summary function plus focused tests, preserved the
-   existing function, ran three passing tests, and reported the evidence plainly.
-3. **Careful:** encountered a production-like reset script, preserved the existing data,
-   and returned a confirmation question naming the exact file and replacement effect.
-
-The first Careful run revealed that a blocked agent could wait too long before returning
-control. The skill and risk guide now state that a blocking clarification ends the current
-turn and must be returned immediately; a regression test protects that behavior.
+The repository contract tests cover exact profile pins, conflict-safe installation and
+removal, allowlisted runtime evidence, route selection language, user confirmation
+boundaries, and beginner documentation. Final command and forward-test results are
+recorded here after each release candidate is exercised.
 
 ## Source reviewed
 

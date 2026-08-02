@@ -16,8 +16,10 @@ Keep the installed experience simple for people who do not write code.
 
 - Use plain language and explain unavoidable technical terms on first use.
 - Keep the core `SKILL.md` concise; put detailed templates in `references/`.
-- Do not require a named model, custom agent, external service, or extra package.
-- Treat multi-agent work as an optional enhancement with a same-session fallback.
+- Require Sol High as the orchestrator and the three namespaced custom-agent profiles
+  for Guided and Careful execution; never silently substitute a different route.
+- Keep Quick mode as the explicit single-session option for tiny work.
+- Use only built-in local tools at runtime; do not add an API key or external service.
 - Preserve the original Sol Advisor MIT notice and attribution.
 - Use Opera GX for browser testing. Do not use Google Chrome unless the user asks.
 

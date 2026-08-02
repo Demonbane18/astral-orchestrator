@@ -1,95 +1,79 @@
-# Spec: Project Pilot
+# Spec: Project Pilot v2
 
 ## Objective
 
-Create a neutral, beginner-friendly Codex plugin inspired by Sol Advisor. A person
-should be able to ask Project Pilot to build, fix, plan, or review work without knowing
-model names, agent configuration, shell scripting, or orchestration terminology.
+Create a beginner-friendly Codex plugin that provides real, observable multi-agent
+orchestration inspired by Sol Advisor. Sol High must lead the task, assign bounded work
+to Luna XHigh or Terra XHigh according to the work, integrate and verify the result,
+then use a fresh Sol High reviewer.
 
-The default experience should be safe and useful in one session. When native
-multi-agent tools are available, the skill may use them for focused implementation or
-fresh review. When they are unavailable, it must continue honestly in the primary
-session instead of blocking routine work.
+The user should not need to understand TOML files, runtime logs, or agent APIs. One setup
+command installs the plugin and three namespaced agent profiles. The workflow must stop
+when an exact required route cannot be proven; it must never pretend a fallback was the
+requested orchestration.
 
 ### Assumptions
 
-1. The target is the current Codex plugin format, not a Claude Code plugin.
-2. "Custom" means new neutral branding and a simplified workflow, not a line-for-line fork.
-3. Exact Sol, Terra, and Luna model access cannot be assumed for people receiving the plugin.
-4. The repository will be shareable as a Codex marketplace after the user publishes it.
-5. Publishing to a remote Git host is outside scope until the user chooses an account and repository.
-6. The MIT-licensed Sol Advisor source may be adapted as long as its notice is preserved.
+1. The target is the current Codex plugin and custom-agent format.
+2. The primary task can be started with `gpt-5.6-sol` and High reasoning.
+3. Recipients have access to `gpt-5.6-luna`, `gpt-5.6-terra`, and `gpt-5.6-sol`.
+4. Custom agents are installed to Codex's personal `agents` directory and discovered in
+   a newly started task.
+5. Publishing is outside scope until the user chooses a GitHub destination.
+6. The MIT-licensed Sol Advisor source may be adapted with preserved notice.
+
+## Route Contract
+
+| Responsibility | Required route |
+|---|---|
+| Requirements, architecture, decomposition, cross-lane integration | Sol High primary session |
+| Narrow, repeatable, fully specified execution | Luna XHigh |
+| Context-heavy implementation, debugging, component/external integration, refactoring | Terra XHigh |
+| Fresh final review | Sol High reviewer with requested read-only sandbox |
+
+Quick mode is the explicit exception: tiny, reversible work stays in the Sol High
+primary session. Guided and Careful work use pinned lanes whenever bounded execution
+exists.
 
 ## Tech Stack
 
 - Codex marketplace JSON and plugin manifest JSON
-- Markdown-based Codex skill
-- POSIX shell for local setup and verification helpers
-- Python 3 standard-library tests
-- No runtime packages, API keys, services, or build step
+- Markdown Codex skill and one-level reference files
+- Codex custom-agent TOML profiles
+- POSIX shell for setup, exact-copy installation, and verification
+- Python 3 standard library for tests and allowlisted runtime evidence
+- No API key, external service, analytics, network call, or background process
 
 ## Commands
 
 - Test: `python3 -m unittest discover -s tests -v`
 - Verify package: `sh plugins/project-pilot/scripts/verify.sh`
-- Check setup helper: `sh scripts/setup.sh --dry-run`
-- Official skill validation: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
-- Official plugin validation: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
+- Check setup: `sh scripts/setup.sh --dry-run`
+- Validate skill: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
+- Validate plugin: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
 
-## Project Structure
+## Safety and Failure Behavior
 
-- `.agents/plugins/marketplace.json` — shareable Codex marketplace catalog
-- `plugins/project-pilot/` — installable plugin package
-- `plugins/project-pilot/skills/project-pilot/` — concise runtime workflow and references
-- `plugins/project-pilot/scripts/verify.sh` — dependency-free package check
-- `scripts/setup.sh` — one-command local install/update helper
-- `tests/` — packaging and behavior-contract tests
-- `docs/` — contributor-facing rationale and comparison
-- `tasks/` — implementation plan and progress checklist
-
-## Content Style
-
-Prefer direct, observable language:
-
-```text
-Outcome: Add a working search box to the customer list.
-Done when: A user can search by name, clear the search, and existing tests pass.
-Safety: Do not change login, billing, or stored customer data.
-Checks: Run the focused tests and inspect the final diff.
-```
-
-Avoid unexplained labels such as "lane pin," "rollout metadata," or "commitment boundary."
-
-## Testing Strategy
-
-- Use standard-library unit tests to validate manifest fields, file layout, documentation,
-  mode names, safety gates, fallbacks, and attribution.
-- Use the repository verifier for JSON, shell syntax, and cross-file consistency.
-- Run the official Codex skill and plugin validators before handoff.
-- Forward-test realistic invocations in a fresh agent context after the package validates.
-
-## Boundaries
-
-- Always: keep installation reversible, report actual verification, preserve attribution,
-  and distinguish independent review from self-review.
-- Ask first: publishing, pushing, installing into global Codex configuration, destructive
-  actions, credentials, paid services, and consequential production changes.
-- Never: claim a particular model ran without evidence, require private session-log access,
-  silently skip a requested careful review, or overwrite unrelated user configuration.
+- Agent installation never overwrites a different file.
+- Agent removal deletes only exact, unmodified Project Pilot profiles.
+- Destructive, irreversible, credential, publishing, and production actions retain an
+  explicit user confirmation gate.
+- Each worker receives exact ownership and must preserve concurrent edits.
+- Agent reports are inspected and independently verified in the primary session.
+- Missing or mismatched role/model/effort evidence stops the route; no silent fallback.
+- Careful review cannot claim `ship` unless required read-only isolation is observed.
 
 ## Success Criteria
 
-1. One plugin install exposes one clearly named Project Pilot skill.
-2. The plugin has no custom-agent, named-model, `jq`, API-key, or service dependency.
-3. Quick, Guided, and Careful modes have clear routing and safety behavior.
-4. A non-technical reader can install, invoke, update, share, and remove it from the README.
-5. Optional delegation uses bounded ownership; absence of delegation has an honest fallback.
-6. Meaningful code changes receive verification, and risky changes receive a fresh review
-   when available or an explicit limitation when not.
-7. Repository tests, package verification, and official validators all pass.
-8. The original Sol Advisor copyright and MIT permission notice remain included.
+1. One setup command installs one plugin and exactly three namespaced profiles.
+2. Profiles pin Sol High, Luna XHigh, and Terra XHigh exactly as specified.
+3. The skill routes by work characteristics and parallelizes only non-overlapping cards.
+4. Runtime inspection emits only allowlisted route fields.
+5. A non-technical reader can install, invoke, update, share, troubleshoot, and remove it.
+6. Tests, package verification, and official validators pass.
+7. The original Sol Advisor copyright and MIT permission notice remain included.
 
 ## Open Questions
 
-- The final GitHub owner and repository URL are intentionally unset until the user chooses them.
-- The publisher display name can be personalized later without changing the workflow.
+- The final GitHub owner and repository URL remain unset until the user chooses them.
+- A PowerShell installer may be added after demand from Windows recipients is confirmed.

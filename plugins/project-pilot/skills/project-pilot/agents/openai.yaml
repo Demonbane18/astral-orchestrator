@@ -1,4 +1,4 @@
 interface:
   display_name: "Project Pilot"
-  short_description: "Simple, risk-aware delivery for any project"
-  default_prompt: "Use $project-pilot to complete this request safely and verify the result."
+  short_description: "Sol-led, model-routed delivery for any project"
+  default_prompt: "Use $project-pilot to orchestrate this request with the pinned lanes and verify the result."
