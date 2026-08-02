@@ -7,9 +7,9 @@ confirmation or a fresh review.
 
 | Mode | Best for | Planning | Agent route | Review |
 |---|---|---|---|---|
-| Quick | Small, obvious, reversible work | Mental or one sentence | Sol High only | Sol High self-review |
-| Guided | Normal project work | Compact work card | Luna XHigh or Terra XHigh for bounded execution | Fresh Sol High review after every worker-produced change |
-| Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes | Fresh Sol High review with observed read-only isolation |
+| Quick | Small, obvious, reversible work | Mental or one sentence | Sol at configured effort | Sol self-review at configured effort |
+| Guided | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
+| Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with observed read-only isolation |
 
 Guided is the default. A user can simply say “Use Project Pilot” without learning the
 mode system.
@@ -36,7 +36,8 @@ Typical signs:
 - A bug whose root cause or regression surface needs investigation
 - Moderate refactoring, dependencies, or integration work
 
-Use Guided. Every worker-produced change receives a fresh Sol High review. Answer-only
+Use Guided. Every worker-produced change receives a fresh Sol review at the configured
+reviewer effort. Answer-only
 or no-change Guided work may use a clearly labeled primary-session self-review.
 
 ### High risk
@@ -77,8 +78,9 @@ instructed to remain behaviorally read-only.
   independent review as incomplete. Do not silently substitute self-review.
 - If Careful mode requires hard read-only isolation and it cannot be observed, stop the
   review and report the limitation.
-- Quick work and truly trivial answer-only Guided work may use a clearly labeled Sol High
-  self-review because no independent implementation was performed.
+- Quick work and truly trivial answer-only Guided work may use a clearly labeled Sol
+  self-review at the configured orchestrator effort because no independent implementation
+  was performed.
 
 ## Proportionality checks
 

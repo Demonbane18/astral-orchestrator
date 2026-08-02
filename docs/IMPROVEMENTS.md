@@ -2,7 +2,7 @@
 
 ## Executive assessment
 
-Project Pilot v2 now provides the core behavior the original Sol Advisor is built for:
+Project Pilot v2.1 now provides the core behavior the original Sol Advisor is built for:
 one strong orchestrator, two model-pinned implementation lanes, exact route evidence,
 bounded ownership, independent verification, and a fresh model-pinned reviewer.
 
@@ -15,15 +15,16 @@ is missing.
 
 | Area | Sol Advisor | Project Pilot v2 |
 |---|---|---|
-| Main session | Sol with high reasoning | Sol High, verified before Guided/Careful work |
-| Focused lane | Luna with a pinned high reasoning setting | Luna XHigh for repeatable, fully specified work |
-| Context lane | Terra with a pinned high reasoning setting | Terra XHigh for context-heavy implementation |
-| Reviewer | Fresh Sol High, requested read-only | Fresh Sol High, requested read-only |
+| Main session | Sol with high reasoning | Sol at configured effort; High by default |
+| Focused lane | Luna with a pinned high reasoning setting | Luna at configured effort; XHigh by default |
+| Context lane | Terra with a pinned high reasoning setting | Terra at configured effort; XHigh by default |
+| Reviewer | Fresh Sol High, requested read-only | Fresh Sol at configured effort; High by default and requested read-only |
 | Routing proof | Native metadata plus allowlisted rollout inspection | Same guarantee with a Python standard-library inspector |
 | User controls | Architecture-oriented workflow | Quick, Guided, Careful modes |
 | Installation | Companion agent installer | Plugin setup plus conflict-safe profile installer |
 | Removal | Manual profile cleanup | `--remove` deletes only exact unmodified profiles |
 | Failure | Stop when strict preflight fails | Same; never silently substitute another lane |
+| Effort tuning | Profile-oriented | One command; persistent per-lane settings |
 
 ## Improvements beyond the original
 
@@ -42,6 +43,9 @@ is missing.
 7. **Host-compatible exact routing.** When a Codex build cannot select native custom
    agents, a bundled launcher starts a fresh process with the same pinned model, effort,
    role instructions, and sandbox instead of falling back to a generic worker.
+8. **Upgrade-resistant effort controls.** Users can tune all four lanes without editing
+   profiles. Custom values force the exact-process route and unsupported values fail
+   clearly instead of being downgraded.
 
 ## Tradeoffs
 
@@ -60,7 +64,7 @@ prefer trustworthy launch metadata when Codex exposes it directly.
 1. Choose the final publisher name and GitHub repository.
 2. Test installation from a clean Codex profile and a remote GitHub checkout.
 3. Confirm all three models are available to the intended recipients.
-4. Tag v2.0.0 and keep future version changes semantic.
+4. Tag v2.1.0 and keep future version changes semantic.
 
 ### Usability follow-up
 
@@ -72,11 +76,12 @@ prefer trustworthy launch metadata when Codex exposes it directly.
 
 ## Validation evidence
 
-The 2026-08-02 release candidate passed 19 repository contract tests, package
+The 2026-08-02 v2.1 release candidate passed 23 repository contract tests, package
 verification, setup dry-run, whitespace checks, and the official Codex skill and plugin
 validators. The tests cover exact profile pins, conflict-safe installation and removal,
 allowlisted runtime evidence, exact-process command construction, bounded prompt
-handling, route selection, confirmation boundaries, and beginner documentation.
+handling, per-lane effort configuration and validation, route selection, confirmation
+boundaries, and beginner documentation.
 
 Forward testing on Codex CLI 0.144.5 showed why the compatibility route is necessary: a
 generic subagent given a Luna-looking task name still ran Sol High. Project Pilot rejected
@@ -85,9 +90,11 @@ that result. Separate launcher sessions then proved Luna XHigh with workspace-wr
 (`019fc04c-42b7-7fc0-91df-2d6f10e36677`), and Sol High with read-only review. The final
 fresh Sol High review (`019fc05a-b89d-7fb2-91c9-2960cb3f3077`) returned `ship`.
 
-The locally installed cache is `2.0.0+codex.20260802025027`. Its launcher, skill, and
-routing guide byte-match the reviewed source; all three installed profiles also match
-their shipped files exactly.
+The locally installed cache is `2.1.0+codex.20260802031330`. Its launcher, effort
+configuration scripts, skill, and routing guide byte-match the reviewed source; all
+three installed profiles also match their shipped files exactly. The separate effort
+settings file remains absent, so installation preserved the defaults without writing
+global effort choices.
 
 ## Source reviewed
 

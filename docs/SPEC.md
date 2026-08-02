@@ -1,11 +1,11 @@
-# Spec: Project Pilot v2
+# Spec: Project Pilot v2.1
 
 ## Objective
 
 Create a beginner-friendly Codex plugin that provides real, observable multi-agent
-orchestration inspired by Sol Advisor. Sol High must lead the task, assign bounded work
-to Luna XHigh or Terra XHigh according to the work, integrate and verify the result,
-then use a fresh Sol High reviewer.
+orchestration inspired by Sol Advisor. A Sol task must lead, assign bounded work to Luna
+or Terra according to the work, integrate and verify the result, then use a fresh Sol
+reviewer. The user can tune each lane's effort without editing agent profiles.
 
 The user should not need to understand TOML files, runtime logs, or agent APIs. One setup
 command installs the plugin and three namespaced agent profiles. The workflow must stop
@@ -15,7 +15,8 @@ requested orchestration.
 ### Assumptions
 
 1. The target is the current Codex plugin and custom-agent format.
-2. The primary task can be started with `gpt-5.6-sol` and High reasoning.
+2. The primary task can be started with `gpt-5.6-sol` and the configured reasoning
+   effort; High is the default.
 3. Recipients have access to `gpt-5.6-luna`, `gpt-5.6-terra`, and `gpt-5.6-sol`.
 4. Custom agents are installed to Codex's personal `agents` directory and discovered in
    a newly started task.
@@ -28,14 +29,18 @@ requested orchestration.
 
 | Responsibility | Required route |
 |---|---|
-| Requirements, architecture, decomposition, cross-lane integration | Sol High primary session |
-| Narrow, repeatable, fully specified execution | Luna XHigh |
-| Context-heavy implementation, debugging, component/external integration, refactoring | Terra XHigh |
-| Fresh final review | Sol High reviewer with requested read-only sandbox |
+| Requirements, architecture, decomposition, cross-lane integration | Sol at configured effort (High default) |
+| Narrow, repeatable, fully specified execution | Luna at configured effort (XHigh default) |
+| Context-heavy implementation, debugging, component/external integration, refactoring | Terra at configured effort (XHigh default) |
+| Fresh final review | Sol at configured reviewer effort (High default), with requested read-only sandbox |
 
-Quick mode is the explicit exception: tiny, reversible work stays in the Sol High
-primary session. Guided and Careful work use pinned lanes whenever bounded execution
-exists.
+The default efforts are Sol High, Luna XHigh, Terra XHigh, and reviewer Sol High.
+Per-lane overrides are stored outside the plugin cache. A custom worker or reviewer
+effort uses the exact-process launcher so a native profile cannot override it.
+
+Quick mode is the explicit exception: tiny, reversible work stays in the Sol primary at
+its configured effort. Guided and Careful work use pinned lanes whenever bounded
+execution exists.
 
 ## Tech Stack
 
@@ -65,6 +70,7 @@ exists.
 - Each worker receives exact ownership and must preserve concurrent edits.
 - Agent reports are inspected and independently verified in the primary session.
 - Missing or mismatched role/model/effort evidence stops the route; no silent fallback.
+- Unsupported effort settings fail before a delegated Codex process starts.
 - Careful review cannot claim `ship` unless required read-only isolation is observed.
 
 ## Success Criteria
@@ -76,6 +82,7 @@ exists.
 5. A non-technical reader can install, invoke, update, share, troubleshoot, and remove it.
 6. Tests, package verification, and official validators pass.
 7. The original Sol Advisor copyright and MIT permission notice remain included.
+8. A non-technical user can show, change, and reset every lane's effort independently.
 
 ## Open Questions
 

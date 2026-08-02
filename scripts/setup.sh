@@ -73,5 +73,7 @@ codex plugin add project-pilot@project-pilot
 printf '%s\n' \
   '' \
   'Project Pilot and its three model-routed agents are installed.' \
-  'Start a new Codex task with gpt-5.6-sol and High reasoning, then say:' \
-  'Use Project Pilot to orchestrate this request and verify every lane.'
+  'Start a new Codex task with gpt-5.6-sol and your configured effort (High by default), then say:' \
+  'Use Project Pilot to orchestrate this request and verify every lane.' \
+  '' \
+  'Optional: run sh scripts/configure-effort.sh --show to view effort settings.'

@@ -5,7 +5,7 @@ used the intended lanes, not merely to request them.
 
 ## Exact route contract
 
-| Role | Agent type | Required model | Effort | Best work |
+| Role | Agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
 | Orchestrator | Primary session | `gpt-5.6-sol` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
 | Focused worker | `project_pilot_luna_implementer` | `gpt-5.6-luna` | `xhigh` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
@@ -15,12 +15,20 @@ used the intended lanes, not merely to request them.
 Do not silently substitute a built-in agent, a different custom role, model, or effort.
 The main session owns lane selection and remains accountable for the combined result.
 
+The effective values come from
+`${CODEX_HOME:-~/.codex}/project-pilot/effort-levels.toml`. When the file is absent,
+use the defaults in the table. Supported setting names are `minimal`, `low`, `medium`,
+`high`, `xhigh`, `max`, and `ultra`; the last two are model- and account-dependent.
+Never silently downgrade a value that Codex rejects.
+
 ## Primary-session preflight
 
 Before execution in any mode:
 
-1. Confirm observable runtime evidence identifies the primary model as `gpt-5.6-sol`
-   and reasoning as `high`. If the host exposes no primary metadata, obtain one explicit
+1. Resolve `../../scripts/configure-effort.py` relative to this skill and run
+   `python3 configure-effort.py --show --json`. Confirm the configured orchestrator effort
+   matches observable runtime evidence for the `gpt-5.6-sol` primary model. If the host
+   exposes no primary metadata, obtain one explicit
    user confirmation and label it user-supplied rather than observed.
 2. Read applicable workspace instructions and inspect the current change state.
 3. Define the work card and identify whether worker cards can have non-overlapping
@@ -37,11 +45,11 @@ Before Guided or Careful execution, additionally:
 If the primary route is neither observable nor explicitly user-confirmed, or if step 5
 or 6 fails, stop before implementation. Explain the missing item and the smallest
 corrective action: run `sh scripts/setup.sh --refresh` from the Project Pilot repository
-when profiles are missing or different, then start a new task with Sol High and High
-reasoning. Do not fall back to another route.
+when profiles are missing or different, then start a new task with Sol and the configured
+orchestrator effort. Do not fall back to another route.
 
-Quick mode intentionally uses only the verified Sol High primary session and does not
-need custom worker availability.
+Quick mode intentionally uses only the verified Sol primary session at the configured
+orchestrator effort and does not need custom worker availability.
 
 ## Lane decision
 
@@ -60,15 +68,17 @@ true:
 - interfaces, integrations, or moderate refactors require careful judgment;
 - the change has a wider but still bounded regression surface.
 
-Keep the decision in Sol High when requirements, architecture, safety boundaries,
-public interfaces, or acceptance criteria are unsettled. Sol may settle the decision,
-then issue bounded execution to Luna or Terra.
+Keep the decision in the Sol primary session at the configured orchestrator effort when
+requirements, architecture, safety boundaries, public interfaces, or acceptance criteria
+are unsettled. Sol may settle the decision, then issue bounded execution to Luna or Terra.
 
 ## Choose the execution mechanism
 
-Prefer a native custom agent when the collaboration tool exposes an explicit
-`agent_type` field and the exact Project Pilot role. Do not treat a task name as an agent
-type; current hosts can otherwise create a default Sol agent under a Luna-looking name.
+Prefer a native custom agent only when the collaboration tool exposes an explicit
+`agent_type` field, the exact Project Pilot role, and its native profile effort matches
+the configured value. Do not treat a task name as an agent type; current hosts can
+otherwise create a default Sol agent under a Luna-looking name. A custom effort that
+differs from the native profile always uses the exact-process mechanism.
 
 When native selection is unavailable, use the **exact-process** mechanism. Resolve
 `../../scripts/run-agent.py` relative to this skill, write the complete standalone work
@@ -78,10 +88,12 @@ packet to a private temporary regular file, then run:
 python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt-file <packet>
 ```
 
-The launcher reads the shipped profile, pins its model and effort on `codex exec`, injects
-the profile's developer instructions that forbid further delegation, and selects
-workspace-write for workers or read-only for the reviewer. Remove only the exact
-temporary packet after the process exits. A non-zero exit blocks the lane.
+The launcher reads the shipped profile, reads the effective effort settings, pins the
+model and configured effort on `codex exec`, injects the profile's developer
+instructions that forbid further delegation, and selects workspace-write for workers
+or read-only for the reviewer. Its evidence marks whether the effort is the default and
+whether the native profile is compatible. Remove only the exact temporary packet after
+the process exits. A non-zero exit blocks the lane.
 
 ## Spawn and runtime evidence
 
@@ -97,7 +109,7 @@ After launch, collect runtime evidence showing:
   exact role;
 - the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
-- `effort` equals the role's required effort;
+- `effort` equals the role's configured effort;
 - for the reviewer, the sandbox policy is `read-only` when Careful mode requires hard
   isolation.
 

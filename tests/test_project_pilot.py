@@ -24,6 +24,9 @@ AGENTS = PLUGIN / "agents"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
 RUN_AGENT = PLUGIN / "scripts/run-agent.py"
+CONFIGURE_EFFORT = PLUGIN / "scripts/configure-effort.py"
+EFFORT_SETTINGS = PLUGIN / "scripts/effort_settings.py"
+CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
 
 
 def read(path: Path) -> str:
@@ -401,6 +404,8 @@ class SkillContractTests(unittest.TestCase):
                         str(workdir),
                         "--prompt-file",
                         str(prompt),
+                        "--settings-file",
+                        str(Path(directory) / "missing-effort-levels.toml"),
                         "--dry-run",
                     ],
                     cwd=ROOT,
@@ -457,6 +462,8 @@ class SkillContractTests(unittest.TestCase):
                     str(workdir),
                     "--prompt-file",
                     str(prompt),
+                    "--settings-file",
+                    str(Path(directory) / "missing-effort-levels.toml"),
                 ]
                 with (
                     mock.patch.object(sys, "argv", argv),
@@ -499,6 +506,186 @@ class SkillContractTests(unittest.TestCase):
                 self.assertIn("PROJECT_PILOT_ROUTE ", route_header)
                 self.assertNotIn(prompt_text.strip(), route_header)
                 self.assertNotIn(profile["developer_instructions"], route_header)
+
+    def test_effort_configurator_round_trips_partial_changes_and_reset(self):
+        with tempfile.TemporaryDirectory() as directory:
+            settings = Path(directory) / "project-pilot" / "effort-levels.toml"
+
+            configured = subprocess.run(
+                [
+                    "python3",
+                    str(CONFIGURE_EFFORT),
+                    "--settings-file",
+                    str(settings),
+                    "--orchestrator",
+                    "medium",
+                    "--luna",
+                    "low",
+                    "--terra",
+                    "max",
+                    "--reviewer",
+                    "ultra",
+                    "--json",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                configured.returncode, 0, configured.stdout + configured.stderr
+            )
+            self.assertEqual(
+                json.loads(configured.stdout)["effort"],
+                {
+                    "orchestrator": "medium",
+                    "luna": "low",
+                    "terra": "max",
+                    "reviewer": "ultra",
+                },
+            )
+
+            partial = subprocess.run(
+                [
+                    "python3",
+                    str(CONFIGURE_EFFORT),
+                    "--settings-file",
+                    str(settings),
+                    "--luna",
+                    "xhigh",
+                    "--json",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(partial.returncode, 0, partial.stdout + partial.stderr)
+            self.assertEqual(
+                json.loads(partial.stdout)["effort"],
+                {
+                    "orchestrator": "medium",
+                    "luna": "xhigh",
+                    "terra": "max",
+                    "reviewer": "ultra",
+                },
+            )
+
+            reset = subprocess.run(
+                [
+                    "python3",
+                    str(CONFIGURE_EFFORT),
+                    "--settings-file",
+                    str(settings),
+                    "--reset",
+                    "--json",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(reset.returncode, 0, reset.stdout + reset.stderr)
+            self.assertEqual(
+                json.loads(reset.stdout)["effort"],
+                {
+                    "orchestrator": "high",
+                    "luna": "xhigh",
+                    "terra": "xhigh",
+                    "reviewer": "high",
+                },
+            )
+            self.assertTrue(settings.is_file())
+
+    def test_process_launcher_uses_configured_effort_and_marks_native_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            settings = root / "effort-levels.toml"
+            settings.write_text(
+                """[effort]
+orchestrator = "medium"
+luna = "low"
+terra = "minimal"
+reviewer = "xhigh"
+""",
+                encoding="utf-8",
+            )
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+
+            for role, effort in {
+                "luna": "low",
+                "terra": "minimal",
+                "reviewer": "xhigh",
+            }.items():
+                result = subprocess.run(
+                    [
+                        "python3",
+                        str(RUN_AGENT),
+                        "--role",
+                        role,
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--settings-file",
+                        str(settings),
+                        "--dry-run",
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                evidence = json.loads(result.stdout)
+                self.assertEqual(evidence["effort"], effort)
+                self.assertEqual(evidence["effort_source"], "custom")
+                self.assertFalse(evidence["native_profile_compatible"])
+
+    def test_invalid_effort_settings_fail_before_a_process_starts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+
+            for contents, expected_error in (
+                (
+                    "[effort]\nluna = \"impossible\"\n",
+                    "unsupported effort",
+                ),
+                (
+                    "[effort]\nunknown_lane = \"high\"\n",
+                    "unknown effort lane",
+                ),
+            ):
+                settings = root / "effort-levels.toml"
+                settings.write_text(contents, encoding="utf-8")
+                result = subprocess.run(
+                    [
+                        "python3",
+                        str(RUN_AGENT),
+                        "--role",
+                        "luna",
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--settings-file",
+                        str(settings),
+                        "--dry-run",
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(expected_error, result.stderr.lower())
 
     def test_risk_and_destructive_actions_are_gated(self):
         skill = read(SKILL).lower()
@@ -565,6 +752,35 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("--remove", readme)
         self.assertIn("cannot grant model access", readme)
         self.assertIn("codex plugin list --marketplace project-pilot", readme)
+        self.assertIn("tune the effort levels", readme)
+        self.assertIn("configure-effort.sh", readme)
+        self.assertIn("minimal", readme)
+        self.assertIn("ultra", readme)
+        self.assertIn("model-dependent", readme)
+
+    def test_effort_tools_are_packaged_and_routing_respects_custom_values(self):
+        self.assertTrue(CONFIGURE_EFFORT.is_file())
+        self.assertTrue(EFFORT_SETTINGS.is_file())
+        self.assertTrue(CONFIGURE_EFFORT_WRAPPER.is_file())
+
+        routing = read(ROUTING).lower()
+        self.assertIn("effort-levels.toml", routing)
+        self.assertIn("configured orchestrator effort", routing)
+        self.assertIn("native profile", routing)
+        self.assertIn("exact-process", routing)
+        self.assertIn("custom effort", routing)
+        self.assertNotIn("sol high primary session", routing)
+
+        self.assertIn("configured effort", read(MODES).lower())
+        self.assertIn("configured effort", read(ROOT / "AGENTS.md").lower())
+        self.assertIn(
+            "configured efforts",
+            load_json(MANIFEST)["interface"]["longDescription"].lower(),
+        )
+        self.assertIn(
+            "23 repository contract tests",
+            read(ROOT / "docs/IMPROVEMENTS.md").lower(),
+        )
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"

@@ -14,6 +14,17 @@ import tomllib
 from pathlib import Path
 from typing import NoReturn
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from effort_settings import (  # noqa: E402
+    DEFAULT_EFFORTS,
+    EffortSettingsError,
+    default_settings_path,
+    load_efforts,
+)
+
 
 ROLE_CONTRACTS = {
     "luna": {
@@ -99,6 +110,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workdir", required=True)
     parser.add_argument("--prompt-file", required=True)
     parser.add_argument(
+        "--settings-file",
+        type=Path,
+        default=default_settings_path(),
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Validate and print allowlisted route settings without starting Codex.",
@@ -111,8 +128,7 @@ def main() -> int:
         fail("Python 3.11 or newer is required.")
 
     args = parse_args()
-    script_dir = Path(__file__).resolve().parent
-    profile_dir = script_dir.parent / "agents"
+    profile_dir = SCRIPT_DIR.parent / "agents"
     contract = ROLE_CONTRACTS[args.role]
     profile_path = regular_file(profile_dir / contract["filename"], "agent profile")
 
@@ -133,6 +149,12 @@ def main() -> int:
     if not isinstance(instructions, str) or not instructions.strip():
         fail(f"{profile_path.name} has no developer instructions")
 
+    try:
+        efforts, settings_file_present = load_efforts(args.settings_file)
+    except EffortSettingsError as error:
+        fail(str(error))
+    configured_effort = efforts[args.role]
+
     prompt_path = Path(args.prompt_file).expanduser()
     prompt = read_prompt(prompt_path)
     prompt_bytes = len(prompt)
@@ -145,7 +167,14 @@ def main() -> int:
         "role": args.role,
         "agent_name": contract["agent_name"],
         "model": contract["model"],
-        "effort": contract["effort"],
+        "effort": configured_effort,
+        "effort_source": (
+            "default"
+            if configured_effort == DEFAULT_EFFORTS[args.role]
+            else "custom"
+        ),
+        "native_profile_compatible": configured_effort == contract["effort"],
+        "settings_file_present": settings_file_present,
         "sandbox": contract["sandbox"],
         "workdir": str(workdir),
         "prompt_bytes": prompt_bytes,
@@ -164,7 +193,7 @@ def main() -> int:
         "--model",
         contract["model"],
         "-c",
-        f"model_reasoning_effort={json.dumps(contract['effort'])}",
+        f"model_reasoning_effort={json.dumps(configured_effort)}",
         "-c",
         f"developer_instructions={json.dumps(instructions)}",
         "--sandbox",

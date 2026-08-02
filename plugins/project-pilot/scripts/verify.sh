@@ -19,9 +19,12 @@ agent_dir=$plugin_dir/agents
 installer=$plugin_dir/scripts/install-agents.sh
 inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
 launcher=$plugin_dir/scripts/run-agent.py
+effort_settings=$plugin_dir/scripts/effort_settings.py
+effort_configurator=$plugin_dir/scripts/configure-effort.py
+effort_wrapper=$repo_root/scripts/configure-effort.sh
 marketplace=$repo_root/.agents/plugins/marketplace.json
 
-for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher"; do
+for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher" "$effort_settings" "$effort_configurator" "$effort_wrapper"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
@@ -136,6 +139,8 @@ PY
 sh -n "$0"
 sh -n "$installer"
 sh -n "$inspector"
+sh -n "$effort_wrapper"
 python3 "$launcher" --help >/dev/null
+python3 "$effort_configurator" --help >/dev/null
 
 printf '%s\n' 'Project Pilot verification passed.'

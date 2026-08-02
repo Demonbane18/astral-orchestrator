@@ -1,13 +1,14 @@
 ---
 name: project-pilot
-description: "Orchestrate project work with a Sol High lead, pinned Luna XHigh and Terra XHigh implementation lanes, and a fresh Sol High reviewer. Use when the user invokes Project Pilot, asks for real multi-agent delegation, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
+description: "Orchestrate project work with a Sol lead, model-pinned Luna and Terra implementation lanes, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Project Pilot, asks for real multi-agent delegation, wants to change Project Pilot effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
 ---
 
 # Project Pilot
 
-Own the result from request to verified handoff. Keep Sol High accountable for planning,
-routing, integration, and final decisions; use pinned workers for bounded execution; and
-keep the process understandable to a non-technical user.
+Own the result from request to verified handoff. Keep the Sol primary at its configured
+effort accountable for planning, routing, integration, and final decisions; use pinned
+workers for bounded execution; and keep the process understandable to a non-technical
+user.
 
 Read [references/modes-and-risk.md](references/modes-and-risk.md) for mode, risk, and
 confirmation decisions. Before spawning any lane, read
@@ -17,13 +18,15 @@ delegating or reviewing, read
 
 ## 1. Choose the mode and risk
 
-- **Quick** — tiny, reversible, low-risk work with an obvious solution. Sol High works
-  directly and self-reviews; no worker is spawned.
+- **Quick** — tiny, reversible, low-risk work with an obvious solution. The Sol primary
+  works directly at its configured effort and self-reviews; no worker is spawned.
 - **Guided (default)** — normal feature, fix, content, configuration, or project work.
-  Sol High routes bounded execution to Luna XHigh or Terra XHigh and integrates it.
+  Sol routes bounded execution to Luna or Terra at their configured effort and integrates
+  it.
 - **Careful** — high-impact, hard-to-reverse, security-sensitive, financial, privacy,
   production, migration, or explicitly thorough work. Use visible planning, strict
-  confirmation gates, pinned implementation lanes, and a fresh Sol High review.
+  confirmation gates, pinned implementation lanes, and a fresh Sol review at the
+  configured reviewer effort.
 
 Honor an explicit mode unless its safeguards are too weak for the observed risk. Raise
 the safeguards when necessary and explain why in one sentence. Never lower Careful
@@ -31,22 +34,32 @@ without permission.
 
 ## 2. Prove the orchestration preflight
 
-Project Pilot v2 uses these exact roles:
+Project Pilot v2 uses these exact models. Their default efforts are:
 
 - main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
 - focused worker: `project_pilot_luna_implementer` (Luna XHigh);
 - context-heavy worker: `project_pilot_terra_implementer` (Terra XHigh);
 - fresh reviewer: `project_pilot_sol_reviewer` (Sol High, requested read-only).
 
-For every mode, verify that the primary session is Sol High. Prefer observable runtime
-metadata. If the host does not expose it, ask the user once to confirm that this task was
-started with `gpt-5.6-sol` and High reasoning; record that as **user-confirmed**, not
-observed evidence. For Guided and Careful work, also run the bundled profile installer's
-exact `--check`. Prefer the three named native custom roles when the collaboration tool
-exposes an `agent_type` selector. Otherwise use the bundled exact-process launcher,
-which starts the same pinned models and role instructions as separate Codex processes.
+Resolve the bundled `../../scripts/configure-effort.py` and run it with `--show --json`
+to obtain the effective effort for all four lanes. Missing settings mean the defaults
+above. For every mode, verify that the primary session is `gpt-5.6-sol` at the configured
+orchestrator effort. Prefer observable runtime metadata. If the host does not expose it,
+ask the user once to confirm the model and effort; record that as **user-confirmed**, not
+observed evidence. A changed orchestrator setting applies to a new task, not the task
+already running.
+
+For Guided and Careful work, also run the bundled profile installer's exact `--check`.
+Use a named native custom role only when its pinned profile effort equals the configured
+effort. A custom worker or reviewer effort must use the exact-process launcher, which
+starts the pinned model with that configured effort and the shipped role instructions.
 If profiles differ or neither route can run, tell the user to rerun setup. A blocking
-preflight ends the current turn.
+preflight ends the current turn. Never silently lower an unsupported effort.
+
+When the user explicitly asks to show or change effort settings, run the configuration
+script. Preserve unspecified lanes and report the resulting four values. Use `--reset`
+only when the user asks to restore defaults. Explain that `max` and `ultra` are
+model- and account-dependent.
 
 Do not silently substitute a built-in or differently configured agent. Give every lane
 a complete standalone work packet. For a native lane, use `fork_turns: "none"`. For an
@@ -71,18 +84,20 @@ return one direct question immediately. Do not wait silently in the same turn.
 
 For Guided or Careful work, split execution into the fewest useful non-overlapping work
 cards. Keep requirements, architecture, task decomposition, acceptance decisions, and
-cross-lane integration in the Sol High primary session.
+cross-lane integration in the Sol primary session at its configured effort.
 
 ## 4. Route bounded execution
 
 Select each lane by the work, never by prestige:
 
-- Use Luna XHigh for narrow, repeatable, fully specified, or mechanical work.
-- Use Terra XHigh for normal implementation that is context-heavy, implements a
+- Use Luna at its configured effort for narrow, repeatable, fully specified, or mechanical
+  work.
+- Use Terra at its configured effort for normal implementation that is context-heavy, implements a
   component or external integration, is moderately ambiguous, or needs judgment inside
   a settled architecture.
-- Keep work in Sol High when it changes requirements, architecture, safety boundaries,
-  or acceptance decisions. Settle those decisions before delegating execution.
+- Keep work in the Sol primary when it changes requirements, architecture, safety
+  boundaries, or acceptance decisions. Settle those decisions before delegating
+  execution.
 
 Give every worker the complete implementation contract from the template: outcome,
 ownership, done-when conditions, interfaces and boundaries, and exact checks. State
@@ -109,10 +124,11 @@ pinned lane, rerun affected checks, and inspect the result again.
 
 ## 6. Require the right review
 
-- **Quick:** Sol High self-review of the actual change and evidence.
+- **Quick:** Sol self-review at the configured orchestrator effort using the actual
+  change and evidence.
 - **Guided:** use a new `project_pilot_sol_reviewer` native lane or reviewer process after
   every worker-produced change. For a no-change or answer-only request with no worker,
-  label Sol High self-review plainly.
+  label primary-session Sol self-review plainly.
 - **Careful:** always use the exact Sol reviewer lane, and require observed read-only
   isolation before accepting its independent review.
 
@@ -120,7 +136,7 @@ Give the fresh reviewer only the outcome, acceptance conditions, boundaries, com
 change set, and verification evidence. Accept exactly one verdict: **ship**,
 **fix-first**, or **rethink**. A fix invalidates the old verdict; verify again and request
 a new fresh reviewer, never a follow-up to the earlier reviewer. A `rethink` verdict
-returns architecture or scope decisions to Sol High and may require user direction.
+returns architecture or scope decisions to the Sol primary and may require user direction.
 
 If the reviewer route or required isolation cannot be proven, stop and report review
 as incomplete. Do not replace it with self-review or claim an independent review.
