@@ -438,6 +438,8 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("install-agents.sh", result.stdout)
         self.assertIn("DRY RUN", result.stdout)
         self.assertIn("command -v python3", setup_text)
+        self.assertIn("sys.version_info >= (3, 11)", setup_text)
+        self.assertIn("python 3.11", read(ROOT / "README.md").lower())
 
     def test_original_license_and_attribution_are_preserved(self):
         license_text = read(ROOT / "LICENSE")

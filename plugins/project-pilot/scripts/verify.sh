@@ -24,7 +24,8 @@ for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installe
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
-command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for repository verification."
+command -v python3 >/dev/null 2>&1 || fail "Python 3.11 or newer is required for repository verification."
+python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)' >/dev/null 2>&1 || fail "Python 3.11 or newer is required for repository verification."
 
 python3 - "$manifest" "$skill" "$modes" "$templates" "$routing" "$agent_dir" "$marketplace" <<'PY'
 import json

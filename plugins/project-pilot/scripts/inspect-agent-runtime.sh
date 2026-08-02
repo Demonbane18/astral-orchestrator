@@ -78,7 +78,8 @@ if [ -z "$sessions_dir" ]; then
 fi
 
 [ -d "$sessions_dir" ] || fail "sessions directory is unavailable: $sessions_dir"
-command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for route inspection."
+command -v python3 >/dev/null 2>&1 || fail "Python 3.11 or newer is required for route inspection."
+python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)' >/dev/null 2>&1 || fail "Python 3.11 or newer is required for route inspection."
 
 python3 - "$sessions_dir" "$selector_kind" "$selector_value" "$since_epoch" <<'PY'
 import json

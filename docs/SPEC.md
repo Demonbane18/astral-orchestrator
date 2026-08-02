@@ -41,7 +41,7 @@ exists.
 - Markdown Codex skill and one-level reference files
 - Codex custom-agent TOML profiles
 - POSIX shell for setup, exact-copy installation, and verification
-- Python 3 standard library for tests and allowlisted runtime evidence
+- Python 3.11+ standard library for tests and allowlisted runtime evidence
 - No API key, external service, analytics, network call, or background process
 
 ## Commands

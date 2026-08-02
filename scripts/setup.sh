@@ -60,7 +60,8 @@ if [ "$mode" = dry-run ]; then
 fi
 
 command -v codex >/dev/null 2>&1 || fail "the codex command is unavailable; install or update Codex first."
-command -v python3 >/dev/null 2>&1 || fail "Python 3 is required for safe model-route inspection."
+command -v python3 >/dev/null 2>&1 || fail "Python 3.11 or newer is required."
+python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)' >/dev/null 2>&1 || fail "Python 3.11 or newer is required."
 
 if [ "$mode" = install ]; then
   codex plugin marketplace add "$repo_root"

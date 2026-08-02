@@ -27,8 +27,8 @@ workspace-based projects.
 
 Guided and Careful modes require actual access to Sol, Luna, and Terra. Setup installs
 their profiles but cannot grant model access to an account. Quick mode still requires
-the task to be started with Sol High. Setup also checks for Python 3, which Project Pilot
-uses locally to read only the routing fields needed for verification.
+the task to be started with Sol High. Setup also checks for Python 3.11 or newer, which
+Project Pilot uses locally to read only the routing fields needed for verification.
 
 ### Easiest: ask Codex to install it
 
