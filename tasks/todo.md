@@ -2,7 +2,7 @@
 
 ## 1. Contract tests
 
-- [ ] Add tests before implementation.
+- [x] Add tests before implementation.
   - Acceptance: tests cover plugin structure, plain-language modes, fallbacks,
     safety, docs, setup dry run, and MIT attribution.
   - Verify: `python3 -m unittest discover -s tests -v` fails only because the
@@ -11,7 +11,7 @@
 
 ## 2. Plugin foundation
 
-- [ ] Scaffold the marketplace, plugin manifest, and skill metadata.
+- [x] Scaffold the marketplace, plugin manifest, and skill metadata.
   - Acceptance: names and relative paths are consistent and contain no placeholders.
   - Verify: JSON parses and official validators can discover the package.
   - Files: `.agents/plugins/marketplace.json`, `plugins/project-pilot/**`
@@ -19,7 +19,7 @@
 
 ## 3. Workflow
 
-- [ ] Implement Quick, Guided, and Careful execution with risk-based review.
+- [x] Implement Quick, Guided, and Careful execution with risk-based review.
   - Acceptance: no named model or custom-agent dependency; delegation is optional;
     requested independent review is never silently downgraded.
   - Verify: contract tests and skill validation pass.
@@ -28,7 +28,7 @@
 
 ## 4. Helpers
 
-- [ ] Add deterministic verification and one-command local setup.
+- [x] Add deterministic verification and one-command local setup.
   - Acceptance: verification is dependency-free; setup has `--help` and `--dry-run`;
     neither path overwrites unrelated configuration.
   - Verify: shell syntax, dry run, and contract tests pass.
@@ -37,7 +37,7 @@
 
 ## 5. Documentation and attribution
 
-- [ ] Add beginner-first usage and sharing docs plus the design review.
+- [x] Add beginner-first usage and sharing docs plus the design review.
   - Acceptance: README covers install, use, update, share, remove, troubleshooting;
     original MIT notice is preserved.
   - Verify: contract tests and a manual plain-language read-through pass.
@@ -46,7 +46,7 @@
 
 ## 6. Final validation
 
-- [ ] Run official validators and forward-test realistic usage.
+- [x] Run official validators and forward-test realistic usage.
   - Acceptance: all checks pass; forward tests expose no blocking ambiguity.
   - Verify: commands in `AGENTS.md` and `docs/SPEC.md` complete successfully.
   - Files: only targeted fixes found during validation

@@ -37,38 +37,38 @@ Official validation + forward test
 
 ### Phase 1: Contract and scaffold
 
-- [ ] Write failing tests for the required marketplace, manifest, workflow, safety, and docs contracts.
-- [ ] Scaffold the repository marketplace and `project-pilot` plugin with the official helpers.
-- [ ] Initialize the `project-pilot` skill with the official skill helper.
+- [x] Write failing tests for the required marketplace, manifest, workflow, safety, and docs contracts.
+- [x] Scaffold the repository marketplace and `project-pilot` plugin with the official helpers.
+- [x] Initialize the `project-pilot` skill with the official skill helper.
 
 ### Checkpoint: Foundation
 
-- [ ] The initial tests fail for missing implementation rather than test errors.
-- [ ] Generated JSON parses and folder names match manifest names.
+- [x] The initial tests fail for missing implementation rather than test errors.
+- [x] Generated JSON parses and folder names match manifest names.
 
 ### Phase 2: Runtime workflow
 
-- [ ] Implement the concise core skill and mode/risk reference.
-- [ ] Add work-card, delegation, verification, and fresh-review templates.
-- [ ] Add dependency-free package verification.
+- [x] Implement the concise core skill and mode/risk reference.
+- [x] Add work-card, delegation, verification, and fresh-review templates.
+- [x] Add dependency-free package verification.
 
 ### Checkpoint: Runtime
 
-- [ ] Tests pass for mode selection, safe fallback, and review honesty.
-- [ ] Official skill and plugin validators pass.
+- [x] Tests pass for mode selection, safe fallback, and review honesty.
+- [x] Official skill and plugin validators pass.
 
 ### Phase 3: Human handoff
 
-- [ ] Add plain-language install, use, update, share, remove, and troubleshooting instructions.
-- [ ] Add one-command local setup with a non-mutating dry run.
-- [ ] Add attribution, license, design comparison, and improvement notes.
-- [ ] Forward-test realistic Quick, Guided, and Careful requests in a fresh context.
+- [x] Add plain-language install, use, update, share, remove, and troubleshooting instructions.
+- [x] Add one-command local setup with a non-mutating dry run.
+- [x] Add attribution, license, design comparison, and improvement notes.
+- [x] Forward-test realistic Quick, Guided, and Careful requests in a fresh context.
 
 ### Checkpoint: Complete
 
-- [ ] Every success criterion in `docs/SPEC.md` is met.
-- [ ] Tests and verification are clean from a fresh checkout layout.
-- [ ] No placeholder metadata, secret, named-model dependency, or unexplained setup step remains.
+- [x] Every success criterion in `docs/SPEC.md` is met.
+- [x] Tests and verification are clean from a fresh checkout layout.
+- [x] No placeholder metadata, secret, named-model dependency, or unexplained setup step remains.
 
 ## Risks and Mitigations
 

@@ -9,8 +9,8 @@ Keep the installed experience simple for people who do not write code.
 
 - Test: `python3 -m unittest discover -s tests -v`
 - Verify package: `sh plugins/project-pilot/scripts/verify.sh`
-- Validate skill: `python3 "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
-- Validate plugin: `python3 "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
+- Validate skill: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
+- Validate plugin: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
 
 ## Conventions
 

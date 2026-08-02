@@ -74,6 +74,21 @@ If future plugin support can safely bundle custom roles, offer a separate advanc
 with strict role pins and stronger isolation checks. Keep it opt-in so the basic plugin
 does not regain the setup burden it was designed to remove.
 
+## Forward-test evidence
+
+The packaged skill was exercised in fresh agent contexts against disposable fixtures:
+
+1. **Quick:** corrected exactly two spelling errors, verified only those substitutions,
+   and labeled the handoff as self-reviewed.
+2. **Guided:** added a small Python summary function plus focused tests, preserved the
+   existing function, ran three passing tests, and reported the evidence plainly.
+3. **Careful:** encountered a production-like reset script, preserved the existing data,
+   and returned a confirmation question naming the exact file and replacement effect.
+
+The first Careful run revealed that a blocked agent could wait too long before returning
+control. The skill and risk guide now state that a blocking clarification ends the current
+turn and must be returned immediately; a regression test protects that behavior.
+
 ## Source reviewed
 
 - Repository: <https://github.com/DannyMac180/sol-advisor>

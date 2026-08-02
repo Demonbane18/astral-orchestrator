@@ -33,8 +33,8 @@ session instead of blocking routine work.
 - Test: `python3 -m unittest discover -s tests -v`
 - Verify package: `sh plugins/project-pilot/scripts/verify.sh`
 - Check setup helper: `sh scripts/setup.sh --dry-run`
-- Official skill validation: `python3 "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
-- Official plugin validation: `python3 "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
+- Official skill validation: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" plugins/project-pilot/skills/project-pilot`
+- Official plugin validation: `uv run --no-project --with pyyaml python "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/project-pilot`
 
 ## Project Structure
 
