@@ -1,0 +1,33 @@
+{
+  "name": "project-pilot",
+  "version": "1.0.0",
+  "description": "Beginner-friendly, risk-aware workflow for planning, implementing, verifying, and reviewing project work in Codex.",
+  "author": {
+    "name": "Project Pilot Contributors"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "project-management",
+    "implementation",
+    "verification",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Project Pilot",
+    "shortDescription": "Simple, risk-aware delivery for any project.",
+    "longDescription": "Project Pilot turns an everyday request into a clear outcome, chooses the right level of care, completes the work, verifies the actual result, and explains what happened in plain language. It works without special models or extra services and can optionally use native agents when they are available.",
+    "developerName": "Project Pilot Contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use Project Pilot to complete this request and verify the result.",
+      "Use Project Pilot in Quick mode for this small change.",
+      "Use Project Pilot in Careful mode for this risky change."
+    ]
+  }
+}

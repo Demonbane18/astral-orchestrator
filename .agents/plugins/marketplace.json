@@ -1,0 +1,20 @@
+{
+  "name": "project-pilot",
+  "interface": {
+    "displayName": "Project Pilot"
+  },
+  "plugins": [
+    {
+      "name": "project-pilot",
+      "source": {
+        "source": "local",
+        "path": "./plugins/project-pilot"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
