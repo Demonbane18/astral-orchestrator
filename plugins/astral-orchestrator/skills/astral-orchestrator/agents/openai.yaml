@@ -1,4 +1,6 @@
 interface:
   display_name: "Astral Orchestrator"
   short_description: "Sol-led, model-routed delivery for any project"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
   default_prompt: "Use $astral-orchestrator to orchestrate this request with the pinned lanes and verify the result."
