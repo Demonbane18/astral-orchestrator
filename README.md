@@ -6,8 +6,7 @@ context-heavy implementation, and a fresh Sol reviewer checks the finished chang
 
 ## Quick Install
 
-Paste this into Codex. For the private repository, make sure GitHub CLI is authenticated
-to an account that has access:
+Paste this into Codex to install from the public repository:
 
 ~~~text
 Install and set up Astral Orchestrator from https://github.com/Demonbane18/astral-orchestrator. Run sh scripts/setup.sh --dry-run first, then sh scripts/setup.sh. Preserve any conflicting agent profiles and run the package verification.
@@ -57,18 +56,17 @@ Open this complete repository in Codex and use the Quick Install prompt above. C
 run the dry run, installation, and verification for you. Installation changes your local
 Codex configuration only after you run the non-dry command.
 
-### Manual or private repository
+### Manual installation
 
-Download or clone the complete repository, open a terminal in its root, and run:
+Download the public repository as a ZIP or clone it, open a terminal in its root, and run:
 
 ~~~sh
 sh scripts/setup.sh --dry-run
 sh scripts/setup.sh
 ~~~
 
-For a private GitHub repository, authenticate with GitHub before cloning, or download an
-authorized archive. Do not install only the plugin folder: the repository-local
-marketplace file and the three profiles are part of the setup.
+Do not install only the plugin folder: the repository-local marketplace file and the
+three profiles are part of the setup.
 
 ## First use
 
@@ -306,11 +304,10 @@ their own Codex environment. They need their own access to the three models.
 
 ## Sharing
 
-The repository is currently private at
-https://github.com/Demonbane18/astral-orchestrator. Give each recipient repository
-access, or provide an authorized complete archive. Ask recipients to use the
-Codex-assisted installation prompt or the manual setup commands; do not share an
-installed profile directory on its own.
+The repository is public at https://github.com/Demonbane18/astral-orchestrator. Share
+the link or a complete archive. Ask recipients to use the Codex-assisted installation
+prompt or the manual setup commands; do not share an installed profile directory on its
+own.
 
 ## Contributor commands
 
