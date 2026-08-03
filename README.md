@@ -1,6 +1,6 @@
 # Astral Orchestrator
 
-Astral Orchestrator v3.1.3 is a published, installable, open-source Codex plugin. It
+Astral Orchestrator v3.1.4 is a published, installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
@@ -120,7 +120,7 @@ model choice.
 
 ## Measured instruction-context footprint
 
-Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.1.3 core
+Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.1.4 core
 `SKILL.md` measures **1,791 tokens**. The Quick path (`SKILL.md`,
 `modes-and-risk.md`, and `work-templates.md` for self-review) is **3,324 tokens**;
 eagerly loading the full bundle (`SKILL.md` plus all three references) is **5,049

@@ -43,6 +43,9 @@ ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw
 SCORECARD_DIAGRAM = ROOT / "assets/diagrams/outcome-scorecard.svg"
 SCORECARD_EXCALIDRAW = ROOT / "assets/diagrams/outcome-scorecard.excalidraw"
 SPEC = ROOT / "docs/SPEC.md"
+CANONICAL_IMPROVEMENTS_URL = (
+    "https://github.com/Demonbane18/astral-orchestrator/blob/main/docs/IMPROVEMENTS.md"
+)
 
 
 def read(path: Path) -> str:
@@ -77,7 +80,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.1.3")
+        self.assertEqual(manifest["version"], "3.1.4")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -864,7 +867,7 @@ class UserExperienceTests(unittest.TestCase):
         readme = " ".join(read(ROOT / "README.md").lower().split())
 
         self.assertIn("published, installable, open-source codex plugin", readme)
-        self.assertIn("v3.1.3", readme)
+        self.assertIn("v3.1.4", readme)
         self.assertIn("not listed or endorsed by codex marketplace", readme)
         self.assertIn("mode determines whether to delegate", readme)
         self.assertIn("work characteristics choose sol, luna, or terra", readme)
@@ -997,6 +1000,12 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("Copyright (c) 2026 Daniel McAteer", license_text)
         self.assertIn("DannyMac180/sol-advisor", notice)
         self.assertIn("MIT", notice)
+
+    def test_notice_uses_the_canonical_improvements_link(self):
+        notice = read(NOTICE)
+
+        self.assertIn(f"]({CANONICAL_IMPROVEMENTS_URL})", notice)
+        self.assertNotIn("](docs/IMPROVEMENTS.md)", notice)
 
     def test_distributable_license_and_notice_match_the_canonical_notices(self):
         self.assertEqual(PLUGIN_LICENSE.read_bytes(), LICENSE.read_bytes())
@@ -1504,6 +1513,28 @@ class VerificationTests(unittest.TestCase):
                     f"distributable notice differs from repository root: {filename}",
                     result.stderr,
                 )
+
+    def test_repository_verifier_rejects_a_package_relative_improvements_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_root = self.make_package_fixture(directory)
+            fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+
+            for notice in (fixture_root / "NOTICE.md", fixture_plugin / "NOTICE.md"):
+                notice.write_text(
+                    read(notice).replace(CANONICAL_IMPROVEMENTS_URL, "docs/IMPROVEMENTS.md"),
+                    encoding="utf-8",
+                )
+
+            result = subprocess.run(
+                ["sh", str(fixture_plugin / "scripts/verify.sh")],
+                cwd=fixture_root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("canonical NOTICE must link", result.stderr)
 
     def test_repository_verifier_passes(self):
         verifier = PLUGIN / "scripts/verify.sh"

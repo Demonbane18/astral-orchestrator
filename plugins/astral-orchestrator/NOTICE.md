@@ -14,4 +14,4 @@ modes, namespaced profiles, conflict-safe removal, configurable effort settings,
 Python standard-library inspector for a broader audience.
 
 Astral Orchestrator is not endorsed by or affiliated with Daniel McAteer. See
-[docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md) for the design comparison.
+[docs/IMPROVEMENTS.md](https://github.com/Demonbane18/astral-orchestrator/blob/main/docs/IMPROVEMENTS.md) for the design comparison.

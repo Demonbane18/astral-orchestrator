@@ -7,7 +7,7 @@ recorded runs. Neither substitutes for the other.
 
 ## Instruction-context footprint
 
-The committed v3.1.3 measurement used `tiktoken` 0.13.0 and its `o200k_base` encoding
+The committed v3.1.4 measurement used `tiktoken` 0.13.0 and its `o200k_base` encoding
 on 2026-08-03. It records each source path's byte, word, and token counts, along with a
 SHA-256 hash so a reader can detect a changed instruction file. The core `SKILL.md` is
 1,791 tokens; the Quick path (`SKILL.md`, `modes-and-risk.md`, and
