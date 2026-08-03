@@ -80,6 +80,11 @@ def read_prompt(path: Path) -> bytes:
             details = os.fstat(descriptor)
             if not stat.S_ISREG(details.st_mode):
                 fail(f"prompt file must be a real regular file: {path}")
+            if os.name == "posix" and stat.S_IMODE(details.st_mode) & 0o077:
+                fail(
+                    "prompt file must be private; group or other permission bits are "
+                    f"set: {path}"
+                )
             if details.st_size == 0 or details.st_size > MAX_PROMPT_BYTES:
                 fail(f"prompt file must contain 1 to {MAX_PROMPT_BYTES} bytes")
 

@@ -1,15 +1,12 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "Beginner-friendly, model-routed orchestration for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
   },
   "homepage": "https://github.com/Demonbane18/astral-orchestrator",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Demonbane18/astral-orchestrator.git"
-  },
+  "repository": "https://github.com/Demonbane18/astral-orchestrator",
   "license": "MIT",
   "keywords": [
     "codex",

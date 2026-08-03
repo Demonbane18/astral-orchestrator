@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import io
 import json
 import re
@@ -8,7 +9,8 @@ import sys
 import tempfile
 import tomllib
 import unittest
-from contextlib import redirect_stdout
+import xml.etree.ElementTree as ET
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -34,7 +36,16 @@ EFFORT_SETTINGS = PLUGIN / "scripts/effort_settings.py"
 CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
 BENCHMARK_SCORECARD = PLUGIN / "scripts/benchmark-scorecard.py"
 BENCHMARK_GUIDE = ROOT / "benchmarks/README.md"
+CONTEXT_FOOTPRINT = ROOT / "benchmarks/context-footprint-2026-08-03.json"
+CONTEXT_FOOTPRINT_MEASURER = ROOT / "benchmarks/measure_instruction_context.py"
+ROUTING_DIAGRAM = ROOT / "assets/diagrams/routing-and-verification.svg"
+ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw"
+SCORECARD_DIAGRAM = ROOT / "assets/diagrams/outcome-scorecard.svg"
+SCORECARD_EXCALIDRAW = ROOT / "assets/diagrams/outcome-scorecard.excalidraw"
 SPEC = ROOT / "docs/SPEC.md"
+CANONICAL_IMPROVEMENTS_URL = (
+    "https://github.com/Demonbane18/astral-orchestrator/blob/main/docs/IMPROVEMENTS.md"
+)
 
 
 def read(path: Path) -> str:
@@ -69,7 +80,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.1.3")
+        self.assertEqual(manifest["version"], "3.1.4")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -79,8 +90,8 @@ class MarketplaceTests(unittest.TestCase):
             "https://github.com/Demonbane18/astral-orchestrator",
         )
         self.assertEqual(
-            manifest["repository"]["url"],
-            "https://github.com/Demonbane18/astral-orchestrator.git",
+            manifest["repository"],
+            "https://github.com/Demonbane18/astral-orchestrator",
         )
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
@@ -409,6 +420,7 @@ class SkillContractTests(unittest.TestCase):
             workdir.mkdir()
             prompt = Path(directory) / "packet.txt"
             prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+            prompt.chmod(0o600)
 
             for role, values in expected.items():
                 result = subprocess.run(
@@ -458,6 +470,7 @@ class SkillContractTests(unittest.TestCase):
             prompt = Path(directory) / "packet.txt"
             prompt_text = "standalone packet with private details\n"
             prompt.write_text(prompt_text, encoding="utf-8")
+            prompt.chmod(0o600)
 
             for role, contract in launcher.ROLE_CONTRACTS.items():
                 captured = {}
@@ -523,6 +536,45 @@ class SkillContractTests(unittest.TestCase):
                 self.assertIn("ASTRAL_ORCHESTRATOR_ROUTE ", route_header)
                 self.assertNotIn(prompt_text.strip(), route_header)
                 self.assertNotIn(profile["developer_instructions"], route_header)
+
+    def test_process_launcher_rejects_a_group_or_other_readable_prompt_packet_before_starting_codex(self):
+        spec = importlib.util.spec_from_file_location("astral_orchestrator_run_agent", RUN_AGENT)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        launcher = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(launcher)
+
+        with tempfile.TemporaryDirectory() as directory:
+            workdir = Path(directory) / "work"
+            workdir.mkdir()
+            prompt = Path(directory) / "packet.txt"
+            prompt.write_text("packet must remain private\n", encoding="utf-8")
+            prompt.chmod(0o644)
+            errors = io.StringIO()
+            argv = [
+                str(RUN_AGENT),
+                "--role",
+                "luna",
+                "--workdir",
+                str(workdir),
+                "--prompt-file",
+                str(prompt),
+                "--settings-file",
+                str(Path(directory) / "missing-effort-levels.toml"),
+            ]
+            with (
+                mock.patch.object(sys, "argv", argv),
+                mock.patch.object(launcher.shutil, "which") as find_codex,
+                mock.patch.object(launcher.subprocess, "run") as start_codex,
+                redirect_stderr(errors),
+            ):
+                with self.assertRaises(SystemExit) as raised:
+                    launcher.main()
+
+            self.assertEqual(raised.exception.code, 1)
+            self.assertIn("private", errors.getvalue().lower())
+            find_codex.assert_not_called()
+            start_codex.assert_not_called()
 
     def test_effort_configurator_round_trips_partial_changes_and_reset(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -631,6 +683,7 @@ reviewer = "xhigh"
             workdir.mkdir()
             prompt = root / "packet.txt"
             prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+            prompt.chmod(0o600)
 
             for role, effort in {
                 "luna": "low",
@@ -669,6 +722,7 @@ reviewer = "xhigh"
             workdir.mkdir()
             prompt = root / "packet.txt"
             prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+            prompt.chmod(0o600)
 
             for contents, expected_error in (
                 (
@@ -810,12 +864,16 @@ class UserExperienceTests(unittest.TestCase):
         )
 
     def test_readme_explains_heuristic_routing_and_the_local_benchmark(self):
-        readme = read(ROOT / "README.md").lower()
+        readme = " ".join(read(ROOT / "README.md").lower().split())
 
+        self.assertIn("published, installable, open-source codex plugin", readme)
+        self.assertIn("v3.1.4", readme)
+        self.assertIn("not listed or endorsed by codex marketplace", readme)
         self.assertIn("mode determines whether to delegate", readme)
         self.assertIn("work characteristics choose sol, luna, or terra", readme)
-        self.assertIn("not yet empirically benchmarked", readme)
-        self.assertGreaterEqual(readme.count("~~~mermaid"), 2)
+        self.assertIn("instruction-context loading only", readme)
+        self.assertIn("does not prove every multi-agent run uses fewer total tokens", readme)
+        self.assertNotIn("mermaid", readme)
         self.assertIn("single-sol", readme)
         self.assertIn("repeated trials", readme)
         self.assertIn("identical acceptance checks", readme)
@@ -823,6 +881,97 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("requested reasoning level/budget", readme)
         self.assertIn("increase latency and usage", readme)
         self.assertIn("do not guarantee a better answer", readme)
+
+        for svg, source in (
+            (ROUTING_DIAGRAM, ROUTING_EXCALIDRAW),
+            (SCORECARD_DIAGRAM, SCORECARD_EXCALIDRAW),
+        ):
+            self.assertTrue(svg.is_file(), svg)
+            self.assertTrue(source.is_file(), source)
+            self.assertIn(svg.relative_to(ROOT).as_posix(), readme)
+            self.assertIn(source.relative_to(ROOT).as_posix(), readme)
+            self.assertEqual(ET.parse(svg).getroot().tag, "{http://www.w3.org/2000/svg}svg")
+            excalidraw = load_json(source)
+            self.assertEqual(excalidraw["type"], "excalidraw")
+            self.assertTrue(excalidraw["elements"])
+
+    def test_editable_diagrams_preserve_rendered_labels_and_quick_handoff(self):
+        namespace = {"svg": "http://www.w3.org/2000/svg"}
+
+        routing_root = ET.parse(ROUTING_DIAGRAM).getroot()
+        routing_edge = routing_root.find(
+            ".//svg:path[@id='quick-to-handoff']", namespace
+        )
+        self.assertIsNotNone(routing_edge)
+        self.assertEqual(routing_edge.get("data-from"), "Sol primary + self-review")
+        self.assertEqual(routing_edge.get("data-to"), "Evidence-backed handoff")
+        self.assertEqual(routing_edge.get("marker-end"), "url(#gold-arrow)")
+
+        routing_source = load_json(ROUTING_EXCALIDRAW)
+        routing_elements = {element["id"]: element for element in routing_source["elements"]}
+        source_edge = routing_elements["quick-to-handoff"]
+        self.assertEqual(source_edge["type"], "arrow")
+        self.assertEqual(source_edge["startBinding"]["elementId"], "quick-sol")
+        self.assertEqual(source_edge["endBinding"]["elementId"], "handoff")
+
+        for svg, source in (
+            (ROUTING_DIAGRAM, ROUTING_EXCALIDRAW),
+            (SCORECARD_DIAGRAM, SCORECARD_EXCALIDRAW),
+        ):
+            svg_root = ET.parse(svg).getroot()
+            svg_text = " ".join(
+                " ".join("".join(text.itertext()).split())
+                for text in svg_root.findall(".//svg:text", namespace)
+            )
+            source_text = " ".join(
+                " ".join(element["text"].split())
+                for element in load_json(source)["elements"]
+                if element["type"] == "text" and not element["isDeleted"]
+            )
+            self.assertEqual(source_text, svg_text, source.name)
+
+    def test_context_footprint_evidence_matches_the_published_instruction_files(self):
+        evidence = load_json(CONTEXT_FOOTPRINT)
+        self.assertTrue(CONTEXT_FOOTPRINT_MEASURER.is_file())
+        self.assertEqual(evidence["measured_on"], "2026-08-03")
+        self.assertEqual(
+            evidence["tokenizer"],
+            {"library": "tiktoken", "version": "0.13.0", "encoding": "o200k_base"},
+        )
+
+        expected = {
+            "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md": (8501, 1205, 1791),
+            "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md": (4027, 610, 788),
+            "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md": (3224, 455, 745),
+            "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md": (8149, 1158, 1725),
+        }
+        self.assertEqual({item["path"] for item in evidence["files"]}, set(expected))
+        for item in evidence["files"]:
+            path = ROOT / item["path"]
+            data = path.read_bytes()
+            self.assertEqual(
+                (item["bytes"], item["words"], item["tokens"]), expected[item["path"]]
+            )
+            self.assertEqual(item["bytes"], len(data))
+            self.assertEqual(item["words"], len(data.decode("utf-8").split()))
+            self.assertEqual(item["sha256"], hashlib.sha256(data).hexdigest())
+
+        self.assertEqual(evidence["bundles"]["core"]["tokens"], 1791)
+        self.assertEqual(
+            evidence["bundles"]["quick"],
+            {
+                "paths": [
+                    "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
+                    "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
+                    "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
+                ],
+                "tokens": 3324,
+            },
+        )
+        self.assertEqual(evidence["bundles"]["full"]["tokens"], 5049)
+        self.assertEqual(evidence["quick_vs_full"], {"tokens_avoided": 1725, "percent_avoided": 34.2})
+        self.assertIn("tiktoken==0.13.0", read(BENCHMARK_GUIDE))
+        self.assertIn("measure_instruction_context.py", read(BENCHMARK_GUIDE))
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"
@@ -851,6 +1000,12 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("Copyright (c) 2026 Daniel McAteer", license_text)
         self.assertIn("DannyMac180/sol-advisor", notice)
         self.assertIn("MIT", notice)
+
+    def test_notice_uses_the_canonical_improvements_link(self):
+        notice = read(NOTICE)
+
+        self.assertIn(f"]({CANONICAL_IMPROVEMENTS_URL})", notice)
+        self.assertNotIn("](docs/IMPROVEMENTS.md)", notice)
 
     def test_distributable_license_and_notice_match_the_canonical_notices(self):
         self.assertEqual(PLUGIN_LICENSE.read_bytes(), LICENSE.read_bytes())
@@ -1358,6 +1513,28 @@ class VerificationTests(unittest.TestCase):
                     f"distributable notice differs from repository root: {filename}",
                     result.stderr,
                 )
+
+    def test_repository_verifier_rejects_a_package_relative_improvements_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_root = self.make_package_fixture(directory)
+            fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+
+            for notice in (fixture_root / "NOTICE.md", fixture_plugin / "NOTICE.md"):
+                notice.write_text(
+                    read(notice).replace(CANONICAL_IMPROVEMENTS_URL, "docs/IMPROVEMENTS.md"),
+                    encoding="utf-8",
+                )
+
+            result = subprocess.run(
+                ["sh", str(fixture_plugin / "scripts/verify.sh")],
+                cwd=fixture_root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("canonical NOTICE must link", result.stderr)
 
     def test_repository_verifier_passes(self):
         verifier = PLUGIN / "scripts/verify.sh"

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "measurement": "instruction-context-footprint",
+  "measured_on": "2026-08-03",
+  "generated_by": "benchmarks/measure_instruction_context.py",
+  "command": "uv run --no-project --with tiktoken==0.13.0 python benchmarks/measure_instruction_context.py",
+  "tokenizer": {
+    "library": "tiktoken",
+    "version": "0.13.0",
+    "encoding": "o200k_base"
+  },
+  "counting": {
+    "bytes": "UTF-8 byte length",
+    "words": "whitespace-separated UTF-8 text segments",
+    "tokens": "tiktoken encoding of the complete UTF-8 text"
+  },
+  "files": [
+    {
+      "path": "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
+      "bytes": 8501,
+      "words": 1205,
+      "tokens": 1791,
+      "sha256": "132bb3ebd18541ce05f0eaaa93452aadb9e62dde84462f72671b66b5ee1671fc"
+    },
+    {
+      "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
+      "bytes": 4027,
+      "words": 610,
+      "tokens": 788,
+      "sha256": "5fb3afe30685814017ebd0d330375dc5d614c141264d1244237d4c12178c00c4"
+    },
+    {
+      "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
+      "bytes": 3224,
+      "words": 455,
+      "tokens": 745,
+      "sha256": "b3d1143f14330e3bfbb816c9867016dc60384f1ca000d0b3d844c595ba144658"
+    },
+    {
+      "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md",
+      "bytes": 8149,
+      "words": 1158,
+      "tokens": 1725,
+      "sha256": "82658ab8e1bcacee574f82f63b94f544db72d847aa7e32d176a96702324b2563"
+    }
+  ],
+  "bundles": {
+    "core": {
+      "paths": [
+        "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md"
+      ],
+      "tokens": 1791
+    },
+    "quick": {
+      "paths": [
+        "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
+        "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
+        "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md"
+      ],
+      "tokens": 3324
+    },
+    "full": {
+      "paths": [
+        "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
+        "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
+        "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
+        "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md"
+      ],
+      "tokens": 5049
+    }
+  },
+  "quick_vs_full": {
+    "tokens_avoided": 1725,
+    "percent_avoided": 34.2
+  },
+  "scope_note": "This measures instruction-context loading only. It does not measure outcome quality, latency, price, or total tokens for a complete run."
+}
