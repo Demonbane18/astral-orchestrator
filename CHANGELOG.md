@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.3 — 2026-08-03
+
+### Fixed
+
+- Included the canonical MIT `LICENSE` and Sol Advisor `NOTICE.md` attribution in the
+  distributable plugin bundle.
+- Added package verification and regression coverage that reject missing or modified
+  distributable notices.
+
 ## 3.1.2 — 2026-08-02
 
 ### Changed
