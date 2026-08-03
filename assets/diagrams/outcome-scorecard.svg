@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="740" viewBox="0 0 1120 740" role="img" aria-labelledby="title desc">
+  <title id="title">Astral outcome scorecard comparison workflow</title>
+  <desc id="desc">A hand-drawn comparison uses the same frozen task cases for a single-Sol control and an Astral route, then compares recorded checks and route evidence in a local scorecard.</desc>
+  <defs>
+    <marker id="gold-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 0 L 9 5 L 0 10" fill="none" stroke="#F2C86D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <marker id="lavender-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 0 L 9 5 L 0 10" fill="none" stroke="#C4B5FD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.22"/></filter>
+  </defs>
+  <rect width="1120" height="740" rx="28" fill="#0B1020"/>
+  <g fill="#F2C86D" opacity="0.8"><circle cx="83" cy="75" r="2.3"/><circle cx="1032" cy="67" r="2"/><circle cx="1022" cy="664" r="2.2"/><circle cx="96" cy="687" r="1.8"/></g>
+  <g fill="#C4B5FD" opacity="0.7"><path d="M98 163l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M1026 361l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+  <text x="560" y="48" fill="#F8F3E8" font-family="ui-rounded, system-ui, sans-serif" font-size="27" font-weight="700" text-anchor="middle">Compare recorded outcomes, not assumptions</text>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4">
+    <path d="M500 135 C444 157 336 169 236 214" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
+    <path d="M620 135 C685 157 791 169 884 200" stroke="#C4B5FD" marker-end="url(#lavender-arrow)"/>
+    <path d="M236 319 C319 348 416 368 489 415" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
+    <path d="M884 335 C793 361 691 381 631 415" stroke="#C4B5FD" marker-end="url(#lavender-arrow)"/>
+    <path d="M560 490 C560 505 560 515 560 530" stroke="#C4B5FD" marker-end="url(#lavender-arrow)"/>
+    <path d="M560 605 C560 620 560 630 560 645" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
+    <path d="M772 682 C783 682 790 682 800 682" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
+  </g>
+  <g opacity="0.42" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1">
+    <path d="M503 137 C446 159 339 172 239 217" stroke="#F2C86D"/><path d="M623 137 C688 159 793 172 887 203" stroke="#C4B5FD"/><path d="M239 322 C322 351 419 371 492 418" stroke="#F2C86D"/><path d="M887 338 C796 364 694 384 634 418" stroke="#C4B5FD"/><path d="M563 492 C563 507 563 517 563 532" stroke="#C4B5FD"/><path d="M563 607 C563 622 563 632 563 647" stroke="#F2C86D"/>
+  </g>
+
+  <g filter="url(#soft-shadow)" stroke-linejoin="round">
+    <rect x="410" y="71" width="300" height="64" rx="17" fill="#16213E" stroke="#F2C86D" stroke-width="2.4"/>
+    <rect x="84" y="214" width="304" height="105" rx="18" fill="#252B4A" stroke="#F2C86D" stroke-width="2.4"/>
+    <rect x="732" y="200" width="304" height="135" rx="18" fill="#252B4A" stroke="#C4B5FD" stroke-width="2.4"/>
+    <rect x="347" y="415" width="426" height="75" rx="18" fill="#16213E" stroke="#F2C86D" stroke-width="2.4"/>
+    <rect x="347" y="530" width="426" height="75" rx="18" fill="#252B4A" stroke="#C4B5FD" stroke-width="2.4"/>
+    <rect x="347" y="645" width="426" height="75" rx="18" fill="#16213E" stroke="#F2C86D" stroke-width="2.4"/>
+    <rect x="800" y="645" width="241" height="75" rx="18" fill="#6B5B28" stroke="#F2C86D" stroke-width="2.4"/>
+  </g>
+  <g fill="#F8F3E8" font-family="ui-rounded, system-ui, sans-serif" text-anchor="middle">
+    <text x="560" y="98" font-size="21" font-weight="700">Same frozen task cases</text>
+    <text x="236" y="252" font-size="21" font-weight="700">Single-Sol control</text><text x="236" y="279" font-size="16">one recorded route</text><text x="236" y="301" font-size="16">repeated trials</text>
+    <text x="884" y="237" font-size="21" font-weight="700">Astral route</text><text x="884" y="263" font-size="16">Sol lead → Luna / Terra</text><text x="884" y="287" font-size="16">→ fresh Sol review</text><text x="884" y="311" font-size="16">repeated trials</text>
+    <text x="560" y="446" font-size="20" font-weight="700">Identical acceptance checks</text><text x="560" y="471" font-size="16">for each paired trial</text>
+    <text x="560" y="561" font-size="20" font-weight="700">Observed route evidence</text><text x="560" y="586" font-size="16">for every lane</text>
+    <text x="560" y="690" font-size="20" font-weight="700">Local scorecard</text>
+    <text x="920" y="677" font-size="18" font-weight="700">Compare recorded</text><text x="920" y="700" font-size="18" font-weight="700">outcomes + efficiency</text>
+  </g>
+  <g font-family="ui-rounded, system-ui, sans-serif" font-size="14" font-weight="700"><text x="115" y="185" fill="#F2C86D">same case fingerprint</text><text x="837" y="170" fill="#C4B5FD">same acceptance definition</text></g>
+</svg>

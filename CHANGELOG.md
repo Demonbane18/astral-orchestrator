@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Documentation
+
+- Documented the published, installable, open-source v3.1.3 plugin and added reproducible
+  `tiktoken` instruction-context footprint evidence without changing runtime dependencies.
+- Replaced the README Mermaid diagrams with GitHub-renderable SVGs and editable Excalidraw
+  sources for routing and the separate outcome scorecard.
+
+### Security
+
+- The exact-process launcher now rejects prompt packets with group or other permission bits
+  before Codex lookup or execution.
+
 ## 3.1.3 — 2026-08-03
 
 ### Fixed

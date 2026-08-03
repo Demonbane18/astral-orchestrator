@@ -1,4 +1,36 @@
-# Local benchmark scorecard
+# Benchmarks
+
+Astral publishes two deliberately separate kinds of evidence. The
+[instruction-context footprint](context-footprint-2026-08-03.json) measures the static
+instruction files loaded for named paths. The local outcome scorecard below compares
+recorded runs. Neither substitutes for the other.
+
+## Instruction-context footprint
+
+The committed v3.1.3 measurement used `tiktoken` 0.13.0 and its `o200k_base` encoding
+on 2026-08-03. It records each source path's byte, word, and token counts, along with a
+SHA-256 hash so a reader can detect a changed instruction file. The core `SKILL.md` is
+1,791 tokens; the Quick path (`SKILL.md`, `modes-and-risk.md`, and
+`work-templates.md` for self-review) is 3,324; and the eager full bundle is 5,049.
+Quick avoids 1,725 tokens, or 34.2%, compared with eagerly loading every reference.
+
+This is an instruction-context loading measurement only. It does not measure task
+quality, latency, price, or total token usage for a complete run, so it does not prove
+that every multi-agent run uses fewer total tokens than single Sol.
+
+`tiktoken` is optional contributor tooling, not a plugin or runtime dependency. With
+[`uv`](https://docs.astral.sh/uv/), regenerate and verify the exact evidence from the
+repository root:
+
+```sh
+uv run --no-project --with tiktoken==0.13.0 python benchmarks/measure_instruction_context.py --check benchmarks/context-footprint-2026-08-03.json
+```
+
+The command exits non-zero if the tokenizer version, measured instruction files, hashes,
+or recorded counts no longer match. Run the same command without `--check` to print a
+fresh JSON measurement for review.
+
+## Local outcome scorecard
 
 Use this guide to compare an Astral multi-agent run with a single-Sol control for the
 same task cases. The scorecard is local: it reads the JSONL file you create, uses only

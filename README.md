@@ -1,8 +1,13 @@
 # Astral Orchestrator
 
-Astral Orchestrator helps Codex turn an everyday request into a checked result. Sol stays
-responsible for the plan and final decisions, Luna handles focused work, Terra handles
-context-heavy implementation, and a fresh Sol reviewer checks the finished change.
+Astral Orchestrator v3.1.3 is a published, installable, open-source Codex plugin. It
+helps Codex turn an everyday request into a checked result: Sol stays responsible for
+the plan and final decisions, Luna handles focused work, Terra handles context-heavy
+implementation, and a fresh Sol reviewer checks the finished change.
+
+It is published in this public repository for installation from a local marketplace.
+Marketplace submission and review are separate, so it is not listed or endorsed by
+Codex Marketplace.
 
 ## Quick Install
 
@@ -109,9 +114,23 @@ Three separate decisions keep the workflow predictable:
    effort; it does not substitute another route.
 
 The route below is a documented **heuristic**, based on the type of work and the route
-contract. It is not yet empirically benchmarked for effectiveness or efficiency in this
-repository. The local benchmark scorecard described below is how to collect that evidence
-without pretending that a single anecdote proves a model choice.
+contract. The separate local outcome scorecard described below is how to collect
+effectiveness and efficiency evidence without pretending that a single anecdote proves a
+model choice.
+
+## Measured instruction-context footprint
+
+Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.1.3 core
+`SKILL.md` measures **1,791 tokens**. The Quick path (`SKILL.md`,
+`modes-and-risk.md`, and `work-templates.md` for self-review) is **3,324 tokens**;
+eagerly loading the full bundle (`SKILL.md` plus all three references) is **5,049
+tokens**. Quick therefore avoids **1,725 tokens (34.2%)** compared with eager
+full-bundle loading.
+
+This measures instruction-context loading only. It does not prove every
+multi-agent run uses fewer total tokens than single Sol, and it does not measure outcome
+quality, latency, or price. The committed [context-footprint evidence](benchmarks/context-footprint-2026-08-03.json)
+includes file hashes, byte/word/token counts, and a reproducible contributor command.
 
 ## Configurable effort levels
 
@@ -146,21 +165,9 @@ CODEX_HOME when set), outside the plugin cache.
 
 ## How routing and verification work
 
-~~~mermaid
-flowchart TD
-  Request[Your request] --> Mode{Mode}
-  Mode -->|Quick: do not delegate| QuickSol[Sol primary and self-review]
-  QuickSol --> Handoff[Evidence-backed handoff]
-  Mode -->|Guided or Careful| Work{Work characteristics}
-  Work -->|Requirements or architecture unsettled| Sol[Sol settles the plan]
-  Sol --> Work
-  Work -->|Narrow and repeatable| Luna[Luna]
-  Work -->|Context-heavy implementation| Terra[Terra]
-  Luna --> Checks[Inspect changes and run checks]
-  Terra --> Checks
-  Checks --> Review[Fresh Sol reviewer]
-  Review --> Handoff[Evidence-backed handoff]
-~~~
+![Hand-drawn workflow showing a request choosing Quick or Guided/Careful work; Guided/Careful flows through planning, Luna or Terra, checks, and a fresh Sol review before handoff.](assets/diagrams/routing-and-verification.svg)
+
+[Open the editable Excalidraw source for the routing and verification diagram.](assets/diagrams/routing-and-verification.excalidraw)
 
 Sol uses `gpt-5.6-sol`; Luna uses `gpt-5.6-luna`; Terra uses `gpt-5.6-terra`; and the
 fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described above
@@ -179,22 +186,14 @@ review isolation blocks the lane and tells you the smallest corrective action.
 
 ## Benchmarking Astral against a single-Sol control
 
-The repository includes a local, standard-library scorecard. It does not call Codex,
-send data anywhere, or manufacture a result: you run the same frozen task cases, record
-the trial facts in JSONL, then ask the scorecard to validate and summarize them.
+The repository includes a separate local, standard-library outcome scorecard. It does
+not call Codex, send data anywhere, or manufacture a result: you run the same frozen task
+cases, record the trial facts in JSONL, then ask the scorecard to validate and summarize
+them. It is distinct from the instruction-context footprint above.
 
-~~~mermaid
-flowchart LR
-  Cases[Same frozen task cases] --> Control[Single-Sol control]
-  Cases --> Astral[Astral multi-agent run]
-  Control --> Checks[Identical acceptance checks]
-  Astral --> Checks
-  Control --> Evidence[Observed route evidence]
-  Astral --> Evidence
-  Checks --> Scorecard[Local scorecard]
-  Evidence --> Scorecard
-  Scorecard --> Compare[Effectiveness and efficiency comparison]
-~~~
+![Hand-drawn comparison showing the same frozen cases run through a single-Sol control and an Astral route, then joined by identical checks, route evidence, and a local scorecard.](assets/diagrams/outcome-scorecard.svg)
+
+[Open the editable Excalidraw source for the outcome-scorecard diagram.](assets/diagrams/outcome-scorecard.excalidraw)
 
 Quick start: create at least two JSONL records for every task case under each strategy
 (the guide shows the exact schema), then run:
