@@ -2,6 +2,7 @@ import importlib.util
 import io
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -15,6 +16,10 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 MARKETPLACE = ROOT / ".agents/plugins/marketplace.json"
 PLUGIN = ROOT / "plugins/astral-orchestrator"
+LICENSE = ROOT / "LICENSE"
+NOTICE = ROOT / "NOTICE.md"
+PLUGIN_LICENSE = PLUGIN / "LICENSE"
+PLUGIN_NOTICE = PLUGIN / "NOTICE.md"
 MANIFEST = PLUGIN / ".codex-plugin/plugin.json"
 SKILL = PLUGIN / "skills/astral-orchestrator/SKILL.md"
 MODES = PLUGIN / "skills/astral-orchestrator/references/modes-and-risk.md"
@@ -64,7 +69,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.1.2")
+        self.assertEqual(manifest["version"], "3.1.3")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -840,12 +845,16 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("python 3.11", read(ROOT / "README.md").lower())
 
     def test_original_license_and_attribution_are_preserved(self):
-        license_text = read(ROOT / "LICENSE")
-        notice = read(ROOT / "NOTICE.md")
+        license_text = read(LICENSE)
+        notice = read(NOTICE)
 
         self.assertIn("Copyright (c) 2026 Daniel McAteer", license_text)
         self.assertIn("DannyMac180/sol-advisor", notice)
         self.assertIn("MIT", notice)
+
+    def test_distributable_license_and_notice_match_the_canonical_notices(self):
+        self.assertEqual(PLUGIN_LICENSE.read_bytes(), LICENSE.read_bytes())
+        self.assertEqual(PLUGIN_NOTICE.read_bytes(), NOTICE.read_bytes())
 
 
 class BenchmarkScorecardTests(unittest.TestCase):
@@ -1296,6 +1305,60 @@ class BenchmarkScorecardTests(unittest.TestCase):
 
 
 class VerificationTests(unittest.TestCase):
+    def make_package_fixture(self, directory: str) -> Path:
+        fixture_root = Path(directory) / "repository"
+        fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+        fixture_wrapper = fixture_root / "scripts/configure-effort.sh"
+
+        fixture_plugin.parent.mkdir(parents=True)
+        fixture_wrapper.parent.mkdir(parents=True)
+        shutil.copytree(PLUGIN, fixture_plugin)
+        shutil.copy2(LICENSE, fixture_root / "LICENSE")
+        shutil.copy2(NOTICE, fixture_root / "NOTICE.md")
+        shutil.copy2(CONFIGURE_EFFORT_WRAPPER, fixture_wrapper)
+
+        return fixture_root
+
+    def test_repository_verifier_rejects_missing_distributable_notices(self):
+        for filename in ("LICENSE", "NOTICE.md"):
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as directory:
+                fixture_root = self.make_package_fixture(directory)
+                fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+                (fixture_plugin / filename).unlink()
+
+                result = subprocess.run(
+                    ["sh", str(fixture_plugin / "scripts/verify.sh")],
+                    cwd=fixture_root,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"required distributable notice is missing: {filename}", result.stderr)
+
+    def test_repository_verifier_rejects_changed_distributable_notices(self):
+        for filename in ("LICENSE", "NOTICE.md"):
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as directory:
+                fixture_root = self.make_package_fixture(directory)
+                fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+                copy = fixture_plugin / filename
+                copy.write_bytes(copy.read_bytes() + b"\nchanged by test fixture\n")
+
+                result = subprocess.run(
+                    ["sh", str(fixture_plugin / "scripts/verify.sh")],
+                    cwd=fixture_root,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(
+                    f"distributable notice differs from repository root: {filename}",
+                    result.stderr,
+                )
+
     def test_repository_verifier_passes(self):
         verifier = PLUGIN / "scripts/verify.sh"
         result = subprocess.run(

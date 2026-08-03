@@ -24,6 +24,17 @@ effort_configurator=$plugin_dir/scripts/configure-effort.py
 benchmark_scorecard=$plugin_dir/scripts/benchmark-scorecard.py
 effort_wrapper=$repo_root/scripts/configure-effort.sh
 marketplace=$repo_root/.agents/plugins/marketplace.json
+canonical_license=$repo_root/LICENSE
+canonical_notice=$repo_root/NOTICE.md
+plugin_license=$plugin_dir/LICENSE
+plugin_notice=$plugin_dir/NOTICE.md
+
+[ -f "$canonical_license" ] || fail "canonical notice is missing: LICENSE"
+[ -f "$canonical_notice" ] || fail "canonical notice is missing: NOTICE.md"
+[ -f "$plugin_license" ] || fail "required distributable notice is missing: LICENSE"
+[ -f "$plugin_notice" ] || fail "required distributable notice is missing: NOTICE.md"
+cmp -s "$canonical_license" "$plugin_license" || fail "distributable notice differs from repository root: LICENSE"
+cmp -s "$canonical_notice" "$plugin_notice" || fail "distributable notice differs from repository root: NOTICE.md"
 
 for required in "$manifest" "$skill" "$modes" "$templates" "$routing" "$installer" "$inspector" "$launcher" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
   [ -f "$required" ] || fail "required file is missing: $required"
@@ -45,8 +56,8 @@ manifest_path, skill_path, modes_path, templates_path, routing_path, agent_dir, 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.1.2":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.1.2")
+if manifest.get("version") != "3.1.3":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.1.3")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":

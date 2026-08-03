@@ -21,7 +21,7 @@ recorded.
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.1.2. The normalized plugin, marketplace,
+identifiers. The current product version is 3.1.3. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at

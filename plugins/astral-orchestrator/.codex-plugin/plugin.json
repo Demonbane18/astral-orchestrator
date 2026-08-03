@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "Beginner-friendly, model-routed orchestration for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
