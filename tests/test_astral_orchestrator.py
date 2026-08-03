@@ -79,8 +79,8 @@ class MarketplaceTests(unittest.TestCase):
             "https://github.com/Demonbane18/astral-orchestrator",
         )
         self.assertEqual(
-            manifest["repository"]["url"],
-            "https://github.com/Demonbane18/astral-orchestrator.git",
+            manifest["repository"],
+            "https://github.com/Demonbane18/astral-orchestrator",
         )
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)

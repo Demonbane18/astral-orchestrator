@@ -6,10 +6,7 @@
     "name": "Demonbane18"
   },
   "homepage": "https://github.com/Demonbane18/astral-orchestrator",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Demonbane18/astral-orchestrator.git"
-  },
+  "repository": "https://github.com/Demonbane18/astral-orchestrator",
   "license": "MIT",
   "keywords": [
     "codex",

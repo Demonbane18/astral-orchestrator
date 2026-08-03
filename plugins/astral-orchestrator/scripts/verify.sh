@@ -67,7 +67,7 @@ if manifest.get("interface", {}).get("displayName") != "Astral Orchestrator":
 if manifest.get("homepage") != "https://github.com/Demonbane18/astral-orchestrator":
     raise SystemExit("manifest homepage must be the Astral Orchestrator repository")
 repository = manifest.get("repository")
-if not isinstance(repository, dict) or repository.get("url") != "https://github.com/Demonbane18/astral-orchestrator.git":
+if repository != "https://github.com/Demonbane18/astral-orchestrator":
     raise SystemExit("manifest repository metadata is invalid")
 
 prompts = manifest.get("interface", {}).get("defaultPrompt")
