@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Astral Orchestrator is a local Codex plugin that routes work through Sol, Luna, Terra, checks, and fresh review.">
+    <title>Astral Orchestrator — checked work, plainly routed</title>
+    <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
+    <link rel="stylesheet" href="assets/site.css">
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="./" aria-label="Astral Orchestrator home">
+          <img src="assets/astral-orchestrator-favicon-32.png" alt="" width="32" height="32">
+          <span>Astral Orchestrator</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <ul>
+            <li><a href="./" aria-current="page">Home</a></li>
+            <li><a href="support/">Support</a></li>
+            <li><a href="privacy/">Privacy</a></li>
+            <li><a href="terms/">Terms</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" aria-labelledby="home-title">
+        <div class="shell hero-grid">
+          <div>
+            <p class="eyebrow">A local Codex plugin</p>
+            <h1 id="home-title">Turn a request into a checked result.</h1>
+            <p class="hero-copy">
+              Astral Orchestrator gives a bigger task a clear path: one lead keeps the
+              plan in view, the right worker handles the implementation, and the result
+              is checked before it is handed back.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#install">See the install command</a>
+              <a class="button button-quiet" href="https://github.com/Demonbane18/astral-orchestrator">View the repository</a>
+            </div>
+          </div>
+          <div class="hero-mark">
+            <img src="assets/astral-orchestrator-mark-dark.png" alt="Astral Orchestrator mark: a golden star between lunar arcs" width="1024" height="1024">
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="plain-language-title">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">What it does</p>
+              <h2 id="plain-language-title">A steadier way to ask Codex for help.</h2>
+            </div>
+            <p>
+              Instead of treating every request the same, Astral separates planning,
+              implementation, checking, and review. You still decide the goal; Astral
+              makes the work path easier to follow.
+            </p>
+          </div>
+          <div class="two-up">
+            <article class="plain-card">
+              <h3>Built for real project work</h3>
+              <p>
+                Use it for code, documents, configuration, research artifacts, and other
+                work that lives in a project folder. It is a skills-only local plugin,
+                not a hosted service.
+              </p>
+            </article>
+            <article class="plain-card">
+              <h3>Careful about the route</h3>
+              <p>
+                Guided and Careful work require the configured route rather than quietly
+                swapping to a different model or effort. Tiny, easy-to-reverse tasks can
+                stay with Sol in Quick mode.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow" aria-labelledby="workflow-title">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">The work path</p>
+              <h2 id="workflow-title">One lead, the right lane, then a fresh look.</h2>
+            </div>
+            <p>
+              This is a visual guide to the usual Guided or Careful route. Sol keeps the
+              outcome and safety boundaries; Luna and Terra receive bounded work after
+              that plan is settled.
+            </p>
+          </div>
+
+          <div class="route-map" aria-label="Sol leads the plan. Luna handles narrow repeatable tasks. Terra handles context-heavy implementation. Checks run after the work, then a fresh Sol review happens before handoff.">
+            <article class="route-step route-step--sol">
+              <span class="route-number">01</span>
+              <div>
+                <h3>Sol leads</h3>
+                <p>Clarifies the outcome, plan, safety boundaries, and what success should look like.</p>
+              </div>
+            </article>
+            <div class="route-branches">
+              <article class="route-step">
+                <span class="route-number">02</span>
+                <div>
+                  <h3>Luna handles narrow work</h3>
+                  <p>Best for focused, repeatable tasks with a clear, settled instruction.</p>
+                </div>
+              </article>
+              <article class="route-step">
+                <span class="route-number">02</span>
+                <div>
+                  <h3>Terra handles context-heavy work</h3>
+                  <p>Best for broader implementation, integration, debugging, or careful refactoring.</p>
+                </div>
+              </article>
+            </div>
+            <article class="route-step">
+              <span class="route-number">03</span>
+              <div>
+                <h3>Run checks, then ask for a fresh Sol review</h3>
+                <p>The actual changes are inspected and relevant checks run before a separate Sol reviewer assesses the finished work.</p>
+              </div>
+            </article>
+            <p class="route-caption">The route is based on the work at hand. It is a practical workflow, not a promise that every task has the same result.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="install-section section" id="install" aria-labelledby="install-title">
+        <div class="shell">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow">Get started</p>
+              <h2 id="install-title">Install from the complete repository.</h2>
+            </div>
+            <p>
+              The dry run prints the planned commands first. The full install adds the
+              local marketplace, plugin, and companion profiles without overwriting a
+              different profile.
+            </p>
+          </div>
+          <div class="install-card">
+            <h3>Copy this into a terminal</h3>
+            <div class="command-wrap">
+              <pre id="install-command"><code>git clone https://github.com/Demonbane18/astral-orchestrator.git
+cd astral-orchestrator
+sh scripts/setup.sh --dry-run
+sh scripts/setup.sh</code></pre>
+              <button class="copy-button" type="button" data-copy-target="#install-command" aria-label="Copy the installation command" aria-live="polite">Copy command</button>
+            </div>
+            <p class="install-note">
+              You need Codex access to the configured Sol, Luna, and Terra models, plus
+              Python 3.11 or newer. For complete setup and troubleshooting details, read
+              the <a href="https://github.com/Demonbane18/astral-orchestrator#readme">repository README</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="next-title">
+        <div class="shell two-up">
+          <article class="plain-card">
+            <h2 id="next-title">Need a hand?</h2>
+            <p>Start with the README, then use the public issue tracker for bugs, confusing behavior, or improvement ideas.</p>
+            <p><a href="support/">Read support guidance</a></p>
+          </article>
+          <article class="plain-card">
+            <h2>Want the facts first?</h2>
+            <p>Read the concise privacy policy and terms before installing or using the project.</p>
+            <p><a href="privacy/">Read privacy</a> <span aria-hidden="true">·</span> <a href="terms/">Read terms</a></p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div>
+          <a class="brand" href="./">
+            <img src="assets/astral-orchestrator-favicon-32.png" alt="" width="32" height="32">
+            <span>Astral Orchestrator</span>
+          </a>
+          <p class="footer-note">An independent open-source project operated by JOHN PAUL FURIGAY FUSIN. It is not affiliated with or endorsed by OpenAI.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="./">Home</a></li>
+            <li><a href="support/">Support</a></li>
+            <li><a href="privacy/">Privacy</a></li>
+            <li><a href="terms/">Terms</a></li>
+            <li><a href="https://github.com/Demonbane18/astral-orchestrator">GitHub</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
