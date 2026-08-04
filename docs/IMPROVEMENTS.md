@@ -2,7 +2,7 @@
 
 ## Executive assessment
 
-Astral Orchestrator v3.0 provides the model-routed workflow adapted from Sol Advisor:
+Astral Orchestrator v3.2 provides the model-routed workflow adapted from Sol Advisor:
 one Sol orchestrator, two pinned implementation lanes, exact route evidence, bounded
 ownership, independent verification, and a fresh pinned Sol reviewer.
 
@@ -19,7 +19,7 @@ setup command, and refuses to silently downgrade a requested model or effort.
 | Context lane | Terra with a pinned high reasoning setting | Terra at configured effort; XHigh by default |
 | Reviewer | Fresh Sol High, requested read-only | Fresh Sol at configured effort; High by default and requested read-only |
 | Routing proof | Native metadata plus allowlisted rollout inspection | Same guarantee with a Python standard-library inspector |
-| User controls | Architecture-oriented workflow | Quick, Guided, and Careful modes |
+| User controls | Architecture-oriented workflow | Quick, Guided, Careful, and explicit Measured modes |
 | Installation | Companion agent installer | Plugin setup plus conflict-safe profile installer |
 | Removal | Manual profile cleanup | --remove deletes only exact, unmodified profiles |
 | Failure | Stop when strict preflight fails | Same; never silently substitute another lane |
@@ -45,6 +45,8 @@ setup command, and refuses to silently downgrade a requested model or effort.
 8. **Upgrade-resistant effort controls.** Users can tune all four lanes without editing
    profiles. Custom values force the exact-process route and unsupported values fail
    clearly instead of being downgraded.
+9. **Explicit measured evidence.** Measured freezes one work card and checks, records a
+   non-secret local phase ledger, and probes both candidate lanes only for ambiguity.
 
 ## Version 3 identity migration
 
@@ -63,6 +65,9 @@ action explicit.
 Strict routing requires recipients to have all three models and to start a new task after
 profile installation. This is less portable than generic delegation, but it directly
 satisfies the requirement for a real model-routed orchestrator.
+
+Measured is intentionally slower and more model-intensive than Guided. It is never an
+automatic default: users opt in when a frozen card and reproducible evidence are worth it.
 
 Runtime rollout formats are host implementation details and may change. The inspector
 therefore rejects missing or inconsistent fields instead of guessing, and the skill

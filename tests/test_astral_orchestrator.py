@@ -27,6 +27,7 @@ SKILL = PLUGIN / "skills/astral-orchestrator/SKILL.md"
 MODES = PLUGIN / "skills/astral-orchestrator/references/modes-and-risk.md"
 TEMPLATES = PLUGIN / "skills/astral-orchestrator/references/work-templates.md"
 ROUTING = PLUGIN / "skills/astral-orchestrator/references/routing-and-preflight.md"
+MEASURED = PLUGIN / "skills/astral-orchestrator/references/measured-mode.md"
 AGENTS = PLUGIN / "agents"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
@@ -37,6 +38,7 @@ CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
 BENCHMARK_SCORECARD = PLUGIN / "scripts/benchmark-scorecard.py"
 BENCHMARK_GUIDE = ROOT / "benchmarks/README.md"
 CONTEXT_FOOTPRINT = ROOT / "benchmarks/context-footprint-2026-08-03.json"
+CONTEXT_FOOTPRINT_MEASURED = ROOT / "benchmarks/context-footprint-2026-08-04.json"
 CONTEXT_FOOTPRINT_MEASURER = ROOT / "benchmarks/measure_instruction_context.py"
 ROUTING_DIAGRAM = ROOT / "assets/diagrams/routing-and-verification.svg"
 ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw"
@@ -80,7 +82,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.1.4")
+        self.assertEqual(manifest["version"], "3.2.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -96,7 +98,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.1"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.2"))
 
         prompts = manifest["interface"]["defaultPrompt"]
         self.assertGreaterEqual(len(prompts), 2)
@@ -105,14 +107,56 @@ class MarketplaceTests(unittest.TestCase):
 
 
 class SkillContractTests(unittest.TestCase):
-    def test_skill_uses_three_plain_language_modes(self):
+    def test_skill_uses_four_plain_language_modes(self):
         skill = read(SKILL)
         modes = read(MODES)
 
-        for mode in ("Quick", "Guided", "Careful"):
+        for mode in ("Quick", "Guided", "Careful", "Measured"):
             self.assertIn(mode, skill)
             self.assertIn(mode, modes)
         self.assertRegex(skill, r"Guided[^\n]*(default|Default)")
+
+    def test_measured_state_sequence_templates_and_safe_state_are_explicit(self):
+        measured = " ".join(read(MEASURED).lower().split())
+
+        for required in (
+            "prepare (unpersisted)",
+            "one or more numbered execution attempts",
+            "each in the order `implementation`, `verification`, `review`",
+            "increment the attempt number",
+            "complete is allowed only after a `ship` verdict",
+            "`rethink` does not mutate the frozen card",
+            "current attempt's first unfinished phase",
+            "before any writes",
+            "before recording `freeze started`",
+            "first unfinished base phase",
+            "id -u",
+            "empty or non-decimal result",
+            "canonical temp root",
+            "/tmp/astral-orchestrator-measured-<effective-uid>",
+            "exactly one luna probe and one terra probe",
+            "identical frozen card",
+            "owner-only parent directory",
+            "symlink parents",
+            "personal or regulated data",
+            "no-follow",
+            "atomic",
+            "measured planning probe",
+            "measured ledger entry",
+            "not hard sandbox isolation",
+        ):
+            self.assertIn(required, measured)
+
+        historical = load_json(CONTEXT_FOOTPRINT)
+        expected_template = next(
+            item for item in historical["files"]
+            if item["path"].endswith("references/work-templates.md")
+        )
+        template_data = TEMPLATES.read_bytes()
+        self.assertEqual(len(template_data), expected_template["bytes"])
+        self.assertEqual(hashlib.sha256(template_data).hexdigest(), expected_template["sha256"])
+        self.assertNotIn("Measured planning probe", read(TEMPLATES))
+        self.assertNotIn("Measured ledger entry", read(TEMPLATES))
 
     def test_skill_routes_work_to_exact_model_pinned_roles(self):
         skill = read(SKILL).lower()
@@ -867,7 +911,7 @@ class UserExperienceTests(unittest.TestCase):
         readme = " ".join(read(ROOT / "README.md").lower().split())
 
         self.assertIn("published, installable, open-source codex plugin", readme)
-        self.assertIn("v3.1.4", readme)
+        self.assertIn("v3.2.0", readme)
         self.assertIn("not listed or endorsed by codex marketplace", readme)
         self.assertIn("mode determines whether to delegate", readme)
         self.assertIn("work characteristics choose sol, luna, or terra", readme)
@@ -931,19 +975,18 @@ class UserExperienceTests(unittest.TestCase):
             self.assertEqual(source_text, svg_text, source.name)
 
     def test_context_footprint_evidence_matches_the_published_instruction_files(self):
-        evidence = load_json(CONTEXT_FOOTPRINT)
+        self.assertTrue(CONTEXT_FOOTPRINT.is_file())
+        evidence = load_json(CONTEXT_FOOTPRINT_MEASURED)
         self.assertTrue(CONTEXT_FOOTPRINT_MEASURER.is_file())
-        self.assertEqual(evidence["measured_on"], "2026-08-03")
+        self.assertEqual(evidence["measured_on"], "2026-08-04")
         self.assertEqual(
             evidence["tokenizer"],
             {"library": "tiktoken", "version": "0.13.0", "encoding": "o200k_base"},
         )
 
         expected = {
-            "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md": (8501, 1205, 1791),
-            "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md": (4027, 610, 788),
-            "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md": (3224, 455, 745),
-            "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md": (8149, 1158, 1725),
+            item["path"]: (item["bytes"], item["words"], item["tokens"])
+            for item in evidence["files"]
         }
         self.assertEqual({item["path"] for item in evidence["files"]}, set(expected))
         for item in evidence["files"]:
@@ -956,7 +999,7 @@ class UserExperienceTests(unittest.TestCase):
             self.assertEqual(item["words"], len(data.decode("utf-8").split()))
             self.assertEqual(item["sha256"], hashlib.sha256(data).hexdigest())
 
-        self.assertEqual(evidence["bundles"]["core"]["tokens"], 1791)
+        self.assertEqual(evidence["bundles"]["core"]["tokens"], evidence["files"][0]["tokens"])
         self.assertEqual(
             evidence["bundles"]["quick"],
             {
@@ -965,13 +1008,38 @@ class UserExperienceTests(unittest.TestCase):
                     "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
                     "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
                 ],
-                "tokens": 3324,
+                "tokens": sum(item["tokens"] for item in evidence["files"][:3]),
             },
         )
-        self.assertEqual(evidence["bundles"]["full"]["tokens"], 5049)
-        self.assertEqual(evidence["quick_vs_full"], {"tokens_avoided": 1725, "percent_avoided": 34.2})
-        self.assertIn("tiktoken==0.13.0", read(BENCHMARK_GUIDE))
-        self.assertIn("measure_instruction_context.py", read(BENCHMARK_GUIDE))
+        self.assertEqual(evidence["bundles"]["full"]["tokens"], sum(item["tokens"] for item in evidence["files"][:4]))
+        self.assertEqual(
+            evidence["quick_vs_full"]["tokens_avoided"],
+            evidence["bundles"]["full"]["tokens"] - evidence["bundles"]["quick"]["tokens"],
+        )
+        self.assertEqual(evidence["bundles"]["guided"], evidence["bundles"]["full"])
+        self.assertGreater(evidence["bundles"]["measured"]["tokens"], evidence["bundles"]["full"]["tokens"])
+        benchmark_guide = read(BENCHMARK_GUIDE)
+        self.assertIn("tiktoken==0.13.0", benchmark_guide)
+        self.assertIn("measure_instruction_context.py", benchmark_guide)
+
+        readme = read(ROOT / "README.md")
+        footprint_section = " ".join(
+            readme.split("## Measured instruction-context footprint", 1)[1]
+            .split("## Configurable effort levels", 1)[0]
+            .split()
+        )
+        self.assertIn("published v3.2.0 core", footprint_section)
+        for value in (
+            evidence["bundles"]["core"]["tokens"],
+            evidence["bundles"]["quick"]["tokens"],
+            evidence["bundles"]["full"]["tokens"],
+            evidence["quick_vs_full"]["tokens_avoided"],
+        ):
+            self.assertIn(f"**{value:,} tokens", footprint_section)
+        self.assertIn(
+            f"({evidence['quick_vs_full']['percent_avoided']}%)",
+            footprint_section,
+        )
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"

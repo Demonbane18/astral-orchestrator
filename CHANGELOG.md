@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.2.0 — 2026-08-04
+
+### Added
+
+- Added explicit opt-in Measured mode: a deliberately slower, evidence-oriented route
+  with one frozen work card, deterministic lane selection, and fresh review evidence.
+- Added private non-secret owner-only local state keyed by effective UID plus independent
+  repository-root and frozen-card SHA-256 prefixes, with safe resume/archive handling.
+- Added 2026-08-04 instruction-context evidence for core, Quick, Guided, and Measured
+  bundles while preserving historical v3.1.4 evidence.
+
 ## 3.1.4 — 2026-08-03
 
 ### Documentation
