@@ -47,6 +47,11 @@ ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw
 SCORECARD_DIAGRAM = ROOT / "assets/diagrams/outcome-scorecard.svg"
 SCORECARD_EXCALIDRAW = ROOT / "assets/diagrams/outcome-scorecard.excalidraw"
 SPEC = ROOT / "docs/SPEC.md"
+RELEASE_SKILL = ROOT / "skills/track-astral-releases/SKILL.md"
+RELEASE_SKILL_METADATA = ROOT / "skills/track-astral-releases/agents/openai.yaml"
+RELEASE_SURFACES = ROOT / "skills/track-astral-releases/references/release-surfaces.md"
+RELEASE_LEDGER_SCRIPT = ROOT / "skills/track-astral-releases/scripts/release-ledger.py"
+RELEASE_LEDGER = ROOT / "release/astral-release-ledger.json"
 CANONICAL_IMPROVEMENTS_URL = (
     "https://github.com/Demonbane18/astral-orchestrator/blob/main/docs/IMPROVEMENTS.md"
 )
@@ -1650,6 +1655,123 @@ class BenchmarkScorecardTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Astral Orchestrator benchmark scorecard", result.stdout)
+
+
+class ReleaseTrackingSkillTests(unittest.TestCase):
+    def run_ledger(self, *arguments: str):
+        return subprocess.run(
+            ["python3", str(RELEASE_LEDGER_SCRIPT), *arguments],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    def test_release_skill_tracks_independent_public_surfaces(self):
+        skill = read(RELEASE_SKILL)
+        reference = read(RELEASE_SURFACES)
+        metadata = read(RELEASE_SKILL_METADATA)
+
+        for surface in (
+            "source",
+            "github_release",
+            "github_marketplace",
+            "vercel",
+            "openai_submission",
+            "openai_directory",
+        ):
+            self.assertIn(surface, skill)
+            self.assertIn(surface, reference)
+        self.assertIn("never infer one publication surface from another", read(ROOT / "AGENTS.md"))
+        self.assertIn("legal or policy attestations", skill)
+        self.assertIn("partially released", skill)
+        self.assertIn("$track-astral-releases", metadata)
+
+    def test_release_ledger_reports_the_current_public_version_lag(self):
+        result = self.run_ledger(
+            "status",
+            "--ledger",
+            str(RELEASE_LEDGER),
+            "--expected-version",
+            "3.2.0",
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        status = json.loads(result.stdout)
+        surfaces = status["surfaces"]
+        self.assertEqual(surfaces["github_release"]["version"], "3.2.0")
+        self.assertEqual(surfaces["vercel"]["status"], "deployed")
+        self.assertEqual(surfaces["openai_submission"]["status"], "draft")
+        self.assertEqual(surfaces["openai_directory"]["version"], "3.1.3")
+
+    def test_strict_release_check_fails_while_public_directory_lags(self):
+        result = self.run_ledger(
+            "check",
+            "--ledger",
+            str(RELEASE_LEDGER),
+            "--expected-version",
+            "3.2.0",
+            "--manifest",
+            str(MANIFEST),
+        )
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("openai_directory is 3.1.3", result.stderr)
+
+    def test_record_is_idempotent_and_preserves_history(self):
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = Path(directory) / "ledger.json"
+            shutil.copy2(RELEASE_LEDGER, ledger)
+            before = load_json(ledger)
+            arguments = (
+                "record",
+                "--ledger",
+                str(ledger),
+                "--surface",
+                "openai_submission",
+                "--version",
+                "3.2.0",
+                "--status",
+                "submitted",
+                "--observed-at",
+                "2026-08-04T16:00:00+08:00",
+                "--evidence",
+                "OpenAI Platform accepted the review submission.",
+            )
+
+            first = self.run_ledger(*arguments)
+            second = self.run_ledger(*arguments)
+            after = load_json(ledger)
+
+        self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+        self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+        self.assertEqual(len(after["events"]), len(before["events"]) + 1)
+        self.assertIn("ledger unchanged", second.stdout)
+
+    def test_record_rejects_a_status_that_cannot_exist_on_the_surface(self):
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = Path(directory) / "ledger.json"
+            shutil.copy2(RELEASE_LEDGER, ledger)
+            result = self.run_ledger(
+                "record",
+                "--ledger",
+                str(ledger),
+                "--surface",
+                "openai_directory",
+                "--version",
+                "3.2.0",
+                "--status",
+                "approved",
+                "--observed-at",
+                "2026-08-04T16:00:00+08:00",
+                "--evidence",
+                "Approval is not publication.",
+            )
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("invalid for openai_directory", result.stderr)
 
 
 class VerificationTests(unittest.TestCase):

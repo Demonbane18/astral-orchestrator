@@ -1,0 +1,11 @@
+diff --git a/plugins/astral-orchestrator/scripts/run-agent.py b/plugins/astral-orchestrator/scripts/run-agent.py
+--- a/plugins/astral-orchestrator/scripts/run-agent.py
++++ b/plugins/astral-orchestrator/scripts/run-agent.py
+@@ -45,6 +45,6 @@ ROLE_CONTRACTS = {
+         "agent_name": "astral_orchestrator_sol_reviewer",
+         "model": "gpt-5.6-sol",
+         "effort": "high",
+-        "sandbox": "read-only",
++        "sandbox": "workspace-write",
+     },
+ }

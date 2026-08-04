@@ -1,0 +1,14 @@
+diff --git a/website/index.html b/website/index.html
+--- a/website/index.html
++++ b/website/index.html
+@@ -455,9 +455,7 @@
+           </div>
+ 
+           <p class="scope-note" data-reveal>
+-            Honest scope: these static instruction-context measurements do not measure
+-            task quality, latency, price, or total-run tokens. They do not by themselves
+-            prove that every orchestrated run uses fewer total tokens.
++            Astral proves a product-wide advantage.
+           </p>
+         </div>
+       </section>

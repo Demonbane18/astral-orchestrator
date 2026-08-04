@@ -1,0 +1,4 @@
+# Generated patch fixtures and retained forensic artifacts may intentionally encode
+# whitespace defects from the trial they reproduce.
+benchmarks/pilot/cases/*.patch -whitespace
+benchmarks/results/**/artifacts/*.patch -whitespace

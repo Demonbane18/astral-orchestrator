@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astral Release Tracker"
+  short_description: "Track every Astral release surface"
+  default_prompt: "Use $track-astral-releases to reconcile this update across source, GitHub, Vercel, marketplace, and OpenAI public releases."

@@ -1,0 +1,157 @@
+diff --git a/benchmarks/README.md b/benchmarks/README.md
+index 911a10c..676b0f8 100644
+--- a/benchmarks/README.md
++++ b/benchmarks/README.md
+@@ -54,6 +54,30 @@ route roles, models, expected efforts, and observed efforts are required. The
+ single-Sol control and Astral treatment may intentionally use different route settings;
+ the scorecard compares their outcomes, not identical model configurations.
+ 
++## Check frozen effort settings
++
++Before a run, check the effective effort settings against the values frozen for that
++case. Supply `--check` with one or more repeatable `--expect lane=value` options:
++
++```sh
++python3 plugins/astral-orchestrator/scripts/configure-effort.py \
++  --settings-file /path/to/effort-levels.toml \
++  --check \
++  --expect orchestrator=high \
++  --expect luna=xhigh \
++  --expect terra=xhigh \
++  --expect reviewer=high
++```
++
++The lanes are `orchestrator`, `luna`, `terra`, and `reviewer`; the allowed values are
++`minimal`, `low`, `medium`, `high`, `xhigh`, `max`, and `ultra`. Check mode requires at
++least one expectation and cannot be combined with settings changes. It always emits a
++compact JSON report with `changed: false`, the current `effort` values, requested
++`expected` values, the settings-file path and presence, `matched`, and any
++`mismatches`. It exits zero only when every expectation matches; a mismatch or invalid
++expectation exits non-zero. Check mode only reads the supplied settings file: it never
++creates, writes, or changes it.
++
+ The control is `single-sol`: one Sol route. The treatment is `astral`: an orchestrator,
+ at least one Luna or Terra worker, and a fresh Sol reviewer. Record observed route facts
+ for every lane rather than assuming that a task label proves its model or effort.
+diff --git a/plugins/astral-orchestrator/scripts/configure-effort.py b/plugins/astral-orchestrator/scripts/configure-effort.py
+index 1db7e21..a7ccab0 100644
+--- a/plugins/astral-orchestrator/scripts/configure-effort.py
++++ b/plugins/astral-orchestrator/scripts/configure-effort.py
+@@ -44,6 +44,17 @@ def parse_args() -> argparse.Namespace:
+         action="store_true",
+         help="Show the current effective settings without changing them.",
+     )
++    parser.add_argument(
++        "--check",
++        action="store_true",
++        help="Check requested effort expectations without changing settings.",
++    )
++    parser.add_argument(
++        "--expect",
++        action="append",
++        metavar="LANE=EFFORT",
++        help="Expected lane effort for --check; may be supplied more than once.",
++    )
+     parser.add_argument(
+         "--reset",
+         action="store_true",
+@@ -63,6 +74,26 @@ def parse_args() -> argparse.Namespace:
+     return parser.parse_args()
+ 
+ 
++def parse_expectations(raw_expectations: list[str]) -> dict[str, str]:
++    """Validate --expect values and return them indexed by lane."""
++    expectations: dict[str, str] = {}
++    for raw_expectation in raw_expectations:
++        lane, separator, effort = raw_expectation.partition("=")
++        if separator != "=" or not lane or not effort or "=" in effort:
++            fail("--expect must use LANE=EFFORT")
++        if lane not in LANES:
++            fail(f"unknown effort lane: {lane}; choose from " + ", ".join(LANES))
++        if effort not in ALLOWED_EFFORTS:
++            fail(
++                f"unsupported effort for {lane}: {effort}; choose from "
++                + ", ".join(ALLOWED_EFFORTS)
++            )
++        if lane in expectations:
++            fail(f"--expect may only be supplied once for {lane}")
++        expectations[lane] = effort
++    return expectations
++
++
+ def print_result(
+     efforts: dict[str, str],
+     settings_path: Path,
+@@ -96,6 +127,42 @@ def print_result(
+         print("Note: max and ultra are model- and account-dependent.")
+ 
+ 
++def print_check_result(
++    efforts: dict[str, str],
++    expectations: dict[str, str],
++    settings_path: Path,
++    *,
++    file_present: bool,
++) -> bool:
++    """Print a read-only expectation report and return whether it matched."""
++    mismatches = [
++        {
++            "actual": efforts[lane],
++            "expected": expected,
++            "lane": lane,
++        }
++        for lane, expected in expectations.items()
++        if efforts[lane] != expected
++    ]
++    matched = not mismatches
++    print(
++        json.dumps(
++            {
++                "changed": False,
++                "effort": efforts,
++                "expected": expectations,
++                "matched": matched,
++                "mismatches": mismatches,
++                "settings_file": str(settings_path),
++                "settings_file_present": file_present,
++            },
++            separators=(",", ":"),
++            sort_keys=True,
++        )
++    )
++    return matched
++
++
+ def main() -> int:
+     if sys.version_info < (3, 11):
+         fail("Python 3.11 or newer is required.")
+@@ -106,6 +173,14 @@ def main() -> int:
+         for lane in LANES
+         if getattr(args, lane) is not None
+     }
++    if args.expect and not args.check:
++        fail("--expect requires --check")
++    if args.check:
++        if args.show or args.reset or requested:
++            fail("--check cannot be combined with --show, --reset, or lane changes")
++        if not args.expect:
++            fail("--check requires at least one --expect LANE=EFFORT")
++        expectations = parse_expectations(args.expect)
+     if args.reset and requested:
+         fail("--reset cannot be combined with individual lane changes")
+     if args.show and (args.reset or requested):
+@@ -113,6 +188,14 @@ def main() -> int:
+ 
+     try:
+         efforts, file_present = load_efforts(args.settings_file)
++        if args.check:
++            return 0 if print_check_result(
++                efforts,
++                expectations,
++                args.settings_file,
++                file_present=file_present,
++            ) else 1
++
+         changed = False
+         if args.reset:
+             efforts = dict(DEFAULT_EFFORTS)

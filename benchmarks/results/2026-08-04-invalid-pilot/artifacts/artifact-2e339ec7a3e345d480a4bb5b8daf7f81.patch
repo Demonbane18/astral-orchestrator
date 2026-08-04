@@ -1,0 +1,151 @@
+diff --git a/benchmarks/README.md b/benchmarks/README.md
+index 911a10c..7ad2a5a 100644
+--- a/benchmarks/README.md
++++ b/benchmarks/README.md
+@@ -28,6 +28,27 @@ The command exits non-zero if the tokenizer version, measured instruction files,
+ or recorded counts no longer match. Run the same command without `--check` to print a
+ fresh JSON measurement for review.
+ 
++## Check frozen effort settings
++
++Before recording benchmark runs, check the lane efforts against a specific settings
++file without changing it. Pass one or more `lane=value` expectations by repeating
++`--expect`:
++
++```sh
++python3 plugins/astral-orchestrator/scripts/configure-effort.py \
++  --settings-file /path/to/effort-levels.toml \
++  --check \
++  --expect orchestrator=high \
++  --expect luna=xhigh \
++  --json
++```
++
++Check mode is read-only: it never creates or rewrites the supplied settings file. It
++prints JSON with the effective efforts, requested expectations, any mismatches, and a
++`matched` boolean. The command exits zero only when every expectation matches; any
++mismatch exits non-zero. If the file does not exist, the effective defaults are checked
++and `settings_file_present` is false.
++
+ ## Local outcome scorecard
+ 
+ Use this guide to compare an Astral multi-agent run with a single-Sol control for the
+diff --git a/plugins/astral-orchestrator/scripts/configure-effort.py b/plugins/astral-orchestrator/scripts/configure-effort.py
+index 1db7e21..a15a3ac 100644
+--- a/plugins/astral-orchestrator/scripts/configure-effort.py
++++ b/plugins/astral-orchestrator/scripts/configure-effort.py
+@@ -49,6 +49,18 @@ def parse_args() -> argparse.Namespace:
+         action="store_true",
+         help="Restore all four effort levels to Astral Orchestrator defaults.",
+     )
++    parser.add_argument(
++        "--check",
++        action="store_true",
++        help="Check one or more lane=value expectations without changing settings.",
++    )
++    parser.add_argument(
++        "--expect",
++        action="append",
++        default=[],
++        metavar="LANE=VALUE",
++        help="Expected effort in check mode; repeat for additional lanes.",
++    )
+     parser.add_argument(
+         "--json",
+         action="store_true",
+@@ -63,6 +75,28 @@ def parse_args() -> argparse.Namespace:
+     return parser.parse_args()
+ 
+ 
++def parse_expectations(values: list[str]) -> dict[str, str]:
++    expectations: dict[str, str] = {}
++    for value in values:
++        lane, separator, effort = value.partition("=")
++        if not separator or not lane or not effort or "=" in effort:
++            fail(f"invalid expectation {value!r}; use lane=value")
++        if lane not in LANES:
++            fail(
++                f"unknown expectation lane {lane!r}; choose from "
++                + ", ".join(LANES)
++            )
++        if effort not in ALLOWED_EFFORTS:
++            fail(
++                f"unsupported expected effort for {lane}: {effort}; choose from "
++                + ", ".join(ALLOWED_EFFORTS)
++            )
++        if lane in expectations and expectations[lane] != effort:
++            fail(f"conflicting expectations for {lane}")
++        expectations[lane] = effort
++    return expectations
++
++
+ def print_result(
+     efforts: dict[str, str],
+     settings_path: Path,
+@@ -70,16 +104,31 @@ def print_result(
+     file_present: bool,
+     changed: bool,
+     as_json: bool,
++    expectations: dict[str, str] | None = None,
+ ) -> None:
+     if as_json:
++        result: dict[str, object] = {
++            "changed": changed,
++            "effort": efforts,
++            "settings_file": str(settings_path),
++            "settings_file_present": file_present,
++        }
++        if expectations is not None:
++            mismatches = {
++                lane: {"actual": efforts[lane], "expected": expected}
++                for lane, expected in expectations.items()
++                if efforts[lane] != expected
++            }
++            result.update(
++                {
++                    "expected": expectations,
++                    "matched": not mismatches,
++                    "mismatches": mismatches,
++                }
++            )
+         print(
+             json.dumps(
+-                {
+-                    "changed": changed,
+-                    "effort": efforts,
+-                    "settings_file": str(settings_path),
+-                    "settings_file_present": file_present,
+-                },
++                result,
+                 separators=(",", ":"),
+                 sort_keys=True,
+             )
+@@ -106,6 +155,13 @@ def main() -> int:
+         for lane in LANES
+         if getattr(args, lane) is not None
+     }
++    expectations = parse_expectations(args.expect)
++    if args.check and not expectations:
++        fail("--check requires at least one --expect lane=value")
++    if expectations and not args.check:
++        fail("--expect requires --check")
++    if args.check and (args.show or args.reset or requested):
++        fail("--check cannot be combined with --show, --reset, or lane changes")
+     if args.reset and requested:
+         fail("--reset cannot be combined with individual lane changes")
+     if args.show and (args.reset or requested):
+@@ -132,8 +188,13 @@ def main() -> int:
+         args.settings_file,
+         file_present=file_present,
+         changed=changed,
+-        as_json=args.json,
++        as_json=args.json or args.check,
++        expectations=expectations if args.check else None,
+     )
++    if args.check and any(
++        efforts[lane] != expected for lane, expected in expectations.items()
++    ):
++        return 1
+     return 0
+ 
+ 

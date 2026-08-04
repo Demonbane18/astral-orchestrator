@@ -801,7 +801,10 @@ class WebsiteContractTests(unittest.TestCase):
                 self.assertIn(phrase, home)
 
     def test_homepage_publishes_the_current_instruction_context_measurements(self):
-        home = page_text(PAGES["home"])
+        public_evidence = {
+            "README": " ".join(page_text(ROOT / "README.md").split()),
+            "homepage": " ".join(page_text(PAGES["home"]).split()),
+        }
         benchmark = json.loads(
             page_text(ROOT / "benchmarks" / "context-footprint-2026-08-04.json")
         )
@@ -817,16 +820,55 @@ class WebsiteContractTests(unittest.TestCase):
         )
         self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 1940)
         self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 34.4)
-        for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
-            with self.subTest(figure=figure):
-                self.assertIn(figure, home)
-        for scope_statement in (
-            "static instruction-context measurements",
-            "not task quality, latency, price, or total-run tokens",
-            "published v3.2.0 measurement",
+        for document, evidence in public_evidence.items():
+            for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
+                with self.subTest(document=document, figure=figure):
+                    self.assertIn(figure, evidence)
+            for scope_statement in (
+                "static instruction-context measurements",
+                "not task quality, latency, price, or total-run tokens",
+                "published v3.2.0 measurement",
+            ):
+                with self.subTest(document=document, scope_statement=scope_statement):
+                    self.assertIn(scope_statement, evidence)
+
+        for document, evidence in public_evidence.items():
+            for statement in (
+                "progressive context loading",
+                "exact pinned routes",
+                "objective checks plus fresh review",
+                "local privacy/no-analytics runtime posture",
+                "current repository verification passed",
+                "109 automated tests",
+                "package verification",
+                "validates behavior and contracts",
+                "does not prove Astral beats single-Sol",
+                "first end-to-end pilot",
+                "invalid exploratory evidence",
+                "fresh review found protocol defects",
+                "No valid outcome comparison exists.",
+                "does not publish outcome, token, time, or quality numbers",
+            ):
+                with self.subTest(document=document, statement=statement):
+                    self.assertIn(statement, evidence)
+
+        readme = public_evidence["README"]
+        homepage = public_evidence["homepage"]
+        for link in (
+            "benchmarks/README.md",
+            "benchmarks/context-footprint-2026-08-04.json",
+            "benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
         ):
-            with self.subTest(scope_statement=scope_statement):
-                self.assertIn(scope_statement, home)
+            with self.subTest(readme_link=link):
+                self.assertIn(link, readme)
+
+        for link in (
+            "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/README.md",
+            "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-04.json",
+            "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
+        ):
+            with self.subTest(homepage_link=link):
+                self.assertIn(link, homepage)
 
     def test_homepage_credits_ori_eval_without_claiming_a_runtime_dependency(self):
         home = page_text(PAGES["home"])

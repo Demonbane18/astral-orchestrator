@@ -1,0 +1,1793 @@
+{
+  "evidence_status": "invalid",
+  "invalid_evidence": true,
+  "invalid_reasons": [
+    "The runner launched from a dirty working tree rather than the frozen base commit.",
+    "The acceptance fixture did not require each assigned task to produce a meaningful change.",
+    "The Guided route did not prove an independent primary-session orchestrator call.",
+    "The generated preview and scorecard predated the corrected schema-v2 validation rules."
+  ],
+  "cases": {
+    "effort-configuration": {
+      "case_fingerprint": "09788aad0196dac1c2be59fd9ad0d973d327ce7b3e961b0d5df5c370f366e2df",
+      "comparisons": {
+        "astral-guided_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": 377600.0,
+            "mean_input_tokens": 459664.5,
+            "mean_judge_score": -2.0,
+            "mean_model_calls": 2.0,
+            "mean_output_tokens": 4797.0,
+            "mean_reasoning_output_tokens": 2058.5,
+            "mean_total_tokens": 464461.5,
+            "mean_wall_time_seconds": 136.82448177045444,
+            "quality_per_10000_strategy_tokens": -0.9762566271997517,
+            "quality_per_elapsed_minute": -12.273783192183352,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": 213248.0,
+              "upper": 541952.0
+            },
+            "delta": 377600.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": 290372.0,
+              "upper": 628957.0
+            },
+            "delta": 459664.5
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": -4.0,
+              "upper": 0.0
+            },
+            "delta": -2.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 2.0,
+              "upper": 2.0
+            },
+            "delta": 2.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": 4564.0,
+              "upper": 5030.0
+            },
+            "delta": 4797.0
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 1499.0,
+              "upper": 2618.0
+            },
+            "delta": 2058.5
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": 295402.0,
+              "upper": 633521.0
+            },
+            "delta": 464461.5
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": 106.4810008329805,
+              "upper": 167.16796270792838
+            },
+            "delta": 136.82448177045444
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -1.1446312859659498,
+              "upper": -0.8078819684335536
+            },
+            "delta": -0.9762566271997517
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -13.804819838926019,
+              "upper": -10.742746545440685
+            },
+            "delta": -12.273783192183352
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        },
+        "single-sol-max_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": -83200.0,
+            "mean_input_tokens": -90114.5,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": 0.0,
+            "mean_output_tokens": -611.5,
+            "mean_reasoning_output_tokens": -62.0,
+            "mean_total_tokens": -90726.0,
+            "mean_wall_time_seconds": 16.13742645853199,
+            "quality_per_10000_strategy_tokens": 0.8707969262487564,
+            "quality_per_elapsed_minute": -0.14916849635780416,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": -215040.0,
+              "upper": 48640.0
+            },
+            "delta": -83200.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": -236402.0,
+              "upper": 56173.0
+            },
+            "delta": -90114.5
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": -5044.0,
+              "upper": 3821.0
+            },
+            "delta": -611.5
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": -2774.0,
+              "upper": 2650.0
+            },
+            "delta": -62.0
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": -241446.0,
+              "upper": 59994.0
+            },
+            "delta": -90726.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": -78.03829749999568,
+              "upper": 110.31315041705966
+            },
+            "delta": 16.13742645853199
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -0.21911961244108302,
+              "upper": 1.9607134649385958
+            },
+            "delta": 0.8707969262487564
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -13.23863280474956,
+              "upper": 12.940295812033952
+            },
+            "delta": -0.14916849635780416
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        }
+      },
+      "repetition_count": 2,
+      "variants": {
+        "astral-guided": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 812672.0,
+          "mean_input_tokens": 943501.5,
+          "mean_judge_score": 98.0,
+          "mean_model_calls": 3.0,
+          "mean_output_tokens": 13930.5,
+          "mean_process_cached_input_tokens": 812672.0,
+          "mean_process_input_tokens": 943501.5,
+          "mean_process_output_tokens": 13930.5,
+          "mean_process_reasoning_output_tokens": 6482.0,
+          "mean_process_total_tokens": 957432.0,
+          "mean_quality_score": 98.0,
+          "mean_reasoning_output_tokens": 6482.0,
+          "mean_total_tokens": 957432.0,
+          "mean_wall_time_seconds": 340.9965709374519,
+          "quality_per_10000_strategy_tokens": 1.0235713867930045,
+          "quality_per_elapsed_minute": 17.243575159231007,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-max": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 351872.0,
+          "mean_input_tokens": 393722.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 8522.0,
+          "mean_process_cached_input_tokens": 351872.0,
+          "mean_process_input_tokens": 393722.5,
+          "mean_process_output_tokens": 8522.0,
+          "mean_process_reasoning_output_tokens": 4361.5,
+          "mean_process_total_tokens": 402244.5,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 4361.5,
+          "mean_total_tokens": 402244.5,
+          "mean_wall_time_seconds": 220.30951562552946,
+          "quality_per_10000_strategy_tokens": 2.4860501510896977,
+          "quality_per_elapsed_minute": 27.23441147316798,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-xhigh": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 435072.0,
+          "mean_input_tokens": 483837.0,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 9133.5,
+          "mean_process_cached_input_tokens": 435072.0,
+          "mean_process_input_tokens": 483837.0,
+          "mean_process_output_tokens": 9133.5,
+          "mean_process_reasoning_output_tokens": 4423.5,
+          "mean_process_total_tokens": 492970.5,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 4423.5,
+          "mean_total_tokens": 492970.5,
+          "mean_wall_time_seconds": 204.17208916699747,
+          "quality_per_10000_strategy_tokens": 2.0285189478883625,
+          "quality_per_elapsed_minute": 29.38697460793698,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        }
+      }
+    },
+    "launcher-telemetry": {
+      "case_fingerprint": "ede68293795ef689b021ad69e4b7f8cb081b1d1042a2c3ebc5557ee56451e28a",
+      "comparisons": {
+        "astral-guided_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": 223104.0,
+            "mean_input_tokens": 298773.5,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": 2.0,
+            "mean_output_tokens": 6284.5,
+            "mean_reasoning_output_tokens": 3731.0,
+            "mean_total_tokens": 305058.0,
+            "mean_wall_time_seconds": 159.03675322950585,
+            "quality_per_10000_strategy_tokens": -3.1086464177089717,
+            "quality_per_elapsed_minute": -66.53303499363474,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": 215808.0,
+              "upper": 230400.0
+            },
+            "delta": 223104.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": 285773.0,
+              "upper": 311774.0
+            },
+            "delta": 298773.5
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 2.0,
+              "upper": 2.0
+            },
+            "delta": 2.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": 6044.0,
+              "upper": 6525.0
+            },
+            "delta": 6284.5
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 3694.0,
+              "upper": 3768.0
+            },
+            "delta": 3731.0
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": 291817.0,
+              "upper": 318299.0
+            },
+            "delta": 305058.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": 157.81281920906622,
+              "upper": 160.26068724994548
+            },
+            "delta": 159.03675322950585
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -3.920273655225516,
+              "upper": -2.297019180192427
+            },
+            "delta": -3.1086464177089717
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -81.05133779335503,
+              "upper": -52.01473219391444
+            },
+            "delta": -66.53303499363474
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        },
+        "single-sol-max_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": -19712.0,
+            "mean_input_tokens": -3604.5,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": 0.0,
+            "mean_output_tokens": 1630.5,
+            "mean_reasoning_output_tokens": 944.0,
+            "mean_total_tokens": -1974.0,
+            "mean_wall_time_seconds": 31.683264250517823,
+            "quality_per_10000_strategy_tokens": -0.10908498076607431,
+            "quality_per_elapsed_minute": -27.801405324499278,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": -62720.0,
+              "upper": 23296.0
+            },
+            "delta": -19712.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": -42661.0,
+              "upper": 35452.0
+            },
+            "delta": -3604.5
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": 584.0,
+              "upper": 2677.0
+            },
+            "delta": 1630.5
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 407.0,
+              "upper": 1481.0
+            },
+            "delta": 944.0
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": -42077.0,
+              "upper": 38129.0
+            },
+            "delta": -1974.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": -4.553079499048181,
+              "upper": 67.91960800008383
+            },
+            "delta": 31.683264250517823
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -1.1103032732918212,
+              "upper": 0.8921333117596726
+            },
+            "delta": -0.10908498076607431
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -60.41070597601505,
+              "upper": 4.807895327016496
+            },
+            "delta": -27.801405324499278
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        }
+      },
+      "repetition_count": 2,
+      "variants": {
+        "astral-guided": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 394368.0,
+          "mean_input_tokens": 499819.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 3.0,
+          "mean_output_tokens": 8466.5,
+          "mean_process_cached_input_tokens": 394368.0,
+          "mean_process_input_tokens": 499819.5,
+          "mean_process_output_tokens": 8466.5,
+          "mean_process_reasoning_output_tokens": 4388.0,
+          "mean_process_total_tokens": 508286.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 4388.0,
+          "mean_total_tokens": 508286.0,
+          "mean_wall_time_seconds": 225.34014752099756,
+          "quality_per_10000_strategy_tokens": 1.9673963083775672,
+          "quality_per_elapsed_minute": 26.626413739437666,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-max": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 151552.0,
+          "mean_input_tokens": 197441.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 3812.5,
+          "mean_process_cached_input_tokens": 151552.0,
+          "mean_process_input_tokens": 197441.5,
+          "mean_process_output_tokens": 3812.5,
+          "mean_process_reasoning_output_tokens": 1601.0,
+          "mean_process_total_tokens": 201254.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 1601.0,
+          "mean_total_tokens": 201254.0,
+          "mean_wall_time_seconds": 97.98665854200954,
+          "quality_per_10000_strategy_tokens": 4.968845339719956,
+          "quality_per_elapsed_minute": 61.232825869122145,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-xhigh": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 171264.0,
+          "mean_input_tokens": 201046.0,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 2182.0,
+          "mean_process_cached_input_tokens": 171264.0,
+          "mean_process_input_tokens": 201046.0,
+          "mean_process_output_tokens": 2182.0,
+          "mean_process_reasoning_output_tokens": 657.0,
+          "mean_process_total_tokens": 203228.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 657.0,
+          "mean_total_tokens": 203228.0,
+          "mean_wall_time_seconds": 66.30339429149171,
+          "quality_per_10000_strategy_tokens": 4.920581809593166,
+          "quality_per_elapsed_minute": 90.49310467608957,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        }
+      }
+    },
+    "public-evidence-preview": {
+      "case_fingerprint": "b133e3cc7d66cf8e8ab7b354f26d05ce072cf944f7810612cbcbe5d471ad6345",
+      "comparisons": {
+        "astral-guided_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": 284288.0,
+            "mean_input_tokens": 335839.0,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": 2.0,
+            "mean_output_tokens": 4904.0,
+            "mean_reasoning_output_tokens": 2232.5,
+            "mean_total_tokens": 340743.0,
+            "mean_wall_time_seconds": 138.03391079202993,
+            "quality_per_10000_strategy_tokens": -3.356939046168198,
+            "quality_per_elapsed_minute": -91.32996298292493,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": 254720.0,
+              "upper": 313856.0
+            },
+            "delta": 284288.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": 296441.0,
+              "upper": 375237.0
+            },
+            "delta": 335839.0
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 2.0,
+              "upper": 2.0
+            },
+            "delta": 2.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": 4395.0,
+              "upper": 5413.0
+            },
+            "delta": 4904.0
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 1743.0,
+              "upper": 2722.0
+            },
+            "delta": 2232.5
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": 300836.0,
+              "upper": 380650.0
+            },
+            "delta": 340743.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": 137.6339704170823,
+              "upper": 138.43385116697755
+            },
+            "delta": 138.03391079202993
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -4.728385418940491,
+              "upper": -1.9854926733959049
+            },
+            "delta": -3.356939046168198
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -125.18269324508023,
+              "upper": -57.477232720769614
+            },
+            "delta": -91.32996298292493
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        },
+        "single-sol-max_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.0,
+            "mean_cached_input_tokens": -27136.0,
+            "mean_input_tokens": -23626.0,
+            "mean_judge_score": -0.5,
+            "mean_model_calls": 0.0,
+            "mean_output_tokens": 892.0,
+            "mean_reasoning_output_tokens": 733.5,
+            "mean_total_tokens": -22734.0,
+            "mean_wall_time_seconds": 23.21657100005541,
+            "quality_per_10000_strategy_tokens": 0.6094697658698747,
+            "quality_per_elapsed_minute": -17.11954696092544,
+            "rework_rate": 0.0,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": -116992.0,
+              "upper": 62720.0
+            },
+            "delta": -27136.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": -131137.0,
+              "upper": 83885.0
+            },
+            "delta": -23626.0
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": -1.0,
+              "upper": 0.0
+            },
+            "delta": -0.5
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": -1680.0,
+              "upper": 3464.0
+            },
+            "delta": 892.0
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": -565.0,
+              "upper": 2032.0
+            },
+            "delta": 733.5
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": -132817.0,
+              "upper": 87349.0
+            },
+            "delta": -22734.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": -32.251148082898,
+              "upper": 78.68429008300882
+            },
+            "delta": 23.21657100005541
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -2.4183996684628086,
+              "upper": 3.637339200202558
+            },
+            "delta": 0.6094697658698747
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -107.68836945734394,
+              "upper": 73.44927553549306
+            },
+            "delta": -17.11954696092544
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        }
+      },
+      "repetition_count": 2,
+      "variants": {
+        "astral-guided": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 459776.0,
+          "mean_input_tokens": 542846.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 3.0,
+          "mean_output_tokens": 7003.5,
+          "mean_process_cached_input_tokens": 459776.0,
+          "mean_process_input_tokens": 542846.5,
+          "mean_process_output_tokens": 7003.5,
+          "mean_process_reasoning_output_tokens": 2922.0,
+          "mean_process_total_tokens": 549850.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 2922.0,
+          "mean_total_tokens": 549850.0,
+          "mean_wall_time_seconds": 191.5707407920272,
+          "quality_per_10000_strategy_tokens": 1.81867782122397,
+          "quality_per_elapsed_minute": 31.320022959631988,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-max": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 148352.0,
+          "mean_input_tokens": 183381.5,
+          "mean_judge_score": 99.5,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 2991.5,
+          "mean_process_cached_input_tokens": 148352.0,
+          "mean_process_input_tokens": 183381.5,
+          "mean_process_output_tokens": 2991.5,
+          "mean_process_reasoning_output_tokens": 1423.0,
+          "mean_process_total_tokens": 186373.0,
+          "mean_quality_score": 99.5,
+          "mean_reasoning_output_tokens": 1423.0,
+          "mean_total_tokens": 186373.0,
+          "mean_wall_time_seconds": 76.75340100005269,
+          "quality_per_10000_strategy_tokens": 5.338756150300742,
+          "quality_per_elapsed_minute": 77.78156957495474,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-xhigh": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 175488.0,
+          "mean_input_tokens": 207007.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 2099.5,
+          "mean_process_cached_input_tokens": 175488.0,
+          "mean_process_input_tokens": 207007.5,
+          "mean_process_output_tokens": 2099.5,
+          "mean_process_reasoning_output_tokens": 689.5,
+          "mean_process_total_tokens": 209107.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 689.5,
+          "mean_total_tokens": 209107.0,
+          "mean_wall_time_seconds": 53.53682999999728,
+          "quality_per_10000_strategy_tokens": 4.782240671044011,
+          "quality_per_elapsed_minute": 112.07238082643865,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        }
+      }
+    },
+    "scorecard-correctness": {
+      "case_fingerprint": "29c983a4125394377851283088bf391fe873e9bb900cf6b2d7b82ebdad4cb066",
+      "comparisons": {
+        "astral-guided_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.5,
+            "mean_cached_input_tokens": 258688.0,
+            "mean_input_tokens": 341634.5,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": 1.5,
+            "mean_output_tokens": 7427.5,
+            "mean_reasoning_output_tokens": 4129.0,
+            "mean_total_tokens": 349062.0,
+            "mean_wall_time_seconds": 180.11033966654213,
+            "quality_per_10000_strategy_tokens": -0.8275873165586517,
+            "quality_per_elapsed_minute": -14.177574017115537,
+            "rework_rate": -0.5,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "delta": 0.5
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": 159488.0,
+              "upper": 357888.0
+            },
+            "delta": 258688.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": 244381.0,
+              "upper": 438888.0
+            },
+            "delta": 341634.5
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": 1.0,
+              "upper": 2.0
+            },
+            "delta": 1.5
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": 5750.0,
+              "upper": 9105.0
+            },
+            "delta": 7427.5
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 2936.0,
+              "upper": 5322.0
+            },
+            "delta": 4129.0
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": 250131.0,
+              "upper": 447993.0
+            },
+            "delta": 349062.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": 117.03574491699692,
+              "upper": 243.18493441608734
+            },
+            "delta": 180.11033966654213
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -1.1660106626134248,
+              "upper": -0.4891639705038786
+            },
+            "delta": -0.8275873165586517
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -19.36754241286566,
+              "upper": -8.987605621365415
+            },
+            "delta": -14.177574017115537
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": -1.0,
+              "upper": 0.0
+            },
+            "delta": -0.5
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        },
+        "single-sol-max_vs_single-sol-xhigh": {
+          "bootstrap_samples": 4000,
+          "bootstrap_seed": 20260804,
+          "deltas": {
+            "first_pass_acceptance_rate": 0.5,
+            "mean_cached_input_tokens": 4480.0,
+            "mean_input_tokens": 10497.0,
+            "mean_judge_score": 0.0,
+            "mean_model_calls": -0.5,
+            "mean_output_tokens": 1512.0,
+            "mean_reasoning_output_tokens": 1271.0,
+            "mean_total_tokens": 12009.0,
+            "mean_wall_time_seconds": 35.78207539545838,
+            "quality_per_10000_strategy_tokens": -0.0909145596809221,
+            "quality_per_elapsed_minute": -4.553021533437292,
+            "rework_rate": -0.5,
+            "route_correct_rate": 0.0,
+            "success_rate": 0.0
+          },
+          "first_pass_acceptance_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "delta": 0.5
+          },
+          "mean_cached_input_tokens": {
+            "ci95": {
+              "lower": -74240.0,
+              "upper": 83200.0
+            },
+            "delta": 4480.0
+          },
+          "mean_input_tokens": {
+            "ci95": {
+              "lower": -93309.0,
+              "upper": 114303.0
+            },
+            "delta": 10497.0
+          },
+          "mean_judge_score": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "mean_model_calls": {
+            "ci95": {
+              "lower": -1.0,
+              "upper": 0.0
+            },
+            "delta": -0.5
+          },
+          "mean_output_tokens": {
+            "ci95": {
+              "lower": -627.0,
+              "upper": 3651.0
+            },
+            "delta": 1512.0
+          },
+          "mean_reasoning_output_tokens": {
+            "ci95": {
+              "lower": 605.0,
+              "upper": 1937.0
+            },
+            "delta": 1271.0
+          },
+          "mean_total_tokens": {
+            "ci95": {
+              "lower": -93936.0,
+              "upper": 117954.0
+            },
+            "delta": 12009.0
+          },
+          "mean_wall_time_seconds": {
+            "ci95": {
+              "lower": -14.807160750031471,
+              "upper": 86.37131154094823
+            },
+            "delta": 35.78207539545838
+          },
+          "paired_trial_count": 2,
+          "quality_per_10000_strategy_tokens": {
+            "ci95": {
+              "lower": -0.4902167587009161,
+              "upper": 0.3083876393390719
+            },
+            "delta": -0.0909145596809221
+          },
+          "quality_per_elapsed_minute": {
+            "ci95": {
+              "lower": -10.949451748735907,
+              "upper": 1.8434086818613231
+            },
+            "delta": -4.553021533437292
+          },
+          "rework_rate": {
+            "ci95": {
+              "lower": -1.0,
+              "upper": 0.0
+            },
+            "delta": -0.5
+          },
+          "route_correct_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          },
+          "success_rate": {
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "delta": 0.0
+          }
+        }
+      },
+      "repetition_count": 2,
+      "variants": {
+        "astral-guided": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 702976.0,
+          "mean_input_tokens": 851102.5,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 3.0,
+          "mean_output_tokens": 15936.5,
+          "mean_process_cached_input_tokens": 702976.0,
+          "mean_process_input_tokens": 851102.5,
+          "mean_process_output_tokens": 15936.5,
+          "mean_process_reasoning_output_tokens": 7929.5,
+          "mean_process_total_tokens": 867039.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 7929.5,
+          "mean_total_tokens": 867039.0,
+          "mean_wall_time_seconds": 382.9471639165422,
+          "quality_per_10000_strategy_tokens": 1.1533506566601963,
+          "quality_per_elapsed_minute": 15.66795778988355,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-max": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 1.0,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 448768.0,
+          "mean_input_tokens": 519965.0,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.0,
+          "mean_output_tokens": 10021.0,
+          "mean_process_cached_input_tokens": 448768.0,
+          "mean_process_input_tokens": 519965.0,
+          "mean_process_output_tokens": 10021.0,
+          "mean_process_reasoning_output_tokens": 5071.5,
+          "mean_process_total_tokens": 529986.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 5071.5,
+          "mean_total_tokens": 529986.0,
+          "mean_wall_time_seconds": 238.61889964545844,
+          "quality_per_10000_strategy_tokens": 1.8868422939473872,
+          "quality_per_elapsed_minute": 25.14469729310981,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.0,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        },
+        "single-sol-xhigh": {
+          "disclosure_count": 0,
+          "disclosures": [],
+          "failure_count": 0,
+          "first_pass_acceptance_rate": 0.5,
+          "judge_quality_blinded_rate": 1.0,
+          "mean_cached_input_tokens": 444288.0,
+          "mean_input_tokens": 509468.0,
+          "mean_judge_score": 100.0,
+          "mean_model_calls": 1.5,
+          "mean_output_tokens": 8509.0,
+          "mean_process_cached_input_tokens": 444288.0,
+          "mean_process_input_tokens": 509468.0,
+          "mean_process_output_tokens": 8509.0,
+          "mean_process_reasoning_output_tokens": 3800.5,
+          "mean_process_total_tokens": 517977.0,
+          "mean_quality_score": 100.0,
+          "mean_reasoning_output_tokens": 3800.5,
+          "mean_total_tokens": 517977.0,
+          "mean_wall_time_seconds": 202.83682425000006,
+          "quality_per_10000_strategy_tokens": 1.9305876515752631,
+          "quality_per_elapsed_minute": 29.580427627899024,
+          "quality_score_blinded_rate": 1.0,
+          "rework_rate": 0.5,
+          "route_correct_rate": 1.0,
+          "success_rate": 1.0,
+          "timeout_count": 0,
+          "trial_count": 2
+        }
+      }
+    }
+  },
+  "comparability": {
+    "baseline_variant": "single-sol-xhigh",
+    "bootstrap_samples": 4000,
+    "bootstrap_seed": 20260804,
+    "case_count": 4,
+    "minimum_trials_required": 2,
+    "paired_trial_count": 8,
+    "repetitions_by_case": {
+      "effort-configuration": 2,
+      "launcher-telemetry": 2,
+      "public-evidence-preview": 2,
+      "scorecard-correctness": 2
+    },
+    "variants_present": [
+      "astral-guided",
+      "single-sol-max",
+      "single-sol-xhigh"
+    ]
+  },
+  "comparisons": {
+    "astral-guided_vs_single-sol-xhigh": {
+      "bootstrap_samples": 4000,
+      "bootstrap_seed": 20260804,
+      "deltas": {
+        "first_pass_acceptance_rate": 0.125,
+        "mean_cached_input_tokens": 285920.0,
+        "mean_input_tokens": 358977.875,
+        "mean_judge_score": -0.5,
+        "mean_model_calls": 1.875,
+        "mean_output_tokens": 5853.25,
+        "mean_reasoning_output_tokens": 3037.75,
+        "mean_total_tokens": 364831.125,
+        "mean_wall_time_seconds": 153.5013713646331,
+        "quality_per_10000_strategy_tokens": -2.067357351908893,
+        "quality_per_elapsed_minute": -46.078588796464636,
+        "rework_rate": -0.125,
+        "route_correct_rate": 0.0,
+        "success_rate": 0.0
+      },
+      "first_pass_acceptance_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.375
+        },
+        "delta": 0.125
+      },
+      "mean_cached_input_tokens": {
+        "ci95": {
+          "lower": 216671.2,
+          "upper": 371136.0
+        },
+        "delta": 285920.0
+      },
+      "mean_input_tokens": {
+        "ci95": {
+          "lower": 289349.284375,
+          "upper": 446697.75
+        },
+        "delta": 358977.875
+      },
+      "mean_judge_score": {
+        "ci95": {
+          "lower": -1.5,
+          "upper": 0.0
+        },
+        "delta": -0.5
+      },
+      "mean_model_calls": {
+        "ci95": {
+          "lower": 1.625,
+          "upper": 2.0
+        },
+        "delta": 1.875
+      },
+      "mean_output_tokens": {
+        "ci95": {
+          "lower": 5021.25,
+          "upper": 6892.846875
+        },
+        "delta": 5853.25
+      },
+      "mean_reasoning_output_tokens": {
+        "ci95": {
+          "lower": 2285.9875,
+          "upper": 3832.446875
+        },
+        "delta": 3037.75
+      },
+      "mean_total_tokens": {
+        "ci95": {
+          "lower": 294967.23125,
+          "upper": 452721.946875
+        },
+        "delta": 364831.125
+      },
+      "mean_wall_time_seconds": {
+        "ci95": {
+          "lower": 129.7896534555028,
+          "upper": 182.666262713552
+        },
+        "delta": 153.5013713646331
+      },
+      "paired_trial_count": 8,
+      "quality_per_10000_strategy_tokens": {
+        "ci95": {
+          "lower": -3.089995386357771,
+          "upper": -1.1515585613473056
+        },
+        "delta": -2.067357351908893
+      },
+      "quality_per_elapsed_minute": {
+        "ci95": {
+          "lower": -73.91052939211764,
+          "upper": -21.69974401607129
+        },
+        "delta": -46.078588796464636
+      },
+      "rework_rate": {
+        "ci95": {
+          "lower": -0.375,
+          "upper": 0.0
+        },
+        "delta": -0.125
+      },
+      "route_correct_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0
+        },
+        "delta": 0.0
+      },
+      "success_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0
+        },
+        "delta": 0.0
+      }
+    },
+    "single-sol-max_vs_single-sol-xhigh": {
+      "bootstrap_samples": 4000,
+      "bootstrap_seed": 20260804,
+      "deltas": {
+        "first_pass_acceptance_rate": 0.125,
+        "mean_cached_input_tokens": -31392.0,
+        "mean_input_tokens": -26712.0,
+        "mean_judge_score": -0.125,
+        "mean_model_calls": -0.125,
+        "mean_output_tokens": 855.75,
+        "mean_reasoning_output_tokens": 721.625,
+        "mean_total_tokens": -25856.25,
+        "mean_wall_time_seconds": 26.7048342761409,
+        "quality_per_10000_strategy_tokens": 0.32006678791790866,
+        "quality_per_elapsed_minute": -12.405785578804954,
+        "rework_rate": -0.125,
+        "route_correct_rate": 0.0,
+        "success_rate": 0.0
+      },
+      "first_pass_acceptance_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.375
+        },
+        "delta": 0.125
+      },
+      "mean_cached_input_tokens": {
+        "ci95": {
+          "lower": -100225.6,
+          "upper": 29888.0
+        },
+        "delta": -31392.0
+      },
+      "mean_input_tokens": {
+        "ci95": {
+          "lower": -107204.28749999999,
+          "upper": 45669.50000000001
+        },
+        "delta": -26712.0
+      },
+      "mean_judge_score": {
+        "ci95": {
+          "lower": -0.375,
+          "upper": 0.0
+        },
+        "delta": -0.125
+      },
+      "mean_model_calls": {
+        "ci95": {
+          "lower": -0.375,
+          "upper": 0.0
+        },
+        "delta": -0.125
+      },
+      "mean_output_tokens": {
+        "ci95": {
+          "lower": -1294.503125,
+          "upper": 2692.4687500000005
+        },
+        "delta": 855.75
+      },
+      "mean_reasoning_output_tokens": {
+        "ci95": {
+          "lower": -488.7124999999999,
+          "upper": 1725.125
+        },
+        "delta": 721.625
+      },
+      "mean_total_tokens": {
+        "ci95": {
+          "lower": -108363.940625,
+          "upper": 48560.021875
+        },
+        "delta": -25856.25
+      },
+      "mean_wall_time_seconds": {
+        "ci95": {
+          "lower": -16.48218886387585,
+          "upper": 67.70446364187482
+        },
+        "delta": 26.7048342761409
+      },
+      "paired_trial_count": 8,
+      "quality_per_10000_strategy_tokens": {
+        "ci95": {
+          "lower": -0.7823479143902972,
+          "upper": 1.5708616378874938
+        },
+        "delta": 0.32006678791790866
+      },
+      "quality_per_elapsed_minute": {
+        "ci95": {
+          "lower": -45.82938490536974,
+          "upper": 20.557161323377745
+        },
+        "delta": -12.405785578804954
+      },
+      "rework_rate": {
+        "ci95": {
+          "lower": -0.375,
+          "upper": 0.0
+        },
+        "delta": -0.125
+      },
+      "route_correct_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0
+        },
+        "delta": 0.0
+      },
+      "success_rate": {
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0
+        },
+        "delta": 0.0
+      }
+    }
+  },
+  "disclosures": [
+    "single-sol-max exact preflight passed"
+  ],
+  "limitations": [
+    "Only four internal repository tasks and two repetitions were measured; results are directional, not broadly generalizable.",
+    "The blind evaluator was Sol High rather than an independent human panel, and scores clustered near the rubric ceiling.",
+    "Trials ran sequentially in one local environment; service load and cache effects were not independently controlled.",
+    "The pilot compares tokens and elapsed time, not monetary price."
+  ],
+  "pilot_scope": "Four frozen local repository cases with two randomized repetitions; not a product-wide claim.",
+  "schema_version": 2,
+  "strategies": {
+    "astral-guided": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 1.0,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 592448.0,
+      "mean_input_tokens": 709317.5,
+      "mean_judge_score": 99.5,
+      "mean_model_calls": 3.0,
+      "mean_output_tokens": 11334.25,
+      "mean_process_cached_input_tokens": 592448.0,
+      "mean_process_input_tokens": 709317.5,
+      "mean_process_output_tokens": 11334.25,
+      "mean_process_reasoning_output_tokens": 5430.375,
+      "mean_process_total_tokens": 720651.75,
+      "mean_quality_score": 99.5,
+      "mean_reasoning_output_tokens": 5430.375,
+      "mean_total_tokens": 720651.75,
+      "mean_wall_time_seconds": 285.2136557917547,
+      "quality_per_10000_strategy_tokens": 1.3806946281612442,
+      "quality_per_elapsed_minute": 20.93167658269113,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.0,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    },
+    "single-sol-max": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 1.0,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 275136.0,
+      "mean_input_tokens": 323627.625,
+      "mean_judge_score": 99.875,
+      "mean_model_calls": 1.0,
+      "mean_output_tokens": 6336.75,
+      "mean_process_cached_input_tokens": 275136.0,
+      "mean_process_input_tokens": 323627.625,
+      "mean_process_output_tokens": 6336.75,
+      "mean_process_reasoning_output_tokens": 3114.25,
+      "mean_process_total_tokens": 329964.375,
+      "mean_quality_score": 99.875,
+      "mean_reasoning_output_tokens": 3114.25,
+      "mean_total_tokens": 329964.375,
+      "mean_wall_time_seconds": 158.41711870326253,
+      "quality_per_10000_strategy_tokens": 3.0268419128580173,
+      "quality_per_elapsed_minute": 37.827351292916724,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.0,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    },
+    "single-sol-xhigh": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 0.875,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 306528.0,
+      "mean_input_tokens": 350339.625,
+      "mean_judge_score": 100.0,
+      "mean_model_calls": 1.125,
+      "mean_output_tokens": 5481.0,
+      "mean_process_cached_input_tokens": 306528.0,
+      "mean_process_input_tokens": 350339.625,
+      "mean_process_output_tokens": 5481.0,
+      "mean_process_reasoning_output_tokens": 2392.625,
+      "mean_process_total_tokens": 355820.625,
+      "mean_quality_score": 100.0,
+      "mean_reasoning_output_tokens": 2392.625,
+      "mean_total_tokens": 355820.625,
+      "mean_wall_time_seconds": 131.71228442712163,
+      "quality_per_10000_strategy_tokens": 2.8104048212494708,
+      "quality_per_elapsed_minute": 45.55383748825562,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.125,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    }
+  },
+  "variants": {
+    "astral-guided": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 1.0,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 592448.0,
+      "mean_input_tokens": 709317.5,
+      "mean_judge_score": 99.5,
+      "mean_model_calls": 3.0,
+      "mean_output_tokens": 11334.25,
+      "mean_process_cached_input_tokens": 592448.0,
+      "mean_process_input_tokens": 709317.5,
+      "mean_process_output_tokens": 11334.25,
+      "mean_process_reasoning_output_tokens": 5430.375,
+      "mean_process_total_tokens": 720651.75,
+      "mean_quality_score": 99.5,
+      "mean_reasoning_output_tokens": 5430.375,
+      "mean_total_tokens": 720651.75,
+      "mean_wall_time_seconds": 285.2136557917547,
+      "quality_per_10000_strategy_tokens": 1.3806946281612442,
+      "quality_per_elapsed_minute": 20.93167658269113,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.0,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    },
+    "single-sol-max": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 1.0,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 275136.0,
+      "mean_input_tokens": 323627.625,
+      "mean_judge_score": 99.875,
+      "mean_model_calls": 1.0,
+      "mean_output_tokens": 6336.75,
+      "mean_process_cached_input_tokens": 275136.0,
+      "mean_process_input_tokens": 323627.625,
+      "mean_process_output_tokens": 6336.75,
+      "mean_process_reasoning_output_tokens": 3114.25,
+      "mean_process_total_tokens": 329964.375,
+      "mean_quality_score": 99.875,
+      "mean_reasoning_output_tokens": 3114.25,
+      "mean_total_tokens": 329964.375,
+      "mean_wall_time_seconds": 158.41711870326253,
+      "quality_per_10000_strategy_tokens": 3.0268419128580173,
+      "quality_per_elapsed_minute": 37.827351292916724,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.0,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    },
+    "single-sol-xhigh": {
+      "disclosure_count": 0,
+      "disclosures": [],
+      "failure_count": 0,
+      "first_pass_acceptance_rate": 0.875,
+      "judge_quality_blinded_rate": 1.0,
+      "mean_cached_input_tokens": 306528.0,
+      "mean_input_tokens": 350339.625,
+      "mean_judge_score": 100.0,
+      "mean_model_calls": 1.125,
+      "mean_output_tokens": 5481.0,
+      "mean_process_cached_input_tokens": 306528.0,
+      "mean_process_input_tokens": 350339.625,
+      "mean_process_output_tokens": 5481.0,
+      "mean_process_reasoning_output_tokens": 2392.625,
+      "mean_process_total_tokens": 355820.625,
+      "mean_quality_score": 100.0,
+      "mean_reasoning_output_tokens": 2392.625,
+      "mean_total_tokens": 355820.625,
+      "mean_wall_time_seconds": 131.71228442712163,
+      "quality_per_10000_strategy_tokens": 2.8104048212494708,
+      "quality_per_elapsed_minute": 45.55383748825562,
+      "quality_score_blinded_rate": 1.0,
+      "rework_rate": 0.125,
+      "route_correct_rate": 1.0,
+      "success_rate": 1.0,
+      "timeout_count": 0,
+      "trial_count": 8
+    }
+  },
+  "warnings": []
+}

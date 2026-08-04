@@ -136,6 +136,25 @@ outcome quality, latency, or price, or total tokens for a complete run. The comm
 [context-footprint evidence](benchmarks/context-footprint-2026-08-04.json)
 includes file hashes, byte/word/token counts, and a reproducible contributor command.
 
+The published v3.2.0 measurement records static instruction-context measurements: they
+support the architecture's progressive context loading, not task quality, latency, price,
+or total-run tokens. Alongside exact pinned routes, objective checks plus fresh review,
+and the local privacy/no-analytics runtime posture, they are tested workflow contracts
+rather than proof of outcome superiority. See the
+[benchmark guide](benchmarks/README.md) for the method and scope.
+
+## Public evidence status
+
+The current repository verification passed **109 automated tests** and **package verification**.
+This validates behavior and contracts; it does not prove Astral beats single-Sol or
+establish a valid outcome comparison.
+
+The first end-to-end pilot is retained as invalid exploratory evidence after fresh
+review found protocol defects. [Its disclosure](benchmarks/results/2026-08-04-invalid-pilot/INVALID.md)
+explains why the raw artifacts remain auditable but unsuitable for comparison. No valid
+outcome comparison exists. This README does not publish outcome, token, time, or quality
+numbers from that pilot.
+
 The reproducible pinned/state/evidence method was inspired by OpenRouter's Ori Eval;
 see the [Ori Eval page](https://openrouter.ai/ori/eval) and
 [spawn-ori-eval skill](https://openrouter.ai/skills/spawn-ori-eval). Astral Orchestrator

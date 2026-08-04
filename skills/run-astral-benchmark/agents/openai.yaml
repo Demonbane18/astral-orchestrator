@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astral Benchmark Runner"
+  short_description: "Run bounded quick or full Astral benchmarks"
+  default_prompt: "Use $run-astral-benchmark to run the quick local comparison and report the evidence."

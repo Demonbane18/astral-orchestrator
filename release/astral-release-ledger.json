@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "product": "Astral Orchestrator",
+  "events": [
+    {
+      "surface": "source",
+      "version": "3.2.0",
+      "status": "verified",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "All 78 repository tests, package verification, skill validation, plugin validation, and final Sol High review passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/5d85323d75596ab57219816f8b1bcd27cd9635f4",
+      "commit": "5d85323d75596ab57219816f8b1bcd27cd9635f4"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.2.0",
+      "status": "published",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "Public v3.2.0 GitHub release with ZIP asset SHA-256 e1515788a839092197f385b6af77b5c390d85b1be0b42b4e941140c70f04fd47.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.2.0",
+      "commit": "5d85323d75596ab57219816f8b1bcd27cd9635f4"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.2.0",
+      "status": "installable",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "Public main ref exposes marketplace astral-orchestrator and the documented two-command install path.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.2.0",
+      "status": "deployed",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "Production alias served the v3.2.0 install page from deployment dpl_CLp5Svygx9rW3dDrVSMigkuArTJS.",
+      "url": "https://astral-orchestrator.vercel.app/"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.1.3",
+      "status": "published",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "The public ChatGPT plugin page displayed version 3.1.3.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.2.0",
+      "status": "draft",
+      "observed_at": "2026-08-04T15:15:13+08:00",
+      "evidence": "The OpenAI Platform draft contains v3.2.0 metadata, icons, prompts, and skill; automated scanning and the developer's policy attestations remain before submission."
+    }
+  ]
+}
