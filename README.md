@@ -2,35 +2,28 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.2.0 is a published, installable, open-source Codex plugin. It
+Astral Orchestrator v3.2.0 is an installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
 
-It is published in this public repository for installation from a local marketplace.
-Marketplace submission and review are separate, so it is not listed or endorsed by
-Codex Marketplace.
+Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
+directory is a separate publication surface and may lag until the v3.2.0 directory upload
+is published. Astral Orchestrator is an independent open-source project, not affiliated
+with or endorsed by OpenAI.
 
 ## Quick Install
 
-Paste this into Codex to install from the public repository:
-
-~~~text
-Install and set up Astral Orchestrator from https://github.com/Demonbane18/astral-orchestrator. Run sh scripts/setup.sh --dry-run first, then sh scripts/setup.sh. Preserve any conflicting agent profiles and run the package verification.
-~~~
-
-Or, from a terminal, copy and run:
+From a terminal where Codex is available, run these two commands:
 
 ~~~sh
-git clone https://github.com/Demonbane18/astral-orchestrator.git
-cd astral-orchestrator
-sh scripts/setup.sh --dry-run
-sh scripts/setup.sh
+codex plugin marketplace add Demonbane18/astral-orchestrator --ref main
+codex plugin add astral-orchestrator@astral-orchestrator
 ~~~
 
-The dry run only prints the commands. The install registers this checkout as a local Codex
-marketplace, adds the plugin, and installs three companion profiles without overwriting a
-different file.
+This is the complete install. It bundles the exact-process launcher, so Guided, Careful,
+and Measured work can prove the pinned Sol, Luna, and Terra routes without requiring
+global native profiles.
 
 ## What Astral Orchestrator does
 
@@ -50,30 +43,36 @@ or third-party Python package. The only local runtime requirement beyond Codex i
 
 - Codex with access to gpt-5.6-sol, gpt-5.6-luna, and gpt-5.6-terra.
 - Python 3.11 or newer; the included tools use only the Python standard library.
-- A new Codex task after installation, so Codex can discover the plugin and profiles.
+- A new Codex task after installation, so Codex can discover the plugin. It also discovers
+  native profiles when you choose the optional setup below.
 
-Setup installs profiles; it cannot grant access to models your Codex account does not
-have. Astral Orchestrator stops instead of quietly choosing a different model or effort.
+The optional setup installs profiles; it cannot grant access to models your Codex account
+does not have. Astral Orchestrator stops instead of quietly choosing a different model or
+effort.
 
 ## Installation
 
-### Codex-assisted
+### GitHub marketplace install (recommended)
 
-Open this complete repository in Codex and use the Quick Install prompt above. Codex can
-run the dry run, installation, and verification for you. Installation changes your local
-Codex configuration only after you run the non-dry command.
+The two Quick Install commands add this GitHub repository at its `main` ref, then install
+the `astral-orchestrator` plugin. They are enough for the bundled exact-process route.
 
-### Manual installation
+### Optional native-profile setup
 
-Download the public repository as a ZIP or clone it, open a terminal in its root, and run:
+For faster, more ergonomic native named-agent selection, download the public repository
+as a ZIP or clone it, open a terminal in its root, and run:
 
 ~~~sh
+git clone https://github.com/Demonbane18/astral-orchestrator.git
+cd astral-orchestrator
 sh scripts/setup.sh --dry-run
 sh scripts/setup.sh
 ~~~
 
-Do not install only the plugin folder: the repository-local marketplace file and the
-three profiles are part of the setup.
+The dry run prints the planned local changes. Setup registers the checkout, adds the
+plugin, and installs three companion profiles without overwriting a different file. It is
+an optional enhancement, not a prerequisite: missing or customized native profiles make
+the preflight use the bundled exact-process launcher instead.
 
 ## First use
 
@@ -127,9 +126,9 @@ model choice.
 ## Measured instruction-context footprint
 
 Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.2.0 core
-`SKILL.md` measures **1,974 tokens**; Quick measures **3,634 tokens**; Guided/full
-measures **5,451 tokens**; and Measured measures **7,610 tokens**. Quick therefore
-avoids **1,817 tokens (33.3%)** compared with eager full-bundle loading.
+`SKILL.md` measures **2,036 tokens**; Quick measures **3,696 tokens**; Guided/full
+measures **5,636 tokens**; and Measured measures **7,795 tokens**. Quick therefore
+avoids **1,940 tokens (34.4%)** compared with eager full-bundle loading.
 
 This measures instruction-context loading only. It does not prove every
 multi-agent run uses fewer total tokens than a single Sol run, and it does not measure
@@ -185,12 +184,13 @@ fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described ab
 supply each lane's effort (Sol High, Luna XHigh, Terra XHigh, reviewer Sol High by
 default), rather than the prompt choosing a new effort at runtime.
 
-For Guided, Careful, and Measured work, Astral Orchestrator first proves the installed profiles
-match exactly and confirms the route. It uses native custom-agent selection only when
-the host exposes the exact role; otherwise the included launcher starts a separate
-Codex process pinned to the required model and configured effort. The launcher emits an
-ASTRAL_ORCHESTRATOR_ROUTE header with allowlisted route facts, never the task packet,
-instructions, secrets, or file contents.
+For Guided, Careful, and Measured work, Astral Orchestrator first checks whether installed
+native profiles byte-match the shipped profiles. A matching profile plus an exact host
+role can use native named-agent selection. Missing or different profiles do not weaken
+the route or demand setup: they force a successful dry-run of the bundled exact-process
+launcher, which starts a separate Codex process pinned to the required model and
+configured effort. The launcher emits an ASTRAL_ORCHESTRATOR_ROUTE header with
+allowlisted route facts, never the task packet, instructions, secrets, or file contents.
 
 A task name is not proof of the route. Missing or mismatched role, model, effort, or
 review isolation blocks the lane and tells you the smallest corrective action.
@@ -237,7 +237,7 @@ set as a reason to investigate before making a product claim.
 
 ## Safety and privacy
 
-- Existing different agent profiles are never overwritten.
+- Existing different optional native profiles are never overwritten.
 - Profile removal deletes only shipped files that still match exactly.
 - Destructive, credential, publishing, production, and irreversible actions require
   an explicit confirmation gate in Careful mode.
@@ -249,7 +249,8 @@ set as a reason to investigate before making a product claim.
 
 ## Updating and the 3.0 migration
 
-To update a downloaded checkout, replace it with the newer complete repository and run:
+To refresh the optional native profiles in a downloaded checkout, replace it with the
+newer complete repository and run:
 
 ~~~sh
 sh scripts/setup.sh --refresh
@@ -290,8 +291,8 @@ These commands do not delete your downloaded repository or project files.
 | Problem | What to do |
 |---|---|
 | The plugin does not appear | Start a new Codex task, then run codex plugin list --marketplace astral-orchestrator. |
-| Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized profile. Compare it with the shipped profile, preserve any needed customization, then rerun setup. |
-| A route cannot be proven | Run sh scripts/setup.sh --refresh, start a new Sol task at the shown effort, and do not request a fallback. |
+| Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized native profile. Keep it and use the bundled exact-process route, or resolve the difference deliberately before rerunning optional setup. |
+| A route cannot be proven | Confirm the bundled launcher dry run can prove the exact role, model, and effort. Reinstall the GitHub marketplace source or run `sh scripts/setup.sh --refresh` only if you want to restore native profiles; never accept another role, model, or effort as a fallback. |
 | An effort value is rejected | Pick a supported value available to your account; max and ultra are not available everywhere. |
 | Setup cannot find Codex or Python | Install or update Codex and use Python 3.11 or newer, then rerun the dry run. |
 
@@ -316,15 +317,15 @@ the product identifier.
 
 ### Can I share this with a team?
 
-Yes. Share the complete repository, then have each person run the Quick Install steps in
+Yes. Share the GitHub link, then have each person run the two Quick Install commands in
 their own Codex environment. They need their own access to the three models.
 
 ## Sharing
 
 The repository is public at https://github.com/Demonbane18/astral-orchestrator. Share
-the link or a complete archive. Ask recipients to use the Codex-assisted installation
-prompt or the manual setup commands; do not share an installed profile directory on its
-own.
+the link or a complete archive. Ask recipients to use the two GitHub marketplace commands;
+use the optional setup only when native profiles are wanted. Do not share an installed
+profile directory on its own.
 
 ## Contributor commands
 

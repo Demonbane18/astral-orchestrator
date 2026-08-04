@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Quick install for Astral Orchestrator: clone the repository, preview with a dry run, then install the local Codex plugin.">
+    <meta name="description" content="Quick install for Astral Orchestrator from its GitHub marketplace source in two commands.">
     <meta name="theme-color" content="#f4f2ec">
     <title>Quick Install · Astral Orchestrator</title>
     <link rel="icon" type="image/png" href="../assets/astral-orchestrator-favicon-32.png">
@@ -57,8 +57,8 @@
       <header class="page-header">
         <div class="shell">
           <p class="eyebrow">Quick install</p>
-          <h1>From clone to checked work in four commands.</h1>
-          <p class="page-lede">Astral Orchestrator v3.2.0 adds an explicit opt-in Measured mode alongside the familiar routes. The dry run only prints what it would change, so you can look before you leap. The real install registers the local marketplace, adds the plugin, and installs three companion profiles, and it never overwrites a profile that is different from the shipped one.</p>
+          <h1>Install from GitHub in two commands.</h1>
+          <p class="page-lede">Astral Orchestrator v3.2.0 installs directly from its GitHub marketplace source. This route includes the bundled exact-process launcher, which preserves the pinned Sol, Luna, and Terra model-and-effort contract without requiring native profiles.</p>
         </div>
       </header>
 
@@ -70,26 +70,24 @@
               <div class="terminal">
                 <div class="terminal-bar" aria-hidden="true"><i></i><i></i><i></i><span>terminal</span></div>
                 <div class="command-wrap">
-                  <pre id="install-command"><code><span>git clone https://github.com/Demonbane18/astral-orchestrator.git</span>
-<span>cd astral-orchestrator</span>
-<span>sh scripts/setup.sh --dry-run</span>
-<span>sh scripts/setup.sh</span></code></pre>
+                  <pre id="install-command"><code><span>codex plugin marketplace add Demonbane18/astral-orchestrator --ref main</span>
+<span>codex plugin add astral-orchestrator@astral-orchestrator</span></code></pre>
                   <button class="copy-button" type="button" data-copy-target="#install-command" data-copy-status="install-command-copy-status" aria-label="Copy the installation command" aria-describedby="install-command-copy-status">Copy command</button>
                 </div>
               </div>
               <p class="copy-status" id="install-command-copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
               <ul class="check-list">
-                <li><strong>Clone</strong> the complete repository, not just the plugin folder.</li>
-                <li><strong>Dry run</strong> prints the planned commands and changes nothing.</li>
-                <li><strong>Install</strong> adds the marketplace, plugin, and profiles.</li>
-                <li><strong>Start a new Codex task</strong> afterwards, so Codex discovers everything.</li>
+                <li><strong>Add</strong> the GitHub marketplace source at its <code>main</code> ref.</li>
+                <li><strong>Install</strong> the <code>astral-orchestrator</code> plugin.</li>
+                <li><strong>Use</strong> the bundled exact-process launcher when native profiles are absent or customized.</li>
+                <li><strong>Start a new Codex task</strong> afterwards, so Codex discovers the plugin.</li>
               </ul>
             </div>
 
             <div class="install-card" data-reveal>
-              <h2>Prefer Codex to run it for you?</h2>
-              <p>Open the cloned repository in Codex and paste this prompt:</p>
-              <p class="prompt-box" id="codex-prompt">Install and set up Astral Orchestrator from https://github.com/Demonbane18/astral-orchestrator. Run sh scripts/setup.sh --dry-run first, then sh scripts/setup.sh. Preserve any conflicting agent profiles and run the package verification.</p>
+              <h2>Want native named profiles too?</h2>
+              <p>Optional native-profile setup is faster and more ergonomic, but is not required for exact routing. Clone the repository and paste this into Codex or a terminal:</p>
+              <p class="prompt-box" id="codex-prompt">git clone https://github.com/Demonbane18/astral-orchestrator.git &amp;&amp; cd astral-orchestrator &amp;&amp; sh scripts/setup.sh --dry-run &amp;&amp; sh scripts/setup.sh</p>
               <p>
                 <button class="copy-button" type="button" data-copy-target="#codex-prompt" data-copy-status="codex-prompt-copy-status" aria-label="Copy the Codex install prompt" aria-describedby="codex-prompt-copy-status">Copy prompt</button>
               </p>

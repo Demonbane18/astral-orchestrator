@@ -7,8 +7,9 @@ one Sol orchestrator, two pinned implementation lanes, exact route evidence, bou
 ownership, independent verification, and a fresh pinned Sol reviewer.
 
 The design focuses on usability without weakening the route contract. It keeps Quick,
-Guided, and Careful language, uses namespaced profiles, gives non-technical users one
-setup command, and refuses to silently downgrade a requested model or effort.
+Guided, Careful, and Measured language, gives non-technical users a two-command GitHub
+install with optional namespaced native profiles, and refuses to silently downgrade a
+requested model or effort.
 
 ## Route comparison
 
@@ -20,15 +21,16 @@ setup command, and refuses to silently downgrade a requested model or effort.
 | Reviewer | Fresh Sol High, requested read-only | Fresh Sol at configured effort; High by default and requested read-only |
 | Routing proof | Native metadata plus allowlisted rollout inspection | Same guarantee with a Python standard-library inspector |
 | User controls | Architecture-oriented workflow | Quick, Guided, Careful, and explicit Measured modes |
-| Installation | Companion agent installer | Plugin setup plus conflict-safe profile installer |
+| Installation | Companion agent installer | Two-command GitHub plugin install plus optional conflict-safe native-profile setup |
 | Removal | Manual profile cleanup | --remove deletes only exact, unmodified profiles |
 | Failure | Stop when strict preflight fails | Same; never silently substitute another lane |
 | Effort tuning | Profile-oriented | One command and persistent per-lane settings |
 
 ## Improvements beyond the original
 
-1. **One beginner setup path.** sh scripts/setup.sh registers the marketplace, installs
-   all three profiles, and installs the plugin.
+1. **Two simple install choices.** Two GitHub marketplace commands install the plugin
+   with its bundled exact-process route. `sh scripts/setup.sh` remains an optional,
+   conflict-safe native-profile install for faster named-agent selection.
 2. **Safer lifecycle.** Existing different profiles are never overwritten, and modified
    profiles are never removed automatically.
 3. **No extra JSON package.** The runtime inspector uses Python 3's standard library

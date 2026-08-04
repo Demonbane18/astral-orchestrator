@@ -11,6 +11,15 @@
 - Added 2026-08-04 instruction-context evidence for core, Quick, Guided, and Measured
   bundles while preserving historical v3.1.4 evidence.
 
+### Changed
+
+- Documented the two-command GitHub marketplace install: `codex plugin marketplace add
+  Demonbane18/astral-orchestrator --ref main`, then `codex plugin add
+  astral-orchestrator@astral-orchestrator`. This route uses bundled exact processes;
+  cloning and `scripts/setup.sh` remain the optional faster native-profile route.
+- Clarified that official ChatGPT/Codex directory publication is a separate surface and
+  may lag until the v3.2.0 directory upload is published.
+
 ## 3.1.4 — 2026-08-03
 
 ### Documentation

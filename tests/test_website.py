@@ -303,8 +303,10 @@ class WebsiteContractTests(unittest.TestCase):
     def test_install_page_has_copyable_install_command(self):
         install = page_text(PAGES["install"])
         for phrase in (
-            "git clone https://github.com/Demonbane18/astral-orchestrator.git",
-            "sh scripts/setup.sh --dry-run",
+            "codex plugin marketplace add Demonbane18/astral-orchestrator --ref main",
+            "codex plugin add astral-orchestrator@astral-orchestrator",
+            "bundled exact-process launcher",
+            "Optional native-profile setup",
             "https://github.com/Demonbane18/astral-orchestrator",
         ):
             self.assertIn(phrase, install)
@@ -804,18 +806,18 @@ class WebsiteContractTests(unittest.TestCase):
             page_text(ROOT / "benchmarks" / "context-footprint-2026-08-04.json")
         )
         expected_bundles = {
-            "core": 1974,
-            "quick": 3634,
-            "guided": 5451,
-            "measured": 7610,
+            "core": 2036,
+            "quick": 3696,
+            "guided": 5636,
+            "measured": 7795,
         }
         self.assertEqual(
             {name: benchmark["bundles"][name]["tokens"] for name in expected_bundles},
             expected_bundles,
         )
-        self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 1817)
-        self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 33.3)
-        for figure in ("1,974", "3,634", "5,451", "7,610", "1,817", "33.3%"):
+        self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 1940)
+        self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 34.4)
+        for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
             with self.subTest(figure=figure):
                 self.assertIn(figure, home)
         for scope_statement in (

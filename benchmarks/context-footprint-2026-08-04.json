@@ -17,10 +17,10 @@
   "files": [
     {
       "path": "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
-      "bytes": 9378,
-      "words": 1322,
-      "tokens": 1974,
-      "sha256": "ed32a92b15081aea6fee70bed9aa7fcf805d2646d619a92a709e10797b64241a"
+      "bytes": 9711,
+      "words": 1372,
+      "tokens": 2036,
+      "sha256": "dd110e34d4003ef56d3d6cb6f4eefff4cbffc0e6cf0cdc1612772ecd653ad2d1"
     },
     {
       "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
@@ -38,10 +38,10 @@
     },
     {
       "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md",
-      "bytes": 8616,
-      "words": 1220,
-      "tokens": 1817,
-      "sha256": "19c8250dde0475626b956569217a271bc74ed48fbb0dcbf14dcbaaf7fedc4a2d"
+      "bytes": 9310,
+      "words": 1316,
+      "tokens": 1940,
+      "sha256": "5ad85b9fd5121e8a7665b120c104a7f84ef3d0e62d650c74219b966d0e287d19"
     },
     {
       "path": "plugins/astral-orchestrator/skills/astral-orchestrator/references/measured-mode.md",
@@ -56,7 +56,7 @@
       "paths": [
         "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md"
       ],
-      "tokens": 1974
+      "tokens": 2036
     },
     "quick": {
       "paths": [
@@ -64,7 +64,7 @@
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md"
       ],
-      "tokens": 3634
+      "tokens": 3696
     },
     "full": {
       "paths": [
@@ -73,7 +73,7 @@
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md"
       ],
-      "tokens": 5451
+      "tokens": 5636
     },
     "guided": {
       "paths": [
@@ -82,7 +82,7 @@
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md",
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md"
       ],
-      "tokens": 5451
+      "tokens": 5636
     },
     "measured": {
       "paths": [
@@ -92,12 +92,12 @@
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md",
         "plugins/astral-orchestrator/skills/astral-orchestrator/references/measured-mode.md"
       ],
-      "tokens": 7610
+      "tokens": 7795
     }
   },
   "quick_vs_full": {
-    "tokens_avoided": 1817,
-    "percent_avoided": 33.3
+    "tokens_avoided": 1940,
+    "percent_avoided": 34.4
   },
   "scope_note": "This measures instruction-context loading only. It does not measure outcome quality, latency, price, or total tokens for a complete run."
 }
