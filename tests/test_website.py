@@ -462,22 +462,44 @@ class WebsiteContractTests(unittest.TestCase):
                         3.0,
                     )
 
-    def test_gradient_and_theme_toggle_hover_colors_meet_contrast_requirements(self):
+    def test_emphasized_headings_do_not_depend_on_background_clipping(self):
+        stylesheet = page_text(WEBSITE / "assets" / "site.css")
+        fallback = re.search(
+            r"^\.gradient-text\s*\{(?P<body>.*?)^\}",
+            stylesheet,
+            re.DOTALL | re.MULTILINE,
+        )
+        self.assertIsNotNone(fallback)
+        self.assertIn("color: var(--gold);", fallback.group("body"))
+        for unsupported_effect in (
+            "background:",
+            "background-clip",
+            "color: transparent",
+            "text-fill-color",
+        ):
+            with self.subTest(fallback_excludes=unsupported_effect):
+                self.assertNotIn(unsupported_effect, fallback.group("body"))
+
+        hero_fallback = re.search(
+            r"^\.hero \.gradient-text\s*\{(?P<body>.*?)^\}",
+            stylesheet,
+            re.DOTALL | re.MULTILINE,
+        )
+        self.assertIsNotNone(hero_fallback)
+        self.assertIn("color: var(--gold-bright);", hero_fallback.group("body"))
+        self.assertNotIn("background:", hero_fallback.group("body"))
+
+        for unreliable_effect in (
+            "background-clip: text",
+            "text-fill-color: transparent",
+        ):
+            with self.subTest(stylesheet_excludes=unreliable_effect):
+                self.assertNotIn(unreliable_effect, stylesheet)
+
+    def test_emphasis_and_theme_toggle_hover_colors_meet_contrast_requirements(self):
         stylesheet = page_text(WEBSITE / "assets" / "site.css")
         light = css_variables(stylesheet, ":root")
         dark = css_variables(stylesheet, ':root[data-theme="dark"]')
-
-        self.assertIn(
-            "background: linear-gradient(100deg, var(--gradient-gold) 10%, "
-            "var(--gradient-sky) 55%, var(--gradient-violet) 95%);",
-            stylesheet,
-        )
-        self.assertRegex(
-            stylesheet,
-            r"\.hero \.gradient-text\s*\{\s*"
-            r"background: linear-gradient\(100deg, var\(--gold-bright\) 10%, "
-            r"var\(--sky-bright\) 55%, var\(--violet\) 95%\);",
-        )
 
         for theme, palette, backgrounds in (
             (
@@ -487,20 +509,17 @@ class WebsiteContractTests(unittest.TestCase):
             ),
             ("dark", dark, ("--bg", "--bg-soft", "--surface", "--surface-2")),
         ):
-            for endpoint in ("--gradient-gold", "--gradient-sky", "--gradient-violet"):
-                for background in backgrounds:
-                    with self.subTest(
-                        theme=theme, color=endpoint, background=background
-                    ):
-                        self.assertGreaterEqual(
-                            contrast_ratio(palette[endpoint], palette[background]), 3.0
-                        )
-
-            for endpoint in ("--gold-bright", "--sky-bright", "--violet"):
-                with self.subTest(theme=theme, color=endpoint, background="--hero-bg"):
+            for background in backgrounds:
+                with self.subTest(theme=theme, color="--gold", background=background):
                     self.assertGreaterEqual(
-                        contrast_ratio(palette[endpoint], palette["--hero-bg"]), 3.0
+                        contrast_ratio(palette["--gold"], palette[background]), 4.5
                     )
+
+            with self.subTest(theme=theme, color="--gold-bright", background="--hero-bg"):
+                self.assertGreaterEqual(
+                    contrast_ratio(palette["--gold-bright"], palette["--hero-bg"]),
+                    3.0,
+                )
 
         self.assertRegex(
             stylesheet,

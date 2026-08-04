@@ -20,15 +20,12 @@
 
   --gold: #8a5800;
   --gold-bright: #e3a008;
-  --gradient-gold: #8a5800;
   --focus-ring: #8a5800;
   --gold-soft: #fbe9bd;
   --sky: #0f6d99;
   --sky-bright: #1f9ed6;
-  --gradient-sky: #0f6d99;
   --sky-soft: #d5eef8;
   --violet: #6b4fc6;
-  --gradient-violet: #6b4fc6;
   --violet-soft: #e6def8;
 
   --header-bg: #f4f2ec;
@@ -66,15 +63,12 @@
 
   --gold: #f2ba42;
   --gold-bright: #ffd36a;
-  --gradient-gold: #ffd36a;
   --focus-ring: #ffd36a;
   --gold-soft: #2c2307;
   --sky: #63c9f2;
   --sky-bright: #8adbf7;
-  --gradient-sky: #8adbf7;
   --sky-soft: #0d2b3d;
   --violet: #a585f0;
-  --gradient-violet: #a585f0;
   --violet-soft: #241d44;
 
   --header-bg: rgb(7 11 24 / 0.78);
@@ -469,16 +463,12 @@ p {
 }
 
 .gradient-text {
-  background: linear-gradient(100deg, var(--gradient-gold) 10%, var(--gradient-sky) 55%, var(--gradient-violet) 95%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--gold);
 }
 
 /* Keep the hero's luminous treatment against its dedicated dark backdrop. */
 .hero .gradient-text {
-  background: linear-gradient(100deg, var(--gold-bright) 10%, var(--sky-bright) 55%, var(--violet) 95%);
+  color: var(--gold-bright);
 }
 
 /* Marker-style highlight for key terms */
