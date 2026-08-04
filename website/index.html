@@ -3,28 +3,54 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Astral Orchestrator is a local Codex plugin that routes work through Sol, Luna, Terra, checks, and fresh review.">
-    <title>Astral Orchestrator — checked work, plainly routed</title>
+    <meta name="description" content="Astral Orchestrator is a local, open-source Codex plugin that routes work through Sol, Luna, and Terra with checks and a fresh Sol review.">
+    <meta name="theme-color" content="#f4f2ec">
+    <title>Astral Orchestrator · turn a request into a checked result</title>
     <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
     <link rel="stylesheet" href="assets/site.css">
-    <script src="assets/site.js" defer></script>
+    <script src="assets/site.js"></script>
   </head>
   <body>
+    <div class="ambient" aria-hidden="true"></div>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
       <div class="shell header-inner">
         <a class="brand" href="./" aria-label="Astral Orchestrator home">
-          <img src="assets/astral-orchestrator-favicon-32.png" alt="" width="32" height="32">
-          <span>Astral Orchestrator</span>
+          <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="16.5" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.4" stroke-dasharray="2.5 4"></circle>
+            <path d="M20 6.5 L22.9 17.1 L33.5 20 L22.9 22.9 L20 33.5 L17.1 22.9 L6.5 20 L17.1 17.1 Z"></path>
+            <circle cx="28.3" cy="5.7" r="2.2" fill="#2ea6dc"></circle>
+            <circle cx="5.7" cy="28.3" r="2.6" fill="#8a6cdb"></circle>
+          </svg>
+          <span class="brand-word">Astral <em>Orchestrator</em></span>
         </a>
         <nav class="site-nav" aria-label="Primary navigation">
           <ul>
             <li><a href="./" aria-current="page">Home</a></li>
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#evidence">Results</a></li>
+            <li><a href="install/">Install</a></li>
             <li><a href="support/">Support</a></li>
             <li><a href="privacy/">Privacy</a></li>
             <li><a href="terms/">Terms</a></li>
           </ul>
         </nav>
+        <div class="header-actions">
+          <a class="star-button" href="https://github.com/Demonbane18/astral-orchestrator" target="_blank" rel="noopener" aria-label="Open Astral Orchestrator on GitHub in a new tab">
+            <span class="star-button-part">
+              <svg class="gh-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+            </span>
+            <span class="star-button-part">
+              <svg class="star-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg>
+              <span class="star-label">Star on GitHub</span>
+            </span>
+          </a>
+          <button class="theme-toggle" type="button" data-theme-toggle data-choice="system" aria-label="Theme: system. Activate for light theme.">
+            <svg data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="2.4" r="1.7"></circle><circle cx="12" cy="21.6" r="1.7"></circle><circle cx="2.4" cy="12" r="1.7"></circle><circle cx="21.6" cy="12" r="1.7"></circle><circle cx="4.8" cy="4.8" r="1.7"></circle><circle cx="19.2" cy="19.2" r="1.7"></circle><circle cx="19.2" cy="4.8" r="1.7"></circle><circle cx="4.8" cy="19.2" r="1.7"></circle></svg>
+            <svg data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg>
+            <svg data-theme-icon="system" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h6v2H7a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2h-2v-2h6a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H3Zm0 2h18v9H3V6Z"></path></svg>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -32,147 +58,361 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="eyebrow">A local Codex plugin</p>
-            <h1 id="home-title">Turn a request into a checked result.</h1>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.1.4 · open-source · local plugin runtime</p>
+            <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
-              Astral Orchestrator gives a bigger task a clear path: one lead keeps the
-              plan in view, the right worker handles the implementation, and the result
-              is checked before it is handed back.
+              Astral Orchestrator gives bigger work a clear route through Codex:
+              <span class="hl">Sol</span> plans and stays responsible,
+              <span class="hl">Luna</span> or <span class="hl">Terra</span> implements
+              a bounded piece, and a <span class="hl">fresh Sol review</span> checks
+              the result before it comes back to you.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="#install">See the install command</a>
-              <a class="button button-quiet" href="https://github.com/Demonbane18/astral-orchestrator">View the repository</a>
+              <a class="button button-primary" href="install/">Get the install command</a>
+              <a class="button button-quiet" href="#how-it-works">See how it works</a>
             </div>
+            <ul class="hero-facts">
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>3 pinned lanes</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh Sol review</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>No project-operated backend</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>MIT licensed</li>
+            </ul>
           </div>
-          <div class="hero-mark">
-            <img src="assets/astral-orchestrator-mark-dark.png" alt="Astral Orchestrator mark: a golden star between lunar arcs" width="1024" height="1024">
+          <div class="hero-orbit">
+            <svg class="orbit-scene" viewBox="0 0 340 340" role="img" aria-label="Orbital diagram: Sol the golden lead star at the center, Luna and Terra specialist lanes on inner orbits, and a dashed fresh-review ring around them all.">
+              <circle class="orbit-ring orbit-ring--review" cx="170" cy="170" r="156"></circle>
+              <circle class="orbit-ring" cx="170" cy="170" r="112"></circle>
+              <circle class="orbit-ring" cx="170" cy="170" r="72"></circle>
+              <g class="orbit-group orbit-group--luna">
+                <g transform="translate(282 170)">
+                  <circle class="orbit-luna" r="10"></circle>
+                  <circle class="orbit-cutout" cx="4.5" cy="-3.5" r="7.5"></circle>
+                </g>
+              </g>
+              <g class="orbit-group orbit-group--terra">
+                <g transform="translate(170 98)">
+                  <circle class="orbit-terra" r="9"></circle>
+                  <ellipse cx="0" cy="0" rx="15" ry="4.5" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="1.4" transform="rotate(-18)" class="orbit-terra"></ellipse>
+                </g>
+              </g>
+              <path class="orbit-sol" d="M170 136 L176 164 L204 170 L176 176 L170 204 L164 176 L136 170 L164 164 Z"></path>
+            </svg>
+            <div class="orbit-legend" aria-hidden="true">
+              <span class="orbit-chip"><i class="dot-sol"></i>Sol · lead</span>
+              <span class="orbit-chip"><i class="dot-luna"></i>Luna · narrow</span>
+              <span class="orbit-chip"><i class="dot-terra"></i>Terra · deep</span>
+              <span class="orbit-chip"><i class="dot-review"></i>fresh review</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="plain-language-title">
+      <section class="section" aria-labelledby="what-title">
         <div class="shell">
-          <div class="section-intro">
+          <div class="section-intro" data-reveal>
             <div>
-              <p class="eyebrow">What it does</p>
-              <h2 id="plain-language-title">A steadier way to ask Codex for help.</h2>
+              <p class="eyebrow">What is Astral Orchestrator?</p>
+              <h2 id="what-title">A small flight crew for every bigger request.</h2>
             </div>
             <p>
-              Instead of treating every request the same, Astral separates planning,
-              implementation, checking, and review. You still decide the goal; Astral
-              makes the work path easier to follow.
+              It is a <span class="hl">local, open-source plugin</span> for Codex.
+              Instead of one session doing everything at once, your request travels
+              with a crew: a captain who owns the plan, specialists who fly their
+              leg, and an inspector who signs off before landing. No API key, no
+              project-operated backend, <span class="hl">no analytics</span>. Just a steadier way of
+              working.
             </p>
           </div>
-          <div class="two-up">
-            <article class="plain-card">
-              <h3>Built for real project work</h3>
+          <div class="card-grid">
+            <article class="pillar-card" data-reveal>
+              <span class="card-icon card-icon--sol" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2.5 14.2 9.8 21.5 12 14.2 14.2 12 21.5 9.8 14.2 2.5 12 9.8 9.8Z"></path></svg>
+              </span>
+              <h3>Sol plans the route</h3>
               <p>
-                Use it for code, documents, configuration, research artifacts, and other
-                work that lives in a project folder. It is a skills-only local plugin,
-                not a hosted service.
+                <span class="hl">One lead</span> turns your request into an outcome,
+                a plan, and safety boundaries. Sol stays responsible for the final
+                call instead of drifting mid-conversation.
               </p>
             </article>
-            <article class="plain-card">
-              <h3>Careful about the route</h3>
+            <article class="pillar-card" data-reveal>
+              <span class="card-icon card-icon--lanes" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 4a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Zm10 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM7 6.5h2.2c2.6 0 4.3 1.6 4.3 4.2V13a2.5 2.5 0 1 0 2 .4v-2.7c0-1.5-1-2.4-2.3-2.4H7v-1.8ZM12 15.5A2.5 2.5 0 1 1 12 20.5 2.5 2.5 0 0 1 12 15.5Z"></path></svg>
+              </span>
+              <h3>Specialists do the work</h3>
               <p>
-                Guided and Careful work require the configured route rather than quietly
-                swapping to a different model or effort. Tiny, easy-to-reverse tasks can
-                stay with Sol in Quick mode.
+                Narrow, repeatable pieces go to Luna. Context-heavy implementation
+                goes to Terra. Each worker receives a <span class="hl">bounded
+                packet</span> instead of your whole conversation history.
+              </p>
+            </article>
+            <article class="pillar-card" data-reveal>
+              <span class="card-icon card-icon--review" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 1.8 3.5 5v6.1c0 5.3 3.6 10.3 8.5 11.6 4.9-1.3 8.5-6.3 8.5-11.6V5L12 1.8Zm-1.6 14.6-3.2-3.2 1.4-1.4 1.8 1.8 4.6-4.6 1.4 1.4-6 6Z"></path></svg>
+              </span>
+              <h3>A fresh review signs off</h3>
+              <p>
+                Checks run against the actual changes first. Then a
+                <span class="hl">separate Sol reviewer</span>, with no stake in
+                producing the work, decides whether it is ready to hand back.
               </p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="workflow" aria-labelledby="workflow-title">
+      <section class="section modes-section" aria-labelledby="modes-title">
         <div class="shell">
-          <div class="section-intro">
+          <div class="section-intro" data-reveal>
             <div>
-              <p class="eyebrow">The work path</p>
+              <p class="eyebrow">Pick an altitude</p>
+              <h2 id="modes-title">Three modes, one steady hand.</h2>
+            </div>
+            <p>
+              Tell Astral how careful to be. It <span class="hl">raises safeguards</span>
+              when a request is riskier than the mode you picked, and it never
+              broadens the work you asked for.
+            </p>
+          </div>
+          <div class="card-grid">
+            <article class="mode-card" data-reveal>
+              <span class="mode-tag mode-tag--quick">Quick</span>
+              <h3>Tiny and reversible</h3>
+              <p>
+                Sol works directly and self-reviews at the configured effort. No
+                delegation and no ceremony, just the explicit
+                <span class="hl">single-session option</span> for small jobs.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> obvious, easy-to-undo changes.</p>
+            </article>
+            <article class="mode-card" data-reveal>
+              <span class="mode-tag mode-tag--guided">Guided · default</span>
+              <h3>Plan, delegate, verify</h3>
+              <p>
+                Sol plans, Luna or Terra implements bounded work, and a fresh Sol
+                review checks the result. The everyday route for real project work.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> normal changes and projects.</p>
+            </article>
+            <article class="mode-card" data-reveal>
+              <span class="mode-tag mode-tag--careful">Careful</span>
+              <h3>Maximum scrutiny</h3>
+              <p>
+                A visible plan, confirmation gates, pinned workers, strict
+                verification, and read-only reviewer evidence for high-stakes work.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> credentials, payments, production, migrations.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="section" id="how-it-works" aria-labelledby="workflow-title">
+        <div class="shell">
+          <div class="section-intro" data-reveal>
+            <div>
+              <p class="eyebrow">How it works</p>
               <h2 id="workflow-title">One lead, the right lane, then a fresh look.</h2>
             </div>
             <p>
-              This is a visual guide to the usual Guided or Careful route. Sol keeps the
-              outcome and safety boundaries; Luna and Terra receive bounded work after
+              The usual Guided or Careful route, step by step. Sol keeps the outcome
+              and safety boundaries; Luna and Terra receive bounded work only after
               that plan is settled.
             </p>
           </div>
 
+          <p class="route-hint" data-reveal>Tap a step to open it. Every lane is touch-friendly.</p>
+
           <div class="route-map" aria-label="Sol leads the plan. Luna handles narrow repeatable tasks. Terra handles context-heavy implementation. Checks run after the work, then a fresh Sol review happens before handoff.">
-            <article class="route-step route-step--sol">
-              <span class="route-number">01</span>
-              <div>
-                <h3>Sol leads</h3>
-                <p>Clarifies the outcome, plan, safety boundaries, and what success should look like.</p>
-              </div>
-            </article>
-            <div class="route-branches">
-              <article class="route-step">
-                <span class="route-number">02</span>
-                <div>
-                  <h3>Luna handles narrow work</h3>
-                  <p>Best for focused, repeatable tasks with a clear, settled instruction.</p>
+            <div class="route-step route-step--sol" data-reveal>
+              <details open>
+                <summary>
+                  <span class="route-number">01</span>
+                  <span>
+                    <span class="route-title">Sol leads the plan</span>
+                    <span class="route-tagline">Your request becomes a clear outcome, a plan, and safety boundaries.</span>
+                  </span>
+                  <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
+                </summary>
+                <div class="route-detail">
+                  <p>Sol settles requirements, architecture, and what <strong>done</strong> means before anyone writes a line. Guided and Careful work must run on the <span class="hl">configured Sol route</span> at the configured effort. If that route cannot be proven, Astral stops rather than quietly substituting another model.</p>
                 </div>
-              </article>
-              <article class="route-step">
-                <span class="route-number">02</span>
-                <div>
-                  <h3>Terra handles context-heavy work</h3>
-                  <p>Best for broader implementation, integration, debugging, or careful refactoring.</p>
-                </div>
-              </article>
+              </details>
             </div>
-            <article class="route-step">
-              <span class="route-number">03</span>
-              <div>
-                <h3>Run checks, then ask for a fresh Sol review</h3>
-                <p>The actual changes are inspected and relevant checks run before a separate Sol reviewer assesses the finished work.</p>
+
+            <div class="route-connector" aria-hidden="true"></div>
+
+            <div class="route-branches" data-reveal>
+              <span class="route-branches-label">Sol hands off bounded work</span>
+              <div class="route-step route-step--luna">
+                <details>
+                  <summary>
+                    <span class="route-number">02</span>
+                    <span>
+                      <span class="route-title">Luna takes narrow work</span>
+                      <span class="route-tagline">Focused, repeatable tasks with a settled instruction.</span>
+                    </span>
+                    <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
+                  </summary>
+                  <div class="route-detail">
+                    <p>Think of a rename, a small transform, or a tight template: fully specified and easy to verify. Luna receives a bounded packet, <strong>not your whole conversation</strong>, at its configured effort.</p>
+                  </div>
+                </details>
               </div>
-            </article>
-            <p class="route-caption">The route is based on the work at hand. It is a practical workflow, not a promise that every task has the same result.</p>
+              <div class="route-step route-step--terra">
+                <details>
+                  <summary>
+                    <span class="route-number">02</span>
+                    <span>
+                      <span class="route-title">Terra takes context-heavy work</span>
+                      <span class="route-tagline">Broader implementation, integration, and debugging.</span>
+                    </span>
+                    <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
+                  </summary>
+                  <div class="route-detail">
+                    <p>When the work needs project context, like wiring a feature, chasing a bug across files, or careful refactoring, Terra steps in <strong>after</strong> Sol has settled the plan, at its configured effort.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            <div class="route-connector" aria-hidden="true"></div>
+
+            <div class="route-step route-step--review" data-reveal>
+              <details>
+                <summary>
+                  <span class="route-number">03</span>
+                  <span>
+                    <span class="route-title">Checks run, then a fresh Sol review</span>
+                    <span class="route-tagline">The actual changes are inspected before anything comes back to you.</span>
+                  </span>
+                  <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
+                </summary>
+                <div class="route-detail">
+                  <p>Relevant checks run against the real diff. Then a <strong>separate Sol reviewer</strong>, with no stake in producing the work, assesses the finished result. Careful mode adds confirmation gates and read-only review evidence.</p>
+                </div>
+              </details>
+            </div>
+
+            <p class="route-caption">The route is a documented heuristic based on the work at hand. Every lane runs its pinned model at its configured effort, and a mismatched lane is blocked and explained instead of hidden.</p>
           </div>
         </div>
       </section>
 
-      <section class="install-section section" id="install" aria-labelledby="install-title">
+      <section class="section evidence-section" id="evidence" aria-labelledby="evidence-title">
         <div class="shell">
-          <div class="section-intro">
+          <div class="section-intro" data-reveal>
             <div>
-              <p class="eyebrow">Get started</p>
-              <h2 id="install-title">Install from the complete repository.</h2>
+              <p class="eyebrow">Measured evidence</p>
+              <h2 id="evidence-title">Fewer tokens in context. <span class="gradient-text">More eyes on the work.</span></h2>
             </div>
             <p>
-              The dry run prints the planned commands first. The full install adds the
-              local marketplace, plugin, and companion profiles without overwriting a
-              different profile.
+              Astral loads instructions progressively, so each run reads only what
+              its route needs. These numbers are not estimates: they come from the
+              committed, <span class="hl">reproducible benchmark</span> in the
+              repository.
             </p>
           </div>
-          <div class="install-card">
-            <h3>Copy this into a terminal</h3>
-            <div class="command-wrap">
-              <pre id="install-command"><code>git clone https://github.com/Demonbane18/astral-orchestrator.git
-cd astral-orchestrator
-sh scripts/setup.sh --dry-run
-sh scripts/setup.sh</code></pre>
-              <button class="copy-button" type="button" data-copy-target="#install-command" aria-label="Copy the installation command" aria-live="polite">Copy command</button>
+
+          <div class="evidence-grid">
+            <div class="chart-card" data-reveal>
+              <h3>Instruction-context tokens, by loading path</h3>
+              <p class="chart-sub">tiktoken 0.13.0 · o200k_base encoding · v3.1.4 · 2026-08-03</p>
+              <div class="chart" data-chart role="img" aria-label="Bar chart of instruction-context tokens. Loading the full bundle eagerly costs 5,049 tokens. The Quick path costs 3,324 tokens. The core skill alone costs 1,791 tokens.">
+                <div class="chart-row">
+                  <span class="chart-label">Full bundle <small>everything, eagerly</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--full"></span></span>
+                  <span class="chart-value" data-count-to="5049">5,049</span>
+                </div>
+                <div class="chart-row">
+                  <span class="chart-label">Quick path <small>tiny tasks</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--quick"></span></span>
+                  <span class="chart-value" data-count-to="3324">3,324</span>
+                </div>
+                <div class="chart-row">
+                  <span class="chart-label">Core skill <small>always loaded</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--core"></span></span>
+                  <span class="chart-value" data-count-to="1791">1,791</span>
+                </div>
+              </div>
+              <p class="chart-footnote">Scope: instruction-context loading only, not task quality, latency, or total run tokens. Regenerate it yourself with one command from <code>benchmarks/</code> in the repository.</p>
             </div>
-            <p class="install-note">
-              You need Codex access to the configured Sol, Luna, and Terra models, plus
-              Python 3.11 or newer. For complete setup and troubleshooting details, read
-              the <a href="https://github.com/Demonbane18/astral-orchestrator#readme">repository README</a>.
-            </p>
+
+            <div class="stat-stack">
+              <div class="stat-card" data-reveal>
+                <span class="stat-number"><span data-stat-count data-count-to="34.2" data-decimals="1">34.2</span><span class="stat-unit">%</span></span>
+                <span class="stat-label">fewer instruction tokens on the Quick path than eager full-bundle loading</span>
+              </div>
+              <div class="stat-card" data-reveal>
+                <span class="stat-number"><span data-stat-count data-count-to="1725">1,725</span></span>
+                <span class="stat-label">tokens avoided every time a tiny task stays on the Quick route</span>
+              </div>
+              <div class="stat-card" data-reveal>
+                <span class="stat-number"><span data-stat-count data-count-to="1791">1,791</span></span>
+                <span class="stat-label">tokens for the entire core skill in the published v3.1.4 measurement</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="conclusion-grid">
+            <article class="conclusion-card" data-reveal>
+              <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z"></path></svg>Token-efficient by design</h3>
+              <p>
+                Progressive disclosure is measured, not hoped for: the Quick route
+                reads <span class="hl">34.2% fewer instruction tokens</span> than
+                loading everything up front. And because Luna and Terra receive
+                bounded task packets, workers never re-read the whole conversation
+                either.
+              </p>
+            </article>
+            <article class="conclusion-card" data-reveal>
+              <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8 3.5 5v6.1c0 5.3 3.6 10.3 8.5 11.6 4.9-1.3 8.5-6.3 8.5-11.6V5L12 1.8Zm-1.6 14.6-3.2-3.2 1.4-1.4 1.8 1.8 4.6-4.6 1.4 1.4-6 6Z"></path></svg>More effective where it counts</h3>
+              <p>
+                Splitting planning, doing, and checking means the reviewer had no
+                hand in the work it judges. <span class="hl">Route proof</span> blocks
+                silent model or effort swaps, so the workflow you configured is the
+                one that actually runs.
+              </p>
+            </article>
+            <article class="conclusion-card" data-reveal>
+              <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"></path></svg>Evidence you can reproduce</h3>
+              <p>
+                The chart regenerates from one command in <code>benchmarks/</code>.
+                For outcome comparisons, the repo ships a local scorecard that
+                runs locally on your supplied trials and judges your own Astral
+                versus single-Sol results.
+              </p>
+            </article>
+          </div>
+
+          <p class="scope-note" data-reveal>
+            Honest scope: the footprint measures instruction-context loading only and does
+            not by itself prove every orchestrated run uses fewer total tokens. That is
+            exactly why the outcome scorecard exists.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="cta-title">
+        <div class="shell">
+          <div class="cta-band" data-reveal>
+            <div>
+              <p class="eyebrow">Ready when you are</p>
+              <h2 id="cta-title">Two minutes to a steadier route.</h2>
+              <p>One clone, one dry run, one install. The plugin works in your local Codex and project environment.</p>
+            </div>
+            <a class="button button-primary" href="install/">Open the quick install</a>
           </div>
         </div>
       </section>
 
       <section class="section" aria-labelledby="next-title">
         <div class="shell two-up">
-          <article class="plain-card">
+          <article class="plain-card" data-reveal>
             <h2 id="next-title">Need a hand?</h2>
             <p>Start with the README, then use the public issue tracker for bugs, confusing behavior, or improvement ideas.</p>
             <p><a href="support/">Read support guidance</a></p>
           </article>
-          <article class="plain-card">
+          <article class="plain-card" data-reveal>
             <h2>Want the facts first?</h2>
             <p>Read the concise privacy policy and terms before installing or using the project.</p>
             <p><a href="privacy/">Read privacy</a> <span aria-hidden="true">·</span> <a href="terms/">Read terms</a></p>
@@ -185,14 +425,20 @@ sh scripts/setup.sh</code></pre>
       <div class="shell footer-inner">
         <div>
           <a class="brand" href="./">
-            <img src="assets/astral-orchestrator-favicon-32.png" alt="" width="32" height="32">
-            <span>Astral Orchestrator</span>
+            <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+              <circle cx="20" cy="20" r="16.5" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.4" stroke-dasharray="2.5 4"></circle>
+              <path d="M20 6.5 L22.9 17.1 L33.5 20 L22.9 22.9 L20 33.5 L17.1 22.9 L6.5 20 L17.1 17.1 Z"></path>
+              <circle cx="28.3" cy="5.7" r="2.2" fill="#2ea6dc"></circle>
+              <circle cx="5.7" cy="28.3" r="2.6" fill="#8a6cdb"></circle>
+            </svg>
+            <span class="brand-word">Astral <em>Orchestrator</em></span>
           </a>
           <p class="footer-note">An independent open-source project operated by JOHN PAUL FURIGAY FUSIN. It is not affiliated with or endorsed by OpenAI.</p>
         </div>
         <nav aria-label="Footer navigation">
           <ul class="footer-links">
             <li><a href="./">Home</a></li>
+            <li><a href="install/">Install</a></li>
             <li><a href="support/">Support</a></li>
             <li><a href="privacy/">Privacy</a></li>
             <li><a href="terms/">Terms</a></li>

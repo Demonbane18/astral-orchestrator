@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Support guidance for Astral Orchestrator, including the public issue tracker and README.">
+    <meta name="description" content="Quick install for Astral Orchestrator: clone the repository, preview with a dry run, then install the local Codex plugin.">
     <meta name="theme-color" content="#f4f2ec">
-    <title>Support · Astral Orchestrator</title>
+    <title>Quick Install · Astral Orchestrator</title>
     <link rel="icon" type="image/png" href="../assets/astral-orchestrator-favicon-32.png">
     <link rel="stylesheet" href="../assets/site.css">
     <script src="../assets/site.js"></script>
@@ -27,8 +27,8 @@
         <nav class="site-nav" aria-label="Primary navigation">
           <ul>
             <li><a href="../">Home</a></li>
-            <li><a href="../install/">Install</a></li>
-            <li><a href="./" aria-current="page">Support</a></li>
+            <li><a href="./" aria-current="page">Install</a></li>
+            <li><a href="../support/">Support</a></li>
             <li><a href="../privacy/">Privacy</a></li>
             <li><a href="../terms/">Terms</a></li>
           </ul>
@@ -55,48 +55,62 @@
     <main id="main-content">
       <header class="page-header">
         <div class="shell">
-          <p class="eyebrow">Support</p>
-          <h1>Start with the public project record.</h1>
-          <p class="page-lede">The README explains installation and common setup questions. The issue tracker is the right place for reproducible bugs, confusing behavior, and improvement ideas.</p>
+          <p class="eyebrow">Quick install</p>
+          <h1>From clone to checked work in four commands.</h1>
+          <p class="page-lede">The dry run only prints what it would change, so you can look before you leap. The real install registers the local marketplace, adds the plugin, and installs three companion profiles, and it never overwrites a profile that is different from the shipped one.</p>
         </div>
       </header>
 
-      <section class="section">
-        <div class="shell content-grid">
-          <div class="prose">
-            <h2>Read the setup guidance first</h2>
-            <p>
-              The <a href="https://github.com/Demonbane18/astral-orchestrator#readme">repository README</a>
-              is the source for the complete install flow, requirements, modes, and troubleshooting.
-              In particular, try the dry-run command before an install so you can inspect the planned local changes.
-            </p>
+      <section class="section" aria-labelledby="commands-title">
+        <div class="shell install-layout">
+          <div>
+            <div class="install-card" data-reveal>
+              <h2 id="commands-title">Copy this into a terminal</h2>
+              <div class="terminal">
+                <div class="terminal-bar" aria-hidden="true"><i></i><i></i><i></i><span>terminal</span></div>
+                <div class="command-wrap">
+                  <pre id="install-command"><code><span>git clone https://github.com/Demonbane18/astral-orchestrator.git</span>
+<span>cd astral-orchestrator</span>
+<span>sh scripts/setup.sh --dry-run</span>
+<span>sh scripts/setup.sh</span></code></pre>
+                  <button class="copy-button" type="button" data-copy-target="#install-command" data-copy-status="install-command-copy-status" aria-label="Copy the installation command" aria-describedby="install-command-copy-status">Copy command</button>
+                </div>
+              </div>
+              <p class="copy-status" id="install-command-copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
+              <ul class="check-list">
+                <li><strong>Clone</strong> the complete repository, not just the plugin folder.</li>
+                <li><strong>Dry run</strong> prints the planned commands and changes nothing.</li>
+                <li><strong>Install</strong> adds the marketplace, plugin, and profiles.</li>
+                <li><strong>Start a new Codex task</strong> afterwards, so Codex discovers everything.</li>
+              </ul>
+            </div>
 
-            <h2>Open a useful issue</h2>
-            <p>
-              If the README does not answer the question, open a public issue at
-              <a href="https://github.com/Demonbane18/astral-orchestrator/issues">github.com/Demonbane18/astral-orchestrator/issues</a>.
-              A useful issue helps another person understand the problem without guessing.
-            </p>
-            <ul class="issue-list">
-              <li>Use a short title that describes what happened.</li>
-              <li>Say what you expected, what actually happened, and the exact steps that led there.</li>
-              <li>Include relevant operating system, Python, and Codex details when they affect the result.</li>
-              <li>Share error text or a small safe example when useful. Remove secrets, private files, access tokens, and personal information first.</li>
-            </ul>
-
-            <h2>What to expect</h2>
-            <p>
-              Astral Orchestrator is an independent open-source project. Issues are public and community-visible; a response or timeline is not guaranteed. Do not use the issue tracker for sensitive information or urgent requests.
-            </p>
+            <div class="install-card" data-reveal>
+              <h2>Prefer Codex to run it for you?</h2>
+              <p>Open the cloned repository in Codex and paste this prompt:</p>
+              <p class="prompt-box" id="codex-prompt">Install and set up Astral Orchestrator from https://github.com/Demonbane18/astral-orchestrator. Run sh scripts/setup.sh --dry-run first, then sh scripts/setup.sh. Preserve any conflicting agent profiles and run the package verification.</p>
+              <p>
+                <button class="copy-button" type="button" data-copy-target="#codex-prompt" data-copy-status="codex-prompt-copy-status" aria-label="Copy the Codex install prompt" aria-describedby="codex-prompt-copy-status">Copy prompt</button>
+              </p>
+              <p class="copy-status" id="codex-prompt-copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
+            </div>
           </div>
 
-          <aside class="side-note" aria-labelledby="support-links-title">
-            <h2 id="support-links-title">Useful links</h2>
-            <p><a href="https://github.com/Demonbane18/astral-orchestrator#readme">Read the README</a></p>
-            <p><a href="https://github.com/Demonbane18/astral-orchestrator/issues">Open public issues</a></p>
-            <p><a href="../privacy/">Privacy policy</a></p>
-            <p><a href="../terms/">Terms of service</a></p>
-          </aside>
+          <div class="install-side">
+            <div class="side-note">
+              <h2>What you need</h2>
+              <ul class="check-list">
+                <li>Codex with access to the <strong>Sol, Luna, and Terra</strong> models.</li>
+                <li><strong>Python 3.11</strong> or newer.</li>
+                <li>A fresh Codex task after installing.</li>
+              </ul>
+            </div>
+            <div class="plain-card" data-reveal>
+              <h3>Something off?</h3>
+              <p>The README covers the full install flow, modes, and troubleshooting, and the issue tracker is open for reproducible bugs.</p>
+              <p><a href="https://github.com/Demonbane18/astral-orchestrator#readme">Read the README</a> <span aria-hidden="true">·</span> <a href="../support/">Support guidance</a></p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -118,8 +132,8 @@
         <nav aria-label="Footer navigation">
           <ul class="footer-links">
             <li><a href="../">Home</a></li>
-            <li><a href="../install/">Install</a></li>
-            <li><a href="./">Support</a></li>
+            <li><a href="./">Install</a></li>
+            <li><a href="../support/">Support</a></li>
             <li><a href="../privacy/">Privacy</a></li>
             <li><a href="../terms/">Terms</a></li>
             <li><a href="https://github.com/Demonbane18/astral-orchestrator">GitHub</a></li>
