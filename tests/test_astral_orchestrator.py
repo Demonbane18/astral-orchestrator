@@ -23,6 +23,8 @@ NOTICE = ROOT / "NOTICE.md"
 PLUGIN_LICENSE = PLUGIN / "LICENSE"
 PLUGIN_NOTICE = PLUGIN / "NOTICE.md"
 MANIFEST = PLUGIN / ".codex-plugin/plugin.json"
+OPENAI_METADATA = PLUGIN / "skills/astral-orchestrator/agents/openai.yaml"
+BANNER = ROOT / "assets/brand/astral-orchestrator-banner.gif"
 SKILL = PLUGIN / "skills/astral-orchestrator/SKILL.md"
 MODES = PLUGIN / "skills/astral-orchestrator/references/modes-and-risk.md"
 TEMPLATES = PLUGIN / "skills/astral-orchestrator/references/work-templates.md"
@@ -100,10 +102,34 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("hooks", manifest)
         self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.2"))
 
-        prompts = manifest["interface"]["defaultPrompt"]
+        interface = manifest["interface"]
+        self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
+        self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
+        description = interface["longDescription"].lower()
+        for mode in ("quick", "guided", "careful", "measured"):
+            self.assertIn(mode, description)
+        self.assertIn("opt-in", description)
+        self.assertIn("never runs automatically", description)
+        self.assertNotIn("slower", description)
+
+        prompts = interface["defaultPrompt"]
         self.assertGreaterEqual(len(prompts), 2)
         self.assertLessEqual(len(prompts), 3)
         self.assertTrue(all(len(prompt) <= 128 for prompt in prompts))
+        self.assertTrue(any("measured mode" in prompt.lower() for prompt in prompts))
+
+    def test_openai_metadata_keeps_shared_icon_and_measured_aware_prompt(self):
+        metadata = read(OPENAI_METADATA)
+
+        self.assertIn('icon_small: "./assets/icon.png"', metadata)
+        self.assertIn('icon_large: "./assets/icon.png"', metadata)
+        prompt_line = next(
+            line for line in metadata.splitlines() if line.strip().startswith("default_prompt:")
+        )
+        prompt = prompt_line.split(":", 1)[1].strip().strip('"')
+        self.assertLessEqual(len(prompt), 128)
+        self.assertIn("guided mode", prompt.lower())
+        self.assertIn("measured mode", prompt.lower())
 
 
 class SkillContractTests(unittest.TestCase):
@@ -938,6 +964,46 @@ class UserExperienceTests(unittest.TestCase):
             excalidraw = load_json(source)
             self.assertEqual(excalidraw["type"], "excalidraw")
             self.assertTrue(excalidraw["elements"])
+
+    def test_readme_publishes_banner_footprint_and_ori_eval_attribution(self):
+        readme = read(ROOT / "README.md")
+        first_lines = readme.lstrip().splitlines()
+
+        self.assertTrue(BANNER.is_file())
+        self.assertTrue(first_lines[0].startswith("![Animated outer-space Astral Orchestrator banner"))
+        self.assertIn("(assets/brand/astral-orchestrator-banner.gif)", first_lines[0])
+        for visible_element in (
+            "Sol at the center",
+            "Luna and Terra orbiting",
+            "twinkling stars",
+            "passing comet",
+        ):
+            self.assertIn(visible_element, first_lines[0])
+        self.assertIn("# Astral Orchestrator", first_lines[:4])
+
+        for figure in ("1,974", "3,634", "5,451", "7,610", "1,817", "33.3%"):
+            self.assertIn(figure, readme)
+        footprint = " ".join(
+            readme.split("## Measured instruction-context footprint", 1)[1]
+            .split("## Configurable effort levels", 1)[0]
+            .split()
+        )
+        self.assertIn("published v3.2.0 core `SKILL.md` measures **1,974 tokens**", footprint)
+        self.assertIn("Guided/full measures **5,451 tokens**", footprint)
+        self.assertIn("Measured measures **7,610 tokens**", footprint)
+        self.assertIn("instruction-context loading only", footprint)
+        self.assertIn("quality, latency, or price", footprint)
+        self.assertIn("total tokens for a complete run", footprint)
+
+        self.assertIn("https://openrouter.ai/ori/eval", readme)
+        self.assertIn("https://openrouter.ai/skills/spawn-ori-eval", readme)
+        attribution = " ".join(readme.lower().split())
+        self.assertIn("openrouter's ori eval", attribution)
+        self.assertIn("inspired by", attribution)
+        self.assertIn("pinned codex gpt-5.6 sol/terra/luna lanes", attribution)
+        self.assertIn("does not run or depend on ori or openrouter", attribution)
+        self.assertIn("worker-produced guided or measured work", attribution)
+        self.assertIn("guided, careful, and measured require all three", attribution)
 
     def test_editable_diagrams_preserve_rendered_labels_and_quick_handoff(self):
         namespace = {"svg": "http://www.w3.org/2000/svg"}

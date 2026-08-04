@@ -1,7 +1,7 @@
 {
   "name": "astral-orchestrator",
   "version": "3.2.0",
-  "description": "Beginner-friendly, model-routed orchestration with explicit Measured evidence runs for planning, delegating, verifying, and reviewing project work in Codex.",
+  "description": "Beginner-friendly orchestration with Quick, Guided, Careful, and explicit opt-in Measured modes for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
   },
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Astral Orchestrator turns an everyday request into a clear outcome, keeps the Sol model in charge, routes bounded work to pinned Luna or Terra models at their configured efforts, verifies the actual result, and uses a fresh Sol reviewer before handoff. Its explicit Measured mode adds a deliberately slower local evidence ledger without changing the pinned routes.",
+    "longDescription": "Astral Orchestrator offers Quick, Guided, Careful, and explicit opt-in Measured modes: Quick keeps tiny work in Sol with self-review; Guided, Careful, and Measured route bounded work to pinned Luna or Terra lanes at their configured efforts, verify changes, and request a fresh Sol reviewer. Measured records local evidence and never runs automatically.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",
@@ -30,7 +30,7 @@
     "composerIcon": "./skills/astral-orchestrator/assets/icon.png",
     "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
-      "Use Astral Orchestrator to complete this request and verify the result.",
+      "Use Astral Orchestrator in Guided mode (the default) to complete this request and verify the result.",
       "Use Astral Orchestrator in Measured mode for this evidence-oriented request.",
       "Use Astral Orchestrator in Careful mode for this risky change."
     ]

@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#f4f2ec">
     <title>Astral Orchestrator · turn a request into a checked result</title>
     <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
+    <link rel="apple-touch-icon" href="assets/astral-orchestrator-touch-icon.png">
     <link rel="stylesheet" href="assets/site.css">
     <script src="assets/site.js"></script>
   </head>
@@ -58,7 +59,7 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.1.4 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.2.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
               Astral Orchestrator gives bigger work a clear route through Codex:
@@ -74,6 +75,7 @@
             <ul class="hero-facts">
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>3 pinned lanes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh Sol review</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Measured is opt-in</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>No project-operated backend</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>MIT licensed</li>
             </ul>
@@ -166,7 +168,7 @@
           <div class="section-intro" data-reveal>
             <div>
               <p class="eyebrow">Pick an altitude</p>
-              <h2 id="modes-title">Three modes, one steady hand.</h2>
+              <h2 id="modes-title">Four modes, one steady hand.</h2>
             </div>
             <p>
               Tell Astral how careful to be. It <span class="hl">raises safeguards</span>
@@ -174,7 +176,7 @@
               broadens the work you asked for.
             </p>
           </div>
-          <div class="card-grid">
+          <div class="card-grid modes-grid">
             <article class="mode-card" data-reveal>
               <span class="mode-tag mode-tag--quick">Quick</span>
               <h3>Tiny and reversible</h3>
@@ -202,6 +204,16 @@
                 verification, and read-only reviewer evidence for high-stakes work.
               </p>
               <p class="mode-best"><strong>Best for:</strong> credentials, payments, production, migrations.</p>
+            </article>
+            <article class="mode-card mode-card--measured" data-reveal>
+              <span class="mode-tag mode-tag--measured">Measured · opt-in</span>
+              <h3>Slower by design</h3>
+              <p>
+                A deliberately slower, evidence-oriented route for an explicit
+                request. It is never auto-selected; Guided remains the default for
+                normal work.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> a reproducible record of a route decision and its checks.</p>
             </article>
           </div>
         </div>
@@ -298,6 +310,58 @@
         </div>
       </section>
 
+      <section class="section measured-section" aria-labelledby="measured-title">
+        <div class="shell">
+          <div class="section-intro" data-reveal>
+            <div>
+              <p class="eyebrow">Measured mode</p>
+              <h2 id="measured-title">Freeze the plan. Keep the evidence.</h2>
+            </div>
+            <p>
+              Measured is an explicit opt-in route, not a claim that every task
+              needs more process. It creates a deliberate, inspectable record while
+              Sol keeps the requirements, architecture, and final decisions.
+            </p>
+          </div>
+          <div class="measured-grid">
+            <article class="measured-card" data-reveal>
+              <h3>One fixed card, one selected lane</h3>
+              <p>
+                Sol freezes one canonical work card and named acceptance checks,
+                then uses deterministic Sol/Luna/Terra routing at the configured
+                efforts. Only the selected implementation lane edits the bounded
+                card.
+              </p>
+            </article>
+            <article class="measured-card" data-reveal>
+              <h3>Ambiguity gets the same question</h3>
+              <p>
+                Only a genuine Luna/Terra routing ambiguity can trigger optional,
+                identical read-only probes. They receive the same frozen card and
+                checks; Sol records the decisive facts and keeps the final route
+                decision.
+              </p>
+            </article>
+            <article class="measured-card" data-reveal>
+              <h3>Resumable proof, then a fresh look</h3>
+              <p>
+                Measured keeps private, resumable evidence locally without secrets,
+                raw prompts, or a project-operated service. Frozen checks run on
+                each attempt, and a fresh Sol review supplies the final verdict.
+              </p>
+            </article>
+          </div>
+          <aside class="attribution-note" data-reveal aria-label="Ori Eval inspiration and dependency note">
+            <p>
+              OpenRouter’s <a href="https://openrouter.ai/ori/eval">Ori Eval</a> and
+              its <a href="https://openrouter.ai/skills/spawn-ori-eval">reproducible evaluation skill</a>
+              inspired the pinned/reproducible evaluation and state-tracking method.
+              Astral does not run Ori or OpenRouter and adds no OpenRouter runtime or API dependency.
+            </p>
+          </aside>
+        </div>
+      </section>
+
       <section class="section evidence-section" id="evidence" aria-labelledby="evidence-title">
         <div class="shell">
           <div class="section-intro" data-reveal>
@@ -309,46 +373,52 @@
               Astral loads instructions progressively, so each run reads only what
               its route needs. These numbers are not estimates: they come from the
               committed, <span class="hl">reproducible benchmark</span> in the
-              repository.
+              repository. They are static instruction-context measurements, not
+              a score for task quality.
             </p>
           </div>
 
           <div class="evidence-grid">
             <div class="chart-card" data-reveal>
               <h3>Instruction-context tokens, by loading path</h3>
-              <p class="chart-sub">tiktoken 0.13.0 · o200k_base encoding · v3.1.4 · 2026-08-03</p>
-              <div class="chart" data-chart role="img" aria-label="Bar chart of instruction-context tokens. Loading the full bundle eagerly costs 5,049 tokens. The Quick path costs 3,324 tokens. The core skill alone costs 1,791 tokens.">
+              <p class="chart-sub">Static instruction-context measurements · tiktoken 0.13.0 · o200k_base · v3.2.0 · 2026-08-04</p>
+              <div class="chart" data-chart role="img" aria-label="Bar chart of static instruction-context tokens. Measured costs 7,610 tokens. Guided and full cost 5,451 tokens. Quick costs 3,634 tokens. The core skill costs 1,974 tokens.">
                 <div class="chart-row">
-                  <span class="chart-label">Full bundle <small>everything, eagerly</small></span>
+                  <span class="chart-label">Measured <small>explicit evidence route</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--measured"></span></span>
+                  <span class="chart-value" data-count-to="7610">7,610</span>
+                </div>
+                <div class="chart-row">
+                  <span class="chart-label">Guided / full <small>normal project route</small></span>
                   <span class="chart-track"><span class="chart-bar chart-bar--full"></span></span>
-                  <span class="chart-value" data-count-to="5049">5,049</span>
+                  <span class="chart-value" data-count-to="5451">5,451</span>
                 </div>
                 <div class="chart-row">
                   <span class="chart-label">Quick path <small>tiny tasks</small></span>
                   <span class="chart-track"><span class="chart-bar chart-bar--quick"></span></span>
-                  <span class="chart-value" data-count-to="3324">3,324</span>
+                  <span class="chart-value" data-count-to="3634">3,634</span>
                 </div>
                 <div class="chart-row">
                   <span class="chart-label">Core skill <small>always loaded</small></span>
                   <span class="chart-track"><span class="chart-bar chart-bar--core"></span></span>
-                  <span class="chart-value" data-count-to="1791">1,791</span>
+                  <span class="chart-value" data-count-to="1974">1,974</span>
                 </div>
               </div>
-              <p class="chart-footnote">Scope: instruction-context loading only, not task quality, latency, or total run tokens. Regenerate it yourself with one command from <code>benchmarks/</code> in the repository.</p>
+              <p class="chart-footnote">Scope: static instruction-context measurements only, not task quality, latency, price, or total-run tokens. Regenerate the published v3.2.0 measurement with one command from <code>benchmarks/</code> in the repository.</p>
             </div>
 
             <div class="stat-stack">
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="34.2" data-decimals="1">34.2</span><span class="stat-unit">%</span></span>
-                <span class="stat-label">fewer instruction tokens on the Quick path than eager full-bundle loading</span>
+                <span class="stat-number"><span data-stat-count data-count-to="33.3" data-decimals="1">33.3</span><span class="stat-unit">%</span></span>
+                <span class="stat-label">instruction-context tokens Quick avoids versus Guided / full loading</span>
               </div>
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="1725">1,725</span></span>
-                <span class="stat-label">tokens avoided every time a tiny task stays on the Quick route</span>
+                <span class="stat-number"><span data-stat-count data-count-to="1817">1,817</span></span>
+                <span class="stat-label">instruction-context tokens Quick avoids versus Guided / full loading</span>
               </div>
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="1791">1,791</span></span>
-                <span class="stat-label">tokens for the entire core skill in the published v3.1.4 measurement</span>
+                <span class="stat-number"><span data-stat-count data-count-to="1974">1,974</span></span>
+                <span class="stat-label">tokens for the entire core skill in the published v3.2.0 measurement</span>
               </div>
             </div>
           </div>
@@ -358,14 +428,14 @@
               <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z"></path></svg>Token-efficient by design</h3>
               <p>
                 Progressive disclosure is measured, not hoped for: the Quick route
-                reads <span class="hl">34.2% fewer instruction tokens</span> than
-                loading everything up front. And because Luna and Terra receive
+                avoids <span class="hl">1,817 instruction-context tokens (33.3%)</span>
+                compared with Guided / full loading. And because Luna and Terra receive
                 bounded task packets, workers never re-read the whole conversation
                 either.
               </p>
             </article>
             <article class="conclusion-card" data-reveal>
-              <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8 3.5 5v6.1c0 5.3 3.6 10.3 8.5 11.6 4.9-1.3 8.5-6.3 8.5-11.6V5L12 1.8Zm-1.6 14.6-3.2-3.2 1.4-1.4 1.8 1.8 4.6-4.6 1.4 1.4-6 6Z"></path></svg>More effective where it counts</h3>
+              <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8 3.5 5v6.1c0 5.3 3.6 10.3 8.5 11.6 4.9-1.3 8.5-6.3 8.5-11.6V5L12 1.8Zm-1.6 14.6-3.2-3.2 1.4-1.4 1.8 1.8 4.6-4.6 1.4 1.4-6 6Z"></path></svg>A distinct check before handoff</h3>
               <p>
                 Splitting planning, doing, and checking means the reviewer had no
                 hand in the work it judges. <span class="hl">Route proof</span> blocks
@@ -385,9 +455,9 @@
           </div>
 
           <p class="scope-note" data-reveal>
-            Honest scope: the footprint measures instruction-context loading only and does
-            not by itself prove every orchestrated run uses fewer total tokens. That is
-            exactly why the outcome scorecard exists.
+            Honest scope: these static instruction-context measurements do not measure
+            task quality, latency, price, or total-run tokens. They do not by themselves
+            prove that every orchestrated run uses fewer total tokens.
           </p>
         </div>
       </section>
