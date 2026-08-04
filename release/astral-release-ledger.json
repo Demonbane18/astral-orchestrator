@@ -50,6 +50,15 @@
       "status": "draft",
       "observed_at": "2026-08-04T15:15:13+08:00",
       "evidence": "The OpenAI Platform draft contains v3.2.0 metadata, icons, prompts, and skill; automated scanning and the developer's policy attestations remain before submission."
+    },
+    {
+      "surface": "source",
+      "version": "3.2.0",
+      "status": "verified",
+      "observed_at": "2026-08-04T22:14:21+08:00",
+      "evidence": "Commit contains the 109-test benchmark harness, public evidence disclosures, README update, and Vercel website update; repository tests and package verification passed and fresh Sol review returned ship.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/4292e9b",
+      "commit": "4292e9b"
     }
   ]
 }
