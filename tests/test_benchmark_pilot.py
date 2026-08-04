@@ -223,9 +223,12 @@ class BenchmarkPilotTests(unittest.TestCase):
         result_dir = ROOT / "benchmarks" / "results" / "2026-08-04-invalid-pilot"
         scorecard = json.loads((result_dir / "scorecard.json").read_text(encoding="utf-8"))
         preview = (result_dir / "preview.html").read_text(encoding="utf-8")
+        invalidation = (result_dir / "INVALID.md").read_text(encoding="utf-8")
         self.assertTrue(scorecard["invalid_evidence"])
         self.assertEqual(scorecard["evidence_status"], "invalid")
         self.assertGreaterEqual(len(scorecard["invalid_reasons"]), 1)
+        for reason in scorecard["invalid_reasons"]:
+            self.assertIn(reason, invalidation)
         self.assertIn("INVALID EXPLORATORY PILOT", preview)
         self.assertIn("none of the figures below support a claim", preview)
 

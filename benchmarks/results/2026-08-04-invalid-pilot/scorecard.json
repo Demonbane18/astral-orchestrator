@@ -2,10 +2,10 @@
   "evidence_status": "invalid",
   "invalid_evidence": true,
   "invalid_reasons": [
-    "The runner launched from a dirty working tree rather than the frozen base commit.",
-    "The acceptance fixture did not require each assigned task to produce a meaningful change.",
-    "The Guided route did not prove an independent primary-session orchestrator call.",
-    "The generated preview and scorecard predated the corrected schema-v2 validation rules."
+    "Astral's internal reviewer ran before objective checks and its verdict did not control acceptance.",
+    "Missing strategy telemetry could be represented as numeric zero.",
+    "Sandbox modes were neither embedded nor validated in route evidence.",
+    "Efficiency comparison estimates did not use the same ratio-of-means calculation as the displayed summaries."
   ],
   "cases": {
     "effort-configuration": {
