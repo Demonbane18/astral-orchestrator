@@ -7,10 +7,11 @@ orchestration. A Sol task leads, assigns bounded work to Luna or Terra based on 
 integrates and verifies the result, then uses a fresh Sol reviewer. Each lane's reasoning
 effort is configurable without editing profiles.
 
-The user should not need to understand TOML files, runtime logs, or agent APIs. One setup
-command installs the plugin and three namespaced profiles. When an exact route cannot be
-proven, the workflow stops rather than claiming a generic fallback was the requested
-orchestration.
+The user should not need to understand TOML files, runtime logs, or agent APIs. Two
+GitHub marketplace commands install the plugin and its bundled exact-process launcher.
+The optional setup command installs three namespaced native profiles for faster,
+more-ergonomic named-agent selection. When an exact route cannot be proven, the workflow
+stops rather than claiming a generic fallback was the requested orchestration.
 
 Version 3.1 adds a local JSONL benchmark scorecard. It compares paired, repeated Astral
 and single-Sol trials only after validating frozen task fingerprints, identical
@@ -39,10 +40,11 @@ modified automatically.
 2. The primary task starts with gpt-5.6-sol at the configured reasoning effort; High is
    the default.
 3. Recipients have access to gpt-5.6-luna, gpt-5.6-terra, and gpt-5.6-sol.
-4. Custom agents are installed to Codex's personal agents directory and are discovered
-   in a newly started task.
-5. When a host lacks native custom-agent selection, the bundled launcher may start an
-   exact pinned Codex process for the same lane.
+4. Optional native custom agents, when installed, live in Codex's personal agents
+   directory and are discovered in a newly started task.
+5. When native profiles are missing or customized, or a host lacks exact native
+   custom-agent selection, the bundled launcher starts an exact pinned Codex process for
+   the same lane.
 6. The project homepage is https://github.com/Demonbane18/astral-orchestrator.
 7. The MIT-licensed Sol Advisor source may be adapted with preserved notice.
 
@@ -107,7 +109,8 @@ probe with the identical card; material disagreement defaults to Terra.
 
 ## Success criteria
 
-1. One setup command installs one plugin and exactly three namespaced profiles.
+1. Two GitHub marketplace commands install the plugin; optional setup installs exactly
+   three namespaced native profiles.
 2. Profiles pin Sol High, Luna XHigh, and Terra XHigh exactly as specified.
 3. The skill routes by work characteristics and parallelizes only non-overlapping cards.
 4. Runtime inspection emits only allowlisted route fields.

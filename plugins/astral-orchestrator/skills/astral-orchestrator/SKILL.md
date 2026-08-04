@@ -56,12 +56,16 @@ ask the user once to confirm the model and effort; record that as **user-confirm
 observed evidence. A changed orchestrator setting applies to a new task, not the task
 already running.
 
-For Guided, Careful, and Measured work, also run the bundled profile installer's exact `--check`.
-Use a named native custom role only when its pinned profile effort equals the configured
-effort. A custom worker or reviewer effort must use the exact-process launcher, which
-starts the pinned model with that configured effort and the shipped role instructions.
-If profiles differ or neither route can run, tell the user to rerun setup. A blocking
-preflight ends the current turn. Never silently lower an unsupported effort.
+For Guided, Careful, and Measured work, select one of two exact routes. First run the
+bundled profile installer's exact `--check`. A pass permits native selection only when
+the host exposes the exact role and its native profile effort equals the configured
+effort. When that check reports missing or different native profiles, or the host cannot
+make that exact native selection, run a successful dry-run of the bundled exact-process
+launcher for the needed role. That route starts the pinned model with the configured
+effort and shipped role instructions. Missing or different native profiles force the
+exact-process route; they do not permit substitution or make optional setup required.
+Stop only when neither exact route can be proven. A blocking preflight ends the current
+turn. Never silently lower an unsupported effort.
 
 When the user explicitly asks to show or change effort settings, run the configuration
 script. Preserve unspecified lanes and report the resulting four values. Use `--reset`
@@ -70,9 +74,10 @@ model- and account-dependent.
 
 Do not silently substitute a built-in or differently configured agent. Give every lane
 a complete standalone work packet. For a native lane, use `fork_turns: "none"`. For an
-exact-process lane, use the bundled launcher with the matching role. Combine the
-byte-exact profile check, requested route, task or session id, and observed model/effort
-evidence before accepting its work. The routing guide defines the exact behavior.
+exact-process lane, use the bundled launcher with the matching role. Combine the native
+profile status or successful launcher dry-run, requested route, task or session id, and
+observed model/effort evidence before accepting its work. The routing guide defines the
+exact behavior.
 
 ## 3. Frame and decompose the work
 

@@ -206,6 +206,8 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("--check", routing)
         self.assertIn("run-agent.py", routing)
         self.assertIn("exact-process", routing)
+        self.assertIn("exact pinned sol", routing)
+        self.assertIn("observed read-only access", routing)
 
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
@@ -936,9 +938,15 @@ class UserExperienceTests(unittest.TestCase):
     def test_readme_explains_heuristic_routing_and_the_local_benchmark(self):
         readme = " ".join(read(ROOT / "README.md").lower().split())
 
-        self.assertIn("published, installable, open-source codex plugin", readme)
+        self.assertIn("installable, open-source codex plugin", readme)
         self.assertIn("v3.2.0", readme)
-        self.assertIn("not listed or endorsed by codex marketplace", readme)
+        self.assertIn(
+            "codex plugin marketplace add demonbane18/astral-orchestrator --ref main",
+            readme,
+        )
+        self.assertIn("codex plugin add astral-orchestrator@astral-orchestrator", readme)
+        self.assertIn("official chatgpt/codex directory", readme)
+        self.assertIn("separate publication surface", readme)
         self.assertIn("mode determines whether to delegate", readme)
         self.assertIn("work characteristics choose sol, luna, or terra", readme)
         self.assertIn("instruction-context loading only", readme)
@@ -965,6 +973,57 @@ class UserExperienceTests(unittest.TestCase):
             self.assertEqual(excalidraw["type"], "excalidraw")
             self.assertTrue(excalidraw["elements"])
 
+    def test_preflight_uses_the_bundled_launcher_when_native_profiles_are_absent(self):
+        skill = read(SKILL).lower()
+        routing = read(ROUTING).lower()
+
+        self.assertIn("successful dry-run", skill)
+        self.assertIn("missing or different native profiles", routing)
+        self.assertIn("force the exact-process route", routing)
+        self.assertIn("do not permit substitution", routing)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            native_profiles = root / "agents"
+            native_check = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(native_profiles), "--check"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(native_check.returncode, 0)
+
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            prompt.write_text("bounded standalone packet\n", encoding="utf-8")
+            prompt.chmod(0o600)
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(RUN_AGENT),
+                    "--role",
+                    "terra",
+                    "--workdir",
+                    str(workdir),
+                    "--prompt-file",
+                    str(prompt),
+                    "--settings-file",
+                    str(root / "no-settings.toml"),
+                    "--dry-run",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            evidence = json.loads(result.stdout)
+            self.assertEqual(evidence["agent_name"], "astral_orchestrator_terra_implementer")
+            self.assertEqual(evidence["model"], "gpt-5.6-terra")
+            self.assertEqual(evidence["effort"], "xhigh")
+
     def test_readme_publishes_banner_footprint_and_ori_eval_attribution(self):
         readme = read(ROOT / "README.md")
         first_lines = readme.lstrip().splitlines()
@@ -981,16 +1040,16 @@ class UserExperienceTests(unittest.TestCase):
             self.assertIn(visible_element, first_lines[0])
         self.assertIn("# Astral Orchestrator", first_lines[:4])
 
-        for figure in ("1,974", "3,634", "5,451", "7,610", "1,817", "33.3%"):
+        for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
             self.assertIn(figure, readme)
         footprint = " ".join(
             readme.split("## Measured instruction-context footprint", 1)[1]
             .split("## Configurable effort levels", 1)[0]
             .split()
         )
-        self.assertIn("published v3.2.0 core `SKILL.md` measures **1,974 tokens**", footprint)
-        self.assertIn("Guided/full measures **5,451 tokens**", footprint)
-        self.assertIn("Measured measures **7,610 tokens**", footprint)
+        self.assertIn("published v3.2.0 core `SKILL.md` measures **2,036 tokens**", footprint)
+        self.assertIn("Guided/full measures **5,636 tokens**", footprint)
+        self.assertIn("Measured measures **7,795 tokens**", footprint)
         self.assertIn("instruction-context loading only", footprint)
         self.assertIn("quality, latency, or price", footprint)
         self.assertIn("total tokens for a complete run", footprint)
