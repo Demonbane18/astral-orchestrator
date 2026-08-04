@@ -429,9 +429,7 @@
               <p>
                 Progressive disclosure is measured, not hoped for: the Quick route
                 avoids <span class="hl">1,940 instruction-context tokens (34.4%)</span>
-                compared with Guided / full loading. And because Luna and Terra receive
-                bounded task packets, workers never re-read the whole conversation
-                either.
+                compared with Guided / full loading.
               </p>
             </article>
             <article class="conclusion-card" data-reveal>
@@ -447,9 +445,10 @@
               <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h3v10H4Zm6.5 0V4h3v16h-3ZM17 20v-7h3v7h-3Z"></path></svg>Evidence you can reproduce</h3>
               <p>
                 The chart regenerates from one command in <code>benchmarks/</code>.
-                For outcome comparisons, the repo ships a local scorecard that
-                runs locally on your supplied trials and judges your own Astral
-                versus single-Sol results.
+                Read the <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/README.md">benchmark guide</a>
+                and inspect the committed <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-04.json">context-footprint JSON</a>.
+                The local scorecard runs locally on your supplied trials; it can assess
+                them, but it is not a standing product-performance claim.
               </p>
             </article>
           </div>
@@ -458,6 +457,21 @@
             Honest scope: these static instruction-context measurements do not measure
             task quality, latency, price, or total-run tokens. They do not by themselves
             prove that every orchestrated run uses fewer total tokens.
+          </p>
+
+          <p class="scope-note" data-reveal>
+            The current repository verification passed <strong>109 automated tests</strong> and
+            <strong>package verification</strong>. This validates behavior and contracts:
+            progressive context loading, exact pinned routes, objective checks plus fresh
+            review, and a local privacy/no-analytics runtime posture. It does not prove
+            Astral beats single-Sol.
+          </p>
+
+          <p class="scope-note" data-reveal>
+            The first end-to-end pilot is retained as invalid exploratory evidence after
+            fresh review found protocol defects. Read the <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/results/2026-08-04-invalid-pilot/INVALID.md">invalid-pilot disclosure</a>.
+            No valid outcome comparison exists. This page does not publish outcome,
+            token, time, or quality numbers from that pilot.
           </p>
         </div>
       </section>

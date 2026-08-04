@@ -78,8 +78,11 @@ The input is UTF-8 JSON Lines (JSONL): one complete JSON object per line. Schema
 | `model_calls` | Number of model calls used by the run (at least one and never fewer than its route-evidence entries). It may be higher when a recorded lane made multiple calls. |
 | `route_evidence` | One or more route-evidence objects, described below. |
 
-Optional fields are `input_tokens`, `output_tokens`, `quality_score`, and
-`quality_score_blinded`. Token fields must be non-negative numbers. `quality_score` is
+Optional fields are `input_tokens`, `cached_input_tokens`, `output_tokens`,
+`reasoning_output_tokens`, `quality_score`, and `quality_score_blinded`. Token fields
+must be non-negative numbers. Cached input is already included in input, and reasoning
+output is reported separately, so total strategy tokens are always `input_tokens +
+output_tokens`; neither cached input nor reasoning output is added again. `quality_score` is
 a 0–100 number and requires the boolean `quality_score_blinded`. For a fair aggregate,
 the scorecard accepts an optional metric only when it is recorded for every trial; omit
 it from every line if you cannot collect it consistently.
@@ -144,3 +147,54 @@ It summarizes the trials you supplied. It does not establish general model super
 causation, cost outside the recorded measures, or statistical significance. Do not quote
 its result as a product-wide claim without a representative task set, enough repetitions,
 consistent conditions, and appropriate independent review.
+
+## Unattended schema-v2 pilot
+
+`run_pilot.py` automates the stronger local comparison. It creates a detached clean
+worktree for every trial and has two explicit profiles. The default `quick` profile uses
+one frozen case and one repetition to compare exact single-Sol XHigh with Astral Guided:
+two strategy trials with a 30-minute cap. It intentionally omits Max and is exploratory
+only. The opt-in `full` profile freezes four task packets, uses two randomized
+repetitions, and compares exact single-Sol XHigh, supported single-Sol Max, and Astral
+Guided. Max is included only after an exact preflight; an unsupported route is disclosed
+and is never silently replaced. Full is capped at 24 strategy trials and two hours.
+
+Each model process uses `codex exec --json`. The schema-v2 JSONL records observed route
+metadata (including sandbox mode), per-process and aggregate token usage, strategy wall
+time, first-pass and final objective acceptance, rework, failures, and blind read-only judge results. Judge tokens
+and judge time remain separate from strategy totals. Total tokens are input plus output;
+cached input and reasoning output remain diagnostic submetrics. Missing telemetry is
+disclosed rather than replaced with zero.
+
+Preview the frozen plan without creating worktrees or making model calls:
+
+```sh
+python3 benchmarks/run_pilot.py --profile quick --dry-run --output-dir /tmp/astral-quick-preview
+python3 benchmarks/run_pilot.py --profile full --dry-run --output-dir /tmp/astral-full-preview
+```
+
+Run the quick comparison from a clean frozen commit:
+
+```sh
+python3 benchmarks/run_pilot.py \
+  --profile quick \
+  --base-ref <full-commit-id> \
+  --output-dir benchmarks/results/local-quick
+```
+
+Run the full comparison only when its time and token cost are explicitly authorized:
+
+```sh
+python3 benchmarks/run_pilot.py \
+  --profile full \
+  --base-ref <full-commit-id> \
+  --output-dir benchmarks/results/local-full
+```
+
+The output directory contains `run-manifest.json`, raw schema-v2 `trials.jsonl`, opaque
+patch artifacts, machine-readable `scorecard.json`, and a local `preview.html`. The
+scorecard reports per-case and aggregate comparisons, deterministic paired bootstrap
+confidence intervals, quality per 10,000 strategy tokens, and quality per elapsed minute.
+The quick result is only a smoke comparison. Even the four-case full pilot is directional
+local evidence, not a product-wide performance claim. Use
+`skills/run-astral-benchmark/SKILL.md` for the repeatable run and reporting workflow.

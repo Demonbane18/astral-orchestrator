@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "scorecard-correctness",
+      "title": "Schema-v1 scorecard accounting feature",
+      "task": "Implement the frozen scorecard feature in production. Schema-v1 records must consistently accept optional cached_input_tokens and reasoning_output_tokens; reject partial optional metrics across a comparison, report their means, and keep total tokens exactly input plus output (cached is a subset of input and reasoning is separate). Preserve existing schema-v1 records and JSON/text behavior. Update benchmarks/README.md with the fields and accounting definition. Edit only the two allowed files, then run the immutable acceptance check.",
+      "allowed_paths": ["plugins/astral-orchestrator/scripts/benchmark-scorecard.py", "benchmarks/README.md"],
+      "immutable_paths": ["benchmarks/pilot/cases/check_scorecard.py"],
+      "checks": [{"id": "scorecard-fixture", "command": ["python3", "benchmarks/pilot/cases/check_scorecard.py"]}]
+    },
+    {
+      "id": "effort-configuration",
+      "title": "Read-only effort expectation feature",
+      "task": "Implement the frozen production feature: configure-effort.py needs a read-only expectation/check mode. It must accept one or more requested lane=value expectations against --settings-file, produce JSON, exit nonzero on any mismatch, and never write or change the supplied settings file. Document the mode in benchmarks/README.md. Edit only the two allowed files, then run the immutable acceptance check.",
+      "allowed_paths": ["plugins/astral-orchestrator/scripts/configure-effort.py", "benchmarks/README.md"],
+      "immutable_paths": ["benchmarks/pilot/cases/check_effort.py"],
+      "checks": [{"id": "effort-fixture", "command": ["python3", "benchmarks/pilot/cases/check_effort.py"]}]
+    },
+    {
+      "id": "launcher-telemetry",
+      "title": "Exact-process telemetry",
+      "task": "Repair the controlled production launcher regression. The documented reviewer route must retain its read-only sandbox in dry-run route evidence; the acceptance test never starts Codex. Edit only run-agent.py, then run the supplied acceptance check.",
+      "allowed_paths": ["plugins/astral-orchestrator/scripts/run-agent.py"],
+      "immutable_paths": ["benchmarks/pilot/cases/check_launcher.py", "benchmarks/pilot/cases/launcher-regression.patch"],
+      "setup_patch": "benchmarks/pilot/cases/launcher-regression.patch",
+      "checks": [{"id": "launcher-fixture", "command": ["python3", "benchmarks/pilot/cases/check_launcher.py"]}]
+    },
+    {
+      "id": "public-evidence-preview",
+      "title": "Public evidence preview",
+      "task": "Repair the controlled production website evidence regression. Keep the public benchmark evidence accessible and clearly scoped to static instruction-context measurements; it must not make a product-wide claim. Edit only website/index.html, then run the supplied acceptance check.",
+      "allowed_paths": ["website/index.html"],
+      "immutable_paths": ["benchmarks/pilot/cases/check_evidence.py", "benchmarks/pilot/cases/evidence-regression.patch"],
+      "setup_patch": "benchmarks/pilot/cases/evidence-regression.patch",
+      "checks": [{"id": "evidence-fixture", "command": ["python3", "benchmarks/pilot/cases/check_evidence.py"]}]
+    }
+  ]
+}

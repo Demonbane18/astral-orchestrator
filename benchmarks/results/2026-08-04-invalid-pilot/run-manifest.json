@@ -1,0 +1,138 @@
+{
+  "base_ref": "5d85323d75596ab57219816f8b1bcd27cd9635f4",
+  "disclosures": [
+    "single-sol-max exact preflight passed"
+  ],
+  "max_seconds": 7200.0,
+  "max_trials": 24,
+  "plan": [
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 1,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 1,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 1,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 2,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 2,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "public-evidence-preview",
+      "repetition": 2,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 1,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 1,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 1,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 1,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 1,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 1,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 1,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 1,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 1,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 2,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 2,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "launcher-telemetry",
+      "repetition": 2,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 2,
+      "variant": "single-sol-xhigh"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 2,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "scorecard-correctness",
+      "repetition": 2,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 2,
+      "variant": "astral-guided"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 2,
+      "variant": "single-sol-max"
+    },
+    {
+      "case_id": "effort-configuration",
+      "repetition": 2,
+      "variant": "single-sol-xhigh"
+    }
+  ],
+  "repetitions": 2,
+  "schema_version": 1,
+  "seed": 20260804,
+  "variants": [
+    "single-sol-xhigh",
+    "single-sol-max",
+    "astral-guided"
+  ]
+}
