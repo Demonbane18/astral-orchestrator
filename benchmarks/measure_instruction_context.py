@@ -13,7 +13,7 @@ import tiktoken
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MEASURED_ON = "2026-08-03"
+MEASURED_ON = "2026-08-04"
 TOKENIZER_VERSION = "0.13.0"
 TOKENIZER_ENCODING = "o200k_base"
 PATHS = (
@@ -21,6 +21,7 @@ PATHS = (
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md"),
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md"),
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md"),
+    Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/measured-mode.md"),
 )
 
 
@@ -48,10 +49,12 @@ def measurement() -> dict[str, object]:
             }
         )
 
-    core, modes, templates, routing = files
+    core, modes, templates, routing, measured = files
     quick_files = (core, modes, templates)
     quick_tokens = sum(item["tokens"] for item in quick_files)
-    full_tokens = sum(item["tokens"] for item in files)
+    full_files = (core, modes, templates, routing)
+    full_tokens = sum(item["tokens"] for item in full_files)
+    measured_tokens = sum(item["tokens"] for item in files)
     avoided = full_tokens - quick_tokens
     return {
         "schema_version": 1,
@@ -83,8 +86,16 @@ def measurement() -> dict[str, object]:
                 "tokens": quick_tokens,
             },
             "full": {
-                "paths": [item["path"] for item in files],
+                "paths": [item["path"] for item in full_files],
                 "tokens": full_tokens,
+            },
+            "guided": {
+                "paths": [item["path"] for item in full_files],
+                "tokens": full_tokens,
+            },
+            "measured": {
+                "paths": [item["path"] for item in files],
+                "tokens": measured_tokens,
             },
         },
         "quick_vs_full": {

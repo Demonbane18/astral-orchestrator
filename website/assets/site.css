@@ -896,6 +896,10 @@ p {
   gap: 0.2rem;
 }
 
+.modes-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .mode-tag {
   display: inline-flex;
   align-items: center;
@@ -926,6 +930,16 @@ p {
   background: var(--violet-soft);
 }
 
+.mode-tag--measured {
+  color: var(--gold);
+  background: var(--gold-soft);
+  border: 1px solid currentColor;
+}
+
+.mode-card--measured {
+  border-color: color-mix(in srgb, var(--gold) 38%, var(--line));
+}
+
 .mode-card .mode-best {
   margin-top: auto;
   padding-top: 0.9rem;
@@ -934,6 +948,49 @@ p {
 
 .mode-card .mode-best strong {
   color: var(--text-strong);
+}
+
+/* ---------- Measured mode ---------- */
+
+.measured-section {
+  border-bottom: 1px solid var(--line);
+}
+
+.measured-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.measured-card {
+  padding: clamp(1.35rem, 3vw, 1.9rem);
+  color: var(--muted);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-top: 0.32rem solid var(--gold-bright);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.measured-card h3 {
+  color: var(--text-strong);
+}
+
+.attribution-note {
+  max-width: 54rem;
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.2rem;
+  color: var(--muted);
+  background: var(--gold-soft);
+  border-left: 0.28rem solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.92rem;
+}
+
+.attribution-note p {
+  margin: 0;
 }
 
 /* ---------- How it works: interactive route ---------- */
@@ -1208,17 +1265,22 @@ p {
 }
 
 .chart-bar--full {
+  width: 71.6%;
   background: linear-gradient(90deg, var(--violet) 0%, var(--sky-bright) 100%);
 }
 
 .chart-bar--quick {
-  width: 65.8%;
+  width: 47.8%;
   background: linear-gradient(90deg, var(--sky-bright) 0%, var(--gold-bright) 100%);
 }
 
 .chart-bar--core {
-  width: 35.5%;
+  width: 25.9%;
   background: var(--gold-bright);
+}
+
+.chart-bar--measured {
+  background: linear-gradient(90deg, var(--gold) 0%, var(--violet) 100%);
 }
 
 .chart-row .chart-value {
@@ -1648,7 +1710,8 @@ pre code > span::before {
 
 @media (max-width: 56rem) {
   .card-grid,
-  .conclusion-grid {
+  .conclusion-grid,
+  .measured-grid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -1707,6 +1770,7 @@ pre code > span::before {
 @media (max-width: 34rem) {
   .card-grid,
   .conclusion-grid,
+  .measured-grid,
   .two-up,
   .stat-stack,
   .route-branches {

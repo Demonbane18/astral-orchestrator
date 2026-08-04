@@ -771,12 +771,94 @@ class WebsiteContractTests(unittest.TestCase):
         for phrase in (
             "local plugin runtime",
             "No project-operated backend",
-            "published v3.1.4 measurement",
+            "published v3.2.0 measurement",
             "local Codex and project environment",
             "runs locally on your supplied trials",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
+
+    def test_homepage_explains_the_explicit_opt_in_measured_mode(self):
+        home = page_text(PAGES["home"])
+        for phrase in (
+            "v3.2.0",
+            "Four modes",
+            "Quick",
+            "Guided · default",
+            "Careful",
+            "Measured · opt-in",
+            "deliberately slower, evidence-oriented",
+            "never auto-selected",
+            "one canonical work card",
+            "deterministic Sol/Luna/Terra routing",
+            "identical read-only probes",
+            "private, resumable evidence",
+            "fresh Sol review",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, home)
+
+    def test_homepage_publishes_the_current_instruction_context_measurements(self):
+        home = page_text(PAGES["home"])
+        benchmark = json.loads(
+            page_text(ROOT / "benchmarks" / "context-footprint-2026-08-04.json")
+        )
+        expected_bundles = {
+            "core": 1974,
+            "quick": 3634,
+            "guided": 5451,
+            "measured": 7610,
+        }
+        self.assertEqual(
+            {name: benchmark["bundles"][name]["tokens"] for name in expected_bundles},
+            expected_bundles,
+        )
+        self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 1817)
+        self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 33.3)
+        for figure in ("1,974", "3,634", "5,451", "7,610", "1,817", "33.3%"):
+            with self.subTest(figure=figure):
+                self.assertIn(figure, home)
+        for scope_statement in (
+            "static instruction-context measurements",
+            "not task quality, latency, price, or total-run tokens",
+            "published v3.2.0 measurement",
+        ):
+            with self.subTest(scope_statement=scope_statement):
+                self.assertIn(scope_statement, home)
+
+    def test_homepage_credits_ori_eval_without_claiming_a_runtime_dependency(self):
+        home = page_text(PAGES["home"])
+        for phrase in (
+            "https://openrouter.ai/ori/eval",
+            "https://openrouter.ai/skills/spawn-ori-eval",
+            "inspired the pinned/reproducible evaluation and state-tracking method",
+            "does not run Ori or OpenRouter",
+            "no OpenRouter runtime or API dependency",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, home)
+
+    def test_every_public_page_uses_the_current_web_icons(self):
+        for name, path in PAGES.items():
+            with self.subTest(page=name):
+                page = page_text(path)
+                icon_prefix = "assets/" if name == "home" else "../assets/"
+                self.assertIn(
+                    f'<link rel="icon" type="image/png" href="{icon_prefix}astral-orchestrator-favicon-32.png">',
+                    page,
+                )
+                self.assertIn(
+                    f'<link rel="apple-touch-icon" href="{icon_prefix}astral-orchestrator-touch-icon.png">',
+                    page,
+                )
+
+    def test_current_web_icons_exist(self):
+        for asset in (
+            "astral-orchestrator-favicon-32.png",
+            "astral-orchestrator-touch-icon.png",
+        ):
+            with self.subTest(asset=asset):
+                self.assertTrue((WEBSITE / "assets" / asset).is_file())
 
     def test_github_star_links_do_not_fabricate_a_starred_state(self):
         repository_url = "https://github.com/Demonbane18/astral-orchestrator"

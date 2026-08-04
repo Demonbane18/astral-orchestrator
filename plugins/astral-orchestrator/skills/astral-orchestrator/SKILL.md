@@ -15,6 +15,8 @@ confirmation decisions. Before spawning any lane, read
 [references/routing-and-preflight.md](references/routing-and-preflight.md). Before
 delegating or reviewing, read
 [references/work-templates.md](references/work-templates.md).
+When the user explicitly names Measured, also read
+[references/measured-mode.md](references/measured-mode.md).
 
 ## 1. Choose the mode and risk
 
@@ -27,6 +29,11 @@ delegating or reviewing, read
   production, migration, or explicitly thorough work. Use visible planning, strict
   confirmation gates, pinned implementation lanes, and a fresh Sol review at the
   configured reviewer effort.
+- **Measured (explicit opt-in)** — a deliberately slower, evidence-oriented route for a
+  user who explicitly names Measured. Freeze one canonical work card and its acceptance
+  checks, keep a non-secret resumable local ledger, and use planning probes only when
+  Luna/Terra selection is ambiguous. Measured is never auto-selected; recommend Guided
+  for normal work. Its detailed state machine is in the Measured reference.
 
 Honor an explicit mode unless its safeguards are too weak for the observed risk. Raise
 the safeguards when necessary and explain why in one sentence. Never lower Careful
@@ -49,7 +56,7 @@ ask the user once to confirm the model and effort; record that as **user-confirm
 observed evidence. A changed orchestrator setting applies to a new task, not the task
 already running.
 
-For Guided and Careful work, also run the bundled profile installer's exact `--check`.
+For Guided, Careful, and Measured work, also run the bundled profile installer's exact `--check`.
 Use a named native custom role only when its pinned profile effort equals the configured
 effort. A custom worker or reviewer effort must use the exact-process launcher, which
 starts the pinned model with that configured effort and the shipped role instructions.
@@ -83,8 +90,10 @@ clarification or confirmation ends the current turn: make no dependent change an
 return one direct question immediately. Do not wait silently in the same turn.
 
 For Guided or Careful work, split execution into the fewest useful non-overlapping work
-cards. Keep requirements, architecture, task decomposition, acceptance decisions, and
-cross-lane integration in the Sol primary session at its configured effort.
+cards. Measured freezes exactly one canonical work card; it may describe multiple bounded
+items inside that card, but one selected lane owns all edits. Keep requirements,
+architecture, task decomposition, acceptance decisions, and cross-lane integration in
+the Sol primary session at its configured effort.
 
 ## 4. Route bounded execution
 
@@ -106,7 +115,7 @@ directly, and must not spawn or delegate further.
 
 Parallelize only independent cards with non-overlapping ownership. Run dependent work
 or shared-file edits serially. Do not spawn agents merely to make the run look busy.
-Guided and Careful implementation must use at least one pinned worker whenever bounded
+Guided, Careful, and Measured implementation must use at least one pinned worker whenever bounded
 execution exists; answer-only, planning-only, and blocked requests need no worker.
 
 ## 5. Integrate and verify
@@ -131,6 +140,8 @@ pinned lane, rerun affected checks, and inspect the result again.
   label primary-session Sol self-review plainly.
 - **Careful:** always use the exact Sol reviewer lane, and require observed read-only
   isolation before accepting its independent review.
+- **Measured:** use the normal fresh Sol reviewer after the selected worker. High-risk
+  Measured work also inherits Careful confirmation and observed read-only isolation.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
 change set, and verification evidence. Accept exactly one verdict: **ship**,

@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.1
+# Spec: Astral Orchestrator v3.2
 
 ## Objective
 
@@ -18,10 +18,13 @@ acceptance checks, route evidence, and consistently available optional metrics. 
 summarizes supplied data without calling models or claiming a result that was not
 recorded.
 
+Version 3.2 adds explicit opt-in Measured mode: one canonical frozen work card, an
+owner-only non-secret local ledger, deterministic pinned-lane routing, and fresh review.
+
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.1.4. The normalized plugin, marketplace,
+identifiers. The current product version is 3.2.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
@@ -59,6 +62,11 @@ effort uses the exact-process launcher so a native profile cannot override it.
 Quick mode is the explicit exception: tiny, reversible work stays in the verified Sol
 primary at its configured effort. Guided and Careful use pinned lanes whenever bounded
 execution exists.
+Measured is never auto-selected. Sol freezes exactly one canonical card and chooses Luna
+only for fully specified narrow mechanical work with exact checks and no flags; any
+debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag uses
+Terra. Ambiguous routing receives exactly one Luna and one Terra behaviorally read-only
+probe with the identical card; material disagreement defaults to Terra.
 
 ## Tech stack
 
@@ -92,6 +100,10 @@ execution exists.
   fallback is allowed.
 - Unsupported effort settings fail before a delegated Codex process starts.
 - Careful review cannot claim ship unless required read-only isolation is observed.
+- Measured uses an unpersisted Prepare step, one persisted freeze/preflight/route base,
+  one or more numbered implementation/verification/review attempts, and Complete only
+  after a ship verdict. Its owner-only local state rejects symlinks and records
+  prospective/finished events without secrets.
 
 ## Success criteria
 
@@ -103,3 +115,5 @@ execution exists.
 6. Tests, package verification, and official validators pass.
 7. The original Sol Advisor copyright and MIT permission notice remain included.
 8. A non-technical user can show, change, and reset every lane's effort independently.
+9. A Measured run keeps one canonical card, reproducible safe state, exact routing
+   evidence, fresh verification after fixes, and a new fresh reviewer.

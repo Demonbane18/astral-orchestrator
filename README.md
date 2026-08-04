@@ -1,6 +1,8 @@
+![Animated outer-space Astral Orchestrator banner with Sol at the center, Luna and Terra orbiting, twinkling stars, and a passing comet.](assets/brand/astral-orchestrator-banner.gif)
+
 # Astral Orchestrator
 
-Astral Orchestrator v3.1.4 is a published, installable, open-source Codex plugin. It
+Astral Orchestrator v3.2.0 is a published, installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
@@ -85,6 +87,8 @@ Use Astral Orchestrator to add a search box and verify every lane.
 You can also ask it to fix an error or complete a documentation change. Guided mode is
 the default, so you only need to name a mode when you want a different level of process.
 
+For an evidence-oriented run, say “Use Astral Orchestrator in Measured mode.”
+
 ## Modes
 
 | Mode | Best for | What happens |
@@ -92,16 +96,18 @@ the default, so you only need to name a mode when you want a different level of 
 | Quick | Tiny, obvious, easy-to-undo work | Sol works directly and self-reviews at the configured orchestrator effort. |
 | Guided | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
 | Careful | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and read-only reviewer evidence. |
+| Measured (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
 
 Astral Orchestrator raises safeguards when a request is riskier than the selected mode.
 It does not broaden the work you asked for.
+Measured is never automatic; Guided remains recommended for normal work.
 
 ## How Astral chooses models and effort
 
 Three separate decisions keep the workflow predictable:
 
 1. **Mode determines whether to delegate.** Quick keeps a tiny change in the Sol primary;
-   Guided and Careful delegate bounded implementation when there is work that can safely
+   Guided, Careful, and Measured delegate bounded implementation when there is work that can safely
    be handed off.
 2. **Work characteristics choose Sol, Luna, or Terra.** Sol retains requirements,
    architecture, safety boundaries, and acceptance decisions. Luna receives narrow,
@@ -120,17 +126,22 @@ model choice.
 
 ## Measured instruction-context footprint
 
-Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.1.4 core
-`SKILL.md` measures **1,791 tokens**. The Quick path (`SKILL.md`,
-`modes-and-risk.md`, and `work-templates.md` for self-review) is **3,324 tokens**;
-eagerly loading the full bundle (`SKILL.md` plus all three references) is **5,049
-tokens**. Quick therefore avoids **1,725 tokens (34.2%)** compared with eager
-full-bundle loading.
+Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.2.0 core
+`SKILL.md` measures **1,974 tokens**; Quick measures **3,634 tokens**; Guided/full
+measures **5,451 tokens**; and Measured measures **7,610 tokens**. Quick therefore
+avoids **1,817 tokens (33.3%)** compared with eager full-bundle loading.
 
 This measures instruction-context loading only. It does not prove every
-multi-agent run uses fewer total tokens than single Sol, and it does not measure outcome
-quality, latency, or price. The committed [context-footprint evidence](benchmarks/context-footprint-2026-08-03.json)
+multi-agent run uses fewer total tokens than a single Sol run, and it does not measure
+outcome quality, latency, or price, or total tokens for a complete run. The committed
+[context-footprint evidence](benchmarks/context-footprint-2026-08-04.json)
 includes file hashes, byte/word/token counts, and a reproducible contributor command.
+
+The reproducible pinned/state/evidence method was inspired by OpenRouter's Ori Eval;
+see the [Ori Eval page](https://openrouter.ai/ori/eval) and
+[spawn-ori-eval skill](https://openrouter.ai/skills/spawn-ori-eval). Astral Orchestrator
+uses only pinned Codex GPT-5.6 Sol/Terra/Luna lanes; it does not run or depend on
+Ori or OpenRouter.
 
 ## Configurable effort levels
 
@@ -174,7 +185,7 @@ fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described ab
 supply each lane's effort (Sol High, Luna XHigh, Terra XHigh, reviewer Sol High by
 default), rather than the prompt choosing a new effort at runtime.
 
-For Guided and Careful work, Astral Orchestrator first proves the installed profiles
+For Guided, Careful, and Measured work, Astral Orchestrator first proves the installed profiles
 match exactly and confirms the route. It uses native custom-agent selection only when
 the host exposes the exact role; otherwise the included launcher starts a separate
 Codex process pinned to the required model and configured effort. The launcher emits an
@@ -183,6 +194,13 @@ instructions, secrets, or file contents.
 
 A task name is not proof of the route. Missing or mismatched role, model, effort, or
 review isolation blocks the lane and tells you the smallest corrective action.
+
+Measured freezes exactly one canonical card and its checks before routing. If Luna versus
+Terra is ambiguous, Sol sends exactly one behaviorally read-only probe to each lane with
+the identical card; this is not hard sandbox isolation. The non-secret tracker files are
+owner-only and resumable under a private `/tmp` path derived from effective UID plus
+repository-root and frozen-card SHA-256 prefixes. Only the selected lane edits; fixes
+need fresh verification and a new Sol reviewer.
 
 ## Benchmarking Astral against a single-Sol control
 
@@ -226,8 +244,8 @@ set as a reason to investigate before making a product claim.
 - Work packets remain local. The exact-process route writes a private temporary packet,
   passes it only to the selected Codex process, then removes it after that process exits.
   There is no analytics collection, extra network client, API key, or background service.
-- A fresh reviewer is required after worker-produced Guided work. Careful mode also
-  requires observed read-only review isolation.
+- A fresh reviewer is required after worker-produced Guided or Measured work. Careful
+  mode—and high-risk Measured work—also requires observed read-only review isolation.
 
 ## Updating and the 3.0 migration
 
@@ -286,9 +304,9 @@ pinned lane and demanding evidence before handoff.
 
 ### Can I use only one model?
 
-Quick mode uses the verified Sol primary. Guided and Careful require all three specified
-models when bounded execution or independent review is needed; there is no silent model
-substitution.
+Quick mode uses the verified Sol primary. Guided, Careful, and Measured require all three
+specified models when bounded execution or independent review is needed; there is no
+silent model substitution.
 
 ### Are my effort settings lost during an update?
 

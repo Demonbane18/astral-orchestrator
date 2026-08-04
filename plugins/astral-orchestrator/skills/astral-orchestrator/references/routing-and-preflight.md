@@ -1,6 +1,6 @@
 # Routing and preflight
 
-Use this reference for every Guided or Careful run. The purpose is to prove that work
+Use this reference for every Guided, Careful, or Measured run. The purpose is to prove that work
 used the intended lanes, not merely to request them.
 
 ## Exact route contract
@@ -35,7 +35,7 @@ Before execution in any mode:
    ownership.
 4. Identify user confirmations required before consequential actions.
 
-Before Guided or Careful execution, additionally:
+Before Guided, Careful, or Measured execution, additionally:
 
 5. Resolve `../../scripts/install-agents.sh` relative to this skill and run it with
    `--check` so the installed profiles byte-match the shipped profiles.
@@ -50,6 +50,11 @@ orchestrator effort. Do not fall back to another route.
 
 Quick mode intentionally uses only the verified Sol primary session at the configured
 orchestrator effort and does not need custom worker availability.
+
+Measured uses this same exact route contract and preflight. Its frozen-card state,
+resumption question, behavioral planning probes, deterministic selection rules, and
+ledger are defined in `measured-mode.md`; those details never alter the configured model
+or effort for a lane.
 
 ## Lane decision
 
@@ -71,6 +76,8 @@ true:
 Keep the decision in the Sol primary session at the configured orchestrator effort when
 requirements, architecture, safety boundaries, public interfaces, or acceptance criteria
 are unsettled. Sol may settle the decision, then issue bounded execution to Luna or Terra.
+For Measured, Sol also retains decomposition, integration, and final route selection; use
+its stricter deterministic selection rules rather than a general heuristic.
 
 ## Choose the execution mechanism
 
