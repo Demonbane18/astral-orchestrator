@@ -59,6 +59,33 @@
       "evidence": "Commit contains the 109-test benchmark harness, public evidence disclosures, README update, and Vercel website update; repository tests and package verification passed and fresh Sol review returned ship.",
       "url": "https://github.com/Demonbane18/astral-orchestrator/commit/4292e9b",
       "commit": "4292e9b"
+    },
+    {
+      "surface": "source",
+      "version": "3.2.0",
+      "status": "verified",
+      "observed_at": "2026-08-04T22:19:23+08:00",
+      "evidence": "Reviewed benchmark evidence and website update merged to main; 109 tests and package verification passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/abce4182a13c212d1012d76795649a81c9ef5f59",
+      "commit": "abce4182a13c212d1012d76795649a81c9ef5f59"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.2.0",
+      "status": "installable",
+      "observed_at": "2026-08-04T22:19:23+08:00",
+      "evidence": "Public main served the merged README with the 109-test evidence status and invalid-pilot disclosure.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "abce4182a13c212d1012d76795649a81c9ef5f59"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.2.0",
+      "status": "deployed",
+      "observed_at": "2026-08-04T22:19:23+08:00",
+      "evidence": "Production deployment dpl_7u8PBDrvsJmD2urm9wfMcapr1VoR reached READY and the alias served the 109-test copy, 1,940-token static measurement, and no-valid-outcome-comparison disclosure; verified in Opera GX.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "abce4182a13c212d1012d76795649a81c9ef5f59"
     }
   ]
 }
