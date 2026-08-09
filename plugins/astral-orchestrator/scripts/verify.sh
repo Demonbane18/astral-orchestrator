@@ -26,6 +26,7 @@ inspector=$plugin_dir/scripts/inspect-agent-runtime.sh
 primary_checker=$plugin_dir/scripts/check-primary.py
 launcher=$plugin_dir/scripts/run-agent.py
 morph_launcher=$plugin_dir/scripts/run-morph-agent.py
+codex_runtime=$plugin_dir/scripts/codex_runtime.py
 effort_settings=$plugin_dir/scripts/effort_settings.py
 effort_configurator=$plugin_dir/scripts/configure-effort.py
 benchmark_scorecard=$plugin_dir/scripts/benchmark-scorecard.py
@@ -45,7 +46,7 @@ cmp -s "$canonical_license" "$plugin_license" || fail "distributable notice diff
 cmp -s "$canonical_notice" "$plugin_notice" || fail "distributable notice differs from repository root: NOTICE.md"
 grep -Fq "($canonical_improvements_url)" "$canonical_notice" || fail "canonical NOTICE must link to the repository improvements document"
 
-for required in "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$measured" "$morph" "$constellation" "$portable_hosts" "$installer" "$inspector" "$primary_checker" "$launcher" "$morph_launcher" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
+for required in "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$measured" "$morph" "$constellation" "$portable_hosts" "$installer" "$inspector" "$primary_checker" "$launcher" "$morph_launcher" "$codex_runtime" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
@@ -66,8 +67,8 @@ manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, r
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.3.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.3.0")
+if manifest.get("version") != "3.3.1":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.3.1")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":

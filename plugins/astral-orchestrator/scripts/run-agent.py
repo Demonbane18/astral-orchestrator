@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
 import stat
 import subprocess
 import sys
@@ -23,6 +22,10 @@ from effort_settings import (  # noqa: E402
     EffortSettingsError,
     default_settings_path,
     load_efforts,
+)
+from codex_runtime import (  # noqa: E402
+    RuntimeResolutionError,
+    resolve_codex_runtime,
 )
 
 
@@ -168,6 +171,11 @@ def main() -> int:
     if not workdir.is_dir():
         fail(f"workdir must be an existing directory: {workdir}")
 
+    try:
+        runtime = resolve_codex_runtime()
+    except RuntimeResolutionError as error:
+        fail(str(error))
+
     evidence = {
         "role": args.role,
         "agent_name": contract["agent_name"],
@@ -183,17 +191,16 @@ def main() -> int:
         "sandbox": contract["sandbox"],
         "workdir": str(workdir),
         "prompt_bytes": prompt_bytes,
+        "codex_runtime_source": runtime.source,
+        "codex_version": runtime.version,
+        "codex_config_probe": runtime.config_probe,
     }
     if args.dry_run:
         print(json.dumps(evidence, separators=(",", ":"), sort_keys=True))
         return 0
 
-    codex = shutil.which("codex")
-    if codex is None:
-        fail("the codex command is unavailable")
-
     command = [
-        codex,
+        runtime.path,
         "exec",
         "--model",
         contract["model"],

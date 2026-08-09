@@ -31,10 +31,15 @@ portable package standardizes skill discovery only. On capable non-Codex hosts, 
 explicit Morph or Constellation route requires observable model, worker-context, and
 fresh-reviewer capabilities; it does not generalize fixed Codex lanes.
 
+Version 3.3.1 makes exact-process and Morph dry runs select a host-compatible Codex
+runtime by proving that the active configuration and model catalog parse before any
+worker inference. It preserves the requested model, effort, sandbox, workdir, developer
+instructions, and private standard-input packet without changing OpenCodex configuration.
+
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.3.0. The normalized plugin, marketplace,
+identifiers. The current product version is 3.3.1. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
