@@ -2303,6 +2303,7 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(surfaces["github_marketplace"]["version"], "3.3.0")
         self.assertEqual(surfaces["vercel"]["version"], "3.3.0")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
+        self.assertEqual(surfaces["openai_submission"]["version"], "3.3.0")
         self.assertEqual(surfaces["openai_submission"]["status"], "draft")
         self.assertEqual(surfaces["openai_directory"]["version"], "3.2.0")
 

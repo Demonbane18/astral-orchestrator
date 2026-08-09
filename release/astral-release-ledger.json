@@ -130,6 +130,15 @@
       "evidence": "Production deployment dpl_GrhSAP9C6TkhD9uPBRjbBo4uLq6v reached READY; alias served v3.3.0, all six modes, and security headers; visually verified in Opera GX.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.3.0",
+      "status": "draft",
+      "observed_at": "2026-08-09T19:56:54+08:00",
+      "evidence": "OpenAI Platform accepted the v3.3.0 ZIP, converted the Agent Plugins root manifest to Codex format, populated six-mode metadata and three prompts, and saved draft appsub_6a786a4fd6c4819188380cbc396a39f4. Skill scanning remains in progress and four developer legal/policy attestations remain unchecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a786a4fd6c4819188380cbc396a39f4",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
     }
   ]
 }
