@@ -94,6 +94,42 @@
       "observed_at": "2026-08-09T19:43:36+08:00",
       "evidence": "OpenAI Platform plugin management in Opera GX displayed Astral Orchestrator version 3.2.0 with status Published and View in Directory on 2026-08-09.",
       "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "source",
+      "version": "3.3.0",
+      "status": "verified",
+      "observed_at": "2026-08-09T19:48:26+08:00",
+      "evidence": "Merged PR #8 contains v3.3.0; 123 tests, package verification, both skill validators, Codex plugin validation, and fresh Sol High read-only review passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/80d836eee004075b13fa160c298f9d1ec60a8791",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.3.0",
+      "status": "published",
+      "observed_at": "2026-08-09T19:48:26+08:00",
+      "evidence": "Public GitHub v3.3.0 release asset astral-orchestrator-3.3.0.zip has SHA-256 940f2e9e03cc5724b81a4e85ef48bd61d1736d7bf291518b22d6ef2b267bb1ad.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.3.0",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.3.0",
+      "status": "installable",
+      "observed_at": "2026-08-09T19:48:26+08:00",
+      "evidence": "Public main ref resolves to merge commit 80d836e and raw Codex manifest reports version 3.3.0 with Quick, Guided, Careful, Measured, Morph, and Constellation package content.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.3.0",
+      "status": "deployed",
+      "observed_at": "2026-08-09T19:48:26+08:00",
+      "evidence": "Production deployment dpl_GrhSAP9C6TkhD9uPBRjbBo4uLq6v reached READY; alias served v3.3.0, all six modes, and security headers; visually verified in Opera GX.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
     }
   ]
 }

@@ -2298,7 +2298,10 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         status = json.loads(result.stdout)
         surfaces = status["surfaces"]
-        self.assertEqual(surfaces["github_release"]["version"], "3.2.0")
+        self.assertEqual(surfaces["source"]["version"], "3.3.0")
+        self.assertEqual(surfaces["github_release"]["version"], "3.3.0")
+        self.assertEqual(surfaces["github_marketplace"]["version"], "3.3.0")
+        self.assertEqual(surfaces["vercel"]["version"], "3.3.0")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
         self.assertEqual(surfaces["openai_submission"]["status"], "draft")
         self.assertEqual(surfaces["openai_directory"]["version"], "3.2.0")
