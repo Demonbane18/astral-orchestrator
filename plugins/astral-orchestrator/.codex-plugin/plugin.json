@@ -1,7 +1,7 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.2.0",
-  "description": "Beginner-friendly orchestration with Quick, Guided, Careful, and explicit opt-in Measured modes for planning, delegating, verifying, and reviewing project work in Codex.",
+  "version": "3.3.0",
+  "description": "Beginner-friendly orchestration with Quick, Guided, Careful, Measured, and explicit opt-in Morph and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
   },
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Astral Orchestrator offers Quick, Guided, Careful, and explicit opt-in Measured modes: Quick keeps tiny work in Sol with self-review; Guided, Careful, and Measured route bounded work to pinned Luna or Terra lanes at their configured efforts, verify changes, and request a fresh Sol reviewer. Measured records local evidence and never runs automatically.",
+    "longDescription": "Astral Orchestrator offers Quick, Guided, Careful, Measured, Morph, and Constellation modes: Quick keeps tiny work in Sol with self-review; Guided, Careful, and Measured keep fixed Luna/Terra worker routes at their configured efforts and a fresh Sol reviewer. Explicit opt-in Morph uses a user-selected worker model while Sol remains primary and reviewer; explicit opt-in Constellation fan-outs only independent cards within host capacity. Each explicit opt-in mode never runs automatically.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",
@@ -30,9 +30,9 @@
     "composerIcon": "./skills/astral-orchestrator/assets/icon.png",
     "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
-      "Use Astral Orchestrator in Guided mode (the default) to complete this request and verify the result.",
-      "Use Astral Orchestrator in Measured mode for this evidence-oriented request.",
-      "Use Astral Orchestrator in Careful mode for this risky change."
+      "Use Astral Orchestrator in Guided mode (default); choose Quick or Careful when the task warrants it.",
+      "Use Astral Orchestrator in Measured or Morph mode for this explicit opt-in request.",
+      "Use Astral Orchestrator in Constellation mode for this explicit opt-in independent-card request."
     ]
   }
 }

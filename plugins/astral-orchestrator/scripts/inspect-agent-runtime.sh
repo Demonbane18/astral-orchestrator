@@ -165,7 +165,24 @@ turns = [
     for item in records
     if item.get("type") == "turn_context" and isinstance(item.get("payload"), dict)
 ]
-if len(sessions) != 1:
+if not sessions:
+    fail("metadata for the requested task is missing or ambiguous.")
+session_identity_fields = (
+    "id",
+    "parent_thread_id",
+    "forked_from_id",
+    "agent_nickname",
+    "agent_path",
+    "model_provider",
+)
+session_identity = {
+    field: sessions[0].get(field) for field in session_identity_fields
+}
+if any(
+    {field: candidate.get(field) for field in session_identity_fields}
+    != session_identity
+    for candidate in sessions[1:]
+):
     fail("metadata for the requested task is missing or ambiguous.")
 if not turns:
     fail("turn context is missing.")

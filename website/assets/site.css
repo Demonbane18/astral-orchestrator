@@ -897,7 +897,7 @@ p {
 }
 
 .modes-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .mode-tag {
@@ -936,8 +936,28 @@ p {
   border: 1px solid currentColor;
 }
 
+.mode-tag--morph {
+  color: var(--violet);
+  background: var(--violet-soft);
+  border: 1px solid currentColor;
+}
+
+.mode-tag--constellation {
+  color: var(--sky);
+  background: var(--sky-soft);
+  border: 1px solid currentColor;
+}
+
 .mode-card--measured {
   border-color: color-mix(in srgb, var(--gold) 38%, var(--line));
+}
+
+.mode-card--morph {
+  border-color: color-mix(in srgb, var(--violet) 38%, var(--line));
+}
+
+.mode-card--constellation {
+  border-color: color-mix(in srgb, var(--sky) 38%, var(--line));
 }
 
 .mode-card .mode-best {
@@ -948,6 +968,28 @@ p {
 
 .mode-card .mode-best strong {
   color: var(--text-strong);
+}
+
+.mode-guard {
+  max-width: 60rem;
+  margin: 1.4rem auto 0;
+  padding: 1.15rem 1.35rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-left: 0.32rem solid var(--violet);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.mode-guard h3 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 1rem;
+}
+
+.mode-guard p {
+  margin: 0.45rem 0 0;
 }
 
 /* ---------- Measured mode ---------- */

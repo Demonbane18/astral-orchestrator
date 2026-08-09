@@ -1,6 +1,6 @@
 ---
 name: astral-orchestrator
-description: "Orchestrate project work with a Sol lead, model-pinned Luna and Terra implementation lanes, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation, wants to change Astral Orchestrator effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
+description: "Orchestrate project work with a Sol lead, fixed Luna and Terra lanes, explicit opt-in Morph and Constellation workers, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation, wants to change Astral Orchestrator effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
 ---
 
 # Astral Orchestrator
@@ -11,12 +11,31 @@ workers for bounded execution; and keep the process understandable to a non-tech
 user.
 
 Read [references/modes-and-risk.md](references/modes-and-risk.md) for mode, risk, and
-confirmation decisions. Before spawning any lane, read
-[references/routing-and-preflight.md](references/routing-and-preflight.md). Before
-delegating or reviewing, read
-[references/work-templates.md](references/work-templates.md).
+confirmation decisions. Before spawning a Codex lane, read
+[references/routing-and-preflight.md](references/routing-and-preflight.md) and
+[references/work-templates.md](references/work-templates.md). Before a portable worker,
+read `portable-hosts.md` and the work templates instead.
 When the user explicitly names Measured, also read
 [references/measured-mode.md](references/measured-mode.md).
+When the user explicitly names Morph, also read
+[references/morph-mode.md](references/morph-mode.md). When the user explicitly names Constellation,
+also read [references/constellation-mode.md](references/constellation-mode.md).
+
+## Host boundary
+
+First identify whether the host is Codex from observable host/runtime evidence, not
+from a user guess. On Codex, use the fixed routes and bundled preflight below. On a
+non-Codex Agent Plugins-compatible host, load
+[references/portable-hosts.md](references/portable-hosts.md) before doing anything beyond
+mode selection. Only explicitly selected Morph or Constellation portable routes may run
+there. Do not attempt Codex scripts, `CODEX_THREAD_ID`, or Astral agent names on a
+non-Codex host.
+
+Portable routes require observable host capabilities for model selection, separate worker
+contexts, a fresh reviewer context, and—only for concurrent Constellation—available
+concurrency. Record the actual and requested provider, model, and effort separately. If
+the exact model, effort, or fresh context cannot be proven, stop or use the documented
+serial portable Constellation fallback; never claim Sol/Luna/Terra unless observed.
 
 ## 1. Choose the mode and risk
 
@@ -34,14 +53,20 @@ When the user explicitly names Measured, also read
   checks, keep a non-secret resumable local ledger, and use planning probes only when
   Luna/Terra selection is ambiguous. Measured is never auto-selected; recommend Guided
   for normal work. Its detailed state machine is in the Measured reference.
+- **Morph (explicit opt-in)** — a user-selected routed or native worker model for a
+  bounded card. Sol remains the configured primary and the exact fresh Sol reviewer
+  remains required. Read the Morph reference before launch.
+- **Constellation (explicit opt-in)** — a capacity-limited concurrent first wave for independently
+  owned ready cards. Sol remains one primary and one fresh reviewer; no extra Sol
+  implementers are spawned by default. Read the Constellation reference before launch.
 
 Honor an explicit mode unless its safeguards are too weak for the observed risk. Raise
 the safeguards when necessary and explain why in one sentence. Never lower Careful
 without permission.
 
-## 2. Prove the orchestration preflight
+## 2. Prove the Codex orchestration preflight
 
-Astral Orchestrator v3 uses these exact models. Their default efforts are:
+On Codex, Astral Orchestrator v3 uses these exact models. Their default efforts are:
 
 - main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
 - focused worker: `astral_orchestrator_luna_implementer` (Luna XHigh);
@@ -50,13 +75,16 @@ Astral Orchestrator v3 uses these exact models. Their default efforts are:
 
 Resolve the bundled `../../scripts/configure-effort.py` and run it with `--show --json`
 to obtain the effective effort for all four lanes. Missing settings mean the defaults
-above. For every mode, verify that the primary session is `gpt-5.6-sol` at the configured
-orchestrator effort. Prefer observable runtime metadata. If the host does not expose it,
-ask the user once to confirm the model and effort; record that as **user-confirmed**, not
-observed evidence. A changed orchestrator setting applies to a new task, not the task
+above. For every mode, resolve and run `../../scripts/check-primary.py` first. It uses the
+host's local rollout inspector and `CODEX_THREAD_ID` when available, then exits zero only
+when the observed primary is `gpt-5.6-sol` at the configured orchestrator effort. If its
+allowlisted JSON says unavailable, ask the user once to confirm the model and effort;
+record that as **user-confirmed**, not observed evidence. The checker never asks the user
+itself. A `mismatch` or `invalid` result blocks the route; manual confirmation cannot
+override either one. A changed orchestrator setting applies to a new task, not the task
 already running.
 
-For Guided, Careful, and Measured work, select one of two exact routes. First run the
+For Guided, Careful, and Measured work, select one of two exact fixed routes. First run the
 bundled profile installer's exact `--check`. A pass permits native selection only when
 the host exposes the exact role and its native profile effort equals the configured
 effort. When that check reports missing or different native profiles, or the host cannot
@@ -66,6 +94,10 @@ effort and shipped role instructions. Missing or different native profiles force
 exact-process route; they do not permit substitution or make optional setup required.
 Stop only when neither exact route can be proven. A blocking preflight ends the current
 turn. Never silently lower an unsupported effort.
+
+Morph and Constellation retain this exact Sol primary preflight and fresh Sol review. Their worker
+rules are explicit opt-ins defined only in their dedicated references; never treat either
+as permission to change the primary or final-review model.
 
 When the user explicitly asks to show or change effort settings, run the configuration
 script. Preserve unspecified lanes and report the resulting four values. Use `--reset`
@@ -96,7 +128,9 @@ return one direct question immediately. Do not wait silently in the same turn.
 
 For Guided or Careful work, split execution into the fewest useful non-overlapping work
 cards. Measured freezes exactly one canonical work card; it may describe multiple bounded
-items inside that card, but one selected lane owns all edits. Keep requirements,
+items inside that card, but one selected lane owns all edits. Morph uses a separately
+selected exact worker model only for its bounded card. Constellation may fan out only cards proven
+independent by its reference. Keep requirements,
 architecture, task decomposition, acceptance decisions, and cross-lane integration in
 the Sol primary session at its configured effort.
 
@@ -121,7 +155,8 @@ directly, and must not spawn or delegate further.
 Parallelize only independent cards with non-overlapping ownership. Run dependent work
 or shared-file edits serially. Do not spawn agents merely to make the run look busy.
 Guided, Careful, and Measured implementation must use at least one pinned worker whenever bounded
-execution exists; answer-only, planning-only, and blocked requests need no worker.
+execution exists; answer-only, planning-only, and blocked requests need no worker. Morph
+and Constellation use only their explicit worker rules and never weaken Careful safeguards.
 
 ## 5. Integrate and verify
 
@@ -147,6 +182,8 @@ pinned lane, rerun affected checks, and inspect the result again.
   isolation before accepting its independent review.
 - **Measured:** use the normal fresh Sol reviewer after the selected worker. High-risk
   Measured work also inherits Careful confirmation and observed read-only isolation.
+- **Morph and Constellation:** use the normal fresh exact Sol reviewer after integrated worker
+  changes. Careful risk still requires observed read-only isolation.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
 change set, and verification evidence. Accept exactly one verdict: **ship**,

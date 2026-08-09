@@ -86,6 +86,14 @@
       "evidence": "Production deployment dpl_7u8PBDrvsJmD2urm9wfMcapr1VoR reached READY and the alias served the 109-test copy, 1,940-token static measurement, and no-valid-outcome-comparison disclosure; verified in Opera GX.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "abce4182a13c212d1012d76795649a81c9ef5f59"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.2.0",
+      "status": "published",
+      "observed_at": "2026-08-09T19:43:36+08:00",
+      "evidence": "OpenAI Platform plugin management in Opera GX displayed Astral Orchestrator version 3.2.0 with status Published and View in Directory on 2026-08-09.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
     }
   ]
 }

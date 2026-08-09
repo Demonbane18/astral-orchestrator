@@ -2,6 +2,7 @@ import importlib.util
 import hashlib
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -23,17 +24,23 @@ NOTICE = ROOT / "NOTICE.md"
 PLUGIN_LICENSE = PLUGIN / "LICENSE"
 PLUGIN_NOTICE = PLUGIN / "NOTICE.md"
 MANIFEST = PLUGIN / ".codex-plugin/plugin.json"
+PORTABLE_MANIFEST = PLUGIN / "plugin.json"
+PORTABILITY = ROOT / "docs/PORTABILITY.md"
 OPENAI_METADATA = PLUGIN / "skills/astral-orchestrator/agents/openai.yaml"
 BANNER = ROOT / "assets/brand/astral-orchestrator-banner.gif"
 SKILL = PLUGIN / "skills/astral-orchestrator/SKILL.md"
 MODES = PLUGIN / "skills/astral-orchestrator/references/modes-and-risk.md"
 TEMPLATES = PLUGIN / "skills/astral-orchestrator/references/work-templates.md"
 ROUTING = PLUGIN / "skills/astral-orchestrator/references/routing-and-preflight.md"
+MORPH = PLUGIN / "skills/astral-orchestrator/references/morph-mode.md"
+CONSTELLATION = PLUGIN / "skills/astral-orchestrator/references/constellation-mode.md"
 MEASURED = PLUGIN / "skills/astral-orchestrator/references/measured-mode.md"
 AGENTS = PLUGIN / "agents"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
+CHECK_PRIMARY = PLUGIN / "scripts/check-primary.py"
 RUN_AGENT = PLUGIN / "scripts/run-agent.py"
+RUN_MORPH_AGENT = PLUGIN / "scripts/run-morph-agent.py"
 CONFIGURE_EFFORT = PLUGIN / "scripts/configure-effort.py"
 EFFORT_SETTINGS = PLUGIN / "scripts/effort_settings.py"
 CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
@@ -89,7 +96,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.2.0")
+        self.assertEqual(manifest["version"], "3.3.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -105,13 +112,13 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.2"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.3"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
         self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
         description = interface["longDescription"].lower()
-        for mode in ("quick", "guided", "careful", "measured"):
+        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
             self.assertIn(mode, description)
         self.assertIn("opt-in", description)
         self.assertIn("never runs automatically", description)
@@ -121,9 +128,87 @@ class MarketplaceTests(unittest.TestCase):
         self.assertGreaterEqual(len(prompts), 2)
         self.assertLessEqual(len(prompts), 3)
         self.assertTrue(all(len(prompt) <= 128 for prompt in prompts))
-        self.assertTrue(any("measured mode" in prompt.lower() for prompt in prompts))
+        prompt_text = " ".join(prompts).lower()
+        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
+            self.assertIn(mode, prompt_text)
 
-    def test_openai_metadata_keeps_shared_icon_and_measured_aware_prompt(self):
+    def test_portable_manifest_uses_agent_plugins_v1_fixed_skill_discovery(self):
+        manifest = load_json(PORTABLE_MANIFEST)
+
+        self.assertEqual(
+            manifest["$schema"],
+            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        )
+        self.assertEqual(manifest["name"], "astral-orchestrator")
+        self.assertEqual(manifest["version"], "3.3.0")
+        self.assertEqual(manifest["license"], "MIT")
+        self.assertEqual(
+            set(manifest),
+            {
+                "$schema",
+                "name",
+                "version",
+                "description",
+                "author",
+                "homepage",
+                "repository",
+                "license",
+                "keywords",
+            },
+        )
+        self.assertNotIn("skills", manifest)
+        self.assertNotIn("interface", manifest)
+
+        plugin_root = PLUGIN.resolve()
+        discovered = PLUGIN / "skills/astral-orchestrator/SKILL.md"
+        self.assertTrue(discovered.is_file())
+        self.assertEqual(discovered.resolve().parents[2], plugin_root)
+
+    def test_portability_docs_limit_non_codex_routes_to_observed_capabilities(self):
+        portability = " ".join(read(PORTABILITY).lower().split())
+        skill = " ".join(read(SKILL).lower().split())
+        portable_hosts = " ".join(read(PLUGIN / "skills/astral-orchestrator/references/portable-hosts.md").lower().split())
+        readme = read(ROOT / "README.md").lower()
+
+        for required in (
+            "skills and mcp discovery only",
+            "not agents, concurrency, model selection, or reasoning effort",
+            "vs code",
+            "cursor",
+            "github copilot",
+            "chatgpt/codex",
+            "kiro",
+            "component types incrementally",
+            "https://agent-plugins.org/specification",
+            "https://agent-plugins.org/compatible-clients",
+        ):
+            self.assertIn(required, portability)
+        for required in (
+            "whether the host is codex",
+            "portable-hosts.md",
+            "observable host capabilities",
+            "never claim sol/luna/terra unless observed",
+        ):
+            self.assertIn(required, skill)
+        self.assertIn("reserve and count the primary as one occupied slot", portable_hosts)
+        self.assertIn("regardless of whether the host advertises it", portable_hosts)
+        for forbidden in (
+            "agent plugins",
+            "agent-plugins.org",
+            "portable manifest",
+            "compatible clients",
+            "cross-client",
+        ):
+            self.assertNotIn(forbidden, readme)
+
+    def test_readme_safety_qualifies_external_morph_packet_processing(self):
+        readme = " ".join(read(ROOT / "README.md").lower().split())
+
+        self.assertIn("fixed local codex routes", readme)
+        self.assertIn("external morph provider can receive its bounded worker packet", readme)
+        self.assertNotIn("work packets remain local", readme)
+
+    def test_openai_metadata_keeps_shared_icon_and_six_mode_aware_prompt(self):
         metadata = read(OPENAI_METADATA)
 
         self.assertIn('icon_small: "./assets/icon.png"', metadata)
@@ -133,19 +218,52 @@ class MarketplaceTests(unittest.TestCase):
         )
         prompt = prompt_line.split(":", 1)[1].strip().strip('"')
         self.assertLessEqual(len(prompt), 128)
-        self.assertIn("guided mode", prompt.lower())
-        self.assertIn("measured mode", prompt.lower())
+        for mode in ("guided", "quick", "careful", "measured", "morph", "constellation"):
+            self.assertIn(mode, prompt.lower())
 
 
 class SkillContractTests(unittest.TestCase):
-    def test_skill_uses_four_plain_language_modes(self):
+    def test_skill_uses_six_plain_language_modes_and_loads_opt_in_references_on_demand(self):
         skill = read(SKILL)
         modes = read(MODES)
 
-        for mode in ("Quick", "Guided", "Careful", "Measured"):
+        for mode in ("Quick", "Guided", "Careful", "Measured", "Morph", "Constellation"):
             self.assertIn(mode, skill)
             self.assertIn(mode, modes)
         self.assertRegex(skill, r"Guided[^\n]*(default|Default)")
+        self.assertIn("when the user explicitly names morph", skill.lower())
+        self.assertIn("when the user explicitly names constellation", skill.lower())
+        self.assertTrue(MORPH.is_file())
+        self.assertTrue(CONSTELLATION.is_file())
+
+        morph = " ".join(read(MORPH).lower().split())
+        constellation = read(CONSTELLATION).lower()
+        for required in (
+            "explicit opt-in",
+            "opencodex is optional",
+            "never modifies ~/.opencodex",
+            "provider/model",
+            "requested effort",
+            "upstream-native effort",
+            "fresh sol reviewer",
+            "after the process exits",
+            "remove only that exact private packet",
+            "external or non-openai provider",
+            "worker packet as part of",
+            "does not mean provider traffic or model inference is local",
+        ):
+            self.assertIn(required, morph)
+        for required in (
+            "explicit opt-in",
+            "first wave concurrently",
+            "available slots",
+            "primary consumes one slot",
+            "non-overlapping",
+            "serial guided-style routing",
+            "do not spawn extra sol implementers",
+            "fresh sol reviewer",
+        ):
+            self.assertIn(required, constellation)
 
     def test_measured_state_sequence_templates_and_safe_state_are_explicit(self):
         measured = " ".join(read(MEASURED).lower().split())
@@ -368,6 +486,18 @@ class SkillContractTests(unittest.TestCase):
                         ),
                         json.dumps(
                             {
+                                "type": "session_meta",
+                                "payload": {
+                                    "id": thread_id,
+                                    "parent_thread_id": "parent",
+                                    "agent_nickname": "Atlas",
+                                    "agent_path": "/profiles/astral-orchestrator-luna-implementer.toml",
+                                    "model_provider": "openai",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
                                 "type": "turn_context",
                                 "payload": {
                                     "model": "gpt-5.6-luna",
@@ -410,6 +540,30 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotIn("agent_role", evidence)
             self.assertNotIn("secret", evidence)
             self.assertNotIn("prompt", evidence)
+
+            rollout.write_text(
+                rollout.read_text(encoding="utf-8").replace(
+                    '"agent_nickname": "Atlas"',
+                    '"agent_nickname": "Conflict"',
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            conflicting = subprocess.run(
+                [
+                    "sh",
+                    str(INSPECT_RUNTIME),
+                    "--sessions-dir",
+                    str(sessions),
+                    thread_id,
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(conflicting.returncode, 0)
+            self.assertIn("ambiguous", conflicting.stderr)
 
     def test_runtime_inspector_resolves_the_task_path_returned_by_spawn(self):
         thread_id = "87654321-4321-4321-4321-cba987654321"
@@ -470,6 +624,445 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(evidence["thread_id"], thread_id)
             self.assertEqual(evidence["agent_path"], agent_path)
             self.assertEqual(evidence["model"], "gpt-5.6-luna")
+
+    def test_primary_checker_uses_the_bundled_inspector_and_never_leaks_rollout_contents(self):
+        thread_id = "12345678-1234-1234-1234-123456789abc"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sessions = root / "sessions"
+            sessions.mkdir()
+            rollout = sessions / f"rollout-primary-{thread_id}.jsonl"
+            rollout.write_text(
+                "\n".join(
+                    (
+                        json.dumps(
+                            {
+                                "type": "session_meta",
+                                "payload": {
+                                    "id": thread_id,
+                                    "model_provider": "openai",
+                                    "secret": "must-not-leak",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "turn_context",
+                                "payload": {
+                                    "model": "gpt-5.6-sol",
+                                    "effort": "high",
+                                    "sandbox_policy": {"type": "workspace-write"},
+                                    "permission_profile": {"type": "managed"},
+                                    "cwd": str(ROOT),
+                                    "prompt": "must-not-leak",
+                                },
+                            }
+                        ),
+                    )
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            matched = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_PRIMARY),
+                    "--thread-id",
+                    thread_id,
+                    "--sessions-dir",
+                    str(sessions),
+                    "--settings-file",
+                    str(root / "missing-effort-levels.toml"),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(matched.returncode, 0, matched.stdout + matched.stderr)
+            evidence = json.loads(matched.stdout)
+            self.assertEqual(evidence["status"], "match")
+            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["expected_effort"], "high")
+            self.assertEqual(evidence["observed_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["observed_effort"], "high")
+            self.assertEqual(evidence["thread_id"], thread_id)
+            self.assertNotIn("secret", matched.stdout)
+            self.assertNotIn("prompt", matched.stdout)
+
+            rollout.write_text(
+                rollout.read_text(encoding="utf-8").replace('"high"', '"low"'),
+                encoding="utf-8",
+            )
+            mismatched = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_PRIMARY),
+                    "--thread-id",
+                    thread_id,
+                    "--sessions-dir",
+                    str(sessions),
+                    "--settings-file",
+                    str(root / "missing-effort-levels.toml"),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(mismatched.returncode, 0)
+            self.assertEqual(json.loads(mismatched.stdout)["status"], "mismatch")
+
+            unavailable = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_PRIMARY),
+                    "--settings-file",
+                    str(root / "missing-effort-levels.toml"),
+                ],
+                cwd=ROOT,
+                env={key: value for key, value in os.environ.items() if key != "CODEX_THREAD_ID"},
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(unavailable.returncode, 0)
+            self.assertEqual(json.loads(unavailable.stdout)["status"], "unavailable")
+
+    def test_primary_checker_fails_closed_for_invalid_evidence_and_settings(self):
+        thread_id = "abcdefab-cdef-cdef-cdef-abcdefabcdef"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sessions = root / "sessions"
+            sessions.mkdir()
+            rollout = sessions / f"rollout-primary-{thread_id}.jsonl"
+            rollout.write_text(
+                "\n".join(
+                    (
+                        json.dumps(
+                            {
+                                "type": "session_meta",
+                                "payload": {
+                                    "id": thread_id,
+                                    "agent_nickname": "Primary",
+                                    "secret": "must-not-leak",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "session_meta",
+                                "payload": {
+                                    "id": thread_id,
+                                    "agent_nickname": "Conflicting metadata",
+                                },
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "turn_context",
+                                "payload": {
+                                    "model": "gpt-5.6-sol",
+                                    "effort": "high",
+                                    "sandbox_policy": {"type": "workspace-write"},
+                                    "permission_profile": {"type": "managed"},
+                                    "cwd": str(ROOT),
+                                    "prompt": "must-not-leak",
+                                },
+                            }
+                        ),
+                    )
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            def check(settings: Path) -> subprocess.CompletedProcess[str]:
+                return subprocess.run(
+                    [
+                        "python3",
+                        str(CHECK_PRIMARY),
+                        "--thread-id",
+                        thread_id,
+                        "--sessions-dir",
+                        str(sessions),
+                        "--settings-file",
+                        str(settings),
+                    ],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+            conflicting = check(root / "missing-effort-levels.toml")
+            self.assertNotEqual(conflicting.returncode, 0)
+            conflicting_evidence = json.loads(conflicting.stdout)
+            self.assertEqual(conflicting_evidence["status"], "invalid")
+            self.assertNotIn("secret", conflicting.stdout)
+            self.assertNotIn("prompt", conflicting.stdout)
+            self.assertLessEqual(
+                set(conflicting_evidence),
+                {
+                    "expected_effort",
+                    "expected_model",
+                    "observed_effort",
+                    "observed_model",
+                    "reason",
+                    "status",
+                    "thread_id",
+                },
+            )
+
+            duplicate_filename = sessions / f"rollout-copy-{thread_id}.jsonl"
+            duplicate_filename.write_bytes(rollout.read_bytes())
+            ambiguous = check(root / "missing-effort-levels.toml")
+            self.assertNotEqual(ambiguous.returncode, 0)
+            self.assertEqual(json.loads(ambiguous.stdout)["status"], "invalid")
+            duplicate_filename.unlink()
+
+            malformed_settings = root / "effort-levels.toml"
+            malformed_settings.write_text("[effort\norchestrator = \"high\"\n", encoding="utf-8")
+            malformed = check(malformed_settings)
+            self.assertNotEqual(malformed.returncode, 0)
+            self.assertEqual(json.loads(malformed.stdout)["status"], "invalid")
+
+            rollout.unlink()
+            missing_rollout = check(root / "missing-effort-levels.toml")
+            self.assertNotEqual(missing_rollout.returncode, 0)
+            self.assertEqual(json.loads(missing_rollout.stdout)["status"], "unavailable")
+
+    def test_primary_checker_marks_malformed_or_invalid_inspector_evidence_invalid(self):
+        spec = importlib.util.spec_from_file_location(
+            "astral_orchestrator_check_primary", CHECK_PRIMARY
+        )
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+
+        thread_id = "12345678-1234-1234-1234-123456789abc"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rollout = root / f"rollout-primary-{thread_id}.jsonl"
+            rollout.write_text("{}\n", encoding="utf-8")
+
+            for stdout in (
+                "not-json",
+                json.dumps([]),
+                json.dumps(
+                    {
+                        "thread_id": thread_id,
+                        "model": "invalid model id",
+                        "effort": "high",
+                    }
+                ),
+            ):
+                output = io.StringIO()
+                with (
+                    mock.patch.object(
+                        sys,
+                        "argv",
+                        [
+                            str(CHECK_PRIMARY),
+                            "--thread-id",
+                            thread_id,
+                            "--settings-file",
+                            str(root / "missing-effort-levels.toml"),
+                        ],
+                    ),
+                    mock.patch.object(checker, "find_rollouts", return_value=[rollout]),
+                    mock.patch.object(
+                        checker.subprocess,
+                        "run",
+                        return_value=subprocess.CompletedProcess([], 0, stdout, ""),
+                    ),
+                    redirect_stdout(output),
+                ):
+                    self.assertEqual(checker.main(), 1)
+                evidence = json.loads(output.getvalue())
+                self.assertEqual(evidence["status"], "invalid")
+                self.assertEqual(evidence["reason"], "runtime-evidence-invalid")
+
+    def test_primary_checker_distinguishes_missing_from_malformed_thread_ids(self):
+        spec = importlib.util.spec_from_file_location(
+            "astral_orchestrator_check_primary_thread_id", CHECK_PRIMARY
+        )
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+
+        with tempfile.TemporaryDirectory() as directory:
+            settings = Path(directory) / "missing-effort-levels.toml"
+
+            def invoke(arguments: list[str], environment: dict[str, str]):
+                output = io.StringIO()
+                with (
+                    mock.patch.object(sys, "argv", [str(CHECK_PRIMARY), *arguments]),
+                    mock.patch.dict(os.environ, environment, clear=True),
+                    redirect_stdout(output),
+                ):
+                    self.assertEqual(checker.main(), 1)
+                return json.loads(output.getvalue())
+
+            missing = invoke(["--settings-file", str(settings)], {})
+            malformed_environment = invoke(
+                ["--settings-file", str(settings)],
+                {"CODEX_THREAD_ID": "not-a-uuid"},
+            )
+            malformed_argument = invoke(
+                [
+                    "--thread-id",
+                    "also-not-a-uuid",
+                    "--settings-file",
+                    str(settings),
+                ],
+                {},
+            )
+
+        self.assertEqual(
+            (missing["status"], missing["reason"]),
+            ("unavailable", "thread-id-unavailable"),
+        )
+        self.assertEqual(
+            (malformed_environment["status"], malformed_environment["reason"]),
+            ("invalid", "thread-id-invalid"),
+        )
+        self.assertEqual(
+            (malformed_argument["status"], malformed_argument["reason"]),
+            ("invalid", "thread-id-invalid"),
+        )
+
+    def test_morph_launcher_validates_private_packets_and_marks_effort_as_requested_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            prompt.write_text("private Morph work card\n", encoding="utf-8")
+            prompt.chmod(0o600)
+
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(RUN_MORPH_AGENT),
+                    "--model",
+                    "opencodex/worker-model",
+                    "--effort",
+                    "xhigh",
+                    "--workdir",
+                    str(workdir),
+                    "--prompt-file",
+                    str(prompt),
+                    "--dry-run",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            evidence = json.loads(result.stdout)
+            self.assertEqual(evidence["route"], "morph")
+            self.assertEqual(evidence["model"], "opencodex/worker-model")
+            self.assertEqual(evidence["requested_effort"], "xhigh")
+            self.assertEqual(evidence["verified_upstream_native_effort"], "unverified")
+            self.assertEqual(evidence["effort_semantics"], "requested-only")
+            self.assertEqual(evidence["sandbox"], "workspace-write")
+            self.assertNotIn("private Morph work card", result.stdout)
+
+            invalid_model = subprocess.run(
+                [
+                    "python3",
+                    str(RUN_MORPH_AGENT),
+                    "--model",
+                    "bad model id",
+                    "--effort",
+                    "high",
+                    "--workdir",
+                    str(workdir),
+                    "--prompt-file",
+                    str(prompt),
+                    "--dry-run",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(invalid_model.returncode, 0)
+            self.assertIn("model", invalid_model.stderr.lower())
+
+    def test_morph_launcher_constructs_the_explicit_workspace_write_codex_route(self):
+        spec = importlib.util.spec_from_file_location(
+            "astral_orchestrator_run_morph_agent", RUN_MORPH_AGENT
+        )
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        launcher = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(launcher)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            prompt_text = "private Morph card\n"
+            prompt.write_text(prompt_text, encoding="utf-8")
+            prompt.chmod(0o600)
+            captured = {}
+
+            def fake_run(command, *, input, check):
+                captured["command"] = command
+                captured["input"] = input
+                captured["check"] = check
+                return subprocess.CompletedProcess(command, 17)
+
+            output = io.StringIO()
+            argv = [
+                str(RUN_MORPH_AGENT),
+                "--model",
+                "opencodex/worker-model",
+                "--effort",
+                "medium",
+                "--workdir",
+                str(workdir),
+                "--prompt-file",
+                str(prompt),
+            ]
+            with (
+                mock.patch.object(sys, "argv", argv),
+                mock.patch.object(launcher.shutil, "which", return_value="/test/codex"),
+                mock.patch.object(launcher.subprocess, "run", side_effect=fake_run),
+                redirect_stdout(output),
+            ):
+                return_code = launcher.main()
+
+            command = captured["command"]
+            config_overrides = [
+                command[index + 1]
+                for index, value in enumerate(command)
+                if value == "-c"
+            ]
+            self.assertEqual(return_code, 17)
+            self.assertEqual(captured["input"], prompt_text.encode())
+            self.assertFalse(captured["check"])
+            self.assertEqual(command[:2], ["/test/codex", "exec"])
+            self.assertEqual(command[command.index("--model") + 1], "opencodex/worker-model")
+            self.assertEqual(command[command.index("--sandbox") + 1], "workspace-write")
+            self.assertEqual(command[command.index("--cd") + 1], str(workdir.resolve()))
+            self.assertEqual(command[-1], "-")
+            self.assertIn('model_reasoning_effort="medium"', config_overrides)
+            self.assertIn(
+                f"developer_instructions={json.dumps(launcher.MORPH_DEVELOPER_INSTRUCTIONS)}",
+                config_overrides,
+            )
+            self.assertIn("must not spawn or delegate", launcher.MORPH_DEVELOPER_INSTRUCTIONS)
+            route_header = output.getvalue()
+            self.assertIn("ASTRAL_ORCHESTRATOR_ROUTE ", route_header)
+            self.assertNotIn(prompt_text.strip(), route_header)
 
     def test_process_launcher_maps_every_role_to_exact_runtime_settings(self):
         expected = {
@@ -1052,7 +1645,7 @@ class UserExperienceTests(unittest.TestCase):
             .split("## Configurable effort levels", 1)[0]
             .split()
         )
-        self.assertIn("published v3.2.0 core `SKILL.md` measures **2,036 tokens**", footprint)
+        self.assertIn("historical v3.2.0 core `SKILL.md` measures **2,036 tokens**", footprint)
         self.assertIn("Guided/full measures **5,636 tokens**", footprint)
         self.assertIn("Measured measures **7,795 tokens**", footprint)
         self.assertIn("instruction-context loading only", footprint)
@@ -1066,8 +1659,8 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("inspired by", attribution)
         self.assertIn("pinned codex gpt-5.6 sol/terra/luna lanes", attribution)
         self.assertIn("does not run or depend on ori or openrouter", attribution)
-        self.assertIn("worker-produced guided or measured work", attribution)
-        self.assertIn("guided, careful, and measured require all three", attribution)
+        self.assertIn("worker-produced guided, measured, morph, or constellation work", attribution)
+        self.assertIn("guided, careful, and measured require the three", attribution)
 
     def test_editable_diagrams_preserve_rendered_labels_and_quick_handoff(self):
         namespace = {"svg": "http://www.w3.org/2000/svg"}
@@ -1104,7 +1697,7 @@ class UserExperienceTests(unittest.TestCase):
             )
             self.assertEqual(source_text, svg_text, source.name)
 
-    def test_context_footprint_evidence_matches_the_published_instruction_files(self):
+    def test_context_footprint_evidence_is_a_valid_historical_snapshot(self):
         self.assertTrue(CONTEXT_FOOTPRINT.is_file())
         evidence = load_json(CONTEXT_FOOTPRINT_MEASURED)
         self.assertTrue(CONTEXT_FOOTPRINT_MEASURER.is_file())
@@ -1114,17 +1707,21 @@ class UserExperienceTests(unittest.TestCase):
             {"library": "tiktoken", "version": "0.13.0", "encoding": "o200k_base"},
         )
 
-        expected = {
-            item["path"]: (item["bytes"], item["words"], item["tokens"])
-            for item in evidence["files"]
-        }
-        self.assertEqual({item["path"] for item in evidence["files"]}, set(expected))
+        expected_paths = {item["path"] for item in evidence["files"]}
+        self.assertEqual(len(expected_paths), len(evidence["files"]))
         for item in evidence["files"]:
-            path = ROOT / item["path"]
-            data = path.read_bytes()
-            self.assertEqual(
-                (item["bytes"], item["words"], item["tokens"]), expected[item["path"]]
+            snapshot = subprocess.run(
+                ["git", "show", f"v3.2.0:{item['path']}"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
             )
+            if snapshot.returncode != 0:
+                self.fail(
+                    "historical instruction snapshot v3.2.0 is unavailable for "
+                    f"{item['path']}: {snapshot.stderr.decode('utf-8', 'replace')}"
+                )
+            data = snapshot.stdout
             self.assertEqual(item["bytes"], len(data))
             self.assertEqual(item["words"], len(data.decode("utf-8").split()))
             self.assertEqual(item["sha256"], hashlib.sha256(data).hexdigest())
@@ -1158,7 +1755,7 @@ class UserExperienceTests(unittest.TestCase):
             .split("## Configurable effort levels", 1)[0]
             .split()
         )
-        self.assertIn("published v3.2.0 core", footprint_section)
+        self.assertIn("historical v3.2.0 core", footprint_section)
         for value in (
             evidence["bundles"]["core"]["tokens"],
             evidence["bundles"]["quick"]["tokens"],
@@ -1693,7 +2290,7 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
             "--ledger",
             str(RELEASE_LEDGER),
             "--expected-version",
-            "3.2.0",
+            "3.3.0",
             "--format",
             "json",
         )
@@ -1704,7 +2301,7 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(surfaces["github_release"]["version"], "3.2.0")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
         self.assertEqual(surfaces["openai_submission"]["status"], "draft")
-        self.assertEqual(surfaces["openai_directory"]["version"], "3.1.3")
+        self.assertEqual(surfaces["openai_directory"]["version"], "3.2.0")
 
     def test_strict_release_check_fails_while_public_directory_lags(self):
         result = self.run_ledger(
@@ -1712,13 +2309,13 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
             "--ledger",
             str(RELEASE_LEDGER),
             "--expected-version",
-            "3.2.0",
+            "3.3.0",
             "--manifest",
             str(MANIFEST),
         )
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("openai_directory is 3.1.3", result.stderr)
+        self.assertIn("openai_directory is 3.2.0", result.stderr)
 
     def test_record_is_idempotent_and_preserves_history(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -1850,6 +2447,30 @@ class VerificationTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("canonical NOTICE must link", result.stderr)
+
+    def test_repository_verifier_rejects_a_portable_discovered_skill_symlink_escape(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_root = self.make_package_fixture(directory)
+            fixture_plugin = fixture_root / "plugins/astral-orchestrator"
+            outside = Path(directory) / "outside"
+            outside.mkdir()
+            escaped_skill = outside / "SKILL.md"
+            escaped_skill.write_text("---\nname: escaped\n---\n", encoding="utf-8")
+
+            discovered = fixture_plugin / "skills/astral-orchestrator/SKILL.md"
+            discovered.unlink()
+            discovered.symlink_to(escaped_skill)
+
+            result = subprocess.run(
+                ["sh", str(fixture_plugin / "scripts/verify.sh")],
+                cwd=fixture_root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("portable discovered skill escapes the package", result.stderr)
 
     def test_repository_verifier_passes(self):
         verifier = PLUGIN / "scripts/verify.sh"

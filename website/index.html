@@ -59,7 +59,7 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.2.0 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.3.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
               Astral Orchestrator gives bigger work a clear route through Codex:
@@ -75,7 +75,7 @@
             <ul class="hero-facts">
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>3 pinned lanes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh Sol review</li>
-              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Measured is opt-in</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Six explicit modes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>No project-operated backend</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>MIT licensed</li>
             </ul>
@@ -168,7 +168,7 @@
           <div class="section-intro" data-reveal>
             <div>
               <p class="eyebrow">Pick an altitude</p>
-              <h2 id="modes-title">Four modes, one steady hand.</h2>
+              <h2 id="modes-title">Six modes, one steady hand.</h2>
             </div>
             <p>
               Tell Astral how careful to be. It <span class="hl">raises safeguards</span>
@@ -215,7 +215,40 @@
               </p>
               <p class="mode-best"><strong>Best for:</strong> a reproducible record of a route decision and its checks.</p>
             </article>
+            <article class="mode-card mode-card--morph" data-reveal>
+              <span class="mode-tag mode-tag--morph">Morph · explicit</span>
+              <h3>Choose the worker route</h3>
+              <p>
+                Morph uses an <span class="hl">explicitly selected worker model and effort</span>
+                when the host can provide that capability; the route is capability-dependent.
+                The provider may be external,
+                and a <span class="hl">fresh review is required</span> before handoff.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> a deliberate provider or capability choice.</p>
+            </article>
+            <article class="mode-card mode-card--constellation" data-reveal>
+              <span class="mode-tag mode-tag--constellation">Constellation · capacity-aware</span>
+              <h3>Parallel first wave, when safe</h3>
+              <p>
+                Constellation starts a cost-aware parallel first wave only for
+                <span class="hl">independent, non-overlapping cards</span> within
+                <span class="hl">host-advertised capacity</span>. One primary consumes a slot;
+                no extra Sol implementers run by default.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> parallelizable work with a proven serial fallback.</p>
+            </article>
           </div>
+          <aside class="mode-guard" data-reveal aria-labelledby="mode-guard-title">
+            <h3 id="mode-guard-title">Automatic primary checker</h3>
+            <p>
+              Astral first looks for <strong>allowlisted local model/effort evidence</strong>.
+              If evidence is absent, it can use a <strong>one-time user confirmation</strong>;
+              <strong>mismatch or invalid evidence blocks</strong> the route. Morph does not claim
+              every provider has native effort semantics, and Constellation does not claim
+              every host supports multi-agent orchestration: when capacity or
+              independence is uncertain, use the <strong>serial fallback</strong>.
+            </p>
+          </aside>
         </div>
       </section>
       <section class="section" id="how-it-works" aria-labelledby="workflow-title">
@@ -460,7 +493,7 @@
           </p>
 
           <p class="scope-note" data-reveal>
-            The current repository verification passed <strong>109 automated tests</strong> and
+            The current repository verification passed <strong>100+ automated tests</strong> and
             <strong>package verification</strong>. This validates behavior and contracts:
             progressive context loading, exact pinned routes, objective checks plus fresh
             review, and a local privacy/no-analytics runtime posture. It does not prove

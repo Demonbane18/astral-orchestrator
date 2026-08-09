@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "astral-orchestrator",
+  "version": "3.3.0",
+  "description": "A six-mode project-delivery skill with explicit Morph and Constellation worker routes for capable hosts.",
+  "author": {
+    "name": "Demonbane18",
+    "url": "https://github.com/Demonbane18"
+  },
+  "homepage": "https://github.com/Demonbane18/astral-orchestrator",
+  "repository": "https://github.com/Demonbane18/astral-orchestrator",
+  "license": "MIT",
+  "keywords": [
+    "orchestration",
+    "agent-skills",
+    "project-management",
+    "verification",
+    "review"
+  ]
+}

@@ -2,13 +2,13 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.2.0 is an installable, open-source Codex plugin. It
+Astral Orchestrator v3.3.0 is an installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
 
 Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
-directory is a separate publication surface and may lag until the v3.2.0 directory upload
+directory is a separate publication surface and may lag until the v3.3.0 directory upload
 is published. Astral Orchestrator is an independent open-source project, not affiliated
 with or endorsed by OpenAI.
 
@@ -21,9 +21,10 @@ codex plugin marketplace add Demonbane18/astral-orchestrator --ref main
 codex plugin add astral-orchestrator@astral-orchestrator
 ~~~
 
-This is the complete install. It bundles the exact-process launcher, so Guided, Careful,
+This is the complete install. It bundles the fixed-route launcher, so Guided, Careful,
 and Measured work can prove the pinned Sol, Luna, and Terra routes without requiring
-global native profiles.
+global native profiles. Morph and Constellation are separate explicit opt-ins; they do not
+change the verified Sol primary or fresh Sol reviewer.
 
 ## What Astral Orchestrator does
 
@@ -33,6 +34,10 @@ Astral Orchestrator gives you a repeatable way to:
 2. send narrow, repeatable work to Luna and context-heavy implementation to Terra;
 3. inspect the actual changes and run relevant checks;
 4. request a fresh Sol review before handoff.
+
+Before fixed-mode delegation, the bundled primary checker automatically verifies the
+current Codex primary route when local runtime evidence is available. A mismatch blocks
+the route; unavailable evidence is clearly labeled rather than guessed.
 
 It works for code, documents, configuration, research artifacts, and other
 workspace-based projects. It adds no API key, paid service, background server, analytics,
@@ -87,6 +92,13 @@ You can also ask it to fix an error or complete a documentation change. Guided m
 the default, so you only need to name a mode when you want a different level of process.
 
 For an evidence-oriented run, say “Use Astral Orchestrator in Measured mode.”
+For a bounded card with a user-selected model route, say “Use Astral Orchestrator in Morph
+mode.” For independent cards that may safely fan out, say “Use Astral Orchestrator in
+Constellation mode.”
+
+Morph’s optional OpenCodex provider route is user-owned: configure it separately if you
+choose it. Astral Orchestrator does not install providers, handle credentials, or claim
+that a requested effort was accepted natively by an external model.
 
 ## Modes
 
@@ -96,10 +108,14 @@ For an evidence-oriented run, say “Use Astral Orchestrator in Measured mode.�
 | Guided | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
 | Careful | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and read-only reviewer evidence. |
 | Measured (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
+| Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed or native model | Sol remains the configured primary, the worker receives an exact model id and requested effort, and fresh Sol reviews the result. |
+| Constellation (explicit opt-in) | Several independent, ready cards | Sol proves independent ownership and host capacity, starts a cost-aware non-Sol first wave, integrates it, and requests one fresh Sol review. |
 
 Astral Orchestrator raises safeguards when a request is riskier than the selected mode.
 It does not broaden the work you asked for.
-Measured is never automatic; Guided remains recommended for normal work.
+Measured, Morph, and Constellation are never automatic; Guided remains recommended for
+normal work. Careful safeguards override either opt-in worker mode whenever the risk
+requires confirmation, serial routing, or observed read-only review isolation.
 
 ## How Astral chooses models and effort
 
@@ -107,7 +123,7 @@ Three separate decisions keep the workflow predictable:
 
 1. **Mode determines whether to delegate.** Quick keeps a tiny change in the Sol primary;
    Guided, Careful, and Measured delegate bounded implementation when there is work that can safely
-   be handed off.
+   be handed off. Morph and Constellation work only when the user explicitly names them.
 2. **Work characteristics choose Sol, Luna, or Terra.** Sol retains requirements,
    architecture, safety boundaries, and acceptance decisions. Luna receives narrow,
    repeatable, fully specified work. Terra receives context-heavy implementation,
@@ -117,6 +133,9 @@ Three separate decisions keep the workflow predictable:
    Terra, and reviewer values before it runs, then either uses the matching profile or
    starts the exact pinned process. It stops if it cannot prove the requested model and
    effort; it does not substitute another route.
+4. **Morph labels a worker request, not provider capability.** The selected model gets the
+   requested effort label, but the route records upstream-native effort as unverified until
+   independent provider evidence exists.
 
 The route below is a documented **heuristic**, based on the type of work and the route
 contract. The separate local outcome scorecard described below is how to collect
@@ -125,7 +144,7 @@ model choice.
 
 ## Measured instruction-context footprint
 
-Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the published v3.2.0 core
+Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the historical v3.2.0 core
 `SKILL.md` measures **2,036 tokens**; Quick measures **3,696 tokens**; Guided/full
 measures **5,636 tokens**; and Measured measures **7,795 tokens**. Quick therefore
 avoids **1,940 tokens (34.4%)** compared with eager full-bundle loading.
@@ -145,7 +164,7 @@ rather than proof of outcome superiority. See the
 
 ## Public evidence status
 
-The current repository verification passed **109 automated tests** and **package verification**.
+The current repository verification passed **100+ automated tests** and **package verification**.
 This validates behavior and contracts; it does not prove Astral beats single-Sol or
 establish a valid outcome comparison.
 
@@ -203,6 +222,12 @@ fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described ab
 supply each lane's effort (Sol High, Luna XHigh, Terra XHigh, reviewer Sol High by
 default), rather than the prompt choosing a new effort at runtime.
 
+For every mode, Astral first runs its local primary checker. When `CODEX_THREAD_ID` and
+local rollout evidence are available, it automatically verifies that the primary is
+`gpt-5.6-sol` at the configured orchestrator effort. The checker emits only allowlisted
+route fields and never prints prompt or session contents. Only when that evidence is
+unavailable does Astral ask once for the user's confirmation; a mismatch blocks the route.
+
 For Guided, Careful, and Measured work, Astral Orchestrator first checks whether installed
 native profiles byte-match the shipped profiles. A matching profile plus an exact host
 role can use native named-agent selection. Missing or different profiles do not weaken
@@ -213,6 +238,25 @@ allowlisted route facts, never the task packet, instructions, secrets, or file c
 
 A task name is not proof of the route. Missing or mismatched role, model, effort, or
 review isolation blocks the lane and tells you the smallest corrective action.
+
+### Morph and Constellation
+
+Morph is optional. It can use an OpenCodex-routed `provider/model` or another user-selected
+native model only for a bounded worker card. OpenCodex is independently installed and
+configured by the user: Astral never changes `~/.opencodex`, starts a service, installs a
+package, handles credentials, or assumes provider terms-of-service compatibility. It adds
+no network client; its launcher only invokes the existing `codex` command. Provider/model
+support and effort semantics are capability-dependent, and a worker failure blocks that
+worker rather than falling back silently. A configured external or non-OpenAI provider may
+receive the worker packet during model inference. “No network client” means Astral adds no
+network client, service, or credential handling; it does not mean provider traffic is local.
+
+Constellation is also optional. It starts a concurrent first wave only after Sol proves
+that cards are independent and have non-overlapping ownership, the host advertises enough
+available slots after the primary consumes one, and the configured roster has suitable
+cost-aware non-Sol workers. It never hard-codes a child count or creates extra Sol
+implementers by default. If capacity or independence is uncertain, it uses serial
+Guided-style routing instead.
 
 Measured freezes exactly one canonical card and its checks before routing. If Luna versus
 Terra is ambiguous, Sol sends exactly one behaviorally read-only probe to each lane with
@@ -260,11 +304,14 @@ set as a reason to investigate before making a product claim.
 - Profile removal deletes only shipped files that still match exactly.
 - Destructive, credential, publishing, production, and irreversible actions require
   an explicit confirmation gate in Careful mode.
-- Work packets remain local. The exact-process route writes a private temporary packet,
-  passes it only to the selected Codex process, then removes it after that process exits.
-  There is no analytics collection, extra network client, API key, or background service.
-- A fresh reviewer is required after worker-produced Guided or Measured work. Careful
-  mode—and high-risk Measured work—also requires observed read-only review isolation.
+- Fixed local Codex routes keep private work packets in local temporary files, pass them
+  only to the selected Codex process, then remove them after that process exits. An external
+  Morph provider can receive its bounded worker packet during inference when the user
+  explicitly configures that route; local packet handling does not make external processing
+  local. There is no analytics collection, extra network client, API key, or background service.
+- A fresh reviewer is required after worker-produced Guided, Measured, Morph, or
+  Constellation work. Careful mode—and high-risk Measured, Morph, or Constellation work—
+  also requires observed read-only review isolation.
 
 ## Updating and the 3.0 migration
 
@@ -312,6 +359,8 @@ These commands do not delete your downloaded repository or project files.
 | The plugin does not appear | Start a new Codex task, then run codex plugin list --marketplace astral-orchestrator. |
 | Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized native profile. Keep it and use the bundled exact-process route, or resolve the difference deliberately before rerunning optional setup. |
 | A route cannot be proven | Confirm the bundled launcher dry run can prove the exact role, model, and effort. Reinstall the GitHub marketplace source or run `sh scripts/setup.sh --refresh` only if you want to restore native profiles; never accept another role, model, or effort as a fallback. |
+| A Morph worker fails | Check the separately configured provider/model and requested effort with its owner. Astral does not configure OpenCodex, credentials, services, or provider compatibility. |
+| Constellation will not fan out | Make each card independent with non-overlapping ownership, or continue with the serial Guided-style fallback. The primary consumes one advertised slot. |
 | An effort value is rejected | Pick a supported value available to your account; max and ultra are not available everywhere. |
 | Setup cannot find Codex or Python | Install or update Codex and use Python 3.11 or newer, then rerun the dry run. |
 
@@ -324,9 +373,11 @@ pinned lane and demanding evidence before handoff.
 
 ### Can I use only one model?
 
-Quick mode uses the verified Sol primary. Guided, Careful, and Measured require all three
+Quick mode uses the verified Sol primary. Guided, Careful, and Measured require the three
 specified models when bounded execution or independent review is needed; there is no
-silent model substitution.
+silent model substitution. Morph can use a user-selected worker model only after an
+explicit opt-in, while Constellation defaults to non-Sol workers and retains one Sol
+primary and one fresh Sol reviewer.
 
 ### Are my effort settings lost during an update?
 
