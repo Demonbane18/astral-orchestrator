@@ -20,6 +20,14 @@ required. Only a bounded worker card may use a user-selected model.
      --workdir <workspace> --prompt-file <private-card> --dry-run
    ```
 
+   The dry run selects a compatible Codex runtime and runs `codex features list` so the
+   active user configuration and model catalog must parse before launch. It does not send
+   the private card to a model. Astral checks an explicit `ASTRAL_CODEX_PATH` override,
+   the host's `CODEX_CLI_PATH` hint, known installed app/runtime locations, and finally
+   the current `codex` command. Each path must be absolute, executable, and a regular
+   file. If every candidate fails, stop and report the sanitized candidate-source errors;
+   do not edit the user's configuration or catalog.
+
 4. Start the same command without `--dry-run` only after the card is ready. It launches
    `codex exec` with the exact worker model, requested effort, and workspace-write
    sandbox. Capture its `ASTRAL_ORCHESTRATOR_ROUTE` evidence, process identity, exit
@@ -29,18 +37,21 @@ required. Only a bounded worker card may use a user-selected model.
    packet. Do not use a broad or recursive deletion, and do not remove any other packet
    or user file.
 
-The evidence labels the requested effort separately from upstream-native effort. An
-accepted label is **requested-only** and does not verify upstream-native effort semantics.
-Depending on the configured provider and model, effort can be native, mapped, clamped,
-emulated, or absent. Do not call it native unless independent upstream evidence proves
-that fact.
+The evidence labels the requested effort separately from upstream-native effort and also
+records the selected runtime source, its allowlisted version, and a passing configuration
+probe. It never includes the executable path, environment values, configuration contents,
+credentials, or private packet. An accepted effort label is **requested-only** and does
+not verify upstream-native effort semantics. Depending on the configured provider and
+model, effort can be native, mapped, clamped, emulated, or absent. Do not call it native
+unless independent upstream evidence proves that fact.
 
 ## OpenCodex boundary
 
 OpenCodex is optional and independently installed and configured by the user. Astral
 never modifies ~/.opencodex, starts services, installs packages, handles provider
-credentials, or assumes provider terms-of-service compatibility. It adds no network
-dependency: the launcher invokes only the user’s existing `codex` command.
+credentials, rewrites `$CODEX_HOME/config.toml` or a model catalog, or assumes provider
+terms-of-service compatibility. It adds no network dependency: the launcher invokes only
+a compatible runtime from the user's existing Codex installation.
 
 Provider/model support and effort semantics are capability-dependent. A user must wire an
 OpenCodex provider route to Codex separately before Morph can use it. If the provider,

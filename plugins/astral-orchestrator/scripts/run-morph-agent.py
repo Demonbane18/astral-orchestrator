@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +16,10 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from effort_settings import ALLOWED_EFFORTS  # noqa: E402
+from codex_runtime import (  # noqa: E402
+    RuntimeResolutionError,
+    resolve_codex_runtime,
+)
 
 
 MODEL_CHARACTERS = frozenset(
@@ -95,7 +98,15 @@ def main() -> int:
     if not workdir.is_dir():
         fail(f"workdir must be an existing directory: {workdir}")
 
+    try:
+        runtime = resolve_codex_runtime()
+    except RuntimeResolutionError as error:
+        fail(str(error))
+
     evidence = {
+        "codex_config_probe": runtime.config_probe,
+        "codex_runtime_source": runtime.source,
+        "codex_version": runtime.version,
         "effort_semantics": "requested-only",
         "model": args.model,
         "prompt_bytes": len(prompt),
@@ -109,12 +120,8 @@ def main() -> int:
         print(json.dumps(evidence, separators=(",", ":"), sort_keys=True))
         return 0
 
-    codex = shutil.which("codex")
-    if codex is None:
-        fail("the codex command is unavailable")
-
     command = [
-        codex,
+        runtime.path,
         "exec",
         "--model",
         args.model,

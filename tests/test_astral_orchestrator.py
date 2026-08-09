@@ -41,6 +41,7 @@ INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
 CHECK_PRIMARY = PLUGIN / "scripts/check-primary.py"
 RUN_AGENT = PLUGIN / "scripts/run-agent.py"
 RUN_MORPH_AGENT = PLUGIN / "scripts/run-morph-agent.py"
+CODEX_RUNTIME = PLUGIN / "scripts/codex_runtime.py"
 CONFIGURE_EFFORT = PLUGIN / "scripts/configure-effort.py"
 EFFORT_SETTINGS = PLUGIN / "scripts/effort_settings.py"
 CONFIGURE_EFFORT_WRAPPER = ROOT / "scripts/configure-effort.sh"
@@ -72,6 +73,36 @@ def read(path: Path) -> str:
 
 def load_json(path: Path):
     return json.loads(read(path))
+
+
+def make_fake_codex_runtime(
+    root: Path, name: str = "codex", *, compatible: bool = True
+) -> Path:
+    runtime = root / name
+    feature_exit = 0 if compatible else 42
+    runtime.write_text(
+        "#!/bin/sh\n"
+        f"if [ \"$1 $2\" = \"features list\" ]; then exit {feature_exit}; fi\n"
+        "if [ \"$1\" = \"--version\" ]; then echo 'codex-cli 99.0-test'; exit 0; fi\n"
+        "exit 97\n",
+        encoding="utf-8",
+    )
+    runtime.chmod(0o700)
+    return runtime
+
+
+def load_script(name: str, path: Path):
+    specification = importlib.util.spec_from_file_location(name, path)
+    if specification is None or specification.loader is None:
+        raise AssertionError(f"could not load script: {path}")
+    module = importlib.util.module_from_spec(specification)
+    sys.modules[name] = module
+    try:
+        specification.loader.exec_module(module)
+    except BaseException:
+        sys.modules.pop(name, None)
+        raise
+    return module
 
 
 class MarketplaceTests(unittest.TestCase):
@@ -938,6 +969,7 @@ class SkillContractTests(unittest.TestCase):
     def test_morph_launcher_validates_private_packets_and_marks_effort_as_requested_only(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            codex_runtime = make_fake_codex_runtime(root)
             workdir = root / "work"
             workdir.mkdir()
             prompt = root / "packet.txt"
@@ -962,6 +994,7 @@ class SkillContractTests(unittest.TestCase):
                 check=False,
                 capture_output=True,
                 text=True,
+                env={**os.environ, "ASTRAL_CODEX_PATH": str(codex_runtime)},
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             evidence = json.loads(result.stdout)
@@ -991,6 +1024,7 @@ class SkillContractTests(unittest.TestCase):
                 check=False,
                 capture_output=True,
                 text=True,
+                env={**os.environ, "ASTRAL_CODEX_PATH": str(codex_runtime)},
             )
             self.assertNotEqual(invalid_model.returncode, 0)
             self.assertIn("model", invalid_model.stderr.lower())
@@ -1034,7 +1068,16 @@ class SkillContractTests(unittest.TestCase):
             ]
             with (
                 mock.patch.object(sys, "argv", argv),
-                mock.patch.object(launcher.shutil, "which", return_value="/test/codex"),
+                mock.patch.object(
+                    launcher,
+                    "resolve_codex_runtime",
+                    return_value=mock.Mock(
+                        path="/test/codex",
+                        source="host-runtime",
+                        version="codex-cli test",
+                        config_probe="pass",
+                    ),
+                ),
                 mock.patch.object(launcher.subprocess, "run", side_effect=fake_run),
                 redirect_stdout(output),
             ):
@@ -1086,6 +1129,7 @@ class SkillContractTests(unittest.TestCase):
             ),
         }
         with tempfile.TemporaryDirectory() as directory:
+            codex_runtime = make_fake_codex_runtime(Path(directory))
             workdir = Path(directory) / "work"
             workdir.mkdir()
             prompt = Path(directory) / "packet.txt"
@@ -1111,6 +1155,7 @@ class SkillContractTests(unittest.TestCase):
                     check=False,
                     capture_output=True,
                     text=True,
+                    env={**os.environ, "ASTRAL_CODEX_PATH": str(codex_runtime)},
                 )
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 evidence = json.loads(result.stdout)
@@ -1167,7 +1212,16 @@ class SkillContractTests(unittest.TestCase):
                 ]
                 with (
                     mock.patch.object(sys, "argv", argv),
-                    mock.patch.object(launcher.shutil, "which", return_value="/test/codex"),
+                    mock.patch.object(
+                        launcher,
+                        "resolve_codex_runtime",
+                        return_value=mock.Mock(
+                            path="/test/codex",
+                            source="host-runtime",
+                            version="codex-cli test",
+                            config_probe="pass",
+                        ),
+                    ),
                     mock.patch.object(launcher.subprocess, "run", side_effect=fake_run),
                     redirect_stdout(output),
                 ):
@@ -1234,7 +1288,7 @@ class SkillContractTests(unittest.TestCase):
             ]
             with (
                 mock.patch.object(sys, "argv", argv),
-                mock.patch.object(launcher.shutil, "which") as find_codex,
+                mock.patch.object(launcher, "resolve_codex_runtime") as find_codex,
                 mock.patch.object(launcher.subprocess, "run") as start_codex,
                 redirect_stderr(errors),
             ):
@@ -1339,6 +1393,7 @@ class SkillContractTests(unittest.TestCase):
     def test_process_launcher_uses_configured_effort_and_marks_native_mismatch(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            codex_runtime = make_fake_codex_runtime(root)
             settings = root / "effort-levels.toml"
             settings.write_text(
                 """[effort]
@@ -1378,6 +1433,7 @@ reviewer = "xhigh"
                     check=False,
                     capture_output=True,
                     text=True,
+                    env={**os.environ, "ASTRAL_CODEX_PATH": str(codex_runtime)},
                 )
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 evidence = json.loads(result.stdout)
@@ -1467,6 +1523,526 @@ reviewer = "xhigh"
         self.assertTrue(skill.startswith("---\nname: astral-orchestrator\n"))
         self.assertNotIn("[TODO", skill)
         self.assertNotIn("YOUR-NAME", skill)
+
+
+class CodexRuntimeResolutionTests(unittest.TestCase):
+    def load_runtime(self):
+        return load_script("astral_orchestrator_codex_runtime_tests", CODEX_RUNTIME)
+
+    def test_incompatible_path_runtime_is_skipped_for_compatible_host_runtime(self):
+        runtime = self.load_runtime()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path_runtime = make_fake_codex_runtime(root, "path-codex")
+            app_runtime = make_fake_codex_runtime(root, "app-codex")
+            calls = []
+
+            def runner(command, **kwargs):
+                calls.append((command, kwargs))
+                if command[1:] == ["features", "list"]:
+                    if command[0] == str(path_runtime.resolve()):
+                        return subprocess.CompletedProcess(
+                            command,
+                            1,
+                            "",
+                            "unknown variant audio from private catalog",
+                        )
+                    return subprocess.CompletedProcess(command, 0, "features", "")
+                if command[1:] == ["--version"]:
+                    return subprocess.CompletedProcess(
+                        command, 0, "codex-cli 0.147.0-alpha.6.5\n", ""
+                    )
+                self.fail(f"unexpected inference command: {command}")
+
+            candidates = [
+                runtime.RuntimeCandidate("path", str(path_runtime)),
+                runtime.RuntimeCandidate("chatgpt-app", str(app_runtime)),
+            ]
+            with mock.patch.object(
+                runtime, "runtime_candidates", return_value=candidates
+            ):
+                selected = runtime.resolve_codex_runtime(runner=runner)
+
+        self.assertEqual(selected.path, str(app_runtime.resolve()))
+        self.assertEqual(selected.source, "chatgpt-app")
+        self.assertEqual(selected.version, "codex-cli 0.147.0-alpha.6.5")
+        self.assertEqual(selected.config_probe, "pass")
+        self.assertEqual(
+            [command[1:] for command, _ in calls],
+            [["features", "list"], ["features", "list"], ["--version"]],
+        )
+        for command, kwargs in calls:
+            self.assertNotIn("exec", command)
+            self.assertTrue(kwargs["capture_output"])
+            self.assertTrue(kwargs["text"])
+
+    def test_invalid_hinted_paths_are_rejected_without_being_executed(self):
+        runtime = self.load_runtime()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fallback = make_fake_codex_runtime(root, "fallback-codex")
+            non_executable = root / "non-executable-codex"
+            non_executable.write_text("not executable\n", encoding="utf-8")
+            non_executable.chmod(0o600)
+            directory_candidate = root / "codex-directory"
+            directory_candidate.mkdir()
+            unicode_control = make_fake_codex_runtime(
+                root, "codex-\u0085-control"
+            )
+            invalid_paths = {
+                "missing": root / "missing-codex",
+                "non-executable": non_executable,
+                "directory": directory_candidate,
+                "control-character": f"{root}/codex\nsecret",
+                "unicode-control-character": unicode_control,
+            }
+
+            for label, invalid_path in invalid_paths.items():
+                with self.subTest(label=label):
+                    calls = []
+
+                    def runner(command, **kwargs):
+                        calls.append(command)
+                        if command[1:] == ["features", "list"]:
+                            return subprocess.CompletedProcess(command, 0, "", "")
+                        if command[1:] == ["--version"]:
+                            return subprocess.CompletedProcess(
+                                command, 0, "codex-cli test\n", ""
+                            )
+                        self.fail(f"unexpected inference command: {command}")
+
+                    candidates = [
+                        runtime.RuntimeCandidate("astral-override", str(invalid_path)),
+                        runtime.RuntimeCandidate("path", str(fallback)),
+                    ]
+                    with mock.patch.object(
+                        runtime, "runtime_candidates", return_value=candidates
+                    ):
+                        selected = runtime.resolve_codex_runtime(runner=runner)
+
+                    self.assertEqual(selected.path, str(fallback.resolve()))
+                    self.assertEqual(selected.source, "path")
+                    self.assertEqual(
+                        calls,
+                        [
+                            [str(fallback.resolve()), "features", "list"],
+                            [str(fallback.resolve()), "--version"],
+                        ],
+                    )
+
+    def test_duplicate_resolved_paths_are_probed_only_once(self):
+        runtime = self.load_runtime()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            duplicate = make_fake_codex_runtime(root, "duplicate-codex")
+            fallback = make_fake_codex_runtime(root, "fallback-codex")
+            feature_calls = []
+
+            def runner(command, **kwargs):
+                if command[1:] == ["features", "list"]:
+                    feature_calls.append(command[0])
+                    return subprocess.CompletedProcess(
+                        command,
+                        0 if command[0] == str(fallback.resolve()) else 1,
+                        "",
+                        "",
+                    )
+                return subprocess.CompletedProcess(command, 0, "codex-cli test\n", "")
+
+            candidates = [
+                runtime.RuntimeCandidate("astral-override", str(duplicate)),
+                runtime.RuntimeCandidate("host-runtime", str(duplicate)),
+                runtime.RuntimeCandidate("path", str(fallback)),
+            ]
+            with mock.patch.object(
+                runtime, "runtime_candidates", return_value=candidates
+            ):
+                selected = runtime.resolve_codex_runtime(runner=runner)
+
+        self.assertEqual(selected.source, "path")
+        self.assertEqual(
+            feature_calls,
+            [str(duplicate.resolve()), str(fallback.resolve())],
+        )
+
+    def test_all_failed_probes_fail_closed_without_leaking_output_or_inferring(self):
+        runtime = self.load_runtime()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            first = make_fake_codex_runtime(root, "first-codex")
+            second = make_fake_codex_runtime(root, "second-codex")
+            calls = []
+            packet_secret = "PRIVATE_WORKER_PACKET_DO_NOT_PRINT"
+            config_secret = "provider_api_key=CONFIG_SECRET_DO_NOT_PRINT"
+
+            def runner(command, **kwargs):
+                calls.append(command)
+                return subprocess.CompletedProcess(
+                    command,
+                    1,
+                    f"catalog contained {config_secret}",
+                    f"parse failed near {packet_secret}",
+                )
+
+            candidates = [
+                runtime.RuntimeCandidate("host-runtime", str(first)),
+                runtime.RuntimeCandidate("path", str(second)),
+            ]
+            with mock.patch.object(
+                runtime, "runtime_candidates", return_value=candidates
+            ):
+                with self.assertRaises(runtime.RuntimeResolutionError) as raised:
+                    runtime.resolve_codex_runtime(runner=runner)
+
+        message = str(raised.exception)
+        self.assertIn("host-runtime", message)
+        self.assertIn("path", message)
+        self.assertNotIn(config_secret, message)
+        self.assertNotIn(packet_secret, message)
+        self.assertEqual(
+            calls,
+            [
+                [str(first.resolve()), "features", "list"],
+                [str(second.resolve()), "features", "list"],
+            ],
+        )
+        self.assertTrue(all("exec" not in command for command in calls))
+
+    def test_probe_timeout_fails_closed(self):
+        runtime = self.load_runtime()
+
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = make_fake_codex_runtime(Path(directory))
+            calls = []
+
+            def runner(command, **kwargs):
+                calls.append((command, kwargs))
+                raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+            with mock.patch.object(
+                runtime,
+                "runtime_candidates",
+                return_value=[runtime.RuntimeCandidate("path", str(candidate))],
+            ):
+                with self.assertRaises(runtime.RuntimeResolutionError) as raised:
+                    runtime.resolve_codex_runtime(runner=runner, timeout=0.25)
+
+        self.assertIn("path", str(raised.exception))
+        self.assertIn("timeout", str(raised.exception).lower())
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][0][1:], ["features", "list"])
+        self.assertEqual(calls[0][1]["timeout"], 0.25)
+
+    def test_morph_dry_run_uses_real_probes_for_mismatch_and_all_fail_fixtures(self):
+        runtime = load_script("codex_runtime", CODEX_RUNTIME)
+        launcher = load_script(
+            "astral_orchestrator_run_morph_fixture_test", RUN_MORPH_AGENT
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            incompatible = make_fake_codex_runtime(
+                root, "path-codex", compatible=False
+            )
+            compatible = make_fake_codex_runtime(root, "host-codex")
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            packet = "PRIVATE_FIXTURE_PACKET"
+            prompt.write_text(packet, encoding="utf-8")
+            prompt.chmod(0o600)
+            argv = [
+                str(RUN_MORPH_AGENT),
+                "--model",
+                "opencodex/worker-model",
+                "--effort",
+                "high",
+                "--workdir",
+                str(workdir),
+                "--prompt-file",
+                str(prompt),
+                "--dry-run",
+            ]
+
+            mismatch = [
+                runtime.RuntimeCandidate("path", str(incompatible)),
+                runtime.RuntimeCandidate("host-runtime", str(compatible)),
+            ]
+            output = io.StringIO()
+            with (
+                mock.patch.object(sys, "argv", argv),
+                mock.patch.object(
+                    runtime, "runtime_candidates", return_value=mismatch
+                ),
+                redirect_stdout(output),
+            ):
+                self.assertEqual(launcher.main(), 0)
+
+            evidence = json.loads(output.getvalue())
+            self.assertEqual(evidence["codex_runtime_source"], "host-runtime")
+            self.assertEqual(evidence["codex_config_probe"], "pass")
+            self.assertNotIn(packet, output.getvalue())
+
+            errors = io.StringIO()
+            with (
+                mock.patch.object(sys, "argv", argv),
+                mock.patch.object(
+                    runtime,
+                    "runtime_candidates",
+                    return_value=[
+                        runtime.RuntimeCandidate("path", str(incompatible))
+                    ],
+                ),
+                redirect_stderr(errors),
+            ):
+                with self.assertRaises(SystemExit) as raised:
+                    launcher.main()
+
+            self.assertEqual(raised.exception.code, 1)
+            self.assertIn("no compatible Codex runtime", errors.getvalue())
+            self.assertNotIn(packet, errors.getvalue())
+
+    def test_candidate_generation_is_ordered_and_cross_platform(self):
+        runtime = self.load_runtime()
+
+        darwin = runtime.runtime_candidates(
+            platform_name="Darwin",
+            environ={
+                "ASTRAL_CODEX_PATH": "/override/codex",
+                "CODEX_CLI_PATH": "/host/codex",
+            },
+            home=Path("/Users/tester"),
+            which=lambda _: "/path/codex",
+        )
+        self.assertEqual(
+            [(candidate.source, candidate.path) for candidate in darwin],
+            [
+                ("astral-override", "/override/codex"),
+                ("host-runtime", "/host/codex"),
+                ("chatgpt-app", "/Applications/ChatGPT.app/Contents/Resources/codex"),
+                ("codex-app", "/Applications/Codex.app/Contents/Resources/codex"),
+                (
+                    "chatgpt-app",
+                    "/Users/tester/Applications/ChatGPT.app/Contents/Resources/codex",
+                ),
+                (
+                    "codex-app",
+                    "/Users/tester/Applications/Codex.app/Contents/Resources/codex",
+                ),
+                ("path", "/path/codex"),
+            ],
+        )
+
+        windows = runtime.runtime_candidates(
+            platform_name="Windows",
+            environ={
+                "LOCALAPPDATA": r"C:\Users\tester\AppData\Local",
+                "ProgramFiles": r"C:\Program Files",
+            },
+            home=Path("C:/Users/tester"),
+            which=lambda _: r"C:\Path\codex.exe",
+        )
+        self.assertEqual(
+            [(candidate.source, candidate.path) for candidate in windows],
+            [
+                (
+                    "codex-app",
+                    r"C:\Users\tester\AppData\Local\Programs\OpenAI\Codex\bin\codex.exe",
+                ),
+                (
+                    "codex-app",
+                    r"C:\Users\tester\AppData\Local\OpenAI\Codex\bin\codex.exe",
+                ),
+                ("codex-app", r"C:\Program Files\OpenAI\Codex\bin\codex.exe"),
+                ("path", r"C:\Path\codex.exe"),
+            ],
+        )
+
+        linux = runtime.runtime_candidates(
+            platform_name="Linux",
+            environ={},
+            home=Path("/home/tester"),
+            which=lambda _: "/opt/bin/codex",
+        )
+        self.assertEqual(
+            [(candidate.source, candidate.path) for candidate in linux],
+            [
+                (
+                    "standalone-runtime",
+                    "/home/tester/.codex/packages/standalone/current/bin/codex",
+                ),
+                ("standalone-runtime", "/home/tester/.local/bin/codex"),
+                ("standalone-runtime", "/usr/local/bin/codex"),
+                ("standalone-runtime", "/usr/bin/codex"),
+                ("path", "/opt/bin/codex"),
+            ],
+        )
+
+    def test_both_launchers_import_the_same_shared_resolver(self):
+        runtime = load_script("codex_runtime", CODEX_RUNTIME)
+        process_launcher = load_script(
+            "astral_orchestrator_run_agent_shared_resolver_test", RUN_AGENT
+        )
+        morph_launcher = load_script(
+            "astral_orchestrator_run_morph_shared_resolver_test", RUN_MORPH_AGENT
+        )
+
+        self.assertIs(
+            process_launcher.resolve_codex_runtime,
+            runtime.resolve_codex_runtime,
+        )
+        self.assertIs(
+            morph_launcher.resolve_codex_runtime,
+            runtime.resolve_codex_runtime,
+        )
+
+    def test_dry_runs_probe_runtime_and_emit_only_allowlisted_runtime_evidence(self):
+        runtime = load_script("codex_runtime", CODEX_RUNTIME)
+        selected = runtime.CodexRuntime(
+            path="/selected/codex",
+            source="host-runtime",
+            version="codex-cli test-version",
+            config_probe="pass",
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            packet = "PRIVATE_DRY_RUN_PACKET"
+            prompt.write_text(packet, encoding="utf-8")
+            prompt.chmod(0o600)
+            settings = root / "missing-effort-levels.toml"
+
+            cases = (
+                (
+                    "astral_orchestrator_run_agent_dry_run_test",
+                    RUN_AGENT,
+                    [
+                        "--role",
+                        "luna",
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--settings-file",
+                        str(settings),
+                        "--dry-run",
+                    ],
+                ),
+                (
+                    "astral_orchestrator_run_morph_dry_run_test",
+                    RUN_MORPH_AGENT,
+                    [
+                        "--model",
+                        "opencodex/worker-model",
+                        "--effort",
+                        "high",
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--dry-run",
+                    ],
+                ),
+            )
+            for name, script, arguments in cases:
+                with self.subTest(script=script.name):
+                    launcher = load_script(name, script)
+                    output = io.StringIO()
+                    with (
+                        mock.patch.object(sys, "argv", [str(script), *arguments]),
+                        mock.patch.object(
+                            launcher, "resolve_codex_runtime", return_value=selected
+                        ) as resolve,
+                        mock.patch.object(launcher.subprocess, "run") as start_codex,
+                        redirect_stdout(output),
+                    ):
+                        self.assertEqual(launcher.main(), 0)
+
+                    evidence = json.loads(output.getvalue())
+                    resolve.assert_called_once_with()
+                    start_codex.assert_not_called()
+                    self.assertEqual(evidence["codex_runtime_source"], "host-runtime")
+                    self.assertEqual(evidence["codex_version"], "codex-cli test-version")
+                    self.assertEqual(evidence["codex_config_probe"], "pass")
+                    self.assertNotIn("codex_runtime_path", evidence)
+                    self.assertNotIn(packet, output.getvalue())
+
+    def test_launchers_fail_before_inference_when_runtime_resolution_fails(self):
+        runtime = load_script("codex_runtime", CODEX_RUNTIME)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            workdir = root / "work"
+            workdir.mkdir()
+            prompt = root / "packet.txt"
+            packet = "PRIVATE_PACKET_MUST_NOT_LEAK"
+            prompt.write_text(packet, encoding="utf-8")
+            prompt.chmod(0o600)
+            settings = root / "missing-effort-levels.toml"
+
+            cases = (
+                (
+                    "astral_orchestrator_run_agent_resolution_failure_test",
+                    RUN_AGENT,
+                    [
+                        "--role",
+                        "reviewer",
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                        "--settings-file",
+                        str(settings),
+                    ],
+                ),
+                (
+                    "astral_orchestrator_run_morph_resolution_failure_test",
+                    RUN_MORPH_AGENT,
+                    [
+                        "--model",
+                        "opencodex/worker-model",
+                        "--effort",
+                        "high",
+                        "--workdir",
+                        str(workdir),
+                        "--prompt-file",
+                        str(prompt),
+                    ],
+                ),
+            )
+            for name, script, arguments in cases:
+                with self.subTest(script=script.name):
+                    launcher = load_script(name, script)
+                    output = io.StringIO()
+                    errors = io.StringIO()
+                    with (
+                        mock.patch.object(sys, "argv", [str(script), *arguments]),
+                        mock.patch.object(
+                            launcher,
+                            "resolve_codex_runtime",
+                            side_effect=runtime.RuntimeResolutionError(
+                                "no compatible Codex runtime (path: probe failed)"
+                            ),
+                        ),
+                        mock.patch.object(launcher.subprocess, "run") as start_codex,
+                        redirect_stdout(output),
+                        redirect_stderr(errors),
+                    ):
+                        with self.assertRaises(SystemExit) as raised:
+                            launcher.main()
+
+                    self.assertEqual(raised.exception.code, 1)
+                    start_codex.assert_not_called()
+                    combined = output.getvalue() + errors.getvalue()
+                    self.assertIn("no compatible Codex runtime", combined)
+                    self.assertNotIn(packet, combined)
 
 
 class UserExperienceTests(unittest.TestCase):
@@ -1582,6 +2158,7 @@ class UserExperienceTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            codex_runtime = make_fake_codex_runtime(root)
             native_profiles = root / "agents"
             native_check = subprocess.run(
                 ["sh", str(INSTALL_AGENTS), "--target-dir", str(native_profiles), "--check"],
@@ -1615,6 +2192,7 @@ class UserExperienceTests(unittest.TestCase):
                 check=False,
                 capture_output=True,
                 text=True,
+                env={**os.environ, "ASTRAL_CODEX_PATH": str(codex_runtime)},
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             evidence = json.loads(result.stdout)

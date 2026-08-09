@@ -118,10 +118,21 @@ python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt
 The launcher reads the shipped profile, reads the effective effort settings, pins the
 model and configured effort on `codex exec`, injects the profile's developer
 instructions that forbid further delegation, and selects workspace-write for workers
-or read-only for the reviewer. Its evidence marks whether the effort is the default and
-whether a native profile would be compatible. A successful dry-run proves this bundled
-exact-process contract without requiring installed native profiles. Remove only the
-exact temporary packet after the process exits. A non-zero exit blocks the lane.
+or read-only for the reviewer. Before either a dry run or launch, it checks a small set of
+Codex runtimes supplied by Astral, the host, the installed app, and the current command
+environment. It selects the first runtime whose `codex features list` check proves that
+the active user configuration and model catalog can be parsed. This check does not send
+the work packet to a model. `ASTRAL_CODEX_PATH` may name an absolute executable as an
+explicit override; an inherited `CODEX_CLI_PATH` is treated as a host hint. Invalid or
+incompatible candidates are rejected, and no model or provider is substituted.
+
+The allowlisted route evidence records `codex_runtime_source`, `codex_version`, and
+`codex_config_probe: "pass"` without printing the executable path, candidate environment
+values, configuration contents, credentials, or packet. It also marks whether the effort
+is the default and whether a native profile would be compatible. A successful dry-run
+therefore proves both this bundled exact-process contract and Codex configuration parsing
+without requiring installed native profiles or invoking inference. Remove only the exact
+temporary packet after the process exits. A non-zero exit blocks the lane.
 
 ## Spawn and runtime evidence
 
@@ -135,6 +146,8 @@ After launch, collect runtime evidence showing:
 
 - the native spawn used the exact custom `agent_type`, or the launcher header names the
   exact role;
+- an exact-process launcher reports a passing Codex configuration probe and the selected
+  runtime source and version;
 - the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
 - `effort` equals the role's configured effort;
