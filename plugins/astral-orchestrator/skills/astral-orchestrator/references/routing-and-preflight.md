@@ -1,7 +1,9 @@
 # Routing and preflight
 
-Use this reference for every Guided, Careful, or Measured run. The purpose is to prove that work
-used the intended lanes, not merely to request them.
+Use this reference for every Codex run that needs primary-route proof. The purpose is to prove
+that work used the intended lanes, not merely to request them. Morph and Constellation add worker
+rules only when the user explicitly selects those modes; they do not alter this primary,
+fixed-route, or reviewer contract.
 
 ## Exact route contract
 
@@ -26,10 +28,16 @@ Never silently downgrade a value that Codex rejects.
 Before execution in any mode:
 
 1. Resolve `../../scripts/configure-effort.py` relative to this skill and run
-   `python3 configure-effort.py --show --json`. Confirm the configured orchestrator effort
-   matches observable runtime evidence for the `gpt-5.6-sol` primary model. If the host
-   exposes no primary metadata, obtain one explicit
-   user confirmation and label it user-supplied rather than observed.
+   `python3 configure-effort.py --show --json`. Then resolve
+   `../../scripts/check-primary.py` and run it before the one-time confirmation fallback.
+   Its optional `--thread-id` defaults to `CODEX_THREAD_ID`; use `--sessions-dir` only for
+   local test evidence. It invokes the bundled runtime inspector rather than reading
+   rollout content itself, emits allowlisted JSON, and exits zero only when the observed
+   primary model is `gpt-5.6-sol` and its effort equals the configured orchestrator effort.
+   When its status is `unavailable`, obtain one explicit user confirmation and label it
+   user-supplied rather than observed. When status is `mismatch`, stop and correct the
+   route; do not ask a user to waive a mismatch. `invalid` means malformed, ambiguous, or
+   rejected local evidence and also blocks the route; manual confirmation cannot waive it.
 2. Read applicable workspace instructions and inspect the current change state.
 3. Define the work card and identify whether worker cards can have non-overlapping
    ownership.
@@ -59,6 +67,12 @@ Measured uses this same exact route contract and preflight. Its frozen-card stat
 resumption question, behavioral planning probes, deterministic selection rules, and
 ledger are defined in `measured-mode.md`; those details never alter the configured model
 or effort for a lane.
+
+Morph and Constellation use this same exact Sol primary preflight. Read `morph-mode.md` or
+`constellation-mode.md` only after the user explicitly opts in. Morph workers use
+`run-morph-agent.py` rather than changing the fixed Luna/Terra contracts. Constellation may use
+the normal fixed worker routes or explicit Morph cards, but never changes the Sol primary
+or fresh Sol reviewer.
 
 ## Lane decision
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.3.0 — 2026-08-09
+
+### Added
+
+- Added automatic local primary-route verification for Codex before fixed-mode delegation.
+- Added explicit opt-in Morph and capacity-aware Constellation worker routes while preserving
+  all six modes: Quick, Guided, Careful, Measured, Morph, and Constellation.
+- Added an additive portable package manifest and capability boundary for non-Codex hosts;
+  skill discovery does not claim portable orchestration, model routing, or concurrency.
+
+### Changed
+
+- Clarified that cross-host Morph and Constellation require observed model, worker-context,
+  concurrency where applicable, and fresh-reviewer capabilities before use.
+
 ## 3.2.0 — 2026-08-04
 
 ### Added

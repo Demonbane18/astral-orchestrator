@@ -11,11 +11,20 @@ confirmation or a fresh review.
 | Guided | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
 | Careful | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with observed read-only isolation |
 | Measured (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen work card and named checks | Sol selects one pinned worker; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Careful safeguards |
+| Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed model | Compact work card plus exact worker model and requested effort | Sol remains the configured primary; only the worker uses the explicit Morph route | Fresh exact Sol review at configured effort |
+| Constellation (explicit opt-in) | Several independently owned, ready cards | Sol proves independence and capacity before a concurrent first wave | Cost-aware non-Sol workers by default; capacity-limited fan-out | One fresh exact Sol review after integrated verification |
 
 Guided is the default. A user can simply say “Use Astral Orchestrator” without learning the
 mode system. Measured is never auto-selected: use it only when the user explicitly names
 it. It is intentionally slower and more model-intensive, so recommend Guided for normal
 work.
+Morph and Constellation are also explicit opt-in. They are never selected merely because another
+model is available or because concurrent work would be convenient. Read their dedicated
+references before using either mode.
+
+On a non-Codex host, Quick, Guided, Careful, and Measured retain their documented modes but do
+not acquire a generic replacement for their fixed Codex routes. Only explicitly selected Morph
+or Constellation may use portable-host rules, and only after those capabilities are observed.
 
 ## Risk levels
 
@@ -57,6 +66,9 @@ Typical signs:
 Use Careful even if the user asked for Quick. Explain that the risk raises the safeguards,
 not the scope. High-risk Measured work keeps its evidence-oriented routing and also
 inherits Careful confirmation and observed read-only isolation safeguards.
+Careful safeguards override Morph or Constellation whenever the work has this level of risk: keep
+the exact Sol primary and reviewer, use the required confirmation gates, and serialize any
+card whose safety, interface, or verification depends on another card.
 
 ## User confirmation gate
 
@@ -77,7 +89,7 @@ extra confirmation when they are already within the request.
 Fresh review means a separate agent context that did not implement the change and is
 instructed to remain behaviorally read-only.
 
-- Use the pinned Sol reviewer for Careful work and every Guided or Measured
+- Use the pinned Sol reviewer for Careful work and every Guided, Measured, Morph, or Constellation
   worker-produced change.
 - If the exact reviewer role, model, or effort cannot be proven, stop and report the
   independent review as incomplete. Do not silently substitute self-review.

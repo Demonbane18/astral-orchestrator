@@ -300,6 +300,60 @@ class WebsiteContractTests(unittest.TestCase):
         ):
             self.assertIn(phrase, home)
 
+    def test_homepage_presents_exactly_six_modes(self):
+        home = page_text(PAGES["home"])
+        self.assertIn("Six modes", home)
+        self.assertEqual(
+            len(re.findall(r'<article class="mode-card(?: [^"]+)?"', home)),
+            6,
+        )
+        expected_tags = {
+            "quick": "Quick",
+            "guided": "Guided · default",
+            "careful": "Careful",
+            "measured": "Measured · opt-in",
+            "morph": "Morph · explicit",
+            "constellation": "Constellation · capacity-aware",
+        }
+        for mode, label in expected_tags.items():
+            with self.subTest(mode=mode):
+                self.assertEqual(
+                    len(re.findall(rf'class="mode-tag mode-tag--{mode}"', home)),
+                    1,
+                )
+                self.assertEqual(home.count(f">{label}</span>"), 1)
+
+    def test_homepage_explains_primary_checker_morph_and_constellation_boundaries(self):
+        home = " ".join(page_text(PAGES["home"]).lower().split())
+        for phrase in (
+            "automatic primary checker",
+            "allowlisted local model/effort evidence",
+            "one-time user confirmation",
+            "mismatch or invalid evidence blocks",
+            "explicitly selected worker model and effort",
+            "provider may be external",
+            "fresh review is required",
+            "independent, non-overlapping cards",
+            "host-advertised capacity",
+            "one primary consumes a slot",
+            "serial fallback",
+            "does not claim every provider has native effort semantics",
+            "does not claim every host supports multi-agent orchestration",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, home)
+
+    def test_current_version_copy_is_v3_3_0_on_current_pages(self):
+        for page in ("home", "install", "support"):
+            with self.subTest(page=page):
+                content = page_text(PAGES[page])
+                self.assertIn("v3.3.0", content)
+
+    def test_verification_copy_uses_future_proof_test_count(self):
+        home = page_text(PAGES["home"])
+        self.assertIn("100+ automated tests", home)
+        self.assertNotIn("109 automated tests", home)
+
     def test_install_page_has_copyable_install_command(self):
         install = page_text(PAGES["install"])
         for phrase in (
@@ -351,6 +405,10 @@ class WebsiteContractTests(unittest.TestCase):
             "codex/openai",
             "github",
             "their own terms",
+            "morph",
+            "external",
+            "bounded work packet",
+            "native effort semantics",
         ):
             self.assertIn(phrase, privacy)
 
@@ -375,6 +433,8 @@ class WebsiteContractTests(unittest.TestCase):
             "john paul furigay fusin",
             "independent open-source project",
             "not legal advice",
+            "external-provider terms",
+            "multi-agent orchestration",
         ):
             self.assertIn(phrase, terms)
         self.assertNotIn("officially endorsed by openai", terms)
@@ -784,7 +844,7 @@ class WebsiteContractTests(unittest.TestCase):
         home = page_text(PAGES["home"])
         for phrase in (
             "v3.2.0",
-            "Four modes",
+            "Six modes",
             "Quick",
             "Guided · default",
             "Careful",
@@ -839,7 +899,7 @@ class WebsiteContractTests(unittest.TestCase):
                 "objective checks plus fresh review",
                 "local privacy/no-analytics runtime posture",
                 "current repository verification passed",
-                "109 automated tests",
+                "100+ automated tests",
                 "package verification",
                 "validates behavior and contracts",
                 "does not prove Astral beats single-Sol",

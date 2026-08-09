@@ -3,4 +3,4 @@ interface:
   short_description: "Sol-led, model-routed delivery for any project"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  default_prompt: "Use $astral-orchestrator in Guided mode (the default); choose Measured mode only for a local evidence-oriented run."
+  default_prompt: "Use $astral-orchestrator in Guided (default); choose Quick, Careful, Measured, Morph, or Constellation only when named."
