@@ -164,6 +164,51 @@
       "observed_at": "2026-08-09T22:43:29+08:00",
       "evidence": "PR #9 working tree declares v3.3.1; 133 tests, package verification, both skill validators, plugin validation, and fresh release review passed. Merge and immutable release packaging remain pending.",
       "url": "https://github.com/Demonbane18/astral-orchestrator/pull/9"
+    },
+    {
+      "surface": "source",
+      "version": "3.3.1",
+      "status": "verified",
+      "observed_at": "2026-08-09T22:48:22+08:00",
+      "evidence": "Merged PR #9 contains v3.3.1; 133 tests, package verification, both skill validators, plugin validation, and fresh read-only review passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/c8aa07b6191a8758d85b3915f636f2b8c340d837",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.3.1",
+      "status": "published",
+      "observed_at": "2026-08-09T22:48:22+08:00",
+      "evidence": "Public GitHub v3.3.1 release asset astral-orchestrator-3.3.1.zip was downloaded and independently verified with SHA-256 25494575d44b9d3d8335b2a2d780bd71381ecf925eccb40edde08584e711ec6e.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.3.1",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.3.1",
+      "status": "installable",
+      "observed_at": "2026-08-09T22:48:22+08:00",
+      "evidence": "Public main ref and v3.3.1 tag both resolve to c8aa07b; the public Codex manifest reports version 3.3.1 and includes the runtime-selection fix.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.3.1",
+      "status": "deployed",
+      "observed_at": "2026-08-09T22:53:10+08:00",
+      "evidence": "Production deployment dpl_9JC3mMkmGpuqYACqXeXod7uwwTcL reached READY and was aliased publicly. A cache-busted production response served v3.3.1 with the configured security headers. Opera GX exposed an older cached v3.3.0 tab, but fresh visual confirmation was deferred because the user was actively changing the browser.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.3.1",
+      "status": "deployed",
+      "observed_at": "2026-08-09T22:54:05+08:00",
+      "evidence": "Production deployment dpl_9JC3mMkmGpuqYACqXeXod7uwwTcL is READY and aliased publicly; a fresh Opera GX accessibility inspection rendered the v3.3.1 badge and six-mode content.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
     }
   ]
 }
