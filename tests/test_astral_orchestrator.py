@@ -2882,8 +2882,8 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(surfaces["github_marketplace"]["version"], "3.3.1")
         self.assertEqual(surfaces["vercel"]["version"], "3.3.1")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
-        self.assertEqual(surfaces["openai_submission"]["version"], "3.3.0")
-        self.assertEqual(surfaces["openai_submission"]["status"], "approved")
+        self.assertEqual(surfaces["openai_submission"]["version"], "3.3.1")
+        self.assertEqual(surfaces["openai_submission"]["status"], "draft")
         self.assertEqual(surfaces["openai_directory"]["version"], "3.2.0")
 
     def test_strict_release_check_fails_while_public_directory_lags(self):
