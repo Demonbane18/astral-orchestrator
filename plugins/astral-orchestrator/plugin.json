@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A six-mode project-delivery skill with explicit Morph and Constellation worker routes for capable hosts.",
   "author": {
     "name": "Demonbane18",

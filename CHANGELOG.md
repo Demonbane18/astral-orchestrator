@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.3.1 — 2026-08-09
+
+### Fixed
+
+- Exact-process and Morph launchers now select the first Codex runtime that can parse the
+  active user configuration and model catalog instead of trusting PATH order alone.
+- Dry runs now prove runtime compatibility before inference and report allowlisted runtime
+  source, version, and configuration-probe evidence.
+
+### Security
+
+- Runtime hints now require absolute executable regular files, reject Unicode control
+  characters, deduplicate resolved paths, time out closed, and never expose probe output,
+  configuration contents, credentials, or private worker packets in failure evidence.
+
 ## 3.3.0 — 2026-08-09
 
 ### Added

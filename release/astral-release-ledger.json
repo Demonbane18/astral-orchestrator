@@ -139,6 +139,31 @@
       "evidence": "OpenAI Platform accepted the v3.3.0 ZIP, converted the Agent Plugins root manifest to Codex format, populated six-mode metadata and three prompts, and saved draft appsub_6a786a4fd6c4819188380cbc396a39f4. Skill scanning remains in progress and four developer legal/policy attestations remain unchecked.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a786a4fd6c4819188380cbc396a39f4",
       "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.3.0",
+      "status": "approved",
+      "observed_at": "2026-08-09T22:33:32+08:00",
+      "evidence": "OpenAI Platform in Opera GX displayed Viewing the approved version for Astral Orchestrator v3.3.0. This submission predates runtime-selection fix commit 4850c85 and therefore does not contain that fix.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a786a4fd6c4819188380cbc396a39f4",
+      "commit": "80d836eee004075b13fa160c298f9d1ec60a8791"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.2.0",
+      "status": "published",
+      "observed_at": "2026-08-09T22:33:32+08:00",
+      "evidence": "The public ChatGPT/Codex plugin directory in Opera GX displayed Astral Orchestrator version 3.2.0 and the older four-mode description.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "source",
+      "version": "3.3.1",
+      "status": "draft",
+      "observed_at": "2026-08-09T22:43:29+08:00",
+      "evidence": "PR #9 working tree declares v3.3.1; 133 tests, package verification, both skill validators, plugin validation, and fresh release review passed. Merge and immutable release packaging remain pending.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/pull/9"
     }
   ]
 }
