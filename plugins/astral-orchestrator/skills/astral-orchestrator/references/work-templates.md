@@ -2,6 +2,30 @@
 
 Load only the template needed for the next action. Replace every angle-bracketed field.
 
+## Astral status panel
+
+Use this compact panel in every substantive progress update while Astral is active. It
+is progress commentary, not a permanent native UI widget. Keep one row for the Sol
+primary, one for each selected worker, and one for the fresh reviewer when required.
+Use `not needed` when a lane will not be used, and use `planned` for a required reviewer
+that is waiting to launch. Write `not yet required` only in the evidence field as an
+explanation, never as a state. Requested facts are the intended route; observed facts
+require runtime evidence. Do not call a requested lane `running` or observed without
+that evidence.
+
+```text
+ASTRAL STATUS
+lane | role | model | effort | state | evidence
+Sol primary | primary session | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence>
+Worker <card> | <astral_orchestrator_luna_implementer, astral_orchestrator_terra_implementer, or Morph worker> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence>
+Fresh reviewer | astral_orchestrator_sol_reviewer | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable>
+```
+
+Use `planned`, `requested`, `launched`, `running`, `returned`, `verified`, `blocked`,
+`failed`, or `not needed` only as defined in `routing-and-preflight.md`. Update the
+panel at preflight, launch, new evidence, state changes, completion, failure, and at a
+restrained interval for long-running work. Do not repeat it merely to create activity.
+
 ## Work card
 
 ```text

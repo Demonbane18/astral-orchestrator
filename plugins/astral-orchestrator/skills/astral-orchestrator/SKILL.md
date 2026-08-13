@@ -37,6 +37,17 @@ concurrency. Record the actual and requested provider, model, and effort separat
 the exact model, effort, or fresh context cannot be proven, stop or use the documented
 serial portable Constellation fallback; never claim Sol/Luna/Terra unless observed.
 
+## Live Astral status
+
+Codex plugins cannot pin a permanent native UI widget. The reliable portable surface is
+progress commentary and status updates. While Astral is active, include a compact
+**Astral status** panel in every progress update that contains substantive progress.
+Show the Sol primary, each selected worker, and the fresh reviewer when required, with
+lane, role, requested and observed model and effort, state, and evidence. A requested
+route is not observed route evidence: use the template and routing guide to label it
+plainly. Keep the panel current through preflight, running work, review, and handoff
+without inventing activity or repeating unchanged detail.
+
 ## 1. Choose the mode and risk
 
 - **Quick** — tiny, reversible, low-risk work with an obvious solution. The Sol primary

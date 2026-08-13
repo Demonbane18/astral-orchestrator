@@ -23,6 +23,49 @@ use the defaults in the table. Supported setting names are `minimal`, `low`, `me
 `high`, `xhigh`, `max`, and `ultra`; the last two are model- and account-dependent.
 Never silently downgrade a value that Codex rejects.
 
+## Live Astral status updates
+
+Codex plugins cannot pin a permanent native UI widget. Keep the user informed through a
+compact **Astral status** panel in substantive progress commentary. Use the reusable
+panel in `work-templates.md` for the Sol primary, each selected worker, and the fresh
+reviewer when review is required. For Quick work, say that workers are not needed; for
+any reviewer that is not yet required, say so instead of implying it is running.
+
+Publish the panel at these points:
+
+- preflight, after recording the requested route and available primary evidence;
+- launch, after a native spawn or exact-process request is made;
+- evidence, when a task/session id, runtime metadata, sandbox result, command result, or
+  reviewer verdict is received;
+- state changes, including when a lane is blocked, fails, returns, or verification
+  completes;
+- completion and failure, as part of the handoff or blocked report; and
+- for long-running work, a periodic update only when there is new observable progress or
+  enough elapsed time that silence would be misleading. Do not spam unchanged panels.
+
+### Truthful states and evidence
+
+Use states that describe what the host has actually shown: `planned`, `requested`,
+`launched`, `running`, `returned`, `verified`, `blocked`, `failed`, or `not needed`.
+`requested` means the route was asked for; it is not proof that a lane started.
+`launched` requires a returned task or process id. Mark a lane `running` only when the
+host reports it as running. `returned` means the lane replied or its process exited, not
+that its change is accepted. `verified` requires the applicable runtime and work evidence
+to have been inspected.
+
+Keep requested and observed facts distinct in the model, effort, and evidence fields.
+Requested values may state the configured route. Observed values require matching
+runtime evidence from the primary checker, native spawn/startup metadata, runtime
+inspector, or exact-process header. Do not label a lane observed, its model/effort
+observed, or its state running merely because Astral requested that route. If evidence is
+missing, say `observed: not yet available`; if it conflicts, state the conflict, mark the
+lane blocked or failed as appropriate, and follow the existing stop rules. A
+user-confirmed primary remains user-confirmed, not observed.
+
+Keep the panel allowlisted: never include prompts, packet contents, messages, tool
+arguments, credentials, secrets, personal data, or arbitrary file contents. A lane's
+task/session id and the minimal route and check results are sufficient correlation.
+
 ## Primary-session preflight
 
 Before execution in any mode:

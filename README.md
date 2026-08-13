@@ -100,6 +100,30 @@ Morph’s optional OpenCodex provider route is user-owned: configure it separate
 choose it. Astral Orchestrator does not install providers, handle credentials, or claim
 that a requested effort was accepted natively by an external model.
 
+## Sample prompts for every mode
+
+Copy any of these prompts into a new Codex task and replace the example details with your
+own request:
+
+- **Quick:** `Use Astral Orchestrator in Quick mode to rename the typo “recieve” to “receive” in README.md, then run the relevant check.`
+- **Guided:** `Use Astral Orchestrator in Guided mode to add a search box to the settings page, update its tests, and report the checks you ran.`
+- **Careful:** `Use Astral Orchestrator in Careful mode to rotate the staging API credential reference, show me the plan first, and do not apply changes until I confirm.`
+- **Measured:** `Use Astral Orchestrator in Measured mode to fix the failing date-format test, freeze one card with its acceptance checks, and record the observed route evidence.`
+- **Morph:** `Use Astral Orchestrator in Morph mode for this bounded card: update the CSV export heading and its test using the worker model and effort I specify, then have Sol review it.`
+- **Constellation:** `Use Astral Orchestrator in Constellation mode to update the independent README, changelog, and test-fixture cards only when they have non-overlapping ownership and enough available concurrency.`
+
+Guided remains the recommended default for normal work. The live Astral status panel is a
+user-facing progress view: requested routes are shown first, and a route becomes observed
+only after runtime evidence confirms what actually ran.
+
+For Constellation, **Sol High is sufficient and Sol Ultra is not required.** Sol remains
+the configured primary and fresh reviewer; Constellation does not need extra Sol
+implementers. A custom worker model and effort are available only through an explicit,
+bounded Morph card, and only when that route supports the requested capability and has
+runtime evidence. Constellation fans out only when the host advertises enough available
+concurrency and each card has non-overlapping ownership; otherwise it uses serial
+Guided-style routing.
+
 ## Modes
 
 | Mode | Best for | What happens |

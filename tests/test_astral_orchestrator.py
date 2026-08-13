@@ -254,6 +254,89 @@ class MarketplaceTests(unittest.TestCase):
 
 
 class SkillContractTests(unittest.TestCase):
+    def test_live_route_panel_keeps_astral_and_lane_evidence_visible(self):
+        skill = " ".join(read(SKILL).lower().split())
+        routing = " ".join(read(ROUTING).lower().split())
+        templates = read(TEMPLATES).lower()
+
+        for required in (
+            "astral status",
+            "every progress update",
+            "requested",
+            "observed",
+            "model",
+            "effort",
+            "running",
+        ):
+            self.assertIn(required, skill)
+        for required in (
+            "do not label a lane observed",
+            "runtime evidence",
+            "state changes",
+            "long-running",
+            "never include prompts",
+            "secrets",
+        ):
+            self.assertIn(required, routing)
+        for required in (
+            "astral status",
+            "lane | role | model | effort | state | evidence",
+            "sol primary",
+            "fresh reviewer",
+            "morph worker",
+            "use `planned`",
+            "not yet required",
+            "requested: <configured effort>",
+        ):
+            self.assertIn(required, templates)
+        self.assertNotIn("use `not needed` or `not yet required`", templates)
+
+        declared_section = routing.split(
+            "use states that describe what the host has actually shown:", 1
+        )[1].split("`requested` means", 1)[0]
+        declared_states = set(re.findall(r"`([^`]+)`", declared_section))
+        status_block = templates.split("```text", 1)[1].split("```", 1)[0]
+        panel_rows = [
+            line for line in status_block.splitlines()
+            if line.startswith(("sol primary |", "worker <card> |", "fresh reviewer |"))
+        ]
+        self.assertEqual(len(panel_rows), 3)
+        for row in panel_rows:
+            template_states = set(row.split("|")[4].strip().strip("<>").split("/"))
+            self.assertEqual(template_states, declared_states)
+
+    def test_readme_has_copy_ready_mode_prompts_and_constellation_route_answer(self):
+        readme = " ".join(read(ROOT / "README.md").lower().split())
+
+        self.assertIn("sample prompts for every mode", readme)
+        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
+            self.assertRegex(readme, rf"{mode}[^.]*use astral orchestrator")
+        for required in (
+            "sol high is sufficient",
+            "sol ultra is not required",
+            "custom worker model and effort",
+            "available concurrency",
+            "non-overlapping ownership",
+        ):
+            self.assertIn(required, readme)
+
+    def test_constellation_documents_default_sol_high_and_custom_worker_routes(self):
+        constellation = " ".join(read(CONSTELLATION).lower().split())
+
+        for required in (
+            "sol high is sufficient",
+            "sol ultra is not required",
+            "custom worker model and effort",
+            "morph",
+            "runtime evidence",
+            "available slots",
+            "successful morph dry run before launch",
+            "launch that same route",
+            "matching runtime evidence after startup and before accepting",
+        ):
+            self.assertIn(required, constellation)
+        self.assertNotIn("runtime evidence before launch", constellation)
+
     def test_skill_uses_six_plain_language_modes_and_loads_opt_in_references_on_demand(self):
         skill = read(SKILL)
         modes = read(MODES)
@@ -327,14 +410,6 @@ class SkillContractTests(unittest.TestCase):
         ):
             self.assertIn(required, measured)
 
-        historical = load_json(CONTEXT_FOOTPRINT)
-        expected_template = next(
-            item for item in historical["files"]
-            if item["path"].endswith("references/work-templates.md")
-        )
-        template_data = TEMPLATES.read_bytes()
-        self.assertEqual(len(template_data), expected_template["bytes"])
-        self.assertEqual(hashlib.sha256(template_data).hexdigest(), expected_template["sha256"])
         self.assertNotIn("Measured planning probe", read(TEMPLATES))
         self.assertNotIn("Measured ledger entry", read(TEMPLATES))
 

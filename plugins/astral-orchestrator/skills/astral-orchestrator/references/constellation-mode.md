@@ -4,6 +4,27 @@ Constellation is an explicit opt-in: use it only when the user explicitly names 
 Sol primary and one fresh Sol reviewer on its exact route. It is a constrained fan-out for independently
 owned cards, not a request to fill every available slot or to replace Sol’s integration role.
 
+## Model and effort contract
+
+The default primary and fresh reviewer stay on `gpt-5.6-sol` at Sol High. **Sol High is sufficient** for both
+Constellation Sol roles; **Sol Ultra is not required**. Constellation does not silently raise, lower, or substitute
+the configured Sol model or effort.
+
+Ordinary fixed-route cards remain Luna or Terra at their configured efforts. A Constellation card may use a
+**custom worker model and effort only as an explicit Morph card**. That Morph card must record the exact model id,
+requested effort, route availability, and runtime evidence before its worker is accepted. Record requested and
+observed provider/model/effort separately: requested effort is not upstream-native unless that behavior is
+independently observed.
+
+### Codex Morph sequencing
+
+The Codex Morph route requires a successful Morph dry run before launch. For each explicit Morph card, the dry run
+must prove the exact model, requested effort, route, workspace, and private card are ready; this is pre-launch
+readiness evidence, not runtime evidence. Launch that same route only after the dry run succeeds. Require matching
+runtime evidence after startup and before accepting the worker, and keep requested values separate from observed
+provider/model/effort values. If startup evidence is missing or does not match, reject or block that worker rather
+than substituting a route.
+
 ## Prove that a concurrent first wave is safe
 
 Before launching, Sol must write a complete card for every candidate and prove all of the
@@ -11,7 +32,8 @@ following:
 
 - each ready card has an independent outcome and non-overlapping file and system ownership;
 - no card needs another card’s output, interface decision, confirmation, or verification;
-- every worker has an exact model and requested/configured effort route it can use;
+- every worker has an exact model and requested/configured effort route it can use; for any explicit Codex Morph card,
+  successful Morph dry-run evidence is recorded before launch;
 - the host-advertised available slots are known; the primary consumes one slot;
 - the configured model roster has enough suitable, cost-aware non-Sol workers.
 
