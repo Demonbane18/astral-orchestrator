@@ -36,10 +36,14 @@ runtime by proving that the active configuration and model catalog parse before 
 worker inference. It preserves the requested model, effort, sandbox, workdir, developer
 instructions, and private standard-input packet without changing OpenCodex configuration.
 
+Version 3.4.0 adds live, allowlisted Astral status panels to substantive progress updates,
+documents copy-ready prompts for all six modes, and makes Constellation's default Sol High
+and custom Morph dry-run-to-runtime evidence sequence explicit and testable.
+
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.3.1. The normalized plugin, marketplace,
+identifiers. The current product version is 3.4.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at

@@ -218,6 +218,14 @@
       "evidence": "OpenAI Platform accepted the verified v3.3.1 ZIP with SHA-256 25494575d44b9d3d8335b2a2d780bd71381ecf925eccb40edde08584e711ec6e, created draft appsub_6a7898a502788191ae79a4129034375b, preserved three prompts and six-mode metadata, and saved the approved legal-name and public URLs. Skill scanning remains in progress and all four publisher attestations remain unchecked.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a7898a502788191ae79a4129034375b",
       "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "source",
+      "version": "3.4.0",
+      "status": "draft",
+      "observed_at": "2026-08-13T09:09:36+08:00",
+      "evidence": "Local release candidate declares v3.4.0 with live Astral status, six mode prompts, Constellation Sol High guidance, and website copy; verification and publication remain pending.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator"
     }
   ]
 }

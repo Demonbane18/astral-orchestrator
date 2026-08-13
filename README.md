@@ -2,13 +2,13 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.3.1 is an installable, open-source Codex plugin. It
+Astral Orchestrator v3.4.0 is an installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
 
 Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
-directory is a separate publication surface and may lag until the v3.3.1 directory upload
+directory is a separate publication surface and may lag until the v3.4.0 directory upload
 is published. Astral Orchestrator is an independent open-source project, not affiliated
 with or endorsed by OpenAI.
 

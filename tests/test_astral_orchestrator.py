@@ -127,7 +127,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.3.1")
+        self.assertEqual(manifest["version"], "3.4.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -171,7 +171,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.3.1")
+        self.assertEqual(manifest["version"], "3.4.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -2943,7 +2943,7 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
             "--ledger",
             str(RELEASE_LEDGER),
             "--expected-version",
-            "3.3.1",
+            "3.4.0",
             "--format",
             "json",
         )
@@ -2951,8 +2951,8 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         status = json.loads(result.stdout)
         surfaces = status["surfaces"]
-        self.assertEqual(surfaces["source"]["version"], "3.3.1")
-        self.assertEqual(surfaces["source"]["status"], "verified")
+        self.assertEqual(surfaces["source"]["version"], "3.4.0")
+        self.assertEqual(surfaces["source"]["status"], "draft")
         self.assertEqual(surfaces["github_release"]["version"], "3.3.1")
         self.assertEqual(surfaces["github_marketplace"]["version"], "3.3.1")
         self.assertEqual(surfaces["vercel"]["version"], "3.3.1")
@@ -2967,12 +2967,13 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
             "--ledger",
             str(RELEASE_LEDGER),
             "--expected-version",
-            "3.3.1",
+            "3.4.0",
             "--manifest",
             str(MANIFEST),
         )
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("source status is draft", result.stderr)
         self.assertIn("openai_directory is 3.2.0", result.stderr)
 
     def test_record_is_idempotent_and_preserves_history(self):

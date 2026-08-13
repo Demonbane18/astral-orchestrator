@@ -343,11 +343,22 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_3_1_on_current_pages(self):
+    def test_current_version_copy_is_v3_4_0_on_current_pages(self):
         for page in ("home", "install", "support"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.3.1", content)
+                self.assertIn("v3.4.0", content)
+
+    def test_homepage_explains_live_astral_status(self):
+        home = " ".join(page_text(PAGES["home"]).lower().split())
+        for phrase in (
+            "live astral status",
+            "requested and observed",
+            "model and effort",
+            "sol high is sufficient",
+            "sol ultra is not required",
+        ):
+            self.assertIn(phrase, home)
 
     def test_verification_copy_uses_future_proof_test_count(self):
         home = page_text(PAGES["home"])

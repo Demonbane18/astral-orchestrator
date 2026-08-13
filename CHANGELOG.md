@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.4.0 — 2026-08-13
+
+### Added
+
+- Added a live Astral status panel to substantive progress updates so users can see each
+  primary, worker, and reviewer lane's role, requested and observed model and effort,
+  lifecycle state, and allowlisted route evidence while work is running.
+- Added copy-ready README prompts for Quick, Guided, Careful, Measured, Morph, and
+  Constellation modes.
+
+### Changed
+
+- Clarified that Constellation uses Sol High by default and does not require Sol Ultra.
+- Documented and tested the custom Morph worker sequence: dry-run the exact route, launch
+  that same route, then require matching runtime evidence before accepting the worker.
+
+### Security
+
+- Status panels exclude prompts, packet contents, messages, tool arguments, credentials,
+  secrets, personal data, and arbitrary file contents.
+
 ## 3.3.1 — 2026-08-09
 
 ### Fixed
