@@ -143,7 +143,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.3"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.4"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -2952,10 +2952,12 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         status = json.loads(result.stdout)
         surfaces = status["surfaces"]
         self.assertEqual(surfaces["source"]["version"], "3.4.0")
-        self.assertEqual(surfaces["source"]["status"], "draft")
-        self.assertEqual(surfaces["github_release"]["version"], "3.3.1")
-        self.assertEqual(surfaces["github_marketplace"]["version"], "3.3.1")
-        self.assertEqual(surfaces["vercel"]["version"], "3.3.1")
+        self.assertEqual(surfaces["source"]["status"], "verified")
+        self.assertEqual(surfaces["github_release"]["version"], "3.4.0")
+        self.assertEqual(surfaces["github_release"]["status"], "published")
+        self.assertEqual(surfaces["github_marketplace"]["version"], "3.4.0")
+        self.assertEqual(surfaces["github_marketplace"]["status"], "installable")
+        self.assertEqual(surfaces["vercel"]["version"], "3.4.0")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
         self.assertEqual(surfaces["openai_submission"]["version"], "3.3.1")
         self.assertEqual(surfaces["openai_submission"]["status"], "draft")
@@ -2973,7 +2975,6 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("source status is draft", result.stderr)
         self.assertIn("openai_directory is 3.2.0", result.stderr)
 
     def test_record_is_idempotent_and_preserves_history(self):

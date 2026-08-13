@@ -226,6 +226,42 @@
       "observed_at": "2026-08-13T09:09:36+08:00",
       "evidence": "Local release candidate declares v3.4.0 with live Astral status, six mode prompts, Constellation Sol High guidance, and website copy; verification and publication remain pending.",
       "url": "https://github.com/Demonbane18/astral-orchestrator"
+    },
+    {
+      "surface": "source",
+      "version": "3.4.0",
+      "status": "verified",
+      "observed_at": "2026-08-13T09:19:30+08:00",
+      "evidence": "Public main commit 39c824f contains v3.4.0; 137 tests, package verification, both skill validators, plugin validation, git diff checks, installer dry-run, and Opera GX visual QA passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/39c824f8555d19f0b05ff0067a2326b459c5fa93",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.4.0",
+      "status": "published",
+      "observed_at": "2026-08-13T09:19:31+08:00",
+      "evidence": "Public GitHub v3.4.0 release published with validated asset astral-orchestrator-3.4.0.zip; GitHub reports SHA-256 1de3aa0779e231c4cce3ee214d612f62586ea20d725dac86182e391ce98a5357.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.4.0",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.4.0",
+      "status": "installable",
+      "observed_at": "2026-08-13T09:19:32+08:00",
+      "evidence": "Public main manifest reports version 3.4.0 and live route status; unchanged marketplace and installer commands were verified by setup dry-run.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.4.0",
+      "status": "deployed",
+      "observed_at": "2026-08-13T09:19:33+08:00",
+      "evidence": "Production deployment dpl_BXNpSwXtG2vnq1C9PkW792ZKabDY reached READY and was aliased publicly; cache-busted production served v3.4.0, live Astral status, Sol High guidance, and configured security headers. The identical local build was visually verified in Opera GX.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
     }
   ]
 }

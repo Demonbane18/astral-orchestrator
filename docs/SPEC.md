@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.3
+# Spec: Astral Orchestrator v3.4
 
 ## Objective
 
