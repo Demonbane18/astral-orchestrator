@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.4
+# Spec: Astral Orchestrator v3.5
 
 ## Objective
 
@@ -10,10 +10,59 @@ can fan out independent cards within verified capacity. Each fixed lane's reason
 is configurable without editing profiles.
 
 The user should not need to understand TOML files, runtime logs, or agent APIs. Two
-GitHub marketplace commands install the plugin and its bundled exact-process launcher.
-The optional setup command installs three namespaced native profiles for faster,
-more-ergonomic named-agent selection. When an exact route cannot be proven, the workflow
-stops rather than claiming a generic fallback was the requested orchestration.
+GitHub marketplace commands install the plugin. On current Codex MultiAgentsV2 hosts,
+native explicit spawning is the standard route and the optional setup command is only a
+faster, more-ergonomic named-agent enhancement. When an exact route cannot be proven,
+the workflow stops rather than claiming a generic fallback was the requested
+orchestration.
+
+## Current MultiAgentsV2 native route
+
+On a current Codex **MultiAgentsV2** host, native explicit spawning is the standard route
+for Guided, Careful, and Measured implementation and review lanes. Before spawning,
+inspect `collaboration.spawn_agent` and require these fields: `agent_type`, `task_name`,
+`model`, `reasoning_effort`, and `fork_turns`. Every child receives a complete standalone
+work packet. A Luna or Terra implementation uses the built-in native worker with the
+exact model and configured effort:
+
+```text
+collaboration.spawn_agent({
+  agent_type: "worker",
+  task_name: "<unique_lowercase_task_name>",
+  model: "gpt-5.6-luna" or "gpt-5.6-terra",
+  reasoning_effort: "<configured lane effort>",
+  fork_turns: "none",
+  message: "<complete standalone work packet>"
+})
+```
+
+When a matching custom reviewer profile is unavailable, a reviewer uses the built-in
+native default with `model: "gpt-5.6-sol"`, the configured reviewer effort, its own
+distinct unique reviewer `task_name`, `fork_turns: "none"`, and a complete standalone
+review packet. Custom agent file values take precedence over explicit spawn values, so
+use an Astral custom profile only when its fixed model and effort match the effective
+settings and its fixed capability is needed. A missing, customized, or mismatched
+optional profile does not force a nested CLI process on a v2 host; use the appropriate
+built-in native agent with explicit values.
+
+The reviewer spawn is explicit as well:
+
+```text
+collaboration.spawn_agent({
+  agent_type: "default",
+  task_name: "<unique_lowercase_reviewer_task_name>",
+  model: "gpt-5.6-sol",
+  reasoning_effort: "<configured reviewer effort>",
+  fork_turns: "none",
+  message: "<complete standalone review packet>"
+})
+```
+
+The bundled exact-process launcher is a **legacy exact-process fallback** only for a host
+whose collaboration tool lacks one or more required v2 controls—`agent_type`, `task_name`,
+`model`, `reasoning_effort`, or `fork_turns`. It is not the current route and is not
+selected merely because an optional profile is missing or customized. If the native v2
+route or this compatibility fallback cannot be proven, stop before implementation.
 
 Version 3.1 adds a local JSONL benchmark scorecard. It compares paired, repeated Astral
 and single-Sol trials only after validating frozen task fingerprints, identical
@@ -40,10 +89,15 @@ Version 3.4.0 adds live, allowlisted Astral status panels to substantive progres
 documents copy-ready prompts for all six modes, and makes Constellation's default Sol High
 and custom Morph dry-run-to-runtime evidence sequence explicit and testable.
 
+Version 3.5.0 makes native MultiAgentsV2 spawning the standard Codex route, changes the
+default worker efforts to Luna Max and Terra High, preserves configurable lane efforts,
+and guarantees that Astral Status uses a valid unfenced Markdown table. The bundled
+process launcher remains available only for hosts without the required native-v2 fields.
+
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.4.0. The normalized plugin, marketplace,
+identifiers. The current product version is 3.5.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
@@ -56,13 +110,17 @@ modified automatically.
 
 1. The target is the current Codex plugin and custom-agent format.
 2. The primary task starts with gpt-5.6-sol at the configured reasoning effort; High is
-   the default.
+   the default. The default implementation efforts are Luna Max and Terra High, and the
+   reviewer default is Sol High.
 3. Recipients have access to gpt-5.6-luna, gpt-5.6-terra, and gpt-5.6-sol.
 4. Optional native custom agents, when installed, live in Codex's personal agents
-   directory and are discovered in a newly started task.
-5. When native profiles are missing or customized, or a host lacks exact native
-   custom-agent selection, the bundled launcher starts an exact pinned Codex process for
-   the same lane.
+   directory and are discovered in a newly started task. Their file values take
+   precedence over explicit spawn values.
+5. On a current MultiAgentsV2 host, native explicit spawning uses the required
+   `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` fields. A host
+   that lacks one or more of those five controls—`agent_type`, `task_name`, `model`,
+   `reasoning_effort`, or `fork_turns`—may use the legacy exact-process launcher for the
+   same lane.
 6. The project homepage is https://github.com/Demonbane18/astral-orchestrator.
 7. The MIT-licensed Sol Advisor source may be adapted with preserved notice.
 8. Where `CODEX_THREAD_ID` and local rollout evidence are available, the bundled primary
@@ -78,15 +136,20 @@ modified automatically.
 | Responsibility | Required route |
 |---|---|
 | Requirements, architecture, decomposition, cross-lane integration | Sol at configured effort (High default) |
-| Narrow, repeatable, fully specified execution | Luna at configured effort (XHigh default) |
-| Context-heavy implementation, debugging, component/external integration, refactoring | Terra at configured effort (XHigh default) |
-| Fresh final review | Sol at configured reviewer effort (High default), with requested read-only sandbox |
+| Narrow, repeatable, fully specified execution | MultiAgentsV2 native `worker`, explicitly pinned to Luna at configured effort (Max default) |
+| Context-heavy implementation, debugging, component/external integration, refactoring | MultiAgentsV2 native `worker`, explicitly pinned to Terra at configured effort (High default) |
+| Fresh final review | MultiAgentsV2 native `default`, explicitly pinned to Sol at configured reviewer effort (High default) |
 | Explicit Morph worker | User-selected native or `provider/model` worker at requested effort; Sol remains primary and reviewer |
 | Explicit Constellation first wave | Cost-aware non-Sol workers by default, only for independent ready cards within advertised capacity |
 
-The default efforts are Sol High, Luna XHigh, Terra XHigh, and reviewer Sol High.
-Per-lane overrides are stored outside the plugin cache. A custom worker or reviewer
-effort uses the exact-process launcher so a native profile cannot override it.
+The default efforts are Sol High, Luna Max, Terra High, and reviewer Sol High. The four
+configurable effort levels are independent: every lane reads its value from the per-lane
+settings file outside the plugin cache.
+Explicit native spawn values are used on current v2 hosts: provide `agent_type`, a unique
+lowercase `task_name`, `model`, `reasoning_effort`, and `fork_turns: "none"`. A custom
+profile is used only when its fixed values match because custom agent file values take
+precedence. A host lacking one or more of `agent_type`, `task_name`, `model`,
+`reasoning_effort`, and `fork_turns` may use the legacy exact-process fallback.
 
 Quick mode is the explicit exception: tiny, reversible work stays in the verified Sol
 primary at its configured effort. Guided and Careful use pinned lanes whenever bounded
@@ -130,8 +193,9 @@ back to serial Guided-style routing when capacity or independence cannot be prov
   explicit user-confirmation gate.
 - Each worker receives exact ownership and must preserve concurrent edits.
 - Agent reports are inspected and independently verified in the primary session.
-- Missing or mismatched role, model, or effort evidence stops the route; no silent
-  fallback is allowed.
+- Missing or mismatched role, model, effort, or native spawn evidence stops the route; a
+  missing optional profile on a current v2 host is handled by the explicit built-in
+  native route, not by a silent launcher fallback.
 - The primary checker returns allowlisted `match`, `mismatch`, or `unavailable` JSON and
   exits zero only for the exact configured Sol route; only unavailable evidence may use
   the one-time user-confirmation fallback.
@@ -152,7 +216,8 @@ back to serial Guided-style routing when capacity or independence cannot be prov
 
 1. Two GitHub marketplace commands install the plugin; optional setup installs exactly
    three namespaced native profiles.
-2. Profiles pin Sol High, Luna XHigh, and Terra XHigh exactly as specified.
+2. Profiles pin Sol High, Luna Max, and Terra High exactly as specified, while native v2
+   children receive the same model and configured effort explicitly.
 3. The skill routes by work characteristics and parallelizes only non-overlapping cards.
 4. Runtime inspection emits only allowlisted route fields.
 5. A non-technical reader can install, invoke, update, share, troubleshoot, and remove it.

@@ -24,6 +24,7 @@ fail() {
 
 script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd) || exit 1
 template_dir=$script_dir/../agents
+legacy_template_dir=$template_dir/historical-v3.4.0
 
 if [ -n "${CODEX_HOME-}" ]; then
   target_dir=$CODEX_HOME/agents
@@ -75,6 +76,8 @@ agent_files='astral-orchestrator-luna-implementer.toml astral-orchestrator-terra
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
   [ -f "$template" ] && [ ! -L "$template" ] || fail "profile is missing or unsafe: $template"
+  legacy_template=$legacy_template_dir/$agent_file
+  [ -f "$legacy_template" ] && [ ! -L "$legacy_template" ] || fail "legacy profile fixture is missing or unsafe: $legacy_template"
 done
 
 preflight_failed=0
@@ -87,6 +90,7 @@ fi
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
+  legacy_template=$legacy_template_dir/$agent_file
   destination=$target_dir/$agent_file
 
   if [ -e "$destination" ] || [ -L "$destination" ]; then
@@ -98,6 +102,9 @@ for agent_file in $agent_files; do
       fi
       preflight_failed=1
     elif ! cmp -s "$template" "$destination"; then
+      if [ "$check_only" -eq 0 ] && cmp -s "$legacy_template" "$destination"; then
+        continue
+      fi
       if [ "$remove_only" -eq 1 ]; then
         printf '%s\n' "ERROR: destination differs and will not be removed: $destination" >&2
         printf '%s\n' "       This may be user-owned or customized; remove it deliberately if desired." >&2
@@ -118,9 +125,12 @@ done
 if [ "$remove_only" -eq 1 ]; then
   for agent_file in $agent_files; do
     template=$template_dir/$agent_file
+    legacy_template=$legacy_template_dir/$agent_file
     destination=$target_dir/$agent_file
     if [ -f "$destination" ] && [ ! -L "$destination" ]; then
-      cmp -s "$template" "$destination" || fail "destination changed after preflight and will not be removed: $destination"
+      if ! cmp -s "$template" "$destination" && ! cmp -s "$legacy_template" "$destination"; then
+        fail "destination changed after preflight and will not be removed: $destination"
+      fi
       rm -f "$destination" || fail "could not remove exact Astral Orchestrator profile: $destination"
       printf '%s\n' "REMOVED: $destination"
     fi
@@ -140,11 +150,29 @@ fi
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
+  legacy_template=$legacy_template_dir/$agent_file
   destination=$target_dir/$agent_file
 
   if [ -e "$destination" ] || [ -L "$destination" ]; then
     if [ -f "$destination" ] && [ ! -L "$destination" ] && cmp -s "$template" "$destination"; then
       printf '%s\n' "ALREADY CURRENT: $destination"
+      continue
+    fi
+    if [ -f "$destination" ] && [ ! -L "$destination" ] && cmp -s "$legacy_template" "$destination"; then
+      staged=$(mktemp "$target_dir/.astral-orchestrator-agent.XXXXXX") || fail "could not stage migrated profile: $destination"
+      if ! cp "$template" "$staged"; then
+        rm -f "$staged"
+        fail "could not stage migrated profile: $destination"
+      fi
+      if ! cmp -s "$legacy_template" "$destination"; then
+        rm -f "$staged"
+        fail "destination changed before migration and will not be overwritten: $destination"
+      fi
+      if ! mv -f "$staged" "$destination"; then
+        rm -f "$staged"
+        fail "could not migrate exact legacy profile: $destination"
+      fi
+      printf '%s\n' "MIGRATED: $destination"
       continue
     fi
     fail "destination changed after preflight and will not be overwritten: $destination"

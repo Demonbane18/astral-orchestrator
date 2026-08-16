@@ -67,8 +67,8 @@ manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, r
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.4.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.4.0")
+if manifest.get("version") != "3.5.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.5.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -222,12 +222,12 @@ expected_agents = {
     "astral-orchestrator-luna-implementer.toml": {
         "name": "astral_orchestrator_luna_implementer",
         "model": "gpt-5.6-luna",
-        "model_reasoning_effort": "xhigh",
+        "model_reasoning_effort": "max",
     },
     "astral-orchestrator-terra-implementer.toml": {
         "name": "astral_orchestrator_terra_implementer",
         "model": "gpt-5.6-terra",
-        "model_reasoning_effort": "xhigh",
+        "model_reasoning_effort": "high",
     },
     "astral-orchestrator-sol-reviewer.toml": {
         "name": "astral_orchestrator_sol_reviewer",
@@ -244,6 +244,45 @@ for filename, expected in expected_agents.items():
         if profile.get(field) != value:
             raise SystemExit(f"{filename} must set {field} to {value}")
 
+legacy_agent_dir = agent_dir / "historical-v3.4.0"
+expected_legacy_agents = {
+    "astral-orchestrator-luna-implementer.toml": {
+        "name": "astral_orchestrator_luna_implementer",
+        "model": "gpt-5.6-luna",
+        "model_reasoning_effort": "xhigh",
+    },
+    "astral-orchestrator-terra-implementer.toml": {
+        "name": "astral_orchestrator_terra_implementer",
+        "model": "gpt-5.6-terra",
+        "model_reasoning_effort": "xhigh",
+    },
+    "astral-orchestrator-sol-reviewer.toml": {
+        "name": "astral_orchestrator_sol_reviewer",
+        "model": "gpt-5.6-sol",
+        "model_reasoning_effort": "high",
+        "sandbox_mode": "read-only",
+    },
+}
+if {path.name for path in legacy_agent_dir.glob("*.toml")} != set(expected_legacy_agents):
+    raise SystemExit("legacy agent profile fixture set does not match v3.4.0")
+for filename, expected in expected_legacy_agents.items():
+    legacy_path = legacy_agent_dir / filename
+    profile = tomllib.loads(legacy_path.read_text(encoding="utf-8"))
+    for field, value in expected.items():
+        if profile.get(field) != value:
+            raise SystemExit(f"legacy {filename} must set {field} to {value}")
+    old_effort = expected["model_reasoning_effort"]
+    new_effort = expected_agents[filename]["model_reasoning_effort"]
+    legacy_text = legacy_path.read_text(encoding="utf-8")
+    current_text = (agent_dir / filename).read_text(encoding="utf-8")
+    if legacy_text.replace(
+        f'model_reasoning_effort = "{old_effort}"',
+        f'model_reasoning_effort = "{new_effort}"',
+    ) != current_text:
+        raise SystemExit(
+            f"legacy {filename} must differ from the current profile only by its effort"
+        )
+
 if marketplace_path.is_file():
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
     if marketplace.get("name") != "astral-orchestrator":
@@ -252,7 +291,7 @@ if marketplace_path.is_file():
     if len(entries) != 1 or entries[0].get("name") != "astral-orchestrator":
         raise SystemExit("marketplace must contain exactly one astral-orchestrator entry")
 
-for path in (manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, measured_path, morph_path, constellation_path, portable_hosts_path, *agent_dir.glob("*.toml")):
+for path in (manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, measured_path, morph_path, constellation_path, portable_hosts_path, *agent_dir.glob("*.toml"), *legacy_agent_dir.glob("*.toml")):
     text = path.read_text(encoding="utf-8")
     if "[TODO" in text or "YOUR-NAME" in text:
         raise SystemExit(f"placeholder remains in {path}")

@@ -36,6 +36,7 @@ MORPH = PLUGIN / "skills/astral-orchestrator/references/morph-mode.md"
 CONSTELLATION = PLUGIN / "skills/astral-orchestrator/references/constellation-mode.md"
 MEASURED = PLUGIN / "skills/astral-orchestrator/references/measured-mode.md"
 AGENTS = PLUGIN / "agents"
+LEGACY_AGENTS = AGENTS / "historical-v3.4.0"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
 INSPECT_RUNTIME = PLUGIN / "scripts/inspect-agent-runtime.sh"
 CHECK_PRIMARY = PLUGIN / "scripts/check-primary.py"
@@ -127,7 +128,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.4.0")
+        self.assertEqual(manifest["version"], "3.5.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -143,7 +144,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.4"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.5"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -171,7 +172,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.4.0")
+        self.assertEqual(manifest["version"], "3.5.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -235,7 +236,7 @@ class MarketplaceTests(unittest.TestCase):
     def test_readme_safety_qualifies_external_morph_packet_processing(self):
         readme = " ".join(read(ROOT / "README.md").lower().split())
 
-        self.assertIn("fixed local codex routes", readme)
+        self.assertIn("legacy local process route", readme)
         self.assertIn("external morph provider can receive its bounded worker packet", readme)
         self.assertNotIn("work packets remain local", readme)
 
@@ -295,14 +296,34 @@ class SkillContractTests(unittest.TestCase):
             "use states that describe what the host has actually shown:", 1
         )[1].split("`requested` means", 1)[0]
         declared_states = set(re.findall(r"`([^`]+)`", declared_section))
-        status_block = templates.split("```text", 1)[1].split("```", 1)[0]
+        status_section = templates.split("## work card", 1)[0]
+        self.assertIn("| lane | role | model | effort | state | evidence |", status_section)
+        self.assertRegex(
+            status_section,
+            r"\|\s*---\s*\|\s*---\s*\|\s*---\s*\|\s*---\s*\|\s*---\s*\|\s*---\s*\|",
+        )
+        self.assertNotIn("```", status_section)
+        status_block = status_section
         panel_rows = [
             line for line in status_block.splitlines()
-            if line.startswith(("sol primary |", "worker <card> |", "fresh reviewer |"))
+            if line.startswith(("| sol primary |", "| worker <card> |", "| fresh reviewer |"))
         ]
         self.assertEqual(len(panel_rows), 3)
+        role_cells = [row.split("|")[2].strip() for row in panel_rows]
+        for role_cell in role_cells:
+            self.assertIn("requested:", role_cell)
+            self.assertIn("observed:", role_cell)
+            self.assertIn("not yet available", role_cell)
+        self.assertIn("worker", role_cells[1])
+        self.assertIn("matching astral_orchestrator_luna_implementer profile", role_cells[1])
+        self.assertIn("matching astral_orchestrator_terra_implementer profile", role_cells[1])
+        self.assertIn("morph worker", role_cells[1])
+        self.assertIn("agent type or morph route", role_cells[1])
+        self.assertIn("default", role_cells[2])
+        self.assertIn("matching astral_orchestrator_sol_reviewer profile", role_cells[2])
+        self.assertIn("agent type", role_cells[2])
         for row in panel_rows:
-            template_states = set(row.split("|")[4].strip().strip("<>").split("/"))
+            template_states = set(row.split("|")[5].strip().strip("<>").split("/"))
             self.assertEqual(template_states, declared_states)
 
     def test_readme_has_copy_ready_mode_prompts_and_constellation_route_answer(self):
@@ -438,17 +459,111 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("exact pinned sol", routing)
         self.assertIn("observed read-only access", routing)
 
+    def test_current_multiagents_v2_prefers_explicit_native_spawns(self):
+        documents = {
+            "README.md": " ".join(read(ROOT / "README.md").lower().split()),
+            "SKILL.md": " ".join(read(SKILL).lower().split()),
+            "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
+            "SPEC.md": " ".join(read(SPEC).lower().split()),
+            "IMPROVEMENTS.md": " ".join(
+                read(ROOT / "docs/IMPROVEMENTS.md").lower().split()
+            ),
+        }
+
+        for label, document in documents.items():
+            for required in (
+                "multiagentsv2",
+                "agent_type",
+                "task_name",
+                "model",
+                "reasoning_effort",
+                "fork_turns",
+            ):
+                with self.subTest(document=label, required=required):
+                    self.assertIn(required, document)
+            self.assertRegex(
+                document,
+                r"agent_type.{0,200}task_name.{0,200}model.{0,200}"
+                r"reasoning_effort.{0,200}fork_turns",
+            )
+            self.assertLess(
+                document.find("multiagentsv2"),
+                document.find("legacy exact-process"),
+            )
+
+        skill = documents["SKILL.md"]
+        routing = documents["routing-and-preflight.md"]
+        spec = documents["SPEC.md"]
+        improvements = documents["IMPROVEMENTS.md"]
+
+        for document in (skill, routing):
+            for required in (
+                "custom agent file values take precedence",
+                "legacy exact-process fallback",
+                "required v2 controls",
+            ):
+                self.assertIn(required, document)
+            self.assertNotIn("xhigh by default", document)
+            self.assertNotIn("xhigh default", document)
+            self.assertNotIn("custom values force the exact-process route", document)
+
+        for required in (
+            'agent_type: "worker"',
+            'agent_type: "default"',
+            'task_name: "<unique_lowercase_task_name>"',
+            'fork_turns: "none"',
+        ):
+            self.assertIn(required, routing)
+
+        for document in (routing, spec, improvements):
+            self.assertIn(
+                'task_name: "<unique_lowercase_reviewer_task_name>"',
+                document,
+            )
+
+        for document in (spec, improvements):
+            for required in (
+                'agent_type: "worker"',
+                'agent_type: "default"',
+                'task_name: "<unique_lowercase_task_name>"',
+                'task_name: "<unique_lowercase_reviewer_task_name>"',
+                'model: "gpt-5.6-luna" or "gpt-5.6-terra"',
+                'reasoning_effort: "<configured lane effort>"',
+                'reasoning_effort: "<configured reviewer effort>"',
+                'fork_turns: "none"',
+                "luna max",
+                "terra high",
+                "configurable effort",
+                "custom agent file values take precedence",
+                "legacy exact-process fallback",
+                "required v2 controls",
+            ):
+                self.assertIn(required, document)
+            self.assertNotIn("the same `task_name`", document)
+            self.assertNotIn("xhigh by default", document)
+            self.assertNotIn("xhigh default", document)
+            self.assertNotIn("custom values force the exact-process route", document)
+
+        self.assertNotEqual(
+            '<unique_lowercase_task_name>',
+            '<unique_lowercase_reviewer_task_name>',
+        )
+
+        self.assertIn("careful", skill)
+        self.assertIn("observed read-only isolation", skill)
+        self.assertIn("do not weaken", routing)
+
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
             "astral-orchestrator-luna-implementer.toml": {
                 "name": "astral_orchestrator_luna_implementer",
                 "model": "gpt-5.6-luna",
-                "model_reasoning_effort": "xhigh",
+                "model_reasoning_effort": "max",
             },
             "astral-orchestrator-terra-implementer.toml": {
                 "name": "astral_orchestrator_terra_implementer",
                 "model": "gpt-5.6-terra",
-                "model_reasoning_effort": "xhigh",
+                "model_reasoning_effort": "high",
             },
             "astral-orchestrator-sol-reviewer.toml": {
                 "name": "astral_orchestrator_sol_reviewer",
@@ -469,6 +584,55 @@ class SkillContractTests(unittest.TestCase):
                 profile["developer_instructions"].lower(),
                 filename,
             )
+
+    def test_agent_installer_migrates_only_byte_exact_v340_worker_profiles(self):
+        expected_effort_replacements = {
+            "astral-orchestrator-luna-implementer.toml": (b'"xhigh"', b'"max"'),
+            "astral-orchestrator-terra-implementer.toml": (b'"xhigh"', b'"high"'),
+            "astral-orchestrator-sol-reviewer.toml": (b'"high"', b'"high"'),
+        }
+        for filename, (prior_effort, current_effort) in expected_effort_replacements.items():
+            prior = (LEGACY_AGENTS / filename).read_bytes()
+            self.assertEqual(
+                prior.replace(prior_effort, current_effort),
+                (AGENTS / filename).read_bytes(),
+                f"{filename} must remain the exact shipped v3.4.0 profile apart from its migrated effort",
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "agents"
+            target.mkdir()
+            for legacy in LEGACY_AGENTS.glob("*.toml"):
+                (target / legacy.name).write_bytes(legacy.read_bytes())
+
+            migrated = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(migrated.returncode, 0, migrated.stdout + migrated.stderr)
+            self.assertIn("MIGRATED", migrated.stdout)
+            for template in AGENTS.glob("*.toml"):
+                self.assertEqual(
+                    (target / template.name).read_bytes(), template.read_bytes()
+                )
+
+            legacy_luna = LEGACY_AGENTS / "astral-orchestrator-luna-implementer.toml"
+            customized = legacy_luna.read_bytes() + b"\n# user-owned adjustment\n"
+            destination = target / legacy_luna.name
+            destination.write_bytes(customized)
+            refused = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("will not be overwritten", refused.stderr)
+            self.assertEqual(destination.read_bytes(), customized)
 
     def test_agent_installer_is_idempotent_and_conflict_safe(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -544,6 +708,39 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotEqual(refused.returncode, 0)
             self.assertIn("will not be removed", refused.stderr)
             self.assertEqual(protected.read_text(encoding="utf-8"), "user-owned = true\n")
+
+    def test_agent_installer_removes_only_exact_historical_v340_profiles(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "agents"
+            target.mkdir()
+            for legacy in LEGACY_AGENTS.glob("*.toml"):
+                (target / legacy.name).write_bytes(legacy.read_bytes())
+
+            remove = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target), "--remove"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(remove.returncode, 0, remove.stdout + remove.stderr)
+            self.assertIn("REMOVED", remove.stdout)
+            self.assertFalse(any(target.iterdir()))
+
+            legacy_luna = LEGACY_AGENTS / "astral-orchestrator-luna-implementer.toml"
+            customized = legacy_luna.read_bytes() + b"\n# user-owned adjustment\n"
+            destination = target / legacy_luna.name
+            destination.write_bytes(customized)
+            refused = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target), "--remove"],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("will not be removed", refused.stderr)
+            self.assertEqual(destination.read_bytes(), customized)
 
     def test_runtime_inspector_emits_only_allowlisted_route_evidence(self):
         thread_id = "12345678-1234-1234-1234-123456789abc"
@@ -1187,13 +1384,13 @@ class SkillContractTests(unittest.TestCase):
             "luna": (
                 "astral_orchestrator_luna_implementer",
                 "gpt-5.6-luna",
-                "xhigh",
+                "max",
                 "workspace-write",
             ),
             "terra": (
                 "astral_orchestrator_terra_implementer",
                 "gpt-5.6-terra",
-                "xhigh",
+                "high",
                 "workspace-write",
             ),
             "reviewer": (
@@ -1458,8 +1655,8 @@ class SkillContractTests(unittest.TestCase):
                 json.loads(reset.stdout)["effort"],
                 {
                     "orchestrator": "high",
-                    "luna": "xhigh",
-                    "terra": "xhigh",
+                    "luna": "max",
+                    "terra": "high",
                     "reviewer": "high",
                 },
             )
@@ -2147,8 +2344,8 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("use astral orchestrator", readme)
         self.assertIn("no api key", readme)
         self.assertIn("sol high", readme)
-        self.assertIn("luna xhigh", readme)
-        self.assertIn("terra xhigh", readme)
+        self.assertIn("luna max", readme)
+        self.assertIn("terra high", readme)
         self.assertIn("three companion profiles", readme)
         self.assertIn("--remove", readme)
         self.assertIn("cannot grant access to models", readme)
@@ -2222,14 +2419,14 @@ class UserExperienceTests(unittest.TestCase):
             self.assertEqual(excalidraw["type"], "excalidraw")
             self.assertTrue(excalidraw["elements"])
 
-    def test_preflight_uses_the_bundled_launcher_when_native_profiles_are_absent(self):
+    def test_legacy_launcher_stays_available_for_hosts_without_native_v2_controls(self):
         skill = read(SKILL).lower()
-        routing = read(ROUTING).lower()
+        routing = " ".join(read(ROUTING).lower().split())
 
-        self.assertIn("successful dry-run", skill)
-        self.assertIn("missing or different native profiles", routing)
-        self.assertIn("force the exact-process route", routing)
-        self.assertIn("do not permit substitution", routing)
+        self.assertIn("legacy exact-process fallback", skill)
+        self.assertIn("required v2 controls", routing)
+        self.assertIn("does not force a nested cli process", skill)
+        self.assertIn("do not silently substitute", routing)
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -2273,7 +2470,7 @@ class UserExperienceTests(unittest.TestCase):
             evidence = json.loads(result.stdout)
             self.assertEqual(evidence["agent_name"], "astral_orchestrator_terra_implementer")
             self.assertEqual(evidence["model"], "gpt-5.6-terra")
-            self.assertEqual(evidence["effort"], "xhigh")
+            self.assertEqual(evidence["effort"], "high")
 
     def test_readme_publishes_banner_footprint_and_ori_eval_attribution(self):
         readme = read(ROOT / "README.md")
@@ -2937,7 +3134,7 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertIn("partially released", skill)
         self.assertIn("$track-astral-releases", metadata)
 
-    def test_release_ledger_reports_the_current_public_version_lag(self):
+    def test_release_ledger_reports_the_current_public_version(self):
         result = self.run_ledger(
             "status",
             "--ledger",
@@ -2959,23 +3156,32 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertEqual(surfaces["github_marketplace"]["status"], "installable")
         self.assertEqual(surfaces["vercel"]["version"], "3.4.0")
         self.assertEqual(surfaces["vercel"]["status"], "deployed")
-        self.assertEqual(surfaces["openai_submission"]["version"], "3.3.1")
-        self.assertEqual(surfaces["openai_submission"]["status"], "draft")
-        self.assertEqual(surfaces["openai_directory"]["version"], "3.2.0")
+        self.assertEqual(surfaces["openai_submission"]["version"], "3.4.0")
+        self.assertEqual(surfaces["openai_submission"]["status"], "approved")
+        self.assertEqual(surfaces["openai_directory"]["version"], "3.4.0")
+        self.assertEqual(surfaces["openai_directory"]["status"], "published")
 
-    def test_strict_release_check_fails_while_public_directory_lags(self):
-        result = self.run_ledger(
-            "check",
-            "--ledger",
-            str(RELEASE_LEDGER),
-            "--expected-version",
-            "3.4.0",
-            "--manifest",
-            str(MANIFEST),
-        )
+    def test_strict_release_check_passes_when_every_public_surface_matches(self):
+        with tempfile.TemporaryDirectory() as directory:
+            historical_manifest = Path(directory) / "plugin.json"
+            manifest = load_json(MANIFEST)
+            manifest["version"] = "3.4.0"
+            historical_manifest.write_text(
+                json.dumps(manifest, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            result = self.run_ledger(
+                "check",
+                "--ledger",
+                str(RELEASE_LEDGER),
+                "--expected-version",
+                "3.4.0",
+                "--manifest",
+                str(historical_manifest),
+            )
 
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("openai_directory is 3.2.0", result.stderr)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Astral Orchestrator 3.4.0 is reconciled everywhere.", result.stdout)
 
     def test_record_is_idempotent_and_preserves_history(self):
         with tempfile.TemporaryDirectory() as directory:

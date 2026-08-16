@@ -287,7 +287,7 @@ class BenchmarkPilotTests(unittest.TestCase):
                 {(route["role"], route["model"], route["effort"]) for route in astral["route_evidence"]},
                 {
                     ("orchestrator", "gpt-5.6-sol", "high"),
-                    ("terra", "gpt-5.6-terra", "xhigh"),
+                    ("terra", "gpt-5.6-terra", "high"),
                     ("reviewer", "gpt-5.6-sol", "high"),
                 },
             )

@@ -34,14 +34,14 @@ ROLE_CONTRACTS = {
         "filename": "astral-orchestrator-luna-implementer.toml",
         "agent_name": "astral_orchestrator_luna_implementer",
         "model": "gpt-5.6-luna",
-        "effort": "xhigh",
+        "effort": "max",
         "sandbox": "workspace-write",
     },
     "terra": {
         "filename": "astral-orchestrator-terra-implementer.toml",
         "agent_name": "astral_orchestrator_terra_implementer",
         "model": "gpt-5.6-terra",
-        "effort": "xhigh",
+        "effort": "high",
         "sandbox": "workspace-write",
     },
     "reviewer": {

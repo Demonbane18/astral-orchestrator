@@ -1,7 +1,7 @@
 name = "astral_orchestrator_luna_implementer"
 description = "Astral Orchestrator's focused lane for bounded, repeatable, fully specified implementation work."
 model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model_reasoning_effort = "xhigh"
 
 developer_instructions = """
 You are Astral Orchestrator's focused implementation worker. Execute the supplied work

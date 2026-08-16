@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.5.0 — 2026-08-16
+
+### Added
+
+- Added native Codex MultiAgentsV2 routing with explicit agent type, unique task name,
+  model, reasoning effort, and isolated child context on every worker and reviewer spawn.
+- Added safe migration for byte-exact v3.4.0 companion profiles while preserving any
+  user-customized profile unchanged.
+
+### Changed
+
+- Changed the default worker efforts to Luna Max and Terra High while keeping all four
+  lane efforts independently configurable.
+- Kept the bundled process launcher as a compatibility fallback only for hosts without
+  the required native-v2 controls.
+
+### Fixed
+
+- Astral Status is now always emitted as an unfenced GitHub-flavored Markdown table,
+  including requested-versus-observed role, model, effort, state, and evidence fields.
+- Expanded the privacy notice with explicit retention and user-control information.
+
 ## 3.4.0 — 2026-08-13
 
 ### Added

@@ -11,15 +11,14 @@ Use `not needed` when a lane will not be used, and use `planned` for a required 
 that is waiting to launch. Write `not yet required` only in the evidence field as an
 explanation, never as a state. Requested facts are the intended route; observed facts
 require runtime evidence. Do not call a requested lane `running` or observed without
-that evidence.
+that evidence. Always emit the panel as an actual GitHub-flavored Markdown table with
+the header separator row below: never fence it and never use plain pipe text.
 
-```text
-ASTRAL STATUS
-lane | role | model | effort | state | evidence
-Sol primary | primary session | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence>
-Worker <card> | <astral_orchestrator_luna_implementer, astral_orchestrator_terra_implementer, or Morph worker> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence>
-Fresh reviewer | astral_orchestrator_sol_reviewer | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable>
-```
+| Lane | Role | Model | Effort | State | Evidence |
+|---|---|---|---|---|---|
+| Sol primary | requested: primary session; observed: <primary runtime or not yet available> | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence> |
+| Worker <card> | requested: worker, matching astral_orchestrator_luna_implementer profile, matching astral_orchestrator_terra_implementer profile, or Morph worker; observed: <agent type or Morph route / not yet available> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence> |
+| Fresh reviewer | requested: default or matching astral_orchestrator_sol_reviewer profile; observed: <agent type or not yet available> | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable> |
 
 Use `planned`, `requested`, `launched`, `running`, `returned`, `verified`, `blocked`,
 `failed`, or `not needed` only as defined in `routing-and-preflight.md`. Update the

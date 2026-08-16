@@ -7,15 +7,18 @@ fixed-route, or reviewer contract.
 
 ## Exact route contract
 
-| Role | Agent type | Required model | Default effort | Best work |
+| Role | Native v2 agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
 | Orchestrator | Primary session | `gpt-5.6-sol` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
-| Focused worker | `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `xhigh` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
-| Context worker | `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `xhigh` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
-| Reviewer | `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Fresh final review; requests a read-only sandbox |
+| Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
+| Context worker | Built-in `worker`, or matching `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
+| Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Fresh final review; requests a read-only sandbox when the matching profile is used |
 
-Do not silently substitute a built-in agent, a different custom role, model, or effort.
 The main session owns lane selection and remains accountable for the combined result.
+Do not silently substitute a model, effort, or differently configured custom role. On a
+current v2 host, deliberately using the built-in native worker for Luna or Terra, or the
+built-in native default for a reviewer, with the exact requested model and effort is the
+standard route, not a substitution.
 
 The effective values come from
 `${CODEX_HOME:-~/.codex}/astral-orchestrator/effort-levels.toml`. When the file is absent,
@@ -88,19 +91,29 @@ Before execution in any mode:
 
 Before Guided, Careful, or Measured execution, additionally:
 
-5. Resolve `../../scripts/install-agents.sh` relative to this skill and run it with
-   `--check`. A pass records `native profiles: exact`; a missing or different profile
-   records `native profiles: unavailable` and is not a preflight failure.
-6. Use native selection only when step 5 passed, the collaboration tool exposes the
-   exact custom `agent_type`, and the native profile effort equals the configured value.
-   Otherwise, resolve `../../scripts/run-agent.py` and require a successful dry-run for
-   the needed role, workdir, and private packet.
+5. Inspect the available `collaboration.spawn_agent` contract. A current Codex
+   **MultiAgentsV2** host exposes all five required controls together:
+   `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`.
+6. When `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` are all
+   present, use the standard native route with the complete standalone work packet. Pass
+   a unique lowercase task name, the exact model and configured effort on every child,
+   and set `fork_turns: "none"`. Missing or mismatched optional custom profiles are route
+   evidence, not a native-v2 preflight failure.
+7. Optionally run `../../scripts/install-agents.sh --check` to record profile state. A
+   matching custom role is usable only when its fixed model and effort equal the effective
+   settings, because custom agent file values take precedence over explicit spawn values.
+   Otherwise choose the built-in native worker for Luna or Terra, or built-in native
+   default for a reviewer, with explicit fields.
+8. Use the bundled launcher only as the legacy exact-process fallback when the host lacks
+   one or more required v2 controls—`agent_type`, `task_name`, `model`,
+   `reasoning_effort`, or `fork_turns`—and compatibility requires it. Require a successful
+   dry run for the needed role, workdir, and private packet before launch.
 
-If the primary route is neither observable nor explicitly user-confirmed, or if both the
-native route and bundled launcher dry-run fail, stop before implementation. Explain the
-missing item and the smallest corrective action. Missing or different native profiles
-force the exact-process route; they do not permit substitution and do not require setup.
-Optional setup can restore native named-agent ergonomics, but it is never evidence for a
+If the primary route is neither observable nor explicitly user-confirmed, the selected
+native v2 route cannot be proven, or the needed legacy launcher dry run fails, stop before
+implementation. Explain the missing item and the smallest corrective action. A current
+v2 host never falls through to a process merely because optional profiles are missing or
+customized. Optional setup restores fixed-role ergonomics; it is never evidence for a
 different model or effort. Do not fall back to another route.
 
 Quick mode intentionally uses only the verified Sol primary session at the configured
@@ -142,17 +155,55 @@ its stricter deterministic selection rules rather than a general heuristic.
 
 ## Choose the execution mechanism
 
-Prefer a native custom agent only when the installed native profile check passed, the
-collaboration tool exposes an explicit `agent_type` field, the exact Astral Orchestrator
-role, and its native profile effort matches the configured value. Do not treat a task name
-as an agent type; current hosts can otherwise create a default Sol agent under a
-Luna-looking name. A custom effort that differs from the native profile always uses the
-exact-process mechanism. Missing or different native profiles force the exact-process
-route; they do not permit substitution.
+On a current MultiAgentsV2 host, prefer native spawning. For standard Luna and Terra
+delegation, use the built-in native worker and explicitly pin every child:
 
-When native selection is unavailable, use the **exact-process** mechanism. Resolve
-`../../scripts/run-agent.py` relative to this skill, write the complete standalone work
-packet to a private temporary regular file, then run:
+```text
+collaboration.spawn_agent({
+  agent_type: "worker",
+  task_name: "<unique_lowercase_task_name>",
+  model: "gpt-5.6-luna" or "gpt-5.6-terra",
+  reasoning_effort: "<configured lane effort>",
+  fork_turns: "none",
+  message: "<complete standalone Astral packet>"
+})
+```
+
+For standard reviewer delegation without a matching custom reviewer profile, use the
+built-in native default and explicitly pin the fresh Sol child with its own distinct
+unique lowercase task name:
+
+```text
+collaboration.spawn_agent({
+  agent_type: "default",
+  task_name: "<unique_lowercase_reviewer_task_name>",
+  model: "gpt-5.6-sol",
+  reasoning_effort: "<configured reviewer effort>",
+  fork_turns: "none",
+  message: "<complete standalone Astral review packet>"
+})
+```
+
+The packet must name the intended Astral role, model, effort, ownership, boundaries, and
+checks, and forbid downstream delegation. `agent_type: "worker"` is intentional for
+Luna and Terra implementation, while `agent_type: "default"` is intentional for a
+reviewer without its matching custom profile. The explicit model and reasoning effort
+preserve Astral's configured route. Do not treat a task name as an agent type.
+
+Custom agent file values take precedence over explicit spawn values. Use an Astral custom
+agent type only if its installed profile is byte-exact and its fixed model and effort
+match the effective lane settings. It may then supply a fixed capability such as the
+reviewer profile's read-only request. A custom profile that conflicts with a requested
+setting is not a reason to launch a nested process on a v2 host: use the appropriate
+built-in native agent with the explicit values instead (`worker` for Luna or Terra,
+`default` for reviewer). A custom effort remains a per-lane setting, not a reason to use
+a conflicting profile. If that native spawn cannot provide the requested model or effort,
+block the lane; do not silently substitute.
+
+Use the **legacy exact-process fallback** only when the collaboration tool lacks one or
+more required v2 controls—`agent_type`, `task_name`, `model`, `reasoning_effort`, or
+`fork_turns`—and a compatible legacy route is needed. Resolve `../../scripts/run-agent.py`,
+write the complete standalone work packet to a private temporary regular file, then run:
 
 ```text
 python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt-file <packet>
@@ -179,16 +230,19 @@ temporary packet after the process exits. A non-zero exit blocks the lane.
 
 ## Spawn and runtime evidence
 
-For a native lane, immediately record the epoch seconds, choose a unique lowercase task
-name, and spawn the exact `agent_type` with `fork_turns: "none"`. For an exact-process
-lane, launch a new process for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header,
-Codex startup header, session id, final response, and exit status. Both mechanisms use a
-complete standalone packet and forbid downstream delegation.
+For a native v2 lane, immediately record the epoch seconds, choose a unique lowercase
+task name, and spawn with explicit `agent_type`, `task_name`, `model`,
+`reasoning_effort`, and `fork_turns: "none"`. Record whether it used the built-in worker
+(Luna/Terra), built-in default (reviewer), or a matching custom role; in every case the
+packet is complete and standalone. For a legacy exact-process lane, launch a new process
+for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header, Codex startup header,
+session id, final response, and exit status. Both mechanisms forbid downstream delegation.
 
 After launch, collect runtime evidence showing:
 
-- the native spawn used the exact custom `agent_type`, or the launcher header names the
-  exact role;
+- the native v2 spawn used its recorded built-in or matching custom `agent_type`, unique
+  `task_name`, exact `model`, configured `reasoning_effort`, and `fork_turns: "none"`; or
+  the launcher header names the exact legacy role;
 - an exact-process launcher reports a passing Codex configuration probe and the selected
   runtime source and version;
 - the returned task or process session id identifies that lane;
@@ -211,7 +265,8 @@ the `session_meta` matching the requested task id and reports the final observed
 If runtime evidence is missing, inconsistent, or mismatched, interrupt the lane when
 possible, discard its output, and stop. Report the requested route, observed evidence,
 and corrective action. Never infer a successful route from the agent's writing style or
-self-description.
+self-description. Do not invoke the legacy process route after a current v2 failure just
+to work around a missing or conflicting optional custom profile.
 
 ## Parallel and serial work
 
@@ -231,9 +286,15 @@ The orchestrator inspects every returned change before another lane builds on it
 
 ## Review isolation
 
-The reviewer profile requests a read-only sandbox, and the exact-process launcher passes
-that mode explicitly. The host still controls the effective sandbox. Record the observed
-sandbox and never overstate isolation. In Careful mode, require the exact pinned Sol
-reviewer and observed read-only access; requested read-only access alone is insufficient.
-Observed non-read-only access makes review incomplete. After any fix, create a new native reviewer with
-`fork_turns: "none"` or a new reviewer process; never reuse the previous review context.
+The matching reviewer profile requests a read-only sandbox, and the legacy exact-process
+launcher passes that mode explicitly. A built-in v2 reviewer receives the same complete
+behaviorally read-only review packet, but the host still controls the effective sandbox.
+Record the observed sandbox and never overstate isolation. In Careful mode, require the
+exact pinned Sol `model`, configured reviewer `reasoning_effort`, a distinct unique reviewer
+`task_name`, `fork_turns: "none"`, and observed read-only access; requested read-only access
+alone is insufficient. Do not weaken this safeguard when a custom
+profile is unavailable or when the built-in native default is used. Observed non-read-only
+access, or absent sandbox evidence, makes review incomplete. After any fix, create a new
+native reviewer with explicit `agent_type`, its own distinct unique `task_name`, exact
+`model`, configured `reasoning_effort`, and `fork_turns: "none"`, or a new reviewer
+process; never reuse the previous review context.

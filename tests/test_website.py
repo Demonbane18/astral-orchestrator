@@ -343,11 +343,11 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_4_0_on_current_pages(self):
+    def test_current_version_copy_is_v3_5_0_on_current_pages(self):
         for page in ("home", "install", "support"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.4.0", content)
+                self.assertIn("v3.5.0", content)
 
     def test_homepage_explains_live_astral_status(self):
         home = " ".join(page_text(PAGES["home"]).lower().split())
@@ -400,7 +400,7 @@ class WebsiteContractTests(unittest.TestCase):
     def test_privacy_policy_states_the_local_no_collection_posture(self):
         privacy = page_text(PAGES["privacy"]).lower()
         for phrase in (
-            "2026-08-03",
+            "2026-08-16",
             "no analytics",
             "no cookies",
             "no accounts",
@@ -429,6 +429,20 @@ class WebsiteContractTests(unittest.TestCase):
             "color preference",
             "local storage",
             "does not transmit",
+        ):
+            self.assertIn(phrase, privacy)
+
+    def test_privacy_policy_states_retention_and_user_controls(self):
+        privacy = " ".join(page_text(PAGES["privacy"]).lower().split())
+        for phrase in (
+            "2026-08-16",
+            "retention",
+            "until you clear",
+            "does not receive or retain",
+            "vercel controls",
+            "uninstall the plugin",
+            "remove local settings",
+            "request deletion",
         ):
             self.assertIn(phrase, privacy)
 

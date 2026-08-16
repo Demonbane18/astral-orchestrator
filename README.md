@@ -2,13 +2,13 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.4.0 is an installable, open-source Codex plugin. It
+Astral Orchestrator v3.5.0 is an installable, open-source Codex plugin. It
 helps Codex turn an everyday request into a checked result: Sol stays responsible for
 the plan and final decisions, Luna handles focused work, Terra handles context-heavy
 implementation, and a fresh Sol reviewer checks the finished change.
 
 Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
-directory is a separate publication surface and may lag until the v3.4.0 directory upload
+directory is a separate publication surface and may lag until the v3.5.0 directory upload
 is published. Astral Orchestrator is an independent open-source project, not affiliated
 with or endorsed by OpenAI.
 
@@ -21,10 +21,14 @@ codex plugin marketplace add Demonbane18/astral-orchestrator --ref main
 codex plugin add astral-orchestrator@astral-orchestrator
 ~~~
 
-This is the complete install. It bundles the fixed-route launcher, so Guided, Careful,
-and Measured work can prove the pinned Sol, Luna, and Terra routes without requiring
-global native profiles. Morph and Constellation are separate explicit opt-ins; they do not
-change the verified Sol primary or fresh Sol reviewer.
+This is the complete install. On current Codex MultiAgentsV2 hosts, Guided, Careful, and
+Measured use native child agents with `agent_type`, a unique `task_name`, `model`,
+`reasoning_effort`, and `fork_turns` stated explicitly for each child. Optional native
+profiles are not required. The bundled process launcher is a legacy compatibility fallback
+only for hosts that do not expose `agent_type`, `task_name`, `model`, `reasoning_effort`,
+and `fork_turns`.
+Morph and Constellation are separate explicit opt-ins; they do not change the verified Sol
+primary or fresh Sol reviewer.
 
 ## What Astral Orchestrator does
 
@@ -49,7 +53,7 @@ or third-party Python package. The only local runtime requirement beyond Codex i
 - Codex with access to gpt-5.6-sol, gpt-5.6-luna, and gpt-5.6-terra.
 - Python 3.11 or newer; the included tools use only the Python standard library.
 - A new Codex task after installation, so Codex can discover the plugin. It also discovers
-  native profiles when you choose the optional setup below.
+  optional native profiles when you choose the setup below.
 
 The optional setup installs profiles; it cannot grant access to models your Codex account
 does not have. Astral Orchestrator stops instead of quietly choosing a different model or
@@ -60,9 +64,10 @@ effort.
 ### GitHub marketplace install (recommended)
 
 The two Quick Install commands add this GitHub repository at its `main` ref, then install
-the `astral-orchestrator` plugin. They are enough for the bundled exact-process route.
+the `astral-orchestrator` plugin. They are enough for native MultiAgentsV2 routing and
+the bundled legacy exact-process fallback.
 
-### Optional native-profile setup
+### Optional fixed-role profile setup
 
 For faster, more ergonomic native named-agent selection, download the public repository
 as a ZIP or clone it, open a terminal in its root, and run:
@@ -76,8 +81,9 @@ sh scripts/setup.sh
 
 The dry run prints the planned local changes. Setup registers the checkout, adds the
 plugin, and installs three companion profiles without overwriting a different file. It is
-an optional enhancement, not a prerequisite: missing or customized native profiles make
-the preflight use the bundled exact-process launcher instead.
+an optional enhancement, not a prerequisite: current MultiAgentsV2 hosts use the built-in
+native worker with explicit model and effort for Luna or Terra, or the built-in native
+default for a reviewer, when a profile is absent or customized.
 
 ## First use
 
@@ -114,7 +120,9 @@ own request:
 
 Guided remains the recommended default for normal work. The live Astral status panel is a
 user-facing progress view: requested routes are shown first, and a route becomes observed
-only after runtime evidence confirms what actually ran.
+only after runtime evidence confirms what actually ran. Every Astral Status panel is an
+actual GitHub-flavored Markdown table with a header separator row—never a code block or
+plain pipe text.
 
 For Constellation, **Sol High is sufficient and Sol Ultra is not required.** Sol remains
 the configured primary and fresh reviewer; Constellation does not need extra Sol
@@ -153,10 +161,13 @@ Three separate decisions keep the workflow predictable:
    repeatable, fully specified work. Terra receives context-heavy implementation,
    debugging, integrations, or moderate refactoring after Sol has settled the plan.
 3. **Each lane reads its effort from the per-lane settings file.** Effort is not
-   dynamically chosen from each prompt. Astral reads the configured orchestrator, Luna,
-   Terra, and reviewer values before it runs, then either uses the matching profile or
-   starts the exact pinned process. It stops if it cannot prove the requested model and
-   effort; it does not substitute another route.
+   dynamically chosen from each prompt. On current MultiAgentsV2 hosts, Astral passes
+   the configured model and effort explicitly to a native child. A matching optional
+   profile can be used only when its fixed values agree, because profile values take
+   precedence. The process launcher remains a legacy fallback only for hosts that lack
+   one or more of the native `agent_type`, `task_name`, `model`, `reasoning_effort`, and
+   `fork_turns` controls. Astral stops if it
+   cannot prove the requested model and effort; it does not substitute another route.
 4. **Morph labels a worker request, not provider capability.** The selected model gets the
    requested effort label, but the route records upstream-native effort as unverified until
    independent provider evidence exists.
@@ -207,9 +218,8 @@ Ori or OpenRouter.
 ## Configurable effort levels
 
 Reasoning effort is the requested reasoning level/budget for a lane. Higher values can
-increase latency and usage, and do not guarantee a better answer. Defaults stay
-intentionally unchanged: Sol High for the orchestrator and reviewer, Luna XHigh, and
-Terra XHigh.
+increase latency and usage, and do not guarantee a better answer. Defaults are Sol High
+for the orchestrator and reviewer, Luna Max, and Terra High.
 
 Show the effective settings:
 
@@ -243,7 +253,7 @@ CODEX_HOME when set), outside the plugin cache.
 
 Sol uses `gpt-5.6-sol`; Luna uses `gpt-5.6-luna`; Terra uses `gpt-5.6-terra`; and the
 fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described above
-supply each lane's effort (Sol High, Luna XHigh, Terra XHigh, reviewer Sol High by
+supply each lane's effort (Sol High, Luna Max, Terra High, reviewer Sol High by
 default), rather than the prompt choosing a new effort at runtime.
 
 For every mode, Astral first runs its local primary checker. When `CODEX_THREAD_ID` and
@@ -252,16 +262,24 @@ local rollout evidence are available, it automatically verifies that the primary
 route fields and never prints prompt or session contents. Only when that evidence is
 unavailable does Astral ask once for the user's confirmation; a mismatch blocks the route.
 
-For Guided, Careful, and Measured work, Astral Orchestrator first checks whether installed
-native profiles byte-match the shipped profiles. A matching profile plus an exact host
-role can use native named-agent selection. Missing or different profiles do not weaken
-the route or demand setup: they force a successful dry-run of the bundled exact-process
-launcher, which starts a separate Codex process pinned to the required model and
-configured effort. The launcher emits an ASTRAL_ORCHESTRATOR_ROUTE header with
-allowlisted route facts, never the task packet, instructions, secrets, or file contents.
+For Guided, Careful, and Measured work, Astral Orchestrator first checks whether
+`collaboration.spawn_agent` exposes all five required MultiAgentsV2 controls:
+`agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. A current
+MultiAgentsV2 host uses the native standard route with a complete standalone packet,
+`fork_turns: "none"`, and the exact model and configured effort for each child. A matching
+optional custom profile is used only when its fixed values match the effective settings;
+its TOML values take precedence over explicit spawn values.
+Missing or different profiles do not weaken the route or demand setup: Astral uses the
+built-in native worker with explicit values for Luna or Terra, and the built-in native
+default for a reviewer. Only a host that lacks one or more of `agent_type`, `task_name`,
+`model`, `reasoning_effort`, and `fork_turns` may use the bundled legacy exact-process
+launcher, which emits an
+ASTRAL_ORCHESTRATOR_ROUTE header with allowlisted route facts and never the task packet,
+instructions, secrets, or file contents.
 
-A task name is not proof of the route. Missing or mismatched role, model, effort, or
-review isolation blocks the lane and tells you the smallest corrective action.
+A task name is not proof of the route. Missing or mismatched `agent_type`, `task_name`,
+`model`, `reasoning_effort`, or `fork_turns`, or missing review isolation, blocks the lane
+and tells you the smallest corrective action.
 
 ### Morph and Constellation
 
@@ -328,11 +346,13 @@ set as a reason to investigate before making a product claim.
 - Profile removal deletes only shipped files that still match exactly.
 - Destructive, credential, publishing, production, and irreversible actions require
   an explicit confirmation gate in Careful mode.
-- Fixed local Codex routes keep private work packets in local temporary files, pass them
-  only to the selected Codex process, then remove them after that process exits. An external
-  Morph provider can receive its bounded worker packet during inference when the user
-  explicitly configures that route; local packet handling does not make external processing
-  local. There is no analytics collection, extra network client, API key, or background service.
+- Native MultiAgentsV2 routes pass a complete standalone packet only to the selected
+  native child. The legacy local process route keeps its private packet in a local
+  temporary file, passes it only to the selected Codex process, then removes it after
+  that process exits. An external Morph provider can receive its bounded worker packet
+  during inference when the user explicitly configures that route; local packet handling
+  does not make external processing local. There is no analytics collection, extra network
+  client, API key, or background service.
 - A fresh reviewer is required after worker-produced Guided, Measured, Morph, or
   Constellation work. Careful mode—and high-risk Measured, Morph, or Constellation work—
   also requires observed read-only review isolation.
@@ -345,6 +365,10 @@ newer complete repository and run:
 ~~~sh
 sh scripts/setup.sh --refresh
 ~~~
+
+The refresh migrates only byte-exact shipped v3.4.0 Luna XHigh and Terra XHigh profiles
+to Luna Max and Terra High. A customized or conflicting profile remains untouched; on a
+current MultiAgentsV2 host it is not needed for native delegation.
 
 Version 3.0.0 was a breaking identity migration from the former name, Project Pilot.
 The plugin and marketplace IDs are now `astral-orchestrator`, profile filenames begin
@@ -381,8 +405,8 @@ These commands do not delete your downloaded repository or project files.
 | Problem | What to do |
 |---|---|
 | The plugin does not appear | Start a new Codex task, then run codex plugin list --marketplace astral-orchestrator. |
-| Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized native profile. Keep it and use the bundled exact-process route, or resolve the difference deliberately before rerunning optional setup. |
-| A route cannot be proven | Confirm the bundled launcher dry run can prove the exact role, model, and effort. Reinstall the GitHub marketplace source or run `sh scripts/setup.sh --refresh` only if you want to restore native profiles; never accept another role, model, or effort as a fallback. |
+| Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized native profile. Keep it: current MultiAgentsV2 hosts use the built-in native worker for Luna or Terra, or built-in native default for a reviewer, with explicit values. Run `sh scripts/setup.sh --refresh` only if you deliberately want the fixed role profile restored. |
+| A route cannot be proven | Confirm that the current host exposes all five v2 controls: `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. Only a host that lacks one or more of `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` should use the bundled launcher dry run to prove the exact legacy role, model, and effort; never accept another route as a fallback. |
 | A Morph worker fails | Check the separately configured provider/model and requested effort with its owner. Astral does not configure OpenCodex, credentials, services, or provider compatibility. |
 | Constellation will not fan out | Make each card independent with non-overlapping ownership, or continue with the serial Guided-style fallback. The primary consumes one advertised slot. |
 | An effort value is rejected | Pick a supported value available to your account; max and ultra are not available everywhere. |

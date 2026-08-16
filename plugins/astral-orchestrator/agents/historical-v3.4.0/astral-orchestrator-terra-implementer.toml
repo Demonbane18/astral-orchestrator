@@ -1,7 +1,7 @@
 name = "astral_orchestrator_terra_implementer"
 description = "Astral Orchestrator's context-heavy lane for normal implementation, integration, refactoring, and debugging."
 model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 
 developer_instructions = """
 You are Astral Orchestrator's context-heavy implementation worker. Resolve implementation

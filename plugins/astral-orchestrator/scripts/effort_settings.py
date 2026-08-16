@@ -12,8 +12,8 @@ LANES = ("orchestrator", "luna", "terra", "reviewer")
 ALLOWED_EFFORTS = ("minimal", "low", "medium", "high", "xhigh", "max", "ultra")
 DEFAULT_EFFORTS = {
     "orchestrator": "high",
-    "luna": "xhigh",
-    "terra": "xhigh",
+    "luna": "max",
+    "terra": "high",
     "reviewer": "high",
 }
 MAX_SETTINGS_BYTES = 16_384

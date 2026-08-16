@@ -47,6 +47,8 @@ lane, role, requested and observed model and effort, state, and evidence. A requ
 route is not observed route evidence: use the template and routing guide to label it
 plainly. Keep the panel current through preflight, running work, review, and handoff
 without inventing activity or repeating unchanged detail.
+Always emit it as an actual GitHub-flavored Markdown table with a header separator row;
+never fence it and never use plain pipe text.
 
 ## 1. Choose the mode and risk
 
@@ -80,8 +82,8 @@ without permission.
 On Codex, Astral Orchestrator v3 uses these exact models. Their default efforts are:
 
 - main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
-- focused worker: `astral_orchestrator_luna_implementer` (Luna XHigh);
-- context-heavy worker: `astral_orchestrator_terra_implementer` (Terra XHigh);
+- focused worker: `astral_orchestrator_luna_implementer` (Luna Max);
+- context-heavy worker: `astral_orchestrator_terra_implementer` (Terra High);
 - fresh reviewer: `astral_orchestrator_sol_reviewer` (Sol High, requested read-only).
 
 Resolve the bundled `../../scripts/configure-effort.py` and run it with `--show --json`
@@ -95,16 +97,32 @@ itself. A `mismatch` or `invalid` result blocks the route; manual confirmation c
 override either one. A changed orchestrator setting applies to a new task, not the task
 already running.
 
-For Guided, Careful, and Measured work, select one of two exact fixed routes. First run the
-bundled profile installer's exact `--check`. A pass permits native selection only when
-the host exposes the exact role and its native profile effort equals the configured
-effort. When that check reports missing or different native profiles, or the host cannot
-make that exact native selection, run a successful dry-run of the bundled exact-process
-launcher for the needed role. That route starts the pinned model with the configured
-effort and shipped role instructions. Missing or different native profiles force the
-exact-process route; they do not permit substitution or make optional setup required.
-Stop only when neither exact route can be proven. A blocking preflight ends the current
-turn. Never silently lower an unsupported effort.
+For Guided, Careful, and Measured work, first inspect the `collaboration.spawn_agent`
+contract. Current Codex **MultiAgentsV2** hosts expose all five required controls:
+`agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. When all five
+fields are available, use native spawning as the standard fixed route: choose a unique
+lowercase `task_name`, pass the role's exact model and configured effort, set
+`fork_turns: "none"`, and send the complete standalone work packet. An unavailable,
+missing, or mismatched optional custom profile does not force a nested CLI process on a
+current v2 host. Use the built-in native worker with explicit values for Luna or Terra
+implementation, or the built-in native default with explicit values for a reviewer,
+preserving the requested-versus-observed route evidence.
+
+Custom agent file values take precedence over explicit spawn values. Therefore use an
+Astral custom role only when its fixed model and effort match the effective settings and
+the role adds a needed fixed capability, such as the reviewer's read-only request. In all
+other v2 cases, deliberately choose the appropriate built-in native agent rather than
+silently substituting model or effort. A failed native v2 route blocks the lane; it does
+not fall through to a process merely because profiles are absent or customized.
+
+Keep the bundled exact-process route as a clearly bounded **legacy exact-process fallback**
+only when the host collaboration tool lacks one or more required v2 controls—
+`agent_type`, `task_name`, `model`, `reasoning_effort`, or `fork_turns`—and compatibility
+requires it. Require its successful dry run for the needed role, workdir, and private
+packet. That route starts the pinned model with the configured effort and shipped role
+instructions. Stop when the chosen native route or this legacy fallback cannot be
+proven. A blocking preflight ends the current turn. Never silently lower an unsupported
+effort.
 
 Morph and Constellation retain this exact Sol primary preflight and fresh Sol review. Their worker
 rules are explicit opt-ins defined only in their dedicated references; never treat either
@@ -115,12 +133,12 @@ script. Preserve unspecified lanes and report the resulting four values. Use `--
 only when the user asks to restore defaults. Explain that `max` and `ultra` are
 model- and account-dependent.
 
-Do not silently substitute a built-in or differently configured agent. Give every lane
-a complete standalone work packet. For a native lane, use `fork_turns: "none"`. For an
-exact-process lane, use the bundled launcher with the matching role. Combine the native
-profile status or successful launcher dry-run, requested route, task or session id, and
-observed model/effort evidence before accepting its work. The routing guide defines the
-exact behavior.
+Give every lane a complete standalone work packet. For a native lane, explicitly provide
+`agent_type`, a unique lowercase `task_name`, `model`, `reasoning_effort`, and
+`fork_turns: "none"`. For a legacy exact-process lane, use the bundled launcher with the
+matching role. Combine the native spawn request or successful launcher dry-run, requested
+route, task or session id, and observed model/effort evidence before accepting its work.
+The routing guide defines the exact behavior.
 
 ## 3. Frame and decompose the work
 
@@ -186,9 +204,13 @@ pinned lane, rerun affected checks, and inspect the result again.
 
 - **Quick:** Sol self-review at the configured orchestrator effort using the actual
   change and evidence.
-- **Guided:** use a new `astral_orchestrator_sol_reviewer` native lane or reviewer process after
-  every worker-produced change. For a no-change or answer-only request with no worker,
-  label primary-session Sol self-review plainly.
+- **Guided:** use a new native reviewer with an explicit `agent_type`, a distinct unique
+  lowercase `task_name`, exact Sol `model`, configured reviewer `reasoning_effort`, and
+  `fork_turns: "none"` after every worker-produced change. Prefer a matching
+  `astral_orchestrator_sol_reviewer` profile only when its fixed values match; otherwise
+  use the built-in native default with those explicit values and a complete review packet.
+  For a no-change or answer-only request with no worker, label primary-session Sol
+  self-review plainly.
 - **Careful:** always use the exact Sol reviewer lane, and require observed read-only
   isolation before accepting its independent review.
 - **Measured:** use the normal fresh Sol reviewer after the selected worker. High-risk

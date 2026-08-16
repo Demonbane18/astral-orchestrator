@@ -262,6 +262,51 @@
       "evidence": "Production deployment dpl_BXNpSwXtG2vnq1C9PkW792ZKabDY reached READY and was aliased publicly; cache-busted production served v3.4.0, live Astral status, Sol High guidance, and configured security headers. The identical local build was visually verified in Opera GX.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.3.1",
+      "status": "approved",
+      "observed_at": "2026-08-13T09:24:33+08:00",
+      "evidence": "OpenAI Platform in Opera GX displayed Astral Orchestrator v3.3.1 with status Published, proving the prior submission passed review.",
+      "url": "https://platform.openai.com/plugins",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.3.1",
+      "status": "published",
+      "observed_at": "2026-08-13T09:24:34+08:00",
+      "evidence": "The public ChatGPT/Codex plugin directory in Opera GX displayed Astral Orchestrator version 3.3.1, three starter prompts, six-mode metadata, and the verified publisher identity.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
+      "commit": "c8aa07b6191a8758d85b3915f636f2b8c340d837"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.4.0",
+      "status": "draft",
+      "observed_at": "2026-08-13T09:36:00+08:00",
+      "evidence": "OpenAI Platform accepted the plugin-only v3.4.0 ZIP with SHA-256 77b3f15a9bbe66cf70fb698c9fc8b4064399126b48fa0cc69bdc86a25062c140 and created draft appsub_6a7d1e134ac88191831c7b6b2a56361f. Opera GX verified the corrected subtitle, legal publisher name, website/support/privacy/terms URLs, and all three intended starter prompts. Skill scanning remains in progress and all four publisher attestations remain unchecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a7d1e134ac88191831c7b6b2a56361f",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.4.0",
+      "status": "approved",
+      "observed_at": "2026-08-13T10:02:38+08:00",
+      "evidence": "OpenAI Platform in Opera GX displayed Astral Orchestrator v3.4.0 with status Published, proving the v3.4.0 submission passed review and was approved before publication.",
+      "url": "https://platform.openai.com/plugins",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.4.0",
+      "status": "published",
+      "observed_at": "2026-08-13T10:02:39+08:00",
+      "evidence": "The public ChatGPT/Codex Plugins Directory in Opera GX displayed Astral Orchestrator v3.4.0, the three intended starter prompts, live-route-status metadata, verified publisher identity, and public website, privacy, and terms links.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
+      "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
     }
   ]
 }
