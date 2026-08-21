@@ -307,6 +307,87 @@
       "evidence": "The public ChatGPT/Codex Plugins Directory in Opera GX displayed Astral Orchestrator v3.4.0, the three intended starter prompts, live-route-status metadata, verified publisher identity, and public website, privacy, and terms links.",
       "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
       "commit": "39c824f8555d19f0b05ff0067a2326b459c5fa93"
+    },
+    {
+      "surface": "source",
+      "version": "3.5.0",
+      "status": "verified",
+      "observed_at": "2026-08-16T14:31:05+08:00",
+      "evidence": "Public main commit 64f9cec contains native MultiAgentsV2 routing, Luna Max and Terra High defaults, guaranteed table-form Astral Status, exact v3.4.0 profile migration, and explicit privacy retention/user controls; 141 tests, package verification, both skill validators, plugin validation, git diff checks, and Opera GX visual QA passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/64f9cec",
+      "commit": "64f9cec"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.5.0",
+      "status": "published",
+      "observed_at": "2026-08-16T14:32:09+08:00",
+      "evidence": "Public v3.5.0 annotated tag resolves to 64f9cec; GitHub release asset astral-orchestrator-3.5.0.zip reports SHA-256 f9ce168e34db255ba50ea12f50be53b2ded707c3cb245e6d5403c1c034962f00.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.5.0",
+      "commit": "64f9cec"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.5.0",
+      "status": "installable",
+      "observed_at": "2026-08-16T14:32:09+08:00",
+      "evidence": "Public main manifest reports v3.5.0 and its interface metadata names native MultiAgentsV2 routing, table-form status, Luna Max, and Terra High; the immutable v3.5.0 tag resolves to 64f9cec.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "64f9cec"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.5.0",
+      "status": "deployed",
+      "observed_at": "2026-08-16T14:40:57+08:00",
+      "evidence": "Production deployment dpl_HDa6v4BRghCmJdFHLUZLZ13BiXue reached READY and was aliased publicly; cache-busted production served v3.5.0 and the 2026-08-16 privacy retention and user-control disclosures.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "64f9cec"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.5.0",
+      "status": "draft",
+      "observed_at": "2026-08-16T14:40:57+08:00",
+      "evidence": "OpenAI Platform accepted the plugin-only v3.5.0 ZIP with SHA-256 fbb5d94a2a7d808f4ee8ea007b8660178c844c5d6e8c7a0442a717fc2b91ed79 and created draft appsub_6a815ac57b2c81918a06c1fa0c9d1f7b. Opera GX verified version 3.5.0, subtitle, description, website/support/privacy/terms URLs, inherited icons, and three starter prompts. Skill scanning remains in progress and all four publisher attestations remain unchecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a815ac57b2c81918a06c1fa0c9d1f7b",
+      "commit": "64f9cec"
+    },
+    {
+      "surface": "source",
+      "version": "3.6.0",
+      "status": "verified",
+      "observed_at": "2026-08-21T10:52:00+08:00",
+      "evidence": "Public main commit 794e6f8 contains Singularity plus the Comet, Orbit, Event Horizon, and Pulsar taxonomy; 148 tests, package verification, both skill validators, plugin validation, reproducible context-footprint evidence, Opera GX QA, and fresh read-only Sol High review passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/794e6f86f0e0f7452335ed0ad1d8d2815a172f2f",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.6.0",
+      "status": "published",
+      "observed_at": "2026-08-21T10:52:01+08:00",
+      "evidence": "Public annotated v3.6.0 tag resolves to 794e6f8; GitHub release asset astral-orchestrator-3.6.0.zip and independently downloaded archive both report SHA-256 ce68e8c1dc95c744c7013bdb4ec4b2e523c07e425fd8b13ec6230eda3bb161c2.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.6.0",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.6.0",
+      "status": "installable",
+      "observed_at": "2026-08-21T10:52:02+08:00",
+      "evidence": "Public main and immutable v3.6.0 raw Codex manifests both report version 3.6.0 and all seven modes; main and tag resolve to 794e6f8.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.6.0",
+      "status": "deployed",
+      "observed_at": "2026-08-21T10:52:03+08:00",
+      "evidence": "Production deployment dpl_DQBfSEE2woFAVRGqMomArUJgYUei reached READY and the alias served v3.6.0, all seven modes, current benchmark values, and security headers; Opera GX desktop/mobile QA found no overflow or console/network failures.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
     }
   ]
 }
