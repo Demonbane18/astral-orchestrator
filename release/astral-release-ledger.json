@@ -388,6 +388,15 @@
       "evidence": "Production deployment dpl_DQBfSEE2woFAVRGqMomArUJgYUei reached READY and the alias served v3.6.0, all seven modes, current benchmark values, and security headers; Opera GX desktop/mobile QA found no overflow or console/network failures.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.5.0",
+      "status": "published",
+      "observed_at": "2026-08-21T10:53:30+08:00",
+      "evidence": "The public ChatGPT/Codex Plugins Directory in isolated Opera GX displayed Astral Orchestrator version 3.5.0, the legacy six-mode metadata and starter prompts, publisher information, website, privacy, and terms links; v3.6.0 is not yet public there.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
+      "commit": "64f9cecbcb9fdb50ef84b1d46695fc29a71d314b"
     }
   ]
 }
