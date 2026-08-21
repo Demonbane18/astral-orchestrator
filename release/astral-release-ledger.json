@@ -397,6 +397,15 @@
       "evidence": "The public ChatGPT/Codex Plugins Directory in isolated Opera GX displayed Astral Orchestrator version 3.5.0, the legacy six-mode metadata and starter prompts, publisher information, website, privacy, and terms links; v3.6.0 is not yet public there.",
       "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
       "commit": "64f9cecbcb9fdb50ef84b1d46695fc29a71d314b"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.6.0",
+      "status": "draft",
+      "observed_at": "2026-08-21T11:34:13+08:00",
+      "evidence": "OpenAI Platform accepted the plugin-root v3.6.0 ZIP with SHA-256 1f826b3d08ce3b6faaf69cd71f082fa45f5c2e17adcec2dd61c1359178af1b74 and created draft appsub_6a87c6dca5d08191b0c309d955966099. Opera GX verified version 3.6.0, seven-mode description including Singularity, the restored published subtitle, production website/support/privacy/terms URLs, three starter prompts, and inherited icons. Skill scanning remains in progress; all four policy/legal attestations remain unchecked and Confirm and submit is disabled.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a87c6dca5d08191b0c309d955966099",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
     }
   ]
 }
