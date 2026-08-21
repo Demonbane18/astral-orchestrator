@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.5
+# Spec: Astral Orchestrator v3.6
 
 ## Objective
 
@@ -8,6 +8,11 @@ integrates and verifies the result, then uses a fresh Sol reviewer. Explicit opt
 can route only a bounded worker to a user-selected model, and explicit opt-in Constellation
 can fan out independent cards within verified capacity. Each fixed lane's reasoning effort
 is configurable without editing profiles.
+
+Explicit opt-in Singularity is the token-disciplined single-session route for meaningful
+low- or medium-risk work: one verified Sol primary at the configured orchestrator effort,
+one compact work card, no subagents, and one Sol self-review. It is distinct from Comet,
+never automatic, and Event Horizon overrides Singularity for high-risk work.
 
 The user should not need to understand TOML files, runtime logs, or agent APIs. Two
 GitHub marketplace commands install the plugin. On current Codex MultiAgentsV2 hosts,
@@ -19,7 +24,7 @@ orchestration.
 ## Current MultiAgentsV2 native route
 
 On a current Codex **MultiAgentsV2** host, native explicit spawning is the standard route
-for Guided, Careful, and Measured implementation and review lanes. Before spawning,
+for Orbit, Event Horizon, and Pulsar implementation and review lanes. Before spawning,
 inspect `collaboration.spawn_agent` and require these fields: `agent_type`, `task_name`,
 `model`, `reasoning_effort`, and `fork_turns`. Every child receives a complete standalone
 work packet. A Luna or Terra implementation uses the built-in native worker with the
@@ -70,7 +75,7 @@ acceptance checks, route evidence, and consistently available optional metrics. 
 summarizes supplied data without calling models or claiming a result that was not
 recorded.
 
-Version 3.2 adds explicit opt-in Measured mode: one canonical frozen work card, an
+Version 3.2 added explicit opt-in Measured mode: one canonical frozen work card, an
 owner-only non-secret local ledger, deterministic pinned-lane routing, and fresh review.
 The v3.2 package also documents explicit opt-in Morph and Constellation routes without a
 version bump: Sol remains the verified primary and final reviewer in every mode.
@@ -86,7 +91,7 @@ worker inference. It preserves the requested model, effort, sandbox, workdir, de
 instructions, and private standard-input packet without changing OpenCodex configuration.
 
 Version 3.4.0 adds live, allowlisted Astral status panels to substantive progress updates,
-documents copy-ready prompts for all six modes, and makes Constellation's default Sol High
+documents copy-ready prompts for its six modes, and makes Constellation's default Sol High
 and custom Morph dry-run-to-runtime evidence sequence explicit and testable.
 
 Version 3.5.0 makes native MultiAgentsV2 spawning the standard Codex route, changes the
@@ -97,7 +102,9 @@ process launcher remains available only for hosts without the required native-v2
 ## Identity and migration
 
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
-identifiers. The current product version is 3.5.0. The normalized plugin, marketplace,
+identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
+Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
+The current product version is 3.6.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
@@ -139,6 +146,7 @@ modified automatically.
 | Narrow, repeatable, fully specified execution | MultiAgentsV2 native `worker`, explicitly pinned to Luna at configured effort (Max default) |
 | Context-heavy implementation, debugging, component/external integration, refactoring | MultiAgentsV2 native `worker`, explicitly pinned to Terra at configured effort (High default) |
 | Fresh final review | MultiAgentsV2 native `default`, explicitly pinned to Sol at configured reviewer effort (High default) |
+| Explicit Singularity | One verified Sol primary at configured orchestrator effort; no child agents or fresh reviewer |
 | Explicit Morph worker | User-selected native or `provider/model` worker at requested effort; Sol remains primary and reviewer |
 | Explicit Constellation first wave | Cost-aware non-Sol workers by default, only for independent ready cards within advertised capacity |
 
@@ -151,10 +159,20 @@ profile is used only when its fixed values match because custom agent file value
 precedence. A host lacking one or more of `agent_type`, `task_name`, `model`,
 `reasoning_effort`, and `fork_turns` may use the legacy exact-process fallback.
 
-Quick mode is the explicit exception: tiny, reversible work stays in the verified Sol
-primary at its configured effort. Guided and Careful use pinned lanes whenever bounded
+Comet mode is the explicit exception: tiny, reversible work stays in the verified Sol
+primary at its configured effort. Orbit and Event Horizon use pinned lanes whenever bounded
 execution exists.
-Measured is never auto-selected. Sol freezes exactly one canonical card and chooses Luna
+Singularity is an explicit opt-in for larger low- or medium-risk multi-step work in the
+same verified Sol primary at configured orchestrator effort. It never forces Max, starts
+no child lanes or planning probes, and uses one Sol self-review with actual change and
+verification evidence. It keeps no more than five active steps and one in progress, uses
+the smallest sufficient intervention, and stops after one proportional verification pass
+unless evidence is ambiguous, contradictory, or defective. A user who wants Sol Max must
+configure the orchestrator effort and start a new task. Event Horizon overrides Singularity. All
+modes run the primary checker; Singularity requires observed/verified Sol model and
+effort, must stop on unavailable evidence, and user confirmation cannot satisfy or
+override that requirement.
+Pulsar is never auto-selected. Sol freezes exactly one canonical card and chooses Luna
 only for fully specified narrow mechanical work with exact checks and no flags; any
 debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag uses
 Terra. Ambiguous routing receives exactly one Luna and one Terra behaviorally read-only
@@ -163,7 +181,7 @@ Morph and Constellation are never auto-selected. Morph stores the exact worker m
 and requested effort in each card, but does not claim that a provider accepted native
 effort semantics. Constellation starts only the independent first wave that fits the
 configured roster and host-advertised available slots after the primary uses one. It falls
-back to serial Guided-style routing when capacity or independence cannot be proven.
+back to serial Orbit-style routing when capacity or independence cannot be proven.
 
 ## Tech stack
 
@@ -197,8 +215,11 @@ back to serial Guided-style routing when capacity or independence cannot be prov
   missing optional profile on a current v2 host is handled by the explicit built-in
   native route, not by a silent launcher fallback.
 - The primary checker returns allowlisted `match`, `mismatch`, or `unavailable` JSON and
-  exits zero only for the exact configured Sol route; only unavailable evidence may use
-  the one-time user-confirmation fallback.
+  exits zero only for the exact configured Sol route. When evidence is unavailable, only
+  non-Singularity modes may use the one-time user-confirmation fallback. Singularity
+  requires observed/verified Sol model and effort, must stop on unavailable evidence, and
+  user confirmation cannot satisfy or override that requirement; mismatch and invalid
+  evidence block every route.
 - Unsupported effort settings fail before a delegated Codex process starts.
 - Morph never changes the primary or final reviewer, and its requested effort is not a
   claim of verified upstream-native effort semantics.
@@ -206,8 +227,10 @@ back to serial Guided-style routing when capacity or independence cannot be prov
   unless it can prove independent ownership and available capacity.
 - Portable routes never claim fixed lane names, actual model/effort, concurrency, or fresh
   review without observable host evidence.
-- Careful review cannot claim ship unless required read-only isolation is observed.
-- Measured uses an unpersisted Prepare step, one persisted freeze/preflight/route base,
+- Event Horizon review cannot claim ship unless required read-only isolation is observed.
+- Singularity has no subagents or fresh reviewer; a higher-priority instruction requiring
+  delegation makes Singularity unavailable rather than a substituted route.
+- Pulsar uses an unpersisted Prepare step, one persisted freeze/preflight/route base,
   one or more numbered implementation/verification/review attempts, and Complete only
   after a ship verdict. Its owner-only local state rejects symlinks and records
   prospective/finished events without secrets.
@@ -224,9 +247,11 @@ back to serial Guided-style routing when capacity or independence cannot be prov
 6. Tests, package verification, and official validators pass.
 7. The original Sol Advisor copyright and MIT permission notice remain included.
 8. A non-technical user can show, change, and reset every lane's effort independently.
-9. A Measured run keeps one canonical card, reproducible safe state, exact routing
+9. A Pulsar run keeps one canonical card, reproducible safe state, exact routing
    evidence, fresh verification after fixes, and a new fresh reviewer.
 10. Morph and Constellation remain explicit opt-ins with the fixed Sol primary and reviewer
     guarantees preserved.
-11. The root portable manifest and fixed `skills/` discovery are verified without changing
+11. Singularity remains explicit opt-in, uses one verified Sol primary with no subagents
+    or fresh reviewer, and yields to Event Horizon for high-risk work.
+12. The root portable manifest and fixed `skills/` discovery are verified without changing
     the existing Codex/OpenAI manifest or route contract.

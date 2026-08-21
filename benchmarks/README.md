@@ -1,16 +1,18 @@
 # Benchmarks
 
 Astral publishes two deliberately separate kinds of evidence. The
-[instruction-context footprint](context-footprint-2026-08-04.json) measures the static
+[instruction-context footprint](context-footprint-2026-08-21.json) measures the current static
 instruction files loaded for named paths. The local outcome scorecard below compares
 recorded runs. Neither substitutes for the other.
 
 ## Instruction-context footprint
 
-The committed v3.2.0 measurement used `tiktoken` 0.13.0 and its `o200k_base` encoding
-on 2026-08-04. It preserves the legacy core, Quick, full, and quick-vs-full fields, and
-adds Guided (the same four-file full bundle) and explicit Measured (which adds its own
-reference). Historical 2026-08-03 evidence remains unchanged.
+The current v3.6.0 measurement uses `tiktoken` 0.13.0 and its `o200k_base` encoding on
+2026-08-21. Its `quick`, `guided`, and `measured` bundle keys are stable historical
+schema keys; they now describe the Comet, Orbit, and Pulsar routes respectively. The
+historical `quick` pilot profile also remains unchanged. The current Pulsar bundle loads
+`pulsar-mode.md`. The 2026-08-04 v3.2.0 and 2026-08-03 evidence files remain unchanged
+historical snapshots.
 
 This is an instruction-context loading measurement only. It does not measure task
 quality, latency, price, or total token usage for a complete run, so it does not prove
@@ -21,7 +23,7 @@ that every multi-agent run uses fewer total tokens than single Sol.
 repository root:
 
 ```sh
-uv run --no-project --with tiktoken==0.13.0 python benchmarks/measure_instruction_context.py --check benchmarks/context-footprint-2026-08-04.json
+uv run --no-project --with tiktoken==0.13.0 python benchmarks/measure_instruction_context.py --check benchmarks/context-footprint-2026-08-21.json
 ```
 
 The command exits non-zero if the tokenizer version, measured instruction files, hashes,

@@ -31,7 +31,8 @@ Never silently downgrade a value that Codex rejects.
 Codex plugins cannot pin a permanent native UI widget. Keep the user informed through a
 compact **Astral status** panel in substantive progress commentary. Use the reusable
 panel in `work-templates.md` for the Sol primary, each selected worker, and the fresh
-reviewer when review is required. For Quick work, say that workers are not needed; for
+reviewer when review is required. For Singularity, use only the Sol primary row and do
+not repeat unchanged updates. For Comet work, say that workers are not needed; for
 any reviewer that is not yet required, say so instead of implying it is running.
 
 Publish the panel at these points:
@@ -75,21 +76,25 @@ Before execution in any mode:
 
 1. Resolve `../../scripts/configure-effort.py` relative to this skill and run
    `python3 configure-effort.py --show --json`. Then resolve
-   `../../scripts/check-primary.py` and run it before the one-time confirmation fallback.
+   `../../scripts/check-primary.py` and run it before the non-Singularity one-time
+   confirmation fallback.
    Its optional `--thread-id` defaults to `CODEX_THREAD_ID`; use `--sessions-dir` only for
    local test evidence. It invokes the bundled runtime inspector rather than reading
    rollout content itself, emits allowlisted JSON, and exits zero only when the observed
    primary model is `gpt-5.6-sol` and its effort equals the configured orchestrator effort.
-   When its status is `unavailable`, obtain one explicit user confirmation and label it
-   user-supplied rather than observed. When status is `mismatch`, stop and correct the
-   route; do not ask a user to waive a mismatch. `invalid` means malformed, ambiguous, or
-   rejected local evidence and also blocks the route; manual confirmation cannot waive it.
+   When its status is `unavailable`, a non-Singularity mode may obtain one explicit user
+   confirmation and label it user-supplied rather than observed. Singularity requires an
+   observed/verified Sol model and effort, so it must stop on unavailable; user
+   confirmation cannot satisfy or override that requirement. When status is `mismatch`,
+   stop and correct the route; do not ask a user to waive a mismatch. `invalid` means
+   malformed, ambiguous, or rejected local evidence and also blocks the route; manual
+   confirmation cannot waive it.
 2. Read applicable workspace instructions and inspect the current change state.
 3. Define the work card and identify whether worker cards can have non-overlapping
    ownership.
 4. Identify user confirmations required before consequential actions.
 
-Before Guided, Careful, or Measured execution, additionally:
+Before Orbit, Event Horizon, or Pulsar execution, additionally:
 
 5. Inspect the available `collaboration.spawn_agent` contract. A current Codex
    **MultiAgentsV2** host exposes all five required controls together:
@@ -109,19 +114,27 @@ Before Guided, Careful, or Measured execution, additionally:
    `reasoning_effort`, or `fork_turns`—and compatibility requires it. Require a successful
    dry run for the needed role, workdir, and private packet before launch.
 
-If the primary route is neither observable nor explicitly user-confirmed, the selected
-native v2 route cannot be proven, or the needed legacy launcher dry run fails, stop before
-implementation. Explain the missing item and the smallest corrective action. A current
-v2 host never falls through to a process merely because optional profiles are missing or
-customized. Optional setup restores fixed-role ergonomics; it is never evidence for a
-different model or effort. Do not fall back to another route.
+For non-Singularity modes, stop before implementation if the primary route is neither
+observable nor explicitly user-confirmed, the selected native v2 route cannot be proven,
+or the needed legacy launcher dry run fails. Singularity requires an observed/verified
+Sol model and effort: it stops on unavailable evidence, and user confirmation cannot
+satisfy or override that requirement. Explain the missing item and the smallest corrective
+action. A current v2 host never falls through to a process merely because optional
+profiles are missing or customized. Optional setup restores fixed-role ergonomics; it is
+never evidence for a different model or effort. Do not fall back to another route.
 
-Quick mode intentionally uses only the verified Sol primary session at the configured
+Comet mode intentionally uses only the verified Sol primary session at the configured
 orchestrator effort and does not need custom worker availability.
 
-Measured uses this same exact route contract and preflight. Its frozen-card state,
+Singularity intentionally uses only one verified Sol primary at the configured
+orchestrator effort. It is explicit opt-in, larger than Comet, and does not inspect
+`spawn_agent`, launch child lanes, run planning probes, or request a fresh reviewer.
+Read `singularity-mode.md` after opt-in. If a higher-priority instruction requires
+delegation, report Singularity unavailable; high-risk work uses Event Horizon instead.
+
+Pulsar uses this same exact route contract and preflight. Its frozen-card state,
 resumption question, behavioral planning probes, deterministic selection rules, and
-ledger are defined in `measured-mode.md`; those details never alter the configured model
+ledger are defined in `pulsar-mode.md`; those details never alter the configured model
 or effort for a lane.
 
 Morph and Constellation use this same exact Sol primary preflight. Read `morph-mode.md` or
@@ -150,7 +163,7 @@ true:
 Keep the decision in the Sol primary session at the configured orchestrator effort when
 requirements, architecture, safety boundaries, public interfaces, or acceptance criteria
 are unsettled. Sol may settle the decision, then issue bounded execution to Luna or Terra.
-For Measured, Sol also retains decomposition, integration, and final route selection; use
+For Pulsar, Sol also retains decomposition, integration, and final route selection; use
 its stricter deterministic selection rules rather than a general heuristic.
 
 ## Choose the execution mechanism
@@ -248,7 +261,7 @@ After launch, collect runtime evidence showing:
 - the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
 - `effort` equals the role's configured effort;
-- for the reviewer, the sandbox policy is `read-only` when Careful mode requires hard
+- for the reviewer, the sandbox policy is `read-only` when Event Horizon mode requires hard
   isolation.
 
 Use trustworthy launch or startup metadata when it exposes all fields. If it omits a field, resolve
@@ -289,7 +302,7 @@ The orchestrator inspects every returned change before another lane builds on it
 The matching reviewer profile requests a read-only sandbox, and the legacy exact-process
 launcher passes that mode explicitly. A built-in v2 reviewer receives the same complete
 behaviorally read-only review packet, but the host still controls the effective sandbox.
-Record the observed sandbox and never overstate isolation. In Careful mode, require the
+Record the observed sandbox and never overstate isolation. In Event Horizon mode, require the
 exact pinned Sol `model`, configured reviewer `reasoning_effort`, a distinct unique reviewer
 `task_name`, `fork_turns: "none"`, and observed read-only access; requested read-only access
 alone is insufficient. Do not weaken this safeguard when a custom

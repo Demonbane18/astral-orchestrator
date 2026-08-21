@@ -1,6 +1,6 @@
 ---
 name: astral-orchestrator
-description: "Orchestrate project work with a Sol lead, fixed Luna and Terra lanes, explicit opt-in Morph and Constellation workers, configurable reasoning effort, and a fresh Sol reviewer. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation, wants to change Astral Orchestrator effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation with verified results."
+description: "Orchestrate project work with a Sol lead, fixed Luna and Terra lanes, an explicit opt-in single-session Singularity mode, configurable reasoning effort, and verified results. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation or disciplined one-session work, wants to change effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation."
 ---
 
 # Astral Orchestrator
@@ -11,12 +11,16 @@ workers for bounded execution; and keep the process understandable to a non-tech
 user.
 
 Read [references/modes-and-risk.md](references/modes-and-risk.md) for mode, risk, and
-confirmation decisions. Before spawning a Codex lane, read
+confirmation decisions. Before spawning a Codex lane or using Singularity, read
 [references/routing-and-preflight.md](references/routing-and-preflight.md) and
-[references/work-templates.md](references/work-templates.md). Before a portable worker,
+[references/work-templates.md](references/work-templates.md). Comet retains progressive
+disclosure and does not load those references unless another rule requires them. Before a portable worker,
 read `portable-hosts.md` and the work templates instead.
-When the user explicitly names Measured, also read
-[references/measured-mode.md](references/measured-mode.md).
+When the user explicitly names Pulsar, also read
+[references/pulsar-mode.md](references/pulsar-mode.md).
+When the user explicitly names Singularity, also read
+[references/singularity-mode.md](references/singularity-mode.md) after the routing and
+work-template references above.
 When the user explicitly names Morph, also read
 [references/morph-mode.md](references/morph-mode.md). When the user explicitly names Constellation,
 also read [references/constellation-mode.md](references/constellation-mode.md).
@@ -52,20 +56,25 @@ never fence it and never use plain pipe text.
 
 ## 1. Choose the mode and risk
 
-- **Quick** — tiny, reversible, low-risk work with an obvious solution. The Sol primary
+- **Comet** — tiny, reversible, low-risk work with an obvious solution. The Sol primary
   works directly at its configured effort and self-reviews; no worker is spawned.
-- **Guided (default)** — normal feature, fix, content, configuration, or project work.
+- **Orbit (default)** — normal feature, fix, content, configuration, or project work.
   Sol routes bounded execution to Luna or Terra at their configured effort and integrates
   it.
-- **Careful** — high-impact, hard-to-reverse, security-sensitive, financial, privacy,
+- **Event Horizon** — high-impact, hard-to-reverse, security-sensitive, financial, privacy,
   production, migration, or explicitly thorough work. Use visible planning, strict
   confirmation gates, pinned implementation lanes, and a fresh Sol review at the
   configured reviewer effort.
-- **Measured (explicit opt-in)** — a deliberately slower, evidence-oriented route for a
-  user who explicitly names Measured. Freeze one canonical work card and its acceptance
+- **Singularity (explicit opt-in)** — meaningful low- or medium-risk work that is larger
+  than Comet, but stays in one verified Sol primary session at the configured
+  orchestrator effort. Do not spawn subagents, planning probes, worker lanes, or a fresh
+  reviewer; Sol self-reviews once using actual changes and evidence. Read the Singularity
+  reference before using it. Event Horizon overrides Singularity for high-risk work.
+- **Pulsar (explicit opt-in)** — a deliberately slower, evidence-oriented route for a
+  user who explicitly names Pulsar. Freeze one canonical work card and its acceptance
   checks, keep a non-secret resumable local ledger, and use planning probes only when
-  Luna/Terra selection is ambiguous. Measured is never auto-selected; recommend Guided
-  for normal work. Its detailed state machine is in the Measured reference.
+  Luna/Terra selection is ambiguous. Pulsar is never auto-selected; recommend Orbit
+  for normal work. Its detailed state machine is in the Pulsar reference.
 - **Morph (explicit opt-in)** — a user-selected routed or native worker model for a
   bounded card. Sol remains the configured primary and the exact fresh Sol reviewer
   remains required. Read the Morph reference before launch.
@@ -73,8 +82,12 @@ never fence it and never use plain pipe text.
   owned ready cards. Sol remains one primary and one fresh reviewer; no extra Sol
   implementers are spawned by default. Read the Constellation reference before launch.
 
+Legacy aliases are advisory prompt compatibility only: Quick maps to Comet; Guided maps
+to Orbit; Careful maps to Event Horizon; Measured maps to Pulsar. A legacy alias never
+changes the corresponding route or safeguards.
+
 Honor an explicit mode unless its safeguards are too weak for the observed risk. Raise
-the safeguards when necessary and explain why in one sentence. Never lower Careful
+the safeguards when necessary and explain why in one sentence. Never lower Event Horizon
 without permission.
 
 ## 2. Prove the Codex orchestration preflight
@@ -91,13 +104,15 @@ to obtain the effective effort for all four lanes. Missing settings mean the def
 above. For every mode, resolve and run `../../scripts/check-primary.py` first. It uses the
 host's local rollout inspector and `CODEX_THREAD_ID` when available, then exits zero only
 when the observed primary is `gpt-5.6-sol` at the configured orchestrator effort. If its
-allowlisted JSON says unavailable, ask the user once to confirm the model and effort;
-record that as **user-confirmed**, not observed evidence. The checker never asks the user
-itself. A `mismatch` or `invalid` result blocks the route; manual confirmation cannot
-override either one. A changed orchestrator setting applies to a new task, not the task
-already running.
+allowlisted JSON says unavailable, non-Singularity modes may ask the user once to confirm
+the model and effort; record that as **user-confirmed**, not observed evidence. The
+checker never asks the user itself. Singularity requires observed/verified Sol model and
+effort, so unavailable evidence blocks Singularity; user confirmation cannot override
+that requirement. A `mismatch` or `invalid` result blocks every route; manual
+confirmation cannot override either one. A changed orchestrator setting applies to a new
+task, not the task already running.
 
-For Guided, Careful, and Measured work, first inspect the `collaboration.spawn_agent`
+For Orbit, Event Horizon, and Pulsar work, first inspect the `collaboration.spawn_agent`
 contract. Current Codex **MultiAgentsV2** hosts expose all five required controls:
 `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. When all five
 fields are available, use native spawning as the standard fixed route: choose a unique
@@ -124,7 +139,8 @@ instructions. Stop when the chosen native route or this legacy fallback cannot b
 proven. A blocking preflight ends the current turn. Never silently lower an unsupported
 effort.
 
-Morph and Constellation retain this exact Sol primary preflight and fresh Sol review. Their worker
+Singularity retains the exact Sol primary preflight but never uses child lanes or a fresh
+reviewer. Morph and Constellation retain this exact Sol primary preflight and fresh Sol review. Their worker
 rules are explicit opt-ins defined only in their dedicated references; never treat either
 as permission to change the primary or final-review model.
 
@@ -155,9 +171,10 @@ unsafe. Otherwise state the smallest reasonable assumption and continue. A block
 clarification or confirmation ends the current turn: make no dependent change and
 return one direct question immediately. Do not wait silently in the same turn.
 
-For Guided or Careful work, split execution into the fewest useful non-overlapping work
-cards. Measured freezes exactly one canonical work card; it may describe multiple bounded
-items inside that card, but one selected lane owns all edits. Morph uses a separately
+For Orbit or Event Horizon work, split execution into the fewest useful non-overlapping work
+cards. Pulsar freezes exactly one canonical work card; it may describe multiple bounded
+items inside that card, but one selected lane owns all edits. Singularity keeps one card
+with no more than five active steps and one in progress. Morph uses a separately
 selected exact worker model only for its bounded card. Constellation may fan out only cards proven
 independent by its reference. Keep requirements,
 architecture, task decomposition, acceptance decisions, and cross-lane integration in
@@ -183,9 +200,9 @@ directly, and must not spawn or delegate further.
 
 Parallelize only independent cards with non-overlapping ownership. Run dependent work
 or shared-file edits serially. Do not spawn agents merely to make the run look busy.
-Guided, Careful, and Measured implementation must use at least one pinned worker whenever bounded
+Orbit, Event Horizon, and Pulsar implementation must use at least one pinned worker whenever bounded
 execution exists; answer-only, planning-only, and blocked requests need no worker. Morph
-and Constellation use only their explicit worker rules and never weaken Careful safeguards.
+and Constellation use only their explicit worker rules and never weaken Event Horizon safeguards.
 
 ## 5. Integrate and verify
 
@@ -202,21 +219,23 @@ pinned lane, rerun affected checks, and inspect the result again.
 
 ## 6. Require the right review
 
-- **Quick:** Sol self-review at the configured orchestrator effort using the actual
+- **Comet:** Sol self-review at the configured orchestrator effort using the actual
   change and evidence.
-- **Guided:** use a new native reviewer with an explicit `agent_type`, a distinct unique
+- **Orbit:** use a new native reviewer with an explicit `agent_type`, a distinct unique
   lowercase `task_name`, exact Sol `model`, configured reviewer `reasoning_effort`, and
   `fork_turns: "none"` after every worker-produced change. Prefer a matching
   `astral_orchestrator_sol_reviewer` profile only when its fixed values match; otherwise
   use the built-in native default with those explicit values and a complete review packet.
   For a no-change or answer-only request with no worker, label primary-session Sol
   self-review plainly.
-- **Careful:** always use the exact Sol reviewer lane, and require observed read-only
+- **Event Horizon:** always use the exact Sol reviewer lane, and require observed read-only
   isolation before accepting its independent review.
-- **Measured:** use the normal fresh Sol reviewer after the selected worker. High-risk
-  Measured work also inherits Careful confirmation and observed read-only isolation.
+- **Singularity:** do not spawn a reviewer. Sol self-reviews once using the actual change
+  set and verification evidence; this is not independent review.
+- **Pulsar:** use the normal fresh Sol reviewer after the selected worker. High-risk
+  Pulsar work also inherits Event Horizon confirmation and observed read-only isolation.
 - **Morph and Constellation:** use the normal fresh exact Sol reviewer after integrated worker
-  changes. Careful risk still requires observed read-only isolation.
+changes. Event Horizon risk still requires observed read-only isolation.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
 change set, and verification evidence. Accept exactly one verdict: **ship**,

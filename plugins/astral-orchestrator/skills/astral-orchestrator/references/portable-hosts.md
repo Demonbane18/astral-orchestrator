@@ -39,7 +39,7 @@ capacity, and a fresh reviewer context are observed. Reserve and count the prima
 occupied slot before calculating worker capacity, regardless of whether the host advertises
 it. If concurrency is unavailable but the worker and reviewer requirements are proven, an
 explicitly selected Constellation may run the same cards serially, clearly labeled **serial
-portable fallback**. Do not call it Guided, do not claim it was concurrent, and do not run
+portable fallback**. Do not call it Orbit, do not claim it was concurrent, and do not run
 more workers merely to fill capacity.
 
 ## Fresh review

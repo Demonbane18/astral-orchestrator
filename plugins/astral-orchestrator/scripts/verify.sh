@@ -16,9 +16,10 @@ skill=$plugin_dir/skills/astral-orchestrator/SKILL.md
 modes=$plugin_dir/skills/astral-orchestrator/references/modes-and-risk.md
 templates=$plugin_dir/skills/astral-orchestrator/references/work-templates.md
 routing=$plugin_dir/skills/astral-orchestrator/references/routing-and-preflight.md
-measured=$plugin_dir/skills/astral-orchestrator/references/measured-mode.md
+pulsar=$plugin_dir/skills/astral-orchestrator/references/pulsar-mode.md
 morph=$plugin_dir/skills/astral-orchestrator/references/morph-mode.md
 constellation=$plugin_dir/skills/astral-orchestrator/references/constellation-mode.md
+singularity=$plugin_dir/skills/astral-orchestrator/references/singularity-mode.md
 portable_hosts=$plugin_dir/skills/astral-orchestrator/references/portable-hosts.md
 agent_dir=$plugin_dir/agents
 installer=$plugin_dir/scripts/install-agents.sh
@@ -46,29 +47,29 @@ cmp -s "$canonical_license" "$plugin_license" || fail "distributable notice diff
 cmp -s "$canonical_notice" "$plugin_notice" || fail "distributable notice differs from repository root: NOTICE.md"
 grep -Fq "($canonical_improvements_url)" "$canonical_notice" || fail "canonical NOTICE must link to the repository improvements document"
 
-for required in "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$measured" "$morph" "$constellation" "$portable_hosts" "$installer" "$inspector" "$primary_checker" "$launcher" "$morph_launcher" "$codex_runtime" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
+for required in "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$pulsar" "$morph" "$constellation" "$singularity" "$portable_hosts" "$installer" "$inspector" "$primary_checker" "$launcher" "$morph_launcher" "$codex_runtime" "$effort_settings" "$effort_configurator" "$benchmark_scorecard" "$effort_wrapper"; do
   [ -f "$required" ] || fail "required file is missing: $required"
 done
 
 command -v python3 >/dev/null 2>&1 || fail "Python 3.11 or newer is required for repository verification."
 python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)' >/dev/null 2>&1 || fail "Python 3.11 or newer is required for repository verification."
 
-python3 - "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$measured" "$morph" "$constellation" "$portable_hosts" "$agent_dir" "$marketplace" <<'PY'
+python3 - "$manifest" "$portable_manifest" "$skill" "$modes" "$templates" "$routing" "$pulsar" "$morph" "$constellation" "$singularity" "$portable_hosts" "$agent_dir" "$marketplace" <<'PY'
 import json
 import re
 import sys
 import tomllib
 from pathlib import Path
 
-manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, measured_path, morph_path, constellation_path, portable_hosts_path, agent_dir, marketplace_path = map(
+manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, pulsar_path, morph_path, constellation_path, singularity_path, portable_hosts_path, agent_dir, marketplace_path = map(
     Path, sys.argv[1:]
 )
 
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.5.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.5.0")
+if manifest.get("version") != "3.6.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.6.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -147,10 +148,11 @@ skill = skill_path.read_text(encoding="utf-8")
 if not skill.startswith("---\nname: astral-orchestrator\n"):
     raise SystemExit("skill frontmatter name is invalid")
 for required_text in (
-    "Quick",
-    "Guided (default)",
-    "Careful",
-    "Measured",
+    "Comet",
+    "Orbit (default)",
+    "Event Horizon",
+    "Singularity",
+    "Pulsar (explicit opt-in)",
     "Morph",
     "Constellation",
     "Sol High",
@@ -166,6 +168,21 @@ modes = modes_path.read_text(encoding="utf-8")
 for required_text in ("Low risk", "Medium risk", "High risk", "User confirmation gate"):
     if required_text not in modes:
         raise SystemExit(f"risk guide is missing: {required_text}")
+
+singularity = " ".join(singularity_path.read_text(encoding="utf-8").lower().split())
+for required_text in (
+    "explicit opt-in",
+    "one verified sol primary",
+    "do not spawn",
+    "smallest sufficient intervention",
+    "no more than five active steps",
+    "one proportional verification pass",
+    "event horizon overrides singularity",
+    "anecdotal",
+    "no statem dependency",
+):
+    if required_text not in singularity:
+        raise SystemExit(f"singularity contract is missing: {required_text}")
 
 morph = morph_path.read_text(encoding="utf-8")
 for required_text in ("explicit opt-in", "OpenCodex is optional", "requested effort", "fresh Sol reviewer"):
@@ -198,7 +215,7 @@ for required_text in (
     if required_text not in routing:
         raise SystemExit(f"routing contract is missing: {required_text}")
 
-measured = " ".join(measured_path.read_text(encoding="utf-8").split())
+pulsar = " ".join(pulsar_path.read_text(encoding="utf-8").split())
 for required_text in (
     "explicit opt-in",
     "Never auto-select",
@@ -215,8 +232,8 @@ for required_text in (
     "fresh verification",
     "new reviewer",
 ):
-    if required_text not in measured:
-        raise SystemExit(f"measured contract is missing: {required_text}")
+    if required_text not in pulsar:
+        raise SystemExit(f"pulsar contract is missing: {required_text}")
 
 expected_agents = {
     "astral-orchestrator-luna-implementer.toml": {
@@ -291,7 +308,7 @@ if marketplace_path.is_file():
     if len(entries) != 1 or entries[0].get("name") != "astral-orchestrator":
         raise SystemExit("marketplace must contain exactly one astral-orchestrator entry")
 
-for path in (manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, measured_path, morph_path, constellation_path, portable_hosts_path, *agent_dir.glob("*.toml"), *legacy_agent_dir.glob("*.toml")):
+for path in (manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, pulsar_path, morph_path, constellation_path, singularity_path, portable_hosts_path, *agent_dir.glob("*.toml"), *legacy_agent_dir.glob("*.toml")):
     text = path.read_text(encoding="utf-8")
     if "[TODO" in text or "YOUR-NAME" in text:
         raise SystemExit(f"placeholder remains in {path}")

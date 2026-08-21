@@ -44,7 +44,7 @@ five simultaneous children. Do not spawn extra Sol implementers by default; rese
 for the primary and fresh review, and prefer cost-aware non-Sol workers.
 
 If independence, ownership, ready status, model availability, or capacity cannot be
-proven, fall back to serial Guided-style routing. The fallback keeps the same work cards,
+proven, fall back to serial Orbit-style routing. The fallback keeps the same work cards,
 exact routes, verification, and review; it merely removes unsupported concurrency.
 
 ## Routing and integration
@@ -69,13 +69,13 @@ for every worker and do not rename requested values as observed ones.
 When independent cards and all non-concurrency capabilities are proven but the host cannot
 provide concurrent capacity, an explicitly selected Constellation may use the documented
 serial portable fallback. Keep the same cards, ownership, verification, and fresh reviewer;
-label the result serial and never call it concurrent or Guided-style routing. If separate
+label the result serial and never call it concurrent or Orbit-style routing. If separate
 worker or fresh reviewer context cannot be proven, stop.
 
 ## Review and risk
 
 After integration and verification, start one new fresh exact Sol reviewer for the combined
-change set. Careful safeguards override Constellation whenever risk requires user
+change set. Event Horizon safeguards override Constellation whenever risk requires user
 confirmation, observed read-only reviewer isolation, or serial execution. A failed worker,
 failed check, or uncertain shared interface stops the affected route rather than expanding
 the Constellation.

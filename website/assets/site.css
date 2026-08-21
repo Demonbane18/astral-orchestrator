@@ -915,22 +915,28 @@ p {
   text-transform: uppercase;
 }
 
-.mode-tag--quick {
+.mode-tag--comet {
   color: var(--gold);
   background: var(--gold-soft);
 }
 
-.mode-tag--guided {
+.mode-tag--orbit {
   color: var(--sky);
   background: var(--sky-soft);
 }
 
-.mode-tag--careful {
+.mode-tag--event-horizon {
   color: var(--violet);
   background: var(--violet-soft);
 }
 
-.mode-tag--measured {
+.mode-tag--singularity {
+  color: var(--text-strong);
+  background: color-mix(in srgb, var(--gold-soft) 52%, var(--sky-soft));
+  border: 1px solid color-mix(in srgb, var(--gold) 46%, var(--sky));
+}
+
+.mode-tag--pulsar {
   color: var(--gold);
   background: var(--gold-soft);
   border: 1px solid currentColor;
@@ -948,8 +954,12 @@ p {
   border: 1px solid currentColor;
 }
 
-.mode-card--measured {
+.mode-card--pulsar {
   border-color: color-mix(in srgb, var(--gold) 38%, var(--line));
+}
+
+.mode-card--singularity {
+  border-color: color-mix(in srgb, var(--gold) 28%, var(--sky));
 }
 
 .mode-card--morph {
@@ -992,19 +1002,19 @@ p {
   margin: 0.45rem 0 0;
 }
 
-/* ---------- Measured mode ---------- */
+/* ---------- Pulsar mode ---------- */
 
-.measured-section {
+.pulsar-section {
   border-bottom: 1px solid var(--line);
 }
 
-.measured-grid {
+.pulsar-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.15rem;
 }
 
-.measured-card {
+.pulsar-card {
   padding: clamp(1.35rem, 3vw, 1.9rem);
   color: var(--muted);
   background: var(--glass);
@@ -1016,7 +1026,7 @@ p {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.measured-card h3 {
+.pulsar-card h3 {
   color: var(--text-strong);
 }
 
@@ -1307,21 +1317,22 @@ p {
 }
 
 .chart-bar--full {
-  width: 71.6%;
+  width: 82.4%;
   background: linear-gradient(90deg, var(--violet) 0%, var(--sky-bright) 100%);
 }
 
-.chart-bar--quick {
-  width: 47.8%;
+.chart-bar--comet {
+  width: 38.1%;
   background: linear-gradient(90deg, var(--sky-bright) 0%, var(--gold-bright) 100%);
 }
 
 .chart-bar--core {
-  width: 25.9%;
+  width: 27.4%;
   background: var(--gold-bright);
 }
 
-.chart-bar--measured {
+.chart-bar--pulsar {
+  width: 100%;
   background: linear-gradient(90deg, var(--gold) 0%, var(--violet) 100%);
 }
 
@@ -1753,7 +1764,7 @@ pre code > span::before {
 @media (max-width: 56rem) {
   .card-grid,
   .conclusion-grid,
-  .measured-grid {
+  .pulsar-grid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -1812,7 +1823,7 @@ pre code > span::before {
 @media (max-width: 34rem) {
   .card-grid,
   .conclusion-grid,
-  .measured-grid,
+  .pulsar-grid,
   .two-up,
   .stat-stack,
   .route-branches {

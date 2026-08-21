@@ -2,21 +2,26 @@
 
 ## Executive assessment
 
-The current Astral Orchestrator v3.4 design provides the model-routed workflow adapted
+The current Astral Orchestrator v3.6 design provides the model-routed workflow adapted
 from Sol Advisor: one Sol orchestrator, two explicitly pinned implementation lanes, exact
 route evidence, bounded ownership, independent verification, and a fresh pinned Sol
 reviewer. On current Codex MultiAgentsV2 hosts, native explicit spawning is the standard
 route; the bundled launcher is compatibility infrastructure only for hosts that lack one
 or more of `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`.
 
-The design focuses on usability without weakening the route contract. It keeps Quick,
-Guided, Careful, and Measured language, gives non-technical users a two-command GitHub
-install with optional namespaced native profiles, and refuses to silently downgrade a
-requested model or effort.
+The design focuses on usability without weakening the route contract. Its seven primary
+modes are Comet for tiny self-session work, Orbit as the default project route, Event
+Horizon for high-risk gates and read-only review, Singularity for bounded single-agent
+work, Pulsar for explicit evidence, and opt-in Morph and Constellation specialist routes.
+Singularity is an explicit low-/medium-risk route: one verified Sol performs the work,
+no subagents are spawned, no fresh reviewer is used, and one proportional self-review
+checks the result. Event Horizon overrides Singularity whenever its higher-risk gate
+applies. The design gives non-technical users a two-command GitHub install with optional
+namespaced native profiles, and refuses to silently downgrade a requested model or effort.
 
 ## Current MultiAgentsV2 native route
 
-For Guided, Careful, and Measured work, inspect the current
+For Orbit, Event Horizon, Pulsar, Morph, and Constellation work, inspect the current
 `collaboration.spawn_agent` contract first. A MultiAgentsV2 host must expose
 `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. Native children
 receive a complete standalone packet and explicit model and configured effort. Luna and
@@ -71,7 +76,7 @@ proven, stop rather than silently substituting another model, effort, or route.
 | Context lane | Terra with a pinned high reasoning setting | MultiAgentsV2 native `worker` or matching profile; Terra at configured effort; High by default |
 | Reviewer | Fresh Sol High, requested read-only | MultiAgentsV2 native `default` or matching profile; Sol at configured effort; High by default |
 | Routing proof | Native metadata plus allowlisted rollout inspection | Explicit v2 spawn fields plus allowlisted rollout inspection |
-| User controls | Architecture-oriented workflow | Quick, Guided, Careful, and explicit Measured modes |
+| User controls | Architecture-oriented workflow | Comet, Orbit (default), Event Horizon, Singularity (one verified Sol/no subagents/no fresh reviewer/one proportional self-review), Pulsar, Morph, and Constellation; Event Horizon overrides Singularity |
 | Installation | Companion agent installer | Two-command GitHub plugin install plus optional conflict-safe native-profile setup; legacy launcher only for hosts lacking one or more of `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` |
 | Removal | Manual profile cleanup | --remove deletes only exact, unmodified profiles |
 | Failure | Stop when strict preflight fails | Same; never silently substitute another lane |
@@ -90,8 +95,11 @@ proven, stop rather than silently substituting another model, effort, or route.
    instead of requiring jq.
 4. **Clear lane language.** Luna handles repeatable work; Terra handles context-heavy
    work; Sol retains requirements, architecture, integration, and acceptance.
-5. **Proportional orchestration.** Quick avoids coordination overhead, while Guided and
-   Careful use explicit native v2 routes whenever the host exposes them.
+5. **Proportional orchestration.** Comet avoids coordination overhead; Singularity uses
+   one verified Sol with no subagents, no fresh reviewer, and one proportional self-review
+   for bounded low-/medium-risk work; and Orbit, Event Horizon, Pulsar, Morph, and
+   Constellation use explicit native v2 routes whenever the host exposes them. Event
+   Horizon overrides Singularity for high-risk work.
 6. **Honest host boundary.** The reviewer requests read-only access, records the
    effective sandbox, and does not overclaim host-enforced isolation.
 7. **Native-first explicit routing.** Current MultiAgentsV2 hosts receive explicit
@@ -102,7 +110,7 @@ proven, stop rather than silently substituting another model, effort, or route.
    profiles. Custom profile values take precedence, so matching profiles are used only
    when their fixed model and effort agree; otherwise native built-ins receive explicit
    values. Unsupported values fail clearly instead of being downgraded.
-9. **Explicit measured evidence.** Measured freezes one work card and checks, records a
+9. **Explicit Pulsar evidence.** Pulsar freezes one work card and checks, records a
    non-secret local phase ledger, and probes both candidate lanes only for ambiguity.
 
 ## Version 3 identity migration
@@ -123,7 +131,7 @@ Strict routing requires recipients to have all three models and to start a new t
 profile installation. This is less portable than generic delegation, but it directly
 satisfies the requirement for a real model-routed orchestrator.
 
-Measured is intentionally slower and more model-intensive than Guided. It is never an
+Pulsar is intentionally slower and more model-intensive than Orbit. It is never an
 automatic default: users opt in when a frozen card and reproducible evidence are worth it.
 
 Runtime rollout formats are host implementation details and may change. The inspector

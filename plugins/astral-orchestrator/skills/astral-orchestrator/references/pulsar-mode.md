@@ -1,17 +1,17 @@
-# Measured mode
+# Pulsar mode
 
-Measured is an explicit opt-in route for a user who wants a deliberately slower,
-evidence-oriented execution record. Never auto-select Measured: recommend Guided for
+Pulsar is an explicit opt-in route for a user who wants a deliberately slower,
+evidence-oriented execution record. Never auto-select Pulsar: recommend Orbit for
 normal work. It adds no Ori, OpenRouter, API, network service, secret, analytics, or
 dynamic model selection. It uses the existing pinned `gpt-5.6-sol`, `gpt-5.6-luna`, and
 `gpt-5.6-terra` lanes at their configured efforts.
 
 Sol retains requirements, architecture, safety decisions, decomposition, integration,
-and final routing. Measured does not make a worker an independent owner of those choices.
+and final routing. Pulsar does not make a worker an independent owner of those choices.
 
 ## One executable state sequence
 
-Measured has one unpersisted **Prepare** step followed by this persisted grammar:
+Pulsar has one unpersisted **Prepare** step followed by this persisted grammar:
 `freeze`, `preflight`, `route`, then one or more numbered execution attempts, each in
 the order `implementation`, `verification`, `review`, followed by `complete`. The route
 phase includes any permitted planning probes. Freeze, preflight, and route occur once;
@@ -20,13 +20,13 @@ an execution attempt repeats only after a `fix-first` verdict.
 1. **Prepare (unpersisted).** Sol constructs and canonicalizes the one work card in
    memory, derives its repository/card run path, validates every existing state path, and
    asks the single resume/archive question before any writes. A matching run asks exactly:
-   “Resume this Measured run or archive it and start a new one?” End the turn for that
+   “Resume this Pulsar run or archive it and start a new one?” End the turn for that
    answer. Resume continues from the first unfinished base phase or the current
    attempt's first unfinished phase.
    Before recording `freeze started`, Prepare creates or validates the private state.
 2. **Freeze.** Only after Prepare creates or validates private state, record `freeze
    started`, write the canonical card, then record `freeze finished`.
-3. **Preflight.** Run the normal Guided/Careful route preflight and record observed route
+3. **Preflight.** Run the normal Orbit/Event Horizon route preflight and record observed route
    evidence.
 4. **Route.** Sol applies the deterministic rules below; a planning probe is allowed only
    for genuine Luna/Terra ambiguity.
@@ -50,7 +50,7 @@ a turn.
 
 ## Private, reproducible local state
 
-Measured state is private, local, non-secret, and resumable. Do not record credentials,
+Pulsar state is private, local, non-secret, and resumable. Do not record credentials,
 tokens, raw prompts, diffs, private raw tool output, or personal or regulated data.
 
 Derive the run key in this order:
@@ -70,7 +70,8 @@ Derive the run key in this order:
 
 The independent prefixes prevent identical cards in different repositories from
 colliding. Below the canonical temp root, first create or validate the owner-only parent
-directory `astral-orchestrator-measured-<effective-uid>` with `0700` permissions. Every
+directory `astral-orchestrator-measured-<effective-uid>` with `0700` permissions. The
+legacy directory name remains for resumable-run compatibility. Every
 path component below the canonical temp root must be checked with `lstat`-style or
 no-follow operations: reject symlink parents, a symlink run directory, and any symlink
 tracker file. Reject an existing path not owned by the effective UID or with group or
@@ -110,12 +111,12 @@ state-changing command. That instruction is not hard sandbox isolation. Probes c
 change the card, requirements, architecture, safety boundaries, acceptance checks, files,
 or systems. They do not implement, and Sol still chooses the route.
 
-### Measured planning probe
+### Pulsar planning probe
 
 ```text
 ROLE
 <astral_orchestrator_luna_implementer or astral_orchestrator_terra_implementer>
-Provide a planning probe for Measured routing only. Remain behaviorally read-only: do not
+Provide a planning probe for Pulsar routing only. Remain behaviorally read-only: do not
 edit, format, create, delete, or run a state-changing command. This instruction is not
 hard sandbox isolation. Do not spawn or delegate.
 
@@ -151,7 +152,7 @@ the decisive facts and defaults to Terra. Never route by prestige, popularity, o
 silent fallback. Requested and observed role, model, effort, and task or session identity
 must be recorded as facts; unknown values remain unknown.
 
-## Measured ledger entry
+## Pulsar ledger entry
 
 ```text
 PHASE
@@ -172,7 +173,7 @@ OUTCOME EVIDENCE
 - First-pass acceptance or rework: <observed state>
 - Final reviewer verdict: <ship | fix-first | rethink | unknown>
 
-Never invent a missing measurement. Store only non-secret values in the Measured private
+Never invent a missing measurement. Store only non-secret values in the Pulsar private
 run directory; later transcribe compatible observed values into the existing benchmark
 scorecard JSONL schema.
 ```
@@ -181,5 +182,5 @@ scorecard JSONL schema.
 
 Only the selected implementation lane edits. The other candidate lane does not receive
 implementation ownership. The normal fresh Sol reviewer reviews every worker-produced
-Measured change. High-risk Measured work inherits Careful confirmation gates and observed
+Pulsar change. High-risk Pulsar work inherits Event Horizon confirmation gates and observed
 read-only isolation requirements.

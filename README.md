@@ -2,13 +2,13 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.5.0 is an installable, open-source Codex plugin. It
-helps Codex turn an everyday request into a checked result: Sol stays responsible for
-the plan and final decisions, Luna handles focused work, Terra handles context-heavy
-implementation, and a fresh Sol reviewer checks the finished change.
+Astral Orchestrator v3.6.0 is an installable, open-source Codex plugin. Its delegated
+routes keep Sol responsible for the plan and final decisions, use Luna for focused work
+or Terra for context-heavy implementation, then use a fresh Sol reviewer to check the
+finished change. Singularity is the deliberate one-Sol exception for eligible work.
 
 Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
-directory is a separate publication surface and may lag until the v3.5.0 directory upload
+directory is a separate publication surface and may lag until the v3.6.0 directory upload
 is published. Astral Orchestrator is an independent open-source project, not affiliated
 with or endorsed by OpenAI.
 
@@ -21,27 +21,35 @@ codex plugin marketplace add Demonbane18/astral-orchestrator --ref main
 codex plugin add astral-orchestrator@astral-orchestrator
 ~~~
 
-This is the complete install. On current Codex MultiAgentsV2 hosts, Guided, Careful, and
-Measured use native child agents with `agent_type`, a unique `task_name`, `model`,
+This is the complete install. On current Codex MultiAgentsV2 hosts, Orbit, Event Horizon, and
+Pulsar use native child agents with `agent_type`, a unique `task_name`, `model`,
 `reasoning_effort`, and `fork_turns` stated explicitly for each child. Optional native
 profiles are not required. The bundled process launcher is a legacy compatibility fallback
 only for hosts that do not expose `agent_type`, `task_name`, `model`, `reasoning_effort`,
 and `fork_turns`.
-Morph and Constellation are separate explicit opt-ins; they do not change the verified Sol
-primary or fresh Sol reviewer.
+Singularity, Morph, and Constellation are separate explicit opt-ins. Singularity keeps
+meaningful low- or medium-risk work in one verified Sol primary session with no subagents
+or fresh reviewer; Morph and Constellation do not change the verified Sol primary or
+fresh Sol reviewer.
 
 ## What Astral Orchestrator does
 
-Astral Orchestrator gives you a repeatable way to:
+For Orbit, Event Horizon, Pulsar, Morph, and Constellation work, Astral Orchestrator gives
+you a repeatable way to:
 
 1. have Sol turn your request into a clear outcome and work plan;
 2. send narrow, repeatable work to Luna and context-heavy implementation to Terra;
 3. inspect the actual changes and run relevant checks;
 4. request a fresh Sol review before handoff.
 
-Before fixed-mode delegation, the bundled primary checker automatically verifies the
-current Codex primary route when local runtime evidence is available. A mismatch blocks
-the route; unavailable evidence is clearly labeled rather than guessed.
+Comet and Singularity instead keep their eligible work in the verified Sol primary and
+use a plainly labeled self-review; Event Horizon takes over when the risk requires it.
+
+All modes run the bundled primary checker before execution. If local runtime evidence is
+unavailable, non-Singularity modes may use one-time user confirmation and label it as
+user-confirmed rather than observed. Singularity requires observed/verified Sol model and
+effort, must stop on unavailable evidence, and user confirmation cannot satisfy or
+override that requirement. A mismatch or invalid result blocks every route.
 
 It works for code, documents, configuration, research artifacts, and other
 workspace-based projects. It adds no API key, paid service, background server, analytics,
@@ -94,10 +102,12 @@ default), then say:
 Use Astral Orchestrator to add a search box and verify every lane.
 ~~~
 
-You can also ask it to fix an error or complete a documentation change. Guided mode is
+You can also ask it to fix an error or complete a documentation change. Orbit mode is
 the default, so you only need to name a mode when you want a different level of process.
 
-For an evidence-oriented run, say “Use Astral Orchestrator in Measured mode.”
+For an evidence-oriented run, say “Use Astral Orchestrator in Pulsar mode.”
+For disciplined one-session work larger than Comet, say “Use Astral Orchestrator in
+Singularity mode.”
 For a bounded card with a user-selected model route, say “Use Astral Orchestrator in Morph
 mode.” For independent cards that may safely fan out, say “Use Astral Orchestrator in
 Constellation mode.”
@@ -111,14 +121,15 @@ that a requested effort was accepted natively by an external model.
 Copy any of these prompts into a new Codex task and replace the example details with your
 own request:
 
-- **Quick:** `Use Astral Orchestrator in Quick mode to rename the typo “recieve” to “receive” in README.md, then run the relevant check.`
-- **Guided:** `Use Astral Orchestrator in Guided mode to add a search box to the settings page, update its tests, and report the checks you ran.`
-- **Careful:** `Use Astral Orchestrator in Careful mode to rotate the staging API credential reference, show me the plan first, and do not apply changes until I confirm.`
-- **Measured:** `Use Astral Orchestrator in Measured mode to fix the failing date-format test, freeze one card with its acceptance checks, and record the observed route evidence.`
+- **Comet:** `Use Astral Orchestrator in Comet mode to rename the typo “recieve” to “receive” in README.md, then run the relevant check.`
+- **Orbit:** `Use Astral Orchestrator in Orbit mode to add a search box to the settings page, update its tests, and report the checks you ran.`
+- **Event Horizon:** `Use Astral Orchestrator in Event Horizon mode to rotate the staging API credential reference, show me the plan first, and do not apply changes until I confirm.`
+- **Singularity:** `Use Astral Orchestrator in Singularity mode to complete this low-risk multi-step documentation cleanup in one verified Sol session, with no subagents or fresh reviewer.`
+- **Pulsar:** `Use Astral Orchestrator in Pulsar mode to fix the failing date-format test, freeze one card with its acceptance checks, and record the observed route evidence.`
 - **Morph:** `Use Astral Orchestrator in Morph mode for this bounded card: update the CSV export heading and its test using the worker model and effort I specify, then have Sol review it.`
 - **Constellation:** `Use Astral Orchestrator in Constellation mode to update the independent README, changelog, and test-fixture cards only when they have non-overlapping ownership and enough available concurrency.`
 
-Guided remains the recommended default for normal work. The live Astral status panel is a
+Orbit remains the recommended default for normal work. The live Astral status panel is a
 user-facing progress view: requested routes are shown first, and a route becomes observed
 only after runtime evidence confirms what actually ran. Every Astral Status panel is an
 actual GitHub-flavored Markdown table with a header separator row—never a code block or
@@ -130,31 +141,40 @@ implementers. A custom worker model and effort are available only through an exp
 bounded Morph card, and only when that route supports the requested capability and has
 runtime evidence. Constellation fans out only when the host advertises enough available
 concurrency and each card has non-overlapping ownership; otherwise it uses serial
-Guided-style routing.
+Orbit-style routing.
 
 ## Modes
 
 | Mode | Best for | What happens |
 |---|---|---|
-| Quick | Tiny, obvious, easy-to-undo work | Sol works directly and self-reviews at the configured orchestrator effort. |
-| Guided | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
-| Careful | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and read-only reviewer evidence. |
-| Measured (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
+| Comet | Tiny, obvious, easy-to-undo work | Sol works directly and self-reviews at the configured orchestrator effort. |
+| Orbit (default) | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
+| Event Horizon | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and read-only reviewer evidence. |
+| Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One verified Sol primary completes one compact card at the configured orchestrator effort, with no subagents or fresh reviewer and one proportional verification pass. |
+| Pulsar (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
 | Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed or native model | Sol remains the configured primary, the worker receives an exact model id and requested effort, and fresh Sol reviews the result. |
 | Constellation (explicit opt-in) | Several independent, ready cards | Sol proves independent ownership and host capacity, starts a cost-aware non-Sol first wave, integrates it, and requests one fresh Sol review. |
 
 Astral Orchestrator raises safeguards when a request is riskier than the selected mode.
 It does not broaden the work you asked for.
-Measured, Morph, and Constellation are never automatic; Guided remains recommended for
-normal work. Careful safeguards override either opt-in worker mode whenever the risk
-requires confirmation, serial routing, or observed read-only review isolation.
+Singularity, Pulsar, Morph, and Constellation are never automatic; Orbit remains
+recommended for normal work. Event Horizon overrides Singularity and safeguards override either
+opt-in worker mode whenever the risk requires confirmation, serial routing, or observed
+read-only review isolation.
+
+### Legacy prompt migration
+
+The former names remain advisory prompt aliases: Quick maps to Comet; Guided maps to
+Orbit; Careful maps to Event Horizon; and Measured maps to Pulsar. New prompts and
+documentation use the cosmic names, while an old prompt keeps the same behavior.
 
 ## How Astral chooses models and effort
 
 Three separate decisions keep the workflow predictable:
 
-1. **Mode determines whether to delegate.** Quick keeps a tiny change in the Sol primary;
-   Guided, Careful, and Measured delegate bounded implementation when there is work that can safely
+1. **Mode determines whether to delegate.** Comet keeps a tiny change in the Sol primary;
+   Singularity keeps larger low- or medium-risk work in one verified Sol primary session;
+   Orbit, Event Horizon, and Pulsar delegate bounded implementation when there is work that can safely
    be handed off. Morph and Constellation work only when the user explicitly names them.
 2. **Work characteristics choose Sol, Luna, or Terra.** Sol retains requirements,
    architecture, safety boundaries, and acceptance decisions. Luna receives narrow,
@@ -172,29 +192,52 @@ Three separate decisions keep the workflow predictable:
    requested effort label, but the route records upstream-native effort as unverified until
    independent provider evidence exists.
 
+### Singularity: disciplined one-session work
+
+Singularity is explicit opt-in, never a default or automatic route. It uses exactly one
+verified Sol primary at the configured orchestrator effort—never forced Max—and no
+subagents, planning probes, worker lanes, or fresh reviewer. If you want Sol Max, set
+the orchestrator effort and start a new task. Sol uses one work card, keeps no more than
+five active steps with one in progress, loads targeted context, uses the smallest
+sufficient intervention, and performs one proportional verification pass before its one
+self-review. High-risk work switches to Event Horizon, including its confirmation gates and
+independent reviewer requirements. All modes run the primary checker; Singularity requires
+observed/verified Sol model and effort, must stop on unavailable evidence, and user
+confirmation cannot satisfy or override that requirement.
+
+These scope-control and verification patterns are adapted from
+[single-agent-skills](https://github.com/blavkgokuvnn/single-agent-skills) at commit
+`7fc169557e84e0d27fe22e7d4fc2a6bffeefe4b2`. The external plugin and runtime are not
+bundled or required, and Astral has no StateM dependency. A social-media claim of 4% of a
+five-times plan over six hours and doubled speed is anecdotal and unverified. Astral does
+not promise or claim to have measured it.
+
 The route below is a documented **heuristic**, based on the type of work and the route
 contract. The separate local outcome scorecard described below is how to collect
 effectiveness and efficiency evidence without pretending that a single anecdote proves a
 model choice.
 
-## Measured instruction-context footprint
+## Pulsar instruction-context footprint
 
-Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the historical v3.2.0 core
-`SKILL.md` measures **2,036 tokens**; Quick measures **3,696 tokens**; Guided/full
-measures **5,636 tokens**; and Measured measures **7,795 tokens**. Quick therefore
-avoids **1,940 tokens (34.4%)** compared with eager full-bundle loading.
+Using `tiktoken` 0.13.0 with the `o200k_base` encoding, the current v3.6.0 core
+`SKILL.md` measures **3,403 tokens**; Comet measures **4,722 tokens**; Orbit/full
+measures **10,223 tokens**; and Pulsar measures **12,401 tokens**. Comet therefore
+avoids **5,501 tokens (53.8%)** compared with eager full-bundle loading.
+Comet loads the core skill and mode/risk reference only; it does not load work templates
+or routing/preflight instructions.
 
-This measures instruction-context loading only. It does not prove every
-multi-agent run uses fewer total tokens than a single Sol run, and it does not measure
-outcome quality, latency, or price, or total tokens for a complete run. The committed
-[context-footprint evidence](benchmarks/context-footprint-2026-08-04.json)
-includes file hashes, byte/word/token counts, and a reproducible contributor command.
+These are static instruction-context measurements. This instruction-context footprint covers instruction-context loading only and does not prove every multi-agent run uses fewer total tokens than a single Sol run, and does not measure quality, latency, or price, or total tokens for a complete run. The committed
+[context-footprint evidence](benchmarks/context-footprint-2026-08-21.json)
+includes file hashes, byte/word/token counts, and a reproducible contributor command to
+regenerate the published v3.6.0 measurement.
 
-The published v3.2.0 measurement records static instruction-context measurements: they
-support the architecture's progressive context loading, not task quality, latency, price,
-or total-run tokens. Alongside exact pinned routes, objective checks plus fresh review,
-and the local privacy/no-analytics runtime posture, they are tested workflow contracts
-rather than proof of outcome superiority. See the
+The 2026-08-21 v3.6.0 measurement uses stable historical bundle keys: `quick` means
+Comet, `guided` means Orbit, and `measured` means Pulsar. The older v3.2.0 snapshot is
+preserved as historical evidence. These measurements support the architecture's
+progressive context loading, not task quality, latency, price, or total-run tokens.
+Alongside exact pinned routes, objective checks plus fresh review, and the local
+privacy/no-analytics runtime posture, they are tested workflow contracts rather than
+proof of outcome superiority. See the
 [benchmark guide](benchmarks/README.md) for the method and scope.
 
 ## Public evidence status
@@ -247,22 +290,26 @@ CODEX_HOME when set), outside the plugin cache.
 
 ## How routing and verification work
 
-![Hand-drawn workflow showing a request choosing Quick or Guided/Careful work; Guided/Careful flows through planning, Luna or Terra, checks, and a fresh Sol review before handoff.](assets/diagrams/routing-and-verification.svg)
+![Hand-drawn workflow showing a request choosing Comet or Orbit/Event Horizon work; Orbit/Event Horizon flows through planning, Luna or Terra, checks, and a fresh Sol review before handoff.](assets/diagrams/routing-and-verification.svg)
 
 [Open the editable Excalidraw source for the routing and verification diagram.](assets/diagrams/routing-and-verification.excalidraw)
 
-Sol uses `gpt-5.6-sol`; Luna uses `gpt-5.6-luna`; Terra uses `gpt-5.6-terra`; and the
-fresh reviewer uses `gpt-5.6-sol`. The configurable effort settings described above
-supply each lane's effort (Sol High, Luna Max, Terra High, reviewer Sol High by
-default), rather than the prompt choosing a new effort at runtime.
+In delegated routes, Sol uses `gpt-5.6-sol`; Luna uses `gpt-5.6-luna`; Terra uses
+`gpt-5.6-terra`; and the fresh reviewer uses `gpt-5.6-sol`. Singularity uses only the
+verified Sol primary and its self-review. The configurable effort settings described above
+supply each lane's effort (Sol High, Luna Max, Terra High, reviewer Sol High by default),
+rather than the prompt choosing a new effort at runtime.
 
 For every mode, Astral first runs its local primary checker. When `CODEX_THREAD_ID` and
 local rollout evidence are available, it automatically verifies that the primary is
 `gpt-5.6-sol` at the configured orchestrator effort. The checker emits only allowlisted
 route fields and never prints prompt or session contents. Only when that evidence is
-unavailable does Astral ask once for the user's confirmation; a mismatch blocks the route.
+unavailable, only non-Singularity modes may ask once for the user's confirmation.
+Singularity requires observed/verified Sol model and effort, must stop on unavailable,
+and user confirmation cannot satisfy or override that requirement. A mismatch or invalid
+result blocks every route.
 
-For Guided, Careful, and Measured work, Astral Orchestrator first checks whether
+For Orbit, Event Horizon, and Pulsar work, Astral Orchestrator first checks whether
 `collaboration.spawn_agent` exposes all five required MultiAgentsV2 controls:
 `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. A current
 MultiAgentsV2 host uses the native standard route with a complete standalone packet,
@@ -298,9 +345,9 @@ that cards are independent and have non-overlapping ownership, the host advertis
 available slots after the primary consumes one, and the configured roster has suitable
 cost-aware non-Sol workers. It never hard-codes a child count or creates extra Sol
 implementers by default. If capacity or independence is uncertain, it uses serial
-Guided-style routing instead.
+Orbit-style routing instead.
 
-Measured freezes exactly one canonical card and its checks before routing. If Luna versus
+Pulsar freezes exactly one canonical card and its checks before routing. If Luna versus
 Terra is ambiguous, Sol sends exactly one behaviorally read-only probe to each lane with
 the identical card; this is not hard sandbox isolation. The non-secret tracker files are
 owner-only and resumable under a private `/tmp` path derived from effective UID plus
@@ -345,7 +392,7 @@ set as a reason to investigate before making a product claim.
 - Existing different optional native profiles are never overwritten.
 - Profile removal deletes only shipped files that still match exactly.
 - Destructive, credential, publishing, production, and irreversible actions require
-  an explicit confirmation gate in Careful mode.
+  an explicit confirmation gate in Event Horizon mode.
 - Native MultiAgentsV2 routes pass a complete standalone packet only to the selected
   native child. The legacy local process route keeps its private packet in a local
   temporary file, passes it only to the selected Codex process, then removes it after
@@ -353,8 +400,8 @@ set as a reason to investigate before making a product claim.
   during inference when the user explicitly configures that route; local packet handling
   does not make external processing local. There is no analytics collection, extra network
   client, API key, or background service.
-- A fresh reviewer is required after worker-produced Guided, Measured, Morph, or
-  Constellation work. Careful mode—and high-risk Measured, Morph, or Constellation work—
+- A fresh reviewer is required after worker-produced Orbit, Pulsar, Morph, or
+  Constellation work. Event Horizon mode—and high-risk Pulsar, Morph, or Constellation work—
   also requires observed read-only review isolation.
 
 ## Updating and the 3.0 migration
@@ -408,7 +455,7 @@ These commands do not delete your downloaded repository or project files.
 | Setup reports a profile conflict | Astral Orchestrator will not overwrite a customized native profile. Keep it: current MultiAgentsV2 hosts use the built-in native worker for Luna or Terra, or built-in native default for a reviewer, with explicit values. Run `sh scripts/setup.sh --refresh` only if you deliberately want the fixed role profile restored. |
 | A route cannot be proven | Confirm that the current host exposes all five v2 controls: `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns`. Only a host that lacks one or more of `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` should use the bundled launcher dry run to prove the exact legacy role, model, and effort; never accept another route as a fallback. |
 | A Morph worker fails | Check the separately configured provider/model and requested effort with its owner. Astral does not configure OpenCodex, credentials, services, or provider compatibility. |
-| Constellation will not fan out | Make each card independent with non-overlapping ownership, or continue with the serial Guided-style fallback. The primary consumes one advertised slot. |
+| Constellation will not fan out | Make each card independent with non-overlapping ownership, or continue with the serial Orbit-style fallback. The primary consumes one advertised slot. |
 | An effort value is rejected | Pick a supported value available to your account; max and ultra are not available everywhere. |
 | Setup cannot find Codex or Python | Install or update Codex and use Python 3.11 or newer, then rerun the dry run. |
 
@@ -421,11 +468,12 @@ pinned lane and demanding evidence before handoff.
 
 ### Can I use only one model?
 
-Quick mode uses the verified Sol primary. Guided, Careful, and Measured require the three
-specified models when bounded execution or independent review is needed; there is no
-silent model substitution. Morph can use a user-selected worker model only after an
-explicit opt-in, while Constellation defaults to non-Sol workers and retains one Sol
-primary and one fresh Sol reviewer.
+Comet and explicit Singularity use the verified Sol primary alone; Singularity can cover
+larger eligible low- or medium-risk work with its one self-review. Orbit, Event Horizon, and
+Pulsar require the three specified models when bounded execution or independent review
+is needed; there is no silent model substitution. Morph can use a user-selected worker
+model only after an explicit opt-in, while Constellation defaults to non-Sol workers and
+retains one Sol primary and one fresh Sol reviewer.
 
 ### Are my effort settings lost during an update?
 

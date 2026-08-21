@@ -79,6 +79,6 @@ unobservable, stop rather than attempting a Codex fallback or claiming a fixed A
 ## Review and risk
 
 After a Morph worker changes anything, Sol integrates and verifies the actual change set,
-then starts a new exact fresh Sol reviewer using the normal route. Careful safeguards
+then starts a new exact fresh Sol reviewer using the normal route. Event Horizon safeguards
 override Morph whenever risk requires confirmation, observed read-only review isolation,
 or serial routing. Morph never changes those requirements.

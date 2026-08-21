@@ -18,8 +18,8 @@ Keep the installed experience simple for people who do not write code.
 - Use plain language and explain unavoidable technical terms on first use.
 - Keep the core `SKILL.md` concise; put detailed templates in `references/`.
 - Require the exact Sol, Luna, and Terra models at each lane's configured effort for
-  Guided and Careful execution; never silently substitute a different route.
-- Keep Quick mode as the explicit single-session option for tiny work.
+  Orbit and Event Horizon execution; never silently substitute a different route.
+- Keep Comet mode as the explicit single-session option for tiny work.
 - Use only built-in local tools at runtime; do not add an API key or external service.
 - Preserve the original Sol Advisor MIT notice and attribution.
 - Use Opera GX for browser testing. Do not use Google Chrome unless the user asks.

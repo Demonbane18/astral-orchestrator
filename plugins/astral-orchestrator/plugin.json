@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
-  "version": "3.5.0",
-  "description": "A six-mode project-delivery skill with native MultiAgentsV2 routing, table-form live status, and explicit Morph and Constellation routes.",
+  "version": "3.6.0",
+  "description": "A seven-mode project-delivery skill with Comet, Orbit, Event Horizon, token-disciplined Singularity, Pulsar, Morph, and Constellation routes.",
   "author": {
     "name": "Demonbane18",
     "url": "https://github.com/Demonbane18"

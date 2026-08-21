@@ -1,6 +1,6 @@
 interface:
   display_name: "Astral Orchestrator"
-  short_description: "Sol-led, model-routed delivery for any project"
+  short_description: "Sol-led, risk-aware delivery for any project"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  default_prompt: "Use $astral-orchestrator in Guided (default); choose Quick, Careful, Measured, Morph, or Constellation only when named."
+  default_prompt: "$astral-orchestrator: Orbit default; Comet tiny; Event Horizon high-risk; Pulsar/Singularity/Morph/Constellation on request."

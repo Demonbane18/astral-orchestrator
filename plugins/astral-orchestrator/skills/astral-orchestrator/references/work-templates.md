@@ -25,6 +25,9 @@ Use `planned`, `requested`, `launched`, `running`, `returned`, `verified`, `bloc
 panel at preflight, launch, new evidence, state changes, completion, failure, and at a
 restrained interval for long-running work. Do not repeat it merely to create activity.
 
+For Singularity, emit only the Sol primary row from this panel. Do not add worker or
+fresh-reviewer placeholders: Singularity has no subagents and no fresh reviewer.
+
 ## Work card
 
 ```text
@@ -43,6 +46,29 @@ CHECKS
 - Run: <exact command or inspection>
   Pass means: <concrete evidence>
 ```
+
+## Singularity work card
+
+```text
+OBJECTIVE
+<Observable result and why it matters.>
+
+DONE
+- <Specific acceptance condition.>
+
+NON-GOALS
+- <Related work to park rather than pursue.>
+
+CONSTRAINTS
+- <Scope, safety, compatibility, or confirmation boundary.>
+
+CHECKS
+- <One proportional verification pass and its pass evidence.>
+```
+
+Keep no more than five active steps, with one in progress. Use the smallest sufficient
+intervention; stop after DONE first passes unless evidence is ambiguous, contradictory,
+or defective. Sol self-reviews once using the actual change set and evidence.
 
 ## Implementation delegation
 

@@ -1,7 +1,7 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.5.0",
-  "description": "Beginner-friendly orchestration with Quick, Guided, Careful, Measured, and explicit opt-in Morph and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
+  "version": "3.6.0",
+  "description": "Beginner-friendly orchestration with Comet, Orbit, Event Horizon, explicit opt-in Singularity, Pulsar, Morph, and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
   },
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Astral Orchestrator offers Quick, Guided, Careful, Measured, Morph, and Constellation modes with table-form live status. On current Codex hosts, Guided, Careful, and Measured use native MultiAgentsV2 workers explicitly pinned to Luna Max or Terra High by default and a fresh Sol High reviewer; configured efforts remain independently adjustable. Morph and Constellation stay explicit opt-ins; each explicit opt-in mode never runs automatically.",
+    "longDescription": "Astral Orchestrator offers Comet, Orbit, Event Horizon, Singularity, Pulsar, Morph, and Constellation modes with table-form live status. Singularity is explicit opt-in: one verified Sol primary self-reviews with no subagents or fresh reviewer. On current Codex hosts, Orbit, Event Horizon, and Pulsar use native MultiAgentsV2 workers pinned to Luna Max or Terra High by default and a fresh Sol High reviewer; configured efforts remain adjustable. Every explicit opt-in mode never runs automatically; Event Horizon overrides high-risk Singularity work.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",
@@ -30,9 +30,9 @@
     "composerIcon": "./skills/astral-orchestrator/assets/icon.png",
     "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
-      "Use Astral Orchestrator in Guided mode (default); choose Quick or Careful when the task warrants it.",
-      "Use Astral Orchestrator in Measured or Morph mode for this explicit opt-in request.",
-      "Use Astral Orchestrator in Constellation mode for this explicit opt-in independent-card request."
+      "Use Astral: Orbit default; Comet tiny; Event Horizon high-risk; Singularity one verified Sol session.",
+      "Use Astral in Pulsar or Morph mode for this explicit opt-in request.",
+      "Use Astral in Constellation mode for an explicit opt-in independent-card request."
     ]
   }
 }

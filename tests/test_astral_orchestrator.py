@@ -34,7 +34,8 @@ TEMPLATES = PLUGIN / "skills/astral-orchestrator/references/work-templates.md"
 ROUTING = PLUGIN / "skills/astral-orchestrator/references/routing-and-preflight.md"
 MORPH = PLUGIN / "skills/astral-orchestrator/references/morph-mode.md"
 CONSTELLATION = PLUGIN / "skills/astral-orchestrator/references/constellation-mode.md"
-MEASURED = PLUGIN / "skills/astral-orchestrator/references/measured-mode.md"
+PULSAR = PLUGIN / "skills/astral-orchestrator/references/pulsar-mode.md"
+SINGULARITY = PLUGIN / "skills/astral-orchestrator/references/singularity-mode.md"
 AGENTS = PLUGIN / "agents"
 LEGACY_AGENTS = AGENTS / "historical-v3.4.0"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
@@ -50,6 +51,7 @@ BENCHMARK_SCORECARD = PLUGIN / "scripts/benchmark-scorecard.py"
 BENCHMARK_GUIDE = ROOT / "benchmarks/README.md"
 CONTEXT_FOOTPRINT = ROOT / "benchmarks/context-footprint-2026-08-03.json"
 CONTEXT_FOOTPRINT_MEASURED = ROOT / "benchmarks/context-footprint-2026-08-04.json"
+CONTEXT_FOOTPRINT_CURRENT = ROOT / "benchmarks/context-footprint-2026-08-21.json"
 CONTEXT_FOOTPRINT_MEASURER = ROOT / "benchmarks/measure_instruction_context.py"
 ROUTING_DIAGRAM = ROOT / "assets/diagrams/routing-and-verification.svg"
 ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw"
@@ -128,7 +130,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.5.0")
+        self.assertEqual(manifest["version"], "3.6.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -144,13 +146,21 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.5"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.6"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
         self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
         description = interface["longDescription"].lower()
-        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
+        for mode in (
+            "comet",
+            "orbit",
+            "event horizon",
+            "singularity",
+            "pulsar",
+            "morph",
+            "constellation",
+        ):
             self.assertIn(mode, description)
         self.assertIn("opt-in", description)
         self.assertIn("never runs automatically", description)
@@ -161,7 +171,15 @@ class MarketplaceTests(unittest.TestCase):
         self.assertLessEqual(len(prompts), 3)
         self.assertTrue(all(len(prompt) <= 128 for prompt in prompts))
         prompt_text = " ".join(prompts).lower()
-        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
+        for mode in (
+            "comet",
+            "orbit",
+            "event horizon",
+            "singularity",
+            "pulsar",
+            "morph",
+            "constellation",
+        ):
             self.assertIn(mode, prompt_text)
 
     def test_portable_manifest_uses_agent_plugins_v1_fixed_skill_discovery(self):
@@ -172,7 +190,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.5.0")
+        self.assertEqual(manifest["version"], "3.6.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -240,7 +258,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertIn("external morph provider can receive its bounded worker packet", readme)
         self.assertNotIn("work packets remain local", readme)
 
-    def test_openai_metadata_keeps_shared_icon_and_six_mode_aware_prompt(self):
+    def test_openai_metadata_keeps_shared_icon_and_seven_mode_aware_prompt(self):
         metadata = read(OPENAI_METADATA)
 
         self.assertIn('icon_small: "./assets/icon.png"', metadata)
@@ -250,11 +268,54 @@ class MarketplaceTests(unittest.TestCase):
         )
         prompt = prompt_line.split(":", 1)[1].strip().strip('"')
         self.assertLessEqual(len(prompt), 128)
-        for mode in ("guided", "quick", "careful", "measured", "morph", "constellation"):
+        self.assertIn("event horizon high-risk", prompt.lower())
+        self.assertIn("comet tiny", prompt.lower())
+        for mode in (
+            "orbit",
+            "comet",
+            "event horizon",
+            "pulsar",
+            "singularity",
+            "morph",
+            "constellation",
+        ):
             self.assertIn(mode, prompt.lower())
 
 
 class SkillContractTests(unittest.TestCase):
+    def test_primary_mode_names_use_the_cosmic_taxonomy_with_legacy_aliases(self):
+        skill = " ".join(read(SKILL).split())
+        modes = " ".join(read(MODES).split())
+        readme = " ".join(read(ROOT / "README.md").split())
+        website = " ".join(read(ROOT / "website/index.html").split())
+        metadata = read(OPENAI_METADATA)
+
+        for current_name in ("Comet", "Orbit", "Event Horizon", "Pulsar"):
+            for surface in (skill, modes, readme, website, metadata):
+                self.assertIn(current_name, surface)
+
+        self.assertIn("Orbit (default)", skill)
+        self.assertIn("Pulsar (explicit opt-in)", skill)
+        self.assertIn("legacy aliases", skill.lower())
+        for legacy_name, current_name in (
+            ("Quick", "Comet"),
+            ("Guided", "Orbit"),
+            ("Careful", "Event Horizon"),
+            ("Measured", "Pulsar"),
+        ):
+            self.assertRegex(skill, rf"{legacy_name}[^.]*{current_name}")
+            self.assertRegex(readme, rf"{legacy_name}[^.]*{current_name}")
+
+        self.assertTrue(PULSAR.is_file())
+        self.assertIn("pulsar-mode.md", skill)
+        prompt_line = next(
+            line for line in metadata.splitlines() if line.strip().startswith("default_prompt:")
+        )
+        prompt = prompt_line.split(":", 1)[1].strip().strip('"')
+        self.assertLessEqual(len(prompt), 128)
+        for legacy_name in ("Quick", "Guided", "Careful", "Measured"):
+            self.assertNotIn(legacy_name, prompt)
+
     def test_live_route_panel_keeps_astral_and_lane_evidence_visible(self):
         skill = " ".join(read(SKILL).lower().split())
         routing = " ".join(read(ROUTING).lower().split())
@@ -330,7 +391,15 @@ class SkillContractTests(unittest.TestCase):
         readme = " ".join(read(ROOT / "README.md").lower().split())
 
         self.assertIn("sample prompts for every mode", readme)
-        for mode in ("quick", "guided", "careful", "measured", "morph", "constellation"):
+        for mode in (
+            "comet",
+            "orbit",
+            "event horizon",
+            "singularity",
+            "pulsar",
+            "morph",
+            "constellation",
+        ):
             self.assertRegex(readme, rf"{mode}[^.]*use astral orchestrator")
         for required in (
             "sol high is sufficient",
@@ -358,18 +427,30 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn(required, constellation)
         self.assertNotIn("runtime evidence before launch", constellation)
 
-    def test_skill_uses_six_plain_language_modes_and_loads_opt_in_references_on_demand(self):
+    def test_skill_uses_seven_plain_language_modes_and_loads_opt_in_references_on_demand(self):
         skill = read(SKILL)
         modes = read(MODES)
 
-        for mode in ("Quick", "Guided", "Careful", "Measured", "Morph", "Constellation"):
+        for mode in (
+            "Comet",
+            "Orbit",
+            "Event Horizon",
+            "Singularity",
+            "Pulsar",
+            "Morph",
+            "Constellation",
+        ):
             self.assertIn(mode, skill)
             self.assertIn(mode, modes)
-        self.assertRegex(skill, r"Guided[^\n]*(default|Default)")
+        self.assertRegex(skill, r"Orbit[^\n]*(default|Default)")
+        self.assertIn("when the user explicitly names singularity", skill.lower())
+        self.assertIn("when the user explicitly names pulsar", skill.lower())
         self.assertIn("when the user explicitly names morph", skill.lower())
         self.assertIn("when the user explicitly names constellation", skill.lower())
         self.assertTrue(MORPH.is_file())
         self.assertTrue(CONSTELLATION.is_file())
+        self.assertTrue(PULSAR.is_file())
+        self.assertTrue(SINGULARITY.is_file())
 
         morph = " ".join(read(MORPH).lower().split())
         constellation = read(CONSTELLATION).lower()
@@ -394,14 +475,80 @@ class SkillContractTests(unittest.TestCase):
             "available slots",
             "primary consumes one slot",
             "non-overlapping",
-            "serial guided-style routing",
+            "serial orbit-style routing",
             "do not spawn extra sol implementers",
             "fresh sol reviewer",
         ):
             self.assertIn(required, constellation)
 
-    def test_measured_state_sequence_templates_and_safe_state_are_explicit(self):
-        measured = " ".join(read(MEASURED).lower().split())
+        singularity = " ".join(read(SINGULARITY).lower().split())
+        for required in (
+            "explicit opt-in",
+            "one verified sol primary",
+            "do not spawn",
+            "smallest sufficient intervention",
+            "no more than five active steps",
+            "one proportional verification pass",
+            "event horizon overrides singularity",
+            "anecdotal",
+            "no statem dependency",
+        ):
+            self.assertIn(required, singularity)
+
+    def test_singularity_is_a_token_disciplined_single_session_not_a_weaker_careful_mode(self):
+        singularity = " ".join(read(SINGULARITY).lower().split())
+        skill = " ".join(read(SKILL).lower().split())
+        modes = " ".join(read(MODES).lower().split())
+        templates = " ".join(read(TEMPLATES).lower().split())
+
+        for required in (
+            "never auto-select",
+            "configured orchestrator effort",
+            "larger than comet",
+            "no subagents",
+            "no fresh reviewer",
+            "only the sol primary row",
+            "start a new task",
+            "higher-priority instruction",
+        ):
+            self.assertIn(required, singularity)
+        self.assertIn("singularity", skill)
+        loading_prefix = skill.split("## host boundary", 1)[0]
+        for required_reference in (
+            "routing-and-preflight.md",
+            "work-templates.md",
+            "singularity-mode.md",
+        ):
+            self.assertIn(required_reference, loading_prefix)
+        self.assertRegex(
+            loading_prefix,
+            r"before spawning a codex lane.{0,80}using singularity",
+        )
+        self.assertIn("event horizon overrides singularity", modes)
+        self.assertIn("singularity", templates)
+        self.assertNotIn("always use sol max", singularity)
+        self.assertIn("unavailable evidence blocks singularity", skill)
+        self.assertIn("user confirmation cannot override", singularity)
+
+        for surface in (
+            read(ROUTING),
+            read(ROOT / "README.md"),
+            read(ROOT / "docs/SPEC.md"),
+            read(ROOT / "website/index.html"),
+        ):
+            normalized_surface = " ".join(surface.lower().split())
+            self.assertIn("singularity", normalized_surface)
+            self.assertIn("unavailable", normalized_surface)
+            self.assertIn("user confirmation cannot", normalized_surface)
+
+        readme = " ".join(read(ROOT / "README.md").lower().split())
+        self.assertIn("https://github.com/blavkgokuvnn/single-agent-skills", readme)
+        self.assertIn("anecdotal", readme)
+        one_model_faq = readme.split("can i use only one model?", 1)[1].split("###", 1)[0]
+        self.assertIn("singularity", one_model_faq)
+
+    def test_pulsar_state_sequence_templates_and_safe_state_are_explicit(self):
+        pulsar = " ".join(read(PULSAR).lower().split())
 
         for required in (
             "prepare (unpersisted)",
@@ -425,11 +572,11 @@ class SkillContractTests(unittest.TestCase):
             "personal or regulated data",
             "no-follow",
             "atomic",
-            "measured planning probe",
-            "measured ledger entry",
+            "pulsar planning probe",
+            "pulsar ledger entry",
             "not hard sandbox isolation",
         ):
-            self.assertIn(required, measured)
+            self.assertIn(required, pulsar)
 
         self.assertNotIn("Measured planning probe", read(TEMPLATES))
         self.assertNotIn("Measured ledger entry", read(TEMPLATES))
@@ -2488,16 +2635,17 @@ class UserExperienceTests(unittest.TestCase):
             self.assertIn(visible_element, first_lines[0])
         self.assertIn("# Astral Orchestrator", first_lines[:4])
 
-        for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
+        for figure in ("3,403", "4,722", "10,223", "12,401", "5,501", "53.8%"):
             self.assertIn(figure, readme)
         footprint = " ".join(
-            readme.split("## Measured instruction-context footprint", 1)[1]
+            readme.split("## Pulsar instruction-context footprint", 1)[1]
             .split("## Configurable effort levels", 1)[0]
             .split()
         )
-        self.assertIn("historical v3.2.0 core `SKILL.md` measures **2,036 tokens**", footprint)
-        self.assertIn("Guided/full measures **5,636 tokens**", footprint)
-        self.assertIn("Measured measures **7,795 tokens**", footprint)
+        self.assertIn("current v3.6.0 core `SKILL.md` measures **3,403 tokens**", footprint)
+        self.assertIn("Orbit/full measures **10,223 tokens**", footprint)
+        self.assertIn("Pulsar measures **12,401 tokens**", footprint)
+        self.assertIn("Comet loads the core skill and mode/risk reference only", footprint)
         self.assertIn("instruction-context loading only", footprint)
         self.assertIn("quality, latency, or price", footprint)
         self.assertIn("total tokens for a complete run", footprint)
@@ -2509,15 +2657,15 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("inspired by", attribution)
         self.assertIn("pinned codex gpt-5.6 sol/terra/luna lanes", attribution)
         self.assertIn("does not run or depend on ori or openrouter", attribution)
-        self.assertIn("worker-produced guided, measured, morph, or constellation work", attribution)
-        self.assertIn("guided, careful, and measured require the three", attribution)
+        self.assertIn("worker-produced orbit, pulsar, morph, or constellation work", attribution)
+        self.assertIn("orbit, event horizon, and pulsar require the three", attribution)
 
-    def test_editable_diagrams_preserve_rendered_labels_and_quick_handoff(self):
+    def test_editable_diagrams_preserve_rendered_labels_and_comet_handoff(self):
         namespace = {"svg": "http://www.w3.org/2000/svg"}
 
         routing_root = ET.parse(ROUTING_DIAGRAM).getroot()
         routing_edge = routing_root.find(
-            ".//svg:path[@id='quick-to-handoff']", namespace
+            ".//svg:path[@id='comet-to-handoff']", namespace
         )
         self.assertIsNotNone(routing_edge)
         self.assertEqual(routing_edge.get("data-from"), "Sol primary + self-review")
@@ -2526,9 +2674,9 @@ class UserExperienceTests(unittest.TestCase):
 
         routing_source = load_json(ROUTING_EXCALIDRAW)
         routing_elements = {element["id"]: element for element in routing_source["elements"]}
-        source_edge = routing_elements["quick-to-handoff"]
+        source_edge = routing_elements["comet-to-handoff"]
         self.assertEqual(source_edge["type"], "arrow")
-        self.assertEqual(source_edge["startBinding"]["elementId"], "quick-sol")
+        self.assertEqual(source_edge["startBinding"]["elementId"], "comet-sol")
         self.assertEqual(source_edge["endBinding"]["elementId"], "handoff")
 
         for svg, source in (
@@ -2601,22 +2749,63 @@ class UserExperienceTests(unittest.TestCase):
 
         readme = read(ROOT / "README.md")
         footprint_section = " ".join(
-            readme.split("## Measured instruction-context footprint", 1)[1]
+            readme.split("## Pulsar instruction-context footprint", 1)[1]
             .split("## Configurable effort levels", 1)[0]
             .split()
         )
-        self.assertIn("historical v3.2.0 core", footprint_section)
-        for value in (
-            evidence["bundles"]["core"]["tokens"],
-            evidence["bundles"]["quick"]["tokens"],
-            evidence["bundles"]["full"]["tokens"],
-            evidence["quick_vs_full"]["tokens_avoided"],
-        ):
-            self.assertIn(f"**{value:,} tokens", footprint_section)
-        self.assertIn(
-            f"({evidence['quick_vs_full']['percent_avoided']}%)",
-            footprint_section,
+        self.assertIn("older v3.2.0 snapshot is preserved as historical evidence", footprint_section)
+        self.assertIn("benchmarks/context-footprint-2026-08-21.json", footprint_section)
+
+    def test_current_context_footprint_matches_the_cosmic_v360_instruction_set(self):
+        evidence = load_json(CONTEXT_FOOTPRINT_CURRENT)
+
+        self.assertEqual(evidence["measured_on"], "2026-08-21")
+        self.assertEqual(evidence["product_version"], "3.6.0")
+        self.assertEqual(
+            evidence["tokenizer"],
+            {"library": "tiktoken", "version": "0.13.0", "encoding": "o200k_base"},
         )
+        self.assertEqual(
+            evidence["files"][-1]["path"],
+            "plugins/astral-orchestrator/skills/astral-orchestrator/references/pulsar-mode.md",
+        )
+        self.assertEqual(
+            {name: evidence["bundles"][name]["tokens"] for name in ("core", "quick", "guided", "measured")},
+            {"core": 3403, "quick": 4722, "guided": 10223, "measured": 12401},
+        )
+        self.assertEqual(
+            evidence["bundles"]["quick"]["paths"],
+            [
+                "plugins/astral-orchestrator/skills/astral-orchestrator/SKILL.md",
+                "plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md",
+            ],
+        )
+        self.assertEqual(evidence["quick_vs_full"], {"tokens_avoided": 5501, "percent_avoided": 53.8})
+
+        readme = read(ROOT / "README.md")
+        self.assertIn("benchmarks/context-footprint-2026-08-21.json", readme)
+        self.assertIn("stable historical bundle keys", readme)
+
+    def test_current_improvements_describe_all_seven_v360_modes(self):
+        improvements = read(ROOT / "docs/IMPROVEMENTS.md")
+
+        self.assertIn("current Astral Orchestrator v3.6 design", improvements)
+        for mode in (
+            "Comet",
+            "Orbit",
+            "Event Horizon",
+            "Singularity",
+            "Pulsar",
+            "Morph",
+            "Constellation",
+        ):
+            with self.subTest(mode=mode):
+                self.assertIn(mode, improvements)
+        self.assertIn("one verified Sol performs the work", improvements)
+        self.assertIn("no subagents are spawned", improvements)
+        self.assertIn("no fresh reviewer is used", improvements)
+        self.assertIn("one proportional self-review", improvements)
+        self.assertIn("Event Horizon overrides Singularity", improvements)
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"
@@ -2645,6 +2834,31 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("Copyright (c) 2026 Daniel McAteer", license_text)
         self.assertIn("DannyMac180/sol-advisor", notice)
         self.assertIn("MIT", notice)
+
+    def test_singularity_upstream_notice_is_preserved(self):
+        notice = read(NOTICE)
+
+        self.assertIn("blavkgokuvnn/single-agent-skills", notice)
+        self.assertIn("7fc169557e84e0d27fe22e7d4fc2a6bffeefe4b2", notice)
+        self.assertIn(
+            "Copyright (c) 2026 Single-Agent Skills contributors",
+            notice,
+        )
+        self.assertIn("Permission is hereby granted, free of charge", notice)
+
+    def test_notices_and_v360_changelog_record_the_current_taxonomy(self):
+        notice = read(NOTICE)
+        changelog = read(ROOT / "CHANGELOG.md")
+
+        self.assertIn("Comet, Orbit, Event Horizon,\nand Pulsar modes", notice)
+        self.assertIn("advisory prompt aliases", notice)
+        self.assertEqual(PLUGIN_NOTICE.read_bytes(), NOTICE.read_bytes())
+        v360 = changelog.split("## 3.6.0 — 2026-08-21", 1)[1].split("## 3.5.0", 1)[0]
+        self.assertIn("### Added", v360)
+        self.assertIn("one verified Sol primary session", v360)
+        self.assertIn("no subagents or fresh reviewer", v360)
+        self.assertIn("low- or medium-risk", v360)
+        self.assertIn("Single-Agent Skills", v360)
 
     def test_notice_uses_the_canonical_improvements_link(self):
         notice = read(NOTICE)
@@ -3135,45 +3349,71 @@ class ReleaseTrackingSkillTests(unittest.TestCase):
         self.assertIn("$track-astral-releases", metadata)
 
     def test_release_ledger_reports_the_current_public_version(self):
+        ledger = load_json(RELEASE_LEDGER)
+        target_version = load_json(MANIFEST)["version"]
+        latest_by_surface = {}
+        for event in ledger["events"]:
+            latest_by_surface[event["surface"]] = event
+
         result = self.run_ledger(
             "status",
             "--ledger",
             str(RELEASE_LEDGER),
             "--expected-version",
-            "3.4.0",
+            target_version,
             "--format",
             "json",
         )
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         status = json.loads(result.stdout)
-        surfaces = status["surfaces"]
-        self.assertEqual(surfaces["source"]["version"], "3.4.0")
-        self.assertEqual(surfaces["source"]["status"], "verified")
-        self.assertEqual(surfaces["github_release"]["version"], "3.4.0")
-        self.assertEqual(surfaces["github_release"]["status"], "published")
-        self.assertEqual(surfaces["github_marketplace"]["version"], "3.4.0")
-        self.assertEqual(surfaces["github_marketplace"]["status"], "installable")
-        self.assertEqual(surfaces["vercel"]["version"], "3.4.0")
-        self.assertEqual(surfaces["vercel"]["status"], "deployed")
-        self.assertEqual(surfaces["openai_submission"]["version"], "3.4.0")
-        self.assertEqual(surfaces["openai_submission"]["status"], "approved")
-        self.assertEqual(surfaces["openai_directory"]["version"], "3.4.0")
-        self.assertEqual(surfaces["openai_directory"]["status"], "published")
+        self.assertEqual(status["expected_version"], target_version)
+        self.assertEqual(
+            status["surfaces"],
+            {
+                surface: latest_by_surface.get(surface)
+                for surface in (
+                    "source",
+                    "github_release",
+                    "github_marketplace",
+                    "vercel",
+                    "openai_submission",
+                    "openai_directory",
+                )
+            },
+        )
 
     def test_strict_release_check_passes_when_every_public_surface_matches(self):
         with tempfile.TemporaryDirectory() as directory:
             historical_manifest = Path(directory) / "plugin.json"
+            historical_ledger = Path(directory) / "astral-release-ledger.json"
             manifest = load_json(MANIFEST)
             manifest["version"] = "3.4.0"
             historical_manifest.write_text(
                 json.dumps(manifest, indent=2) + "\n",
                 encoding="utf-8",
             )
+            ledger = load_json(RELEASE_LEDGER)
+            historical_events = [
+                event for event in ledger["events"] if event["version"] == "3.4.0"
+            ]
+            self.assertTrue(historical_events)
+            historical_ledger.write_text(
+                json.dumps(
+                    {
+                        "schema_version": ledger["schema_version"],
+                        "product": ledger["product"],
+                        "events": historical_events,
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
             result = self.run_ledger(
                 "check",
                 "--ledger",
-                str(RELEASE_LEDGER),
+                str(historical_ledger),
                 "--expected-version",
                 "3.4.0",
                 "--manifest",

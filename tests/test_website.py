@@ -300,18 +300,20 @@ class WebsiteContractTests(unittest.TestCase):
         ):
             self.assertIn(phrase, home)
 
-    def test_homepage_presents_exactly_six_modes(self):
+    def test_homepage_presents_exactly_seven_modes(self):
         home = page_text(PAGES["home"])
-        self.assertIn("Six modes", home)
+        self.assertIn("Seven modes", home)
+        self.assertIn("Seven delivery modes", home)
         self.assertEqual(
             len(re.findall(r'<article class="mode-card(?: [^"]+)?"', home)),
-            6,
+            7,
         )
         expected_tags = {
-            "quick": "Quick",
-            "guided": "Guided · default",
-            "careful": "Careful",
-            "measured": "Measured · opt-in",
+            "comet": "Comet",
+            "orbit": "Orbit · default",
+            "event-horizon": "Event Horizon",
+            "singularity": "Singularity · explicit",
+            "pulsar": "Pulsar · opt-in",
             "morph": "Morph · explicit",
             "constellation": "Constellation · capacity-aware",
         }
@@ -338,16 +340,18 @@ class WebsiteContractTests(unittest.TestCase):
             "one primary consumes a slot",
             "serial fallback",
             "does not claim every provider has native effort semantics",
+            "one verified sol session",
+            "no subagents or fresh reviewer",
             "does not claim every host supports multi-agent orchestration",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_5_0_on_current_pages(self):
+    def test_current_version_copy_is_v3_6_0_on_current_pages(self):
         for page in ("home", "install", "support"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.5.0", content)
+                self.assertIn("v3.6.0", content)
 
     def test_homepage_explains_live_astral_status(self):
         home = " ".join(page_text(PAGES["home"]).lower().split())
@@ -858,22 +862,23 @@ class WebsiteContractTests(unittest.TestCase):
         for phrase in (
             "local plugin runtime",
             "No project-operated backend",
-            "published v3.2.0 measurement",
+            "published v3.6.0 measurement",
             "local Codex and project environment",
             "runs locally on your supplied trials",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_homepage_explains_the_explicit_opt_in_measured_mode(self):
+    def test_homepage_explains_the_explicit_opt_in_pulsar_mode(self):
         home = page_text(PAGES["home"])
         for phrase in (
-            "v3.2.0",
-            "Six modes",
-            "Quick",
-            "Guided · default",
-            "Careful",
-            "Measured · opt-in",
+            "v3.6.0",
+            "Seven modes",
+            "Comet",
+            "Orbit · default",
+            "Event Horizon",
+            "Singularity · explicit",
+            "Pulsar · opt-in",
             "deliberately slower, evidence-oriented",
             "never auto-selected",
             "one canonical work card",
@@ -891,28 +896,29 @@ class WebsiteContractTests(unittest.TestCase):
             "homepage": " ".join(page_text(PAGES["home"]).split()),
         }
         benchmark = json.loads(
-            page_text(ROOT / "benchmarks" / "context-footprint-2026-08-04.json")
+            page_text(ROOT / "benchmarks" / "context-footprint-2026-08-21.json")
         )
         expected_bundles = {
-            "core": 2036,
-            "quick": 3696,
-            "guided": 5636,
-            "measured": 7795,
+            "core": 3403,
+            "quick": 4722,
+            "guided": 10223,
+            "measured": 12401,
         }
         self.assertEqual(
             {name: benchmark["bundles"][name]["tokens"] for name in expected_bundles},
             expected_bundles,
         )
-        self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 1940)
-        self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 34.4)
+        self.assertEqual(benchmark["quick_vs_full"]["tokens_avoided"], 5501)
+        self.assertEqual(benchmark["quick_vs_full"]["percent_avoided"], 53.8)
         for document, evidence in public_evidence.items():
-            for figure in ("2,036", "3,696", "5,636", "7,795", "1,940", "34.4%"):
+            for figure in ("3,403", "4,722", "10,223", "12,401", "5,501", "53.8%"):
                 with self.subTest(document=document, figure=figure):
                     self.assertIn(figure, evidence)
             for scope_statement in (
+                "Comet loads the core skill and mode/risk reference only",
                 "static instruction-context measurements",
                 "not task quality, latency, price, or total-run tokens",
-                "published v3.2.0 measurement",
+                "published v3.6.0 measurement",
             ):
                 with self.subTest(document=document, scope_statement=scope_statement):
                     self.assertIn(scope_statement, evidence)
@@ -941,7 +947,7 @@ class WebsiteContractTests(unittest.TestCase):
         homepage = public_evidence["homepage"]
         for link in (
             "benchmarks/README.md",
-            "benchmarks/context-footprint-2026-08-04.json",
+            "benchmarks/context-footprint-2026-08-21.json",
             "benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
         ):
             with self.subTest(readme_link=link):
@@ -949,11 +955,36 @@ class WebsiteContractTests(unittest.TestCase):
 
         for link in (
             "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/README.md",
-            "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-04.json",
+            "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-21.json",
             "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
         ):
             with self.subTest(homepage_link=link):
                 self.assertIn(link, homepage)
+
+    def test_homepage_instruction_context_bar_widths_match_current_evidence(self):
+        benchmark = json.loads(
+            page_text(ROOT / "benchmarks" / "context-footprint-2026-08-21.json")
+        )
+        stylesheet = page_text(WEBSITE / "assets" / "site.css")
+        pulsar_tokens = benchmark["bundles"]["measured"]["tokens"]
+
+        for css_name, bundle_name in (
+            ("pulsar", "measured"),
+            ("full", "full"),
+            ("comet", "quick"),
+            ("core", "core"),
+        ):
+            with self.subTest(css_name=css_name):
+                match = re.search(
+                    rf"\.chart-bar--{css_name}\s*\{{(?P<body>.*?)\}}",
+                    stylesheet,
+                    re.DOTALL,
+                )
+                self.assertIsNotNone(match)
+                width = re.search(r"width:\s*([0-9.]+)%", match.group("body"))
+                self.assertIsNotNone(width)
+                expected = round(benchmark["bundles"][bundle_name]["tokens"] / pulsar_tokens * 100, 1)
+                self.assertEqual(float(width.group(1)), expected)
 
     def test_homepage_credits_ori_eval_without_claiming_a_runtime_dependency(self):
         home = page_text(PAGES["home"])

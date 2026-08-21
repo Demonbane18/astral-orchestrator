@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Astral Orchestrator is a local, open-source Codex plugin that routes work through Sol, Luna, and Terra with checks and a fresh Sol review.">
+    <meta name="description" content="Astral Orchestrator is a local, open-source Codex plugin with delegated Sol, Luna, and Terra routes plus a deliberate one-Sol Singularity mode.">
     <meta name="theme-color" content="#f4f2ec">
     <title>Astral Orchestrator · turn a request into a checked result</title>
     <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
@@ -59,14 +59,15 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.5.0 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.6.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
-              Astral Orchestrator gives bigger work a clear route through Codex:
+              For its normal delegated route, Astral Orchestrator gives bigger work a clear route through Codex:
               <span class="hl">Sol</span> plans and stays responsible,
               <span class="hl">Luna</span> or <span class="hl">Terra</span> implements
               a bounded piece, and a <span class="hl">fresh Sol review</span> checks
-              the result before it comes back to you.
+              the result before it comes back to you. Singularity is the deliberate
+              one-Sol exception for eligible work.
             </p>
             <div class="hero-actions">
               <a class="button button-primary" href="install/">Get the install command</a>
@@ -74,8 +75,8 @@
             </div>
             <ul class="hero-facts">
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>3 pinned lanes</li>
-              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh Sol review</li>
-              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Six explicit modes</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh review when delegated</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Seven delivery modes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Live route status</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>No project-operated backend</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>MIT licensed</li>
@@ -115,15 +116,15 @@
           <div class="section-intro" data-reveal>
             <div>
               <p class="eyebrow">What is Astral Orchestrator?</p>
-              <h2 id="what-title">A small flight crew for every bigger request.</h2>
+              <h2 id="what-title">A small flight crew for delegated work.</h2>
             </div>
             <p>
               It is a <span class="hl">local, open-source plugin</span> for Codex.
-              Instead of one session doing everything at once, your request travels
-              with a crew: a captain who owns the plan, specialists who fly their
-              leg, and an inspector who signs off before landing. No API key, no
-              project-operated backend, <span class="hl">no analytics</span>. Just a steadier way of
-              working.
+              Delegated work travels with a crew: a captain who owns the plan,
+              specialists who fly their leg, and an inspector who signs off before
+              landing. Singularity deliberately keeps eligible work in one verified
+              Sol session instead. No API key, no project-operated backend,
+              <span class="hl">no analytics</span>. Just a steadier way of working.
             </p>
           </div>
           <div class="card-grid">
@@ -193,7 +194,7 @@
           <div class="section-intro" data-reveal>
             <div>
               <p class="eyebrow">Pick an altitude</p>
-              <h2 id="modes-title">Six modes, one steady hand.</h2>
+              <h2 id="modes-title">Seven modes, one steady hand.</h2>
             </div>
             <p>
               Tell Astral how careful to be. It <span class="hl">raises safeguards</span>
@@ -203,7 +204,7 @@
           </div>
           <div class="card-grid modes-grid">
             <article class="mode-card" data-reveal>
-              <span class="mode-tag mode-tag--quick">Quick</span>
+              <span class="mode-tag mode-tag--comet">Comet</span>
               <h3>Tiny and reversible</h3>
               <p>
                 Sol works directly and self-reviews at the configured effort. No
@@ -213,7 +214,7 @@
               <p class="mode-best"><strong>Best for:</strong> obvious, easy-to-undo changes.</p>
             </article>
             <article class="mode-card" data-reveal>
-              <span class="mode-tag mode-tag--guided">Guided · default</span>
+              <span class="mode-tag mode-tag--orbit">Orbit · default</span>
               <h3>Plan, delegate, verify</h3>
               <p>
                 Sol plans, Luna or Terra implements bounded work, and a fresh Sol
@@ -222,7 +223,7 @@
               <p class="mode-best"><strong>Best for:</strong> normal changes and projects.</p>
             </article>
             <article class="mode-card" data-reveal>
-              <span class="mode-tag mode-tag--careful">Careful</span>
+              <span class="mode-tag mode-tag--event-horizon">Event Horizon</span>
               <h3>Maximum scrutiny</h3>
               <p>
                 A visible plan, confirmation gates, pinned workers, strict
@@ -230,12 +231,22 @@
               </p>
               <p class="mode-best"><strong>Best for:</strong> credentials, payments, production, migrations.</p>
             </article>
-            <article class="mode-card mode-card--measured" data-reveal>
-              <span class="mode-tag mode-tag--measured">Measured · opt-in</span>
+            <article class="mode-card mode-card--singularity" data-reveal>
+              <span class="mode-tag mode-tag--singularity">Singularity · explicit</span>
+              <h3>One focused session</h3>
+              <p>
+                One verified Sol session handles meaningful low- or medium-risk work
+                larger than Comet. It uses a compact card, targeted context, and one
+                proportional verification pass: <span class="hl">no subagents or fresh reviewer</span>.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> disciplined multi-step work that does not need delegation.</p>
+            </article>
+            <article class="mode-card mode-card--pulsar" data-reveal>
+              <span class="mode-tag mode-tag--pulsar">Pulsar · opt-in</span>
               <h3>Slower by design</h3>
               <p>
                 A deliberately slower, evidence-oriented route for an explicit
-                request. It is never auto-selected; Guided remains the default for
+                request. It is never auto-selected; Orbit remains the default for
                 normal work.
               </p>
               <p class="mode-best"><strong>Best for:</strong> a reproducible record of a route decision and its checks.</p>
@@ -266,9 +277,14 @@
           <aside class="mode-guard" data-reveal aria-labelledby="mode-guard-title">
             <h3 id="mode-guard-title">Automatic primary checker</h3>
             <p>
-              Astral first looks for <strong>allowlisted local model/effort evidence</strong>.
-              If evidence is absent, it can use a <strong>one-time user confirmation</strong>;
-              <strong>mismatch or invalid evidence blocks</strong> the route. Morph does not claim
+              All modes first look for <strong>allowlisted local model/effort evidence</strong>.
+              When evidence is absent, only non-Singularity modes can use a
+              <strong>one-time user confirmation</strong>. Singularity requires observed,
+              verified Sol model and effort, must stop on unavailable evidence, and user
+              confirmation cannot satisfy or override that requirement. <strong>Mismatch or
+              invalid evidence blocks</strong> every route. Singularity uses <strong>one verified
+              Sol session</strong> with no subagents or fresh reviewer, and Event Horizon takes over
+              for high-risk work. Morph does not claim
               every provider has native effort semantics, and Constellation does not claim
               every host supports multi-agent orchestration: when capacity or
               independence is uncertain, use the <strong>serial fallback</strong>.
@@ -284,7 +300,7 @@
               <h2 id="workflow-title">One lead, the right lane, then a fresh look.</h2>
             </div>
             <p>
-              The usual Guided or Careful route, step by step. Sol keeps the outcome
+              The usual Orbit or Event Horizon route, step by step. Sol keeps the outcome
               and safety boundaries; Luna and Terra receive bounded work only after
               that plan is settled.
             </p>
@@ -292,7 +308,7 @@
 
           <p class="route-hint" data-reveal>Tap a step to open it. Every lane is touch-friendly.</p>
 
-          <div class="route-map" aria-label="Sol leads the plan. Luna handles narrow repeatable tasks. Terra handles context-heavy implementation. Checks run after the work, then a fresh Sol review happens before handoff.">
+          <div class="route-map" aria-label="Normal multi-agent route: Sol leads the plan. Luna handles narrow repeatable tasks. Terra handles context-heavy implementation. Checks run after the work, then a fresh Sol review happens before handoff.">
             <div class="route-step route-step--sol" data-reveal>
               <details open>
                 <summary>
@@ -304,7 +320,7 @@
                   <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
                 </summary>
                 <div class="route-detail">
-                  <p>Sol settles requirements, architecture, and what <strong>done</strong> means before anyone writes a line. Guided and Careful work must run on the <span class="hl">configured Sol route</span> at the configured effort. If that route cannot be proven, Astral stops rather than quietly substituting another model.</p>
+                  <p>Sol settles requirements, architecture, and what <strong>done</strong> means before anyone writes a line. Orbit and Event Horizon work must run on the <span class="hl">configured Sol route</span> at the configured effort. If that route cannot be proven, Astral stops rather than quietly substituting another model.</p>
                 </div>
               </details>
             </div>
@@ -358,31 +374,31 @@
                   <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
                 </summary>
                 <div class="route-detail">
-                  <p>Relevant checks run against the real diff. Then a <strong>separate Sol reviewer</strong>, with no stake in producing the work, assesses the finished result. Careful mode adds confirmation gates and read-only review evidence.</p>
+                  <p>Relevant checks run against the real diff. Then a <strong>separate Sol reviewer</strong>, with no stake in producing the work, assesses the finished result. Event Horizon adds confirmation gates and read-only review evidence.</p>
                 </div>
               </details>
             </div>
 
-            <p class="route-caption">The route is a documented heuristic based on the work at hand. Every lane runs its pinned model at its configured effort, and a mismatched lane is blocked and explained instead of hidden.</p>
+            <p class="route-caption">This normal multi-agent route is a documented heuristic based on the work at hand. Every lane runs its pinned model at its configured effort, and a mismatched lane is blocked and explained instead of hidden. Singularity is the deliberate one-Sol exception.</p>
           </div>
         </div>
       </section>
 
-      <section class="section measured-section" aria-labelledby="measured-title">
+      <section class="section pulsar-section" aria-labelledby="pulsar-title">
         <div class="shell">
           <div class="section-intro" data-reveal>
             <div>
-              <p class="eyebrow">Measured mode</p>
-              <h2 id="measured-title">Freeze the plan. Keep the evidence.</h2>
+              <p class="eyebrow">Pulsar mode</p>
+              <h2 id="pulsar-title">Freeze the plan. Keep the evidence.</h2>
             </div>
             <p>
-              Measured is an explicit opt-in route, not a claim that every task
+              Pulsar is an explicit opt-in route, not a claim that every task
               needs more process. It creates a deliberate, inspectable record while
               Sol keeps the requirements, architecture, and final decisions.
             </p>
           </div>
-          <div class="measured-grid">
-            <article class="measured-card" data-reveal>
+          <div class="pulsar-grid">
+            <article class="pulsar-card" data-reveal>
               <h3>One fixed card, one selected lane</h3>
               <p>
                 Sol freezes one canonical work card and named acceptance checks,
@@ -391,7 +407,7 @@
                 card.
               </p>
             </article>
-            <article class="measured-card" data-reveal>
+            <article class="pulsar-card" data-reveal>
               <h3>Ambiguity gets the same question</h3>
               <p>
                 Only a genuine Luna/Terra routing ambiguity can trigger optional,
@@ -400,10 +416,10 @@
                 decision.
               </p>
             </article>
-            <article class="measured-card" data-reveal>
+            <article class="pulsar-card" data-reveal>
               <h3>Resumable proof, then a fresh look</h3>
               <p>
-                Measured keeps private, resumable evidence locally without secrets,
+                Pulsar keeps private, resumable evidence locally without secrets,
                 raw prompts, or a project-operated service. Frozen checks run on
                 each attempt, and a fresh Sol review supplies the final verdict.
               </p>
@@ -424,7 +440,7 @@
         <div class="shell">
           <div class="section-intro" data-reveal>
             <div>
-              <p class="eyebrow">Measured evidence</p>
+              <p class="eyebrow">Pulsar evidence</p>
               <h2 id="evidence-title">Fewer tokens in context. <span class="gradient-text">More eyes on the work.</span></h2>
             </div>
             <p>
@@ -439,44 +455,44 @@
           <div class="evidence-grid">
             <div class="chart-card" data-reveal>
               <h3>Instruction-context tokens, by loading path</h3>
-              <p class="chart-sub">Static instruction-context measurements · tiktoken 0.13.0 · o200k_base · v3.2.0 · 2026-08-04</p>
-              <div class="chart" data-chart role="img" aria-label="Bar chart of static instruction-context tokens. Measured costs 7,795 tokens. Guided and full cost 5,636 tokens. Quick costs 3,696 tokens. The core skill costs 2,036 tokens.">
+              <p class="chart-sub">Static instruction-context measurements · tiktoken 0.13.0 · o200k_base · v3.6.0 · 2026-08-21</p>
+              <div class="chart" data-chart role="img" aria-label="Bar chart of static instruction-context tokens. Pulsar costs 12,401 tokens. Orbit and full cost 10,223 tokens. Comet costs 4,722 tokens. The core skill costs 3,403 tokens.">
                 <div class="chart-row">
-                  <span class="chart-label">Measured <small>explicit evidence route</small></span>
-                  <span class="chart-track"><span class="chart-bar chart-bar--measured"></span></span>
-                  <span class="chart-value" data-count-to="7795">7,795</span>
+                  <span class="chart-label">Pulsar <small>explicit evidence route</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--pulsar"></span></span>
+                  <span class="chart-value" data-count-to="12401">12,401</span>
                 </div>
                 <div class="chart-row">
-                  <span class="chart-label">Guided / full <small>normal project route</small></span>
+                  <span class="chart-label">Orbit / full <small>normal project route</small></span>
                   <span class="chart-track"><span class="chart-bar chart-bar--full"></span></span>
-                  <span class="chart-value" data-count-to="5636">5,636</span>
+                  <span class="chart-value" data-count-to="10223">10,223</span>
                 </div>
                 <div class="chart-row">
-                  <span class="chart-label">Quick path <small>tiny tasks</small></span>
-                  <span class="chart-track"><span class="chart-bar chart-bar--quick"></span></span>
-                  <span class="chart-value" data-count-to="3696">3,696</span>
+                  <span class="chart-label">Comet path <small>tiny tasks</small></span>
+                  <span class="chart-track"><span class="chart-bar chart-bar--comet"></span></span>
+                  <span class="chart-value" data-count-to="4722">4,722</span>
                 </div>
                 <div class="chart-row">
                   <span class="chart-label">Core skill <small>always loaded</small></span>
                   <span class="chart-track"><span class="chart-bar chart-bar--core"></span></span>
-                  <span class="chart-value" data-count-to="2036">2,036</span>
+                  <span class="chart-value" data-count-to="3403">3,403</span>
                 </div>
               </div>
-              <p class="chart-footnote">Scope: static instruction-context measurements only, not task quality, latency, price, or total-run tokens. Regenerate the published v3.2.0 measurement with one command from <code>benchmarks/</code> in the repository.</p>
+              <p class="chart-footnote">Scope: Comet loads the core skill and mode/risk reference only; static instruction-context measurements are not task quality, latency, price, or total-run tokens. Regenerate the published v3.6.0 measurement with one command from <code>benchmarks/</code> in the repository.</p>
             </div>
 
             <div class="stat-stack">
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="34.4" data-decimals="1">34.4</span><span class="stat-unit">%</span></span>
-                <span class="stat-label">instruction-context tokens Quick avoids versus Guided / full loading</span>
+                <span class="stat-number"><span data-stat-count data-count-to="53.8" data-decimals="1">53.8</span><span class="stat-unit">%</span></span>
+                <span class="stat-label">instruction-context tokens Comet avoids versus Orbit / full loading</span>
               </div>
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="1940">1,940</span></span>
-                <span class="stat-label">instruction-context tokens Quick avoids versus Guided / full loading</span>
+                <span class="stat-number"><span data-stat-count data-count-to="5501">5,501</span></span>
+                <span class="stat-label">instruction-context tokens Comet avoids versus Orbit / full loading</span>
               </div>
               <div class="stat-card" data-reveal>
-                <span class="stat-number"><span data-stat-count data-count-to="2036">2,036</span></span>
-                <span class="stat-label">tokens for the entire core skill in the published v3.2.0 measurement</span>
+                <span class="stat-number"><span data-stat-count data-count-to="3403">3,403</span></span>
+                <span class="stat-label">tokens for the entire core skill in the published v3.6.0 measurement</span>
               </div>
             </div>
           </div>
@@ -485,9 +501,9 @@
             <article class="conclusion-card" data-reveal>
               <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z"></path></svg>Token-efficient by design</h3>
               <p>
-                Progressive disclosure is measured, not hoped for: the Quick route
-                avoids <span class="hl">1,940 instruction-context tokens (34.4%)</span>
-                compared with Guided / full loading.
+                Progressive disclosure is measured, not hoped for: the Comet route
+                avoids <span class="hl">5,501 instruction-context tokens (53.8%)</span>
+                compared with Orbit / full loading.
               </p>
             </article>
             <article class="conclusion-card" data-reveal>
@@ -504,7 +520,7 @@
               <p>
                 The chart regenerates from one command in <code>benchmarks/</code>.
                 Read the <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/README.md">benchmark guide</a>
-                and inspect the committed <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-04.json">context-footprint JSON</a>.
+                and inspect the committed <a href="https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-21.json">context-footprint JSON</a>.
                 The local scorecard runs locally on your supplied trials; it can assess
                 them, but it is not a standing product-performance claim.
               </p>

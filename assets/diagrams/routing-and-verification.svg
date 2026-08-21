@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="810" viewBox="0 0 1120 810" role="img" aria-labelledby="title desc">
   <title id="title">Astral Orchestrator routing and verification workflow</title>
-  <desc id="desc">A hand-drawn dark navy workflow from a request through Quick or Guided and Careful routes, ending in evidence-backed handoff.</desc>
+  <desc id="desc">A hand-drawn dark navy workflow from a request through Comet or Orbit and Event Horizon routes, ending in evidence-backed handoff.</desc>
   <defs>
     <marker id="gold-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 0 L 9 5 L 0 10" fill="none" stroke="#F2C86D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
     <marker id="lavender-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 0 L 9 5 L 0 10" fill="none" stroke="#C4B5FD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
@@ -20,7 +20,7 @@
     <path d="M598 370 C668 391 735 401 778 426" stroke="#C4B5FD" marker-end="url(#lavender-arrow)"/>
     <path d="M446 498 C474 523 499 533 520 550" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
     <path d="M778 498 C726 522 650 538 600 550" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
-    <path id="quick-to-handoff" data-from="Sol primary + self-review" data-to="Evidence-backed handoff" d="M203 498 C203 625 314 747 431 764" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
+    <path id="comet-to-handoff" data-from="Sol primary + self-review" data-to="Evidence-backed handoff" d="M203 498 C203 625 314 747 431 764" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
     <path d="M560 610 C560 622 560 632 560 643" stroke="#C4B5FD" marker-end="url(#lavender-arrow)"/>
     <path d="M560 699 C560 713 560 723 560 736" stroke="#F2C86D" marker-end="url(#gold-arrow)"/>
   </g>
@@ -43,9 +43,9 @@
   <g fill="#F8F3E8" font-family="ui-rounded, system-ui, sans-serif" text-anchor="middle">
     <text x="560" y="109" font-size="22" font-weight="700">Your request</text>
     <text x="560" y="211" font-size="21" font-weight="700">Choose mode</text>
-    <text x="203" y="319" font-size="21" font-weight="700">Quick</text><text x="203" y="345" font-size="16">small, reversible</text>
+    <text x="203" y="319" font-size="21" font-weight="700">Comet</text><text x="203" y="345" font-size="16">small, reversible</text>
     <text x="203" y="456" font-size="19" font-weight="700">Sol primary</text><text x="203" y="479" font-size="16">+ self-review</text>
-    <text x="560" y="319" font-size="21" font-weight="700">Guided / Careful</text><text x="560" y="345" font-size="16">settle the plan</text>
+    <text x="560" y="319" font-size="21" font-weight="700">Orbit / Event Horizon</text><text x="560" y="345" font-size="16">settle the plan</text>
     <text x="446" y="456" font-size="19" font-weight="700">Luna</text><text x="446" y="479" font-size="16">narrow work</text>
     <text x="807" y="456" font-size="19" font-weight="700">Terra</text><text x="807" y="479" font-size="16">context-heavy work</text>
     <text x="560" y="587" font-size="19" font-weight="700">Inspect + checks</text>

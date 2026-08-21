@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.6.0 — 2026-08-21
+
+### Added
+
+- Added explicit opt-in Singularity: one verified Sol primary session for meaningful
+  low- or medium-risk work, with no subagents or fresh reviewer and one proportional
+  self-review. Event Horizon still takes over for high-risk work or when its safeguards
+  are required.
+- Added the documented attribution for Singularity's scope-control and verification
+  patterns to Single-Agent Skills; its external plugin and runtime are not bundled or
+  required.
+
+### Changed
+
+- Renamed the primary modes to Comet, Orbit, Event Horizon, and Pulsar. Orbit remains
+  the default; Comet remains the tiny Sol-only route; Event Horizon retains high-risk
+  confirmation gates and read-only review requirements; Pulsar remains explicit opt-in
+  for evidence-oriented work.
+- Kept Quick, Guided, Careful, and Measured as advisory prompt aliases so existing prompts
+  map to the same behavior while new documentation, starter prompts, and package metadata
+  use the cosmic taxonomy.
+- Renamed the active evidence-route reference to `pulsar-mode.md`; its legacy local state
+  directory name remains compatible with resumable runs.
+
 ## 3.5.0 — 2026-08-16
 
 ### Added

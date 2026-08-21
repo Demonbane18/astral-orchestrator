@@ -13,7 +13,8 @@ import tiktoken
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MEASURED_ON = "2026-08-04"
+MEASURED_ON = "2026-08-21"
+PRODUCT_VERSION = "3.6.0"
 TOKENIZER_VERSION = "0.13.0"
 TOKENIZER_ENCODING = "o200k_base"
 PATHS = (
@@ -21,7 +22,7 @@ PATHS = (
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/modes-and-risk.md"),
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/work-templates.md"),
     Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/routing-and-preflight.md"),
-    Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/measured-mode.md"),
+    Path("plugins/astral-orchestrator/skills/astral-orchestrator/references/pulsar-mode.md"),
 )
 
 
@@ -49,17 +50,20 @@ def measurement() -> dict[str, object]:
             }
         )
 
-    core, modes, templates, routing, measured = files
-    quick_files = (core, modes, templates)
+    core, modes, templates, routing, pulsar = files
+    # Comet uses only the core skill and its mode/risk rules. Work templates and
+    # routing/preflight remain progressive disclosures for broader routes.
+    quick_files = (core, modes)
     quick_tokens = sum(item["tokens"] for item in quick_files)
     full_files = (core, modes, templates, routing)
     full_tokens = sum(item["tokens"] for item in full_files)
-    measured_tokens = sum(item["tokens"] for item in files)
+    pulsar_tokens = sum(item["tokens"] for item in files)
     avoided = full_tokens - quick_tokens
     return {
         "schema_version": 1,
         "measurement": "instruction-context-footprint",
         "measured_on": MEASURED_ON,
+        "product_version": PRODUCT_VERSION,
         "generated_by": "benchmarks/measure_instruction_context.py",
         "command": (
             "uv run --no-project --with tiktoken==0.13.0 python "
@@ -95,7 +99,7 @@ def measurement() -> dict[str, object]:
             },
             "measured": {
                 "paths": [item["path"] for item in files],
-                "tokens": measured_tokens,
+                "tokens": pulsar_tokens,
             },
         },
         "quick_vs_full": {
