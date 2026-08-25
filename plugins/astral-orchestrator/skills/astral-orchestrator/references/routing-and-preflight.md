@@ -260,9 +260,9 @@ After launch, collect runtime evidence showing:
   runtime source and version;
 - the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
-- `effort` equals the role's configured effort;
-- for the reviewer, the sandbox policy is `read-only` when Event Horizon mode requires hard
-  isolation.
+- `effort` equals the role's configured effort; and
+- for the reviewer, the observed sandbox is `read-only`, or only for the guarded fallback,
+  `workspace-write`.
 
 Use trustworthy launch or startup metadata when it exposes all fields. If it omits a field, resolve
 the bundled `../../scripts/inspect-agent-runtime.sh` relative to this skill. When spawn
@@ -302,12 +302,50 @@ The orchestrator inspects every returned change before another lane builds on it
 The matching reviewer profile requests a read-only sandbox, and the legacy exact-process
 launcher passes that mode explicitly. A built-in v2 reviewer receives the same complete
 behaviorally read-only review packet, but the host still controls the effective sandbox.
-Record the observed sandbox and never overstate isolation. In Event Horizon mode, require the
-exact pinned Sol `model`, configured reviewer `reasoning_effort`, a distinct unique reviewer
-`task_name`, `fork_turns: "none"`, and observed read-only access; requested read-only access
-alone is insufficient. Do not weaken this safeguard when a custom
-profile is unavailable or when the built-in native default is used. Observed non-read-only
-access, or absent sandbox evidence, makes review incomplete. After any fix, create a new
-native reviewer with explicit `agent_type`, its own distinct unique `task_name`, exact
-`model`, configured `reasoning_effort`, and `fork_turns: "none"`, or a new reviewer
-process; never reuse the previous review context.
+Record the observed sandbox and never overstate isolation. In Event Horizon mode, prefer hard
+read-only isolation: require the exact pinned Sol `model`, configured reviewer
+`reasoning_effort`, a distinct unique reviewer `task_name`, `fork_turns: "none"`, and
+observed read-only access (`read-only`); requested read-only access alone is insufficient. Do not weaken this
+safeguard when a custom profile is unavailable or when the built-in native default is used.
+
+Only if hard read-only could not be provisioned may Sol use a behavioral-read-only fallback.
+Because a native host may reveal the effective sandbox only after launch, use this sequence:
+
+1. Sol primary captures the protected baseline before launching each reviewer. Record the exact
+   `git status --short` output and enumerate all pre-existing dirty and untracked paths from
+   that snapshot. Recursively enumerate each pre-existing untracked directory without following
+   symlinks. Record the relative path set and type for every descendant, regular-file content
+   fingerprints, and symlink target text without following it; represent other path types by
+   their own type. Also capture the allowlisted review-scope fingerprint for the actual review
+   scope. This baseline detects content edits in already-untracked regular files, but makes no
+   detection claim outside the protected baseline and actual review scope. The complete reviewer
+   packet always forbids edits, formatting, file creation/deletion, staging, commits, and any
+   other mutation or state-changing command, even while the effective sandbox is not yet known.
+2. After that reviewer launches, Sol inspects the effective reviewer sandbox. Observed
+   `read-only` satisfies hard isolation. Only observably workspace-write, not a requested or
+   inferred value, is eligible for the weaker fallback.
+3. If the user already authorized this fallback before launch and Sol captured the protected
+   baseline, the same fresh reviewer may qualify. Otherwise discard its discovery verdict before
+   asking for explicit user authorization. Explain that hard isolation is unavailable; that
+   blocking confirmation ends the current turn.
+4. After explicit user authorization, Sol captures a new protected baseline and launches a new
+   fresh reviewer. Use the same mutation-free packet. Accept its verdict only when its effective
+   sandbox is observably workspace-write and the primary-owned post-return comparison passes.
+
+Missing sandbox evidence, `danger-full-access`, or any broader/unrecognized sandbox does not
+qualify and leaves Event Horizon review incomplete. After the reviewer returns, Sol performs the
+protected-baseline comparison. Compare the exact status snapshot, the protected relative path
+set and types, regular-file content fingerprints, symlink target text, and the allowlisted
+review-scope fingerprint with their pre-launch values. If any protected value changed, discard
+the review and leave Event Horizon incomplete; do not auto-revert user-owned changes. The
+reviewer reports only its own reviewer-only mutation statement—what it did or did not mutate.
+Sol owns this comparison and the final handoff's mutation-check result. A clean fallback may
+return `ship`, `fix-first`, or
+`rethink`, but the handoff must state observed workspace-write, behavioral-read-only fallback,
+no hard isolation, the authorization evidence, and the mutation-check result. Never call it
+hard-isolated.
+
+High-risk Pulsar, Morph, and Constellation work inherits this exact Event Horizon rule. After
+any fix, create a new native reviewer with explicit `agent_type`, its own distinct unique
+`task_name`, exact `model`, configured `reasoning_effort`, and `fork_turns: "none"`, or a new
+reviewer process; never reuse the previous review context.

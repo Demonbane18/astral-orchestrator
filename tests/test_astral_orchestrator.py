@@ -1913,6 +1913,81 @@ reviewer = "xhigh"
         self.assertIn("destructive", modes)
         self.assertIn("credentials", modes)
 
+    def test_event_horizon_workspace_write_review_fallback_is_guarded_and_truthful(self):
+        documents = {
+            "SKILL.md": " ".join(read(SKILL).lower().split()),
+            "modes-and-risk.md": " ".join(read(MODES).lower().split()),
+            "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
+            "work-templates.md": " ".join(read(TEMPLATES).lower().split()),
+            "README.md": " ".join(read(ROOT / "README.md").lower().split()),
+            "SPEC.md": " ".join(read(SPEC).lower().split()),
+            "IMPROVEMENTS.md": " ".join(
+                read(ROOT / "docs/IMPROVEMENTS.md").lower().split()
+            ),
+        }
+
+        for label, document in documents.items():
+            with self.subTest(document=label):
+                self.assertIn("behavioral-read-only fallback", document)
+                self.assertIn("hard read-only", document)
+                self.assertIn("explicit user authorization", document)
+                self.assertIn("observably workspace-write", document)
+                self.assertIn("never call it hard-isolated", document)
+
+        routing = documents["routing-and-preflight.md"]
+        for required in (
+            "allowlisted review-scope fingerprint",
+            "protected baseline",
+            "pre-existing dirty and untracked paths",
+            "recursively enumerate each pre-existing untracked directory",
+            "relative path set",
+            "regular files",
+            "without following symlinks",
+            "symlink target text",
+            "other path types",
+            "git status",
+            "after launch",
+            "discovery verdict",
+            "new fresh reviewer",
+            "already authorized",
+            "danger-full-access",
+            "discard the review",
+            "do not auto-revert",
+            "file creation/deletion",
+            "staging",
+            "commits",
+            "mutation-check result",
+        ):
+            self.assertIn(required, routing)
+
+        ordered_steps = (
+            "Sol primary captures the protected baseline before launching each reviewer.",
+            "After that reviewer launches, Sol inspects the effective reviewer sandbox.",
+            "discard its discovery verdict before asking for explicit user authorization.",
+            "After explicit user authorization, Sol captures a new protected baseline and launches a new fresh reviewer.",
+            "After the reviewer returns, Sol performs the protected-baseline comparison.",
+        )
+        positions = [routing.find(step.lower()) for step in ordered_steps]
+        self.assertTrue(all(position >= 0 for position in positions))
+        self.assertEqual(positions, sorted(positions))
+
+        templates = documents["work-templates.md"]
+        for required in (
+            "no edits, formatting, file creation/deletion, staging, commits",
+            "behavioral-read-only fallback",
+            "no hard isolation",
+            "mutation-check result",
+        ):
+            self.assertIn(required, templates)
+
+        reviewer_packet = templates.split("## plain-language handoff", 1)[0]
+        handoff = templates.split("## plain-language handoff", 1)[1]
+        self.assertIn("mutation statement", reviewer_packet)
+        self.assertIn("reviewer-only", reviewer_packet)
+        self.assertNotIn("- mutation-check result:", reviewer_packet)
+        self.assertIn("sol primary's post-return comparison", handoff)
+        self.assertIn("mutation-check result", handoff)
+
     def test_unavailable_confirmation_returns_control_immediately(self):
         skill = read(SKILL).lower()
         modes = read(MODES).lower()

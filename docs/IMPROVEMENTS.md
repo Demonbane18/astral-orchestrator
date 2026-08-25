@@ -19,6 +19,13 @@ checks the result. Event Horizon overrides Singularity whenever its higher-risk 
 applies. The design gives non-technical users a two-command GitHub install with optional
 namespaced native profiles, and refuses to silently downgrade a requested model or effort.
 
+Event Horizon prefers hard read-only reviewer isolation. When the host cannot provision it,
+the only exception is an observably workspace-write behavioral-read-only fallback with explicit
+user authorization, a pre/post mutation check, and a handoff that states no hard isolation;
+never call it hard-isolated. Missing sandbox evidence, `danger-full-access`, or any
+broader/unrecognized access remains blocking. High-risk Pulsar, Morph, and Constellation work
+inherits this safeguard.
+
 ## Current MultiAgentsV2 native route
 
 For Orbit, Event Horizon, Pulsar, Morph, and Constellation work, inspect the current

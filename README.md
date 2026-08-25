@@ -149,7 +149,7 @@ Orbit-style routing.
 |---|---|---|
 | Comet | Tiny, obvious, easy-to-undo work | Sol works directly and self-reviews at the configured orchestrator effort. |
 | Orbit (default) | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
-| Event Horizon | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and read-only reviewer evidence. |
+| Event Horizon | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and hard read-only reviewer evidence. |
 | Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One verified Sol primary completes one compact card at the configured orchestrator effort, with no subagents or fresh reviewer and one proportional verification pass. |
 | Pulsar (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
 | Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed or native model | Sol remains the configured primary, the worker receives an exact model id and requested effort, and fresh Sol reviews the result. |
@@ -160,7 +160,10 @@ It does not broaden the work you asked for.
 Singularity, Pulsar, Morph, and Constellation are never automatic; Orbit remains
 recommended for normal work. Event Horizon overrides Singularity and safeguards override either
 opt-in worker mode whenever the risk requires confirmation, serial routing, or observed
-read-only review isolation.
+hard read-only review isolation. If hard read-only cannot be provisioned, only an observably
+workspace-write reviewer may use the guarded behavioral-read-only fallback after explicit user
+authorization; Astral records its mutation check and never calls it hard-isolated. Missing
+sandbox evidence, `danger-full-access`, or broader/unrecognized access remains a blocker.
 
 ### Legacy prompt migration
 
@@ -402,7 +405,10 @@ set as a reason to investigate before making a product claim.
   client, API key, or background service.
 - A fresh reviewer is required after worker-produced Orbit, Pulsar, Morph, or
   Constellation work. Event Horizon mode—and high-risk Pulsar, Morph, or Constellation work—
-  also requires observed read-only review isolation.
+  prefers hard read-only review isolation. A behavioral-read-only fallback is allowed only
+  for an observably workspace-write reviewer after explicit user authorization; it compares
+  the pre/post review scope and status, reports no hard isolation and the mutation-check
+  result, and the handoff must never call it hard-isolated.
 
 ## Updating and the 3.0 migration
 

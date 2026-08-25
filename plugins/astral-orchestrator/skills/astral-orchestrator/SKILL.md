@@ -228,14 +228,19 @@ pinned lane, rerun affected checks, and inspect the result again.
   use the built-in native default with those explicit values and a complete review packet.
   For a no-change or answer-only request with no worker, label primary-session Sol
   self-review plainly.
-- **Event Horizon:** always use the exact Sol reviewer lane, and require observed read-only
-  isolation before accepting its independent review.
+- **Event Horizon:** always use the exact Sol reviewer lane. Prefer observed hard read-only
+  isolation; observed read-only isolation remains required whenever it is provisioned. Only the
+  guarded behavioral-read-only fallback in the routing guide may use an
+  observably workspace-write reviewer, after explicit user authorization; never call it
+  hard-isolated.
 - **Singularity:** do not spawn a reviewer. Sol self-reviews once using the actual change
   set and verification evidence; this is not independent review.
 - **Pulsar:** use the normal fresh Sol reviewer after the selected worker. High-risk
-  Pulsar work also inherits Event Horizon confirmation and observed read-only isolation.
+  Pulsar work also inherits Event Horizon confirmation and hard read-only isolation or its
+  guarded behavioral-read-only fallback.
 - **Morph and Constellation:** use the normal fresh exact Sol reviewer after integrated worker
-changes. Event Horizon risk still requires observed read-only isolation.
+changes. Event Horizon risk still requires hard read-only isolation or its guarded
+behavioral-read-only fallback.
 
 Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
 change set, and verification evidence. Accept exactly one verdict: **ship**,
@@ -244,7 +249,9 @@ a new fresh reviewer, never a follow-up to the earlier reviewer. A `rethink` ver
 returns architecture or scope decisions to the Sol primary and may require user direction.
 
 If the reviewer route or required isolation cannot be proven, stop and report review
-as incomplete. Do not replace it with self-review or claim an independent review.
+as incomplete. The fallback needs explicit user authorization, observed workspace-write,
+and the routing guide's mutation check; do not replace it with self-review or claim an
+independent review.
 
 ## 7. Hand off plainly
 

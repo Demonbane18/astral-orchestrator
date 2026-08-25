@@ -227,7 +227,12 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
   unless it can prove independent ownership and available capacity.
 - Portable routes never claim fixed lane names, actual model/effort, concurrency, or fresh
   review without observable host evidence.
-- Event Horizon review cannot claim ship unless required read-only isolation is observed.
+- Event Horizon review prefers hard read-only isolation. Only after it cannot be provisioned
+  may an observably workspace-write reviewer use the guarded behavioral-read-only fallback
+  with explicit user authorization, a pre/post review-scope and `git status` mutation check,
+  and a handoff that says no hard isolation; never call it hard-isolated. Missing sandbox
+  evidence, `danger-full-access`, or broader/unrecognized access remains blocking. High-risk
+  Pulsar, Morph, and Constellation work inherits this rule.
 - Singularity has no subagents or fresh reviewer; a higher-priority instruction requiring
   delegation makes Singularity unavailable rather than a substituted route.
 - Pulsar uses an unpersisted Prepare step, one persisted freeze/preflight/route base,

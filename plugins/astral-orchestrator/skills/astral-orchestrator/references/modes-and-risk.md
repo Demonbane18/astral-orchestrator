@@ -9,7 +9,7 @@ confirmation or a fresh review.
 |---|---|---|---|---|
 | Comet | Small, obvious, reversible work | Mental or one sentence | Sol at configured effort | Sol self-review at configured effort |
 | Orbit (default) | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
-| Event Horizon | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with observed read-only isolation |
+| Event Horizon | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with hard read-only isolation, or a guarded behavioral-read-only fallback |
 | Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol primary at configured orchestrator effort; no subagents | One Sol self-review using actual changes and evidence; no fresh reviewer |
 | Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen work card and named checks | Sol selects one pinned worker; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
 | Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed model | Compact work card plus exact worker model and requested effort | Sol remains the configured primary; only the worker uses the explicit Morph route | Fresh exact Sol review at configured effort |
@@ -70,7 +70,8 @@ Typical signs:
 
 Use Event Horizon even if the user asked for Comet. Explain that the risk raises the safeguards,
 not the scope. High-risk Pulsar work keeps its evidence-oriented routing and also
-inherits Event Horizon confirmation and observed read-only isolation safeguards.
+inherits Event Horizon confirmation and hard read-only isolation safeguards, including its
+guarded behavioral-read-only fallback.
 Event Horizon overrides Singularity. Its safeguards also override Morph or Constellation whenever the work has this level of risk: keep
 the exact Sol primary and reviewer, use the required confirmation gates, and serialize any
 card whose safety, interface, or verification depends on another card.
@@ -98,8 +99,12 @@ instructed to remain behaviorally read-only.
   worker-produced change.
 - If the exact reviewer role, model, or effort cannot be proven, stop and report the
   independent review as incomplete. Do not silently substitute self-review.
-- If Event Horizon mode, or high-risk Pulsar work, requires hard read-only isolation and it
-  cannot be observed, stop the review and report the limitation.
+- Prefer observed hard read-only isolation for Event Horizon and inherited high-risk Pulsar,
+  Morph, or Constellation review. Only after hard read-only cannot be provisioned may an
+  observably workspace-write reviewer use the guarded behavioral-read-only fallback, with
+  explicit user authorization and the routing guide's mutation check. Missing sandbox
+  evidence, `danger-full-access`, or broader/unrecognized access remains blocking; never
+  call it hard-isolated.
 - Comet work and truly trivial answer-only Orbit work may use a clearly labeled Sol
   self-review at the configured orchestrator effort because no independent implementation
   was performed.

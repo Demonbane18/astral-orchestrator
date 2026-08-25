@@ -116,8 +116,13 @@ RETURN
 
 ```text
 ROLE
-Perform a fresh review. Remain behaviorally read-only: do not edit, format, delete, or
-implement files. Perform the review directly; do not spawn or delegate to another agent.
+Perform a fresh review. Remain behaviorally read-only: no edits, formatting, file
+creation/deletion, staging, commits, implementation, or any other mutation or
+state-changing command. Perform the review directly; do not spawn or delegate to another agent.
+
+ISOLATION
+<observed hard read-only, or behavioral-read-only fallback only when the effective sandbox is
+observably workspace-write after explicit user authorization. Never call it hard-isolated.>
 
 OUTCOME
 <The user's requested result.>
@@ -147,6 +152,10 @@ Return exactly one:
 REPORT
 - Verdict: ship, fix-first, or rethink
 - Route: observed agent path, model, effort, sandbox, and task id
+- Isolation: hard read-only, or behavioral-read-only fallback; state no hard isolation and
+  authorization evidence for a fallback
+- Mutation statement (reviewer-only): what the reviewer did or did not mutate; do not report a
+  Sol-owned comparison or final mutation-check result
 - Reason: decisive evidence-based reason
 - Findings: precise references and required fixes, or none
 - Residual risk: most important remaining risk, or none
@@ -166,6 +175,10 @@ CHECKS
 
 REVIEW
 <Independent review, self-review, or incomplete review, plus verdict when applicable.>
+
+MUTATION CHECK
+<Sol primary's post-return comparison of the protected baseline and actual review scope, with
+the mutation-check result.>
 
 NOTES
 <Remaining risk, assumption, limitation, or user action; omit when none.>
