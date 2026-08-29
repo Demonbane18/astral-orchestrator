@@ -460,6 +460,15 @@
       "evidence": "OpenAI Platform Plugins list in Opera GX displayed the newer corrected Astral Orchestrator v3.6.0 submission as Approved with a Publish action, while a separate v3.6.0 row remained Published in the directory.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a8da79602bc8191894c8c82f263a1bf",
       "commit": "bdf5bf1903eed1a5568efe23102896b782319b12"
+    },
+    {
+      "surface": "source",
+      "version": "3.7.0",
+      "status": "verified",
+      "observed_at": "2026-08-29T17:28:39+08:00",
+      "evidence": "Commit fcdac8d aligns the Agent Plugins and Codex author, description, and keywords so OpenAI normalization cannot change listing metadata; the stale read-only reviewer benchmark now matches the workspace-write contract. All 151 tests, package verification, skill validation, plugin validation, and git diff checks passed. The rebuilt upload ZIP reports SHA-256 320490002559a8ee5c2a194468d2e4c09d43fa26782ccef63726ba2e3032a9ba.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/fcdac8d5605158bb7d7effde92e369ab9f6897da",
+      "commit": "fcdac8d5605158bb7d7effde92e369ab9f6897da"
     }
   ]
 }
