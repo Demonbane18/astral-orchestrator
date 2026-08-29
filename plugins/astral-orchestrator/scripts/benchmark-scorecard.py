@@ -77,7 +77,7 @@ V2_EXPECTED_SANDBOXES = {
     "orchestrator": "read-only",
     "luna": "workspace-write",
     "terra": "workspace-write",
-    "reviewer": "read-only",
+    "reviewer": "workspace-write",
 }
 V2_SANDBOXES = {"read-only", "workspace-write"}
 V2_HASH_RE = re.compile(r"^[0-9a-fA-F]{64}$")

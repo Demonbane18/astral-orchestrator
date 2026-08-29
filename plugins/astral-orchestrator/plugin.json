@@ -2,18 +2,17 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
   "version": "3.7.0",
-  "description": "A seven-mode project-delivery skill with Comet, Orbit, Event Horizon, token-disciplined Singularity, Pulsar, Morph, and Constellation routes.",
+  "description": "Beginner-friendly orchestration with Comet, Orbit, Event Horizon, explicit opt-in Singularity, Pulsar, Morph, and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
-    "name": "Demonbane18",
-    "url": "https://github.com/Demonbane18"
+    "name": "Demonbane18"
   },
   "homepage": "https://github.com/Demonbane18/astral-orchestrator",
   "repository": "https://github.com/Demonbane18/astral-orchestrator",
   "license": "MIT",
   "keywords": [
-    "orchestration",
-    "agent-skills",
+    "codex",
     "project-management",
+    "implementation",
     "verification",
     "review"
   ]

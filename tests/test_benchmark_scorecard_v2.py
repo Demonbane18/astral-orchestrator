@@ -57,7 +57,7 @@ class BenchmarkScorecardV2Tests(unittest.TestCase):
                  "cached_input_tokens": 20, "output_tokens": 40,
                  "reasoning_output_tokens": 10, "total_tokens": 140, "duration_seconds": .7},
                 {"role": "reviewer", "model": "gpt-5.6-sol", "effort": "high",
-                 "sandbox": "read-only", "expected_sandbox": "read-only",
+                 "sandbox": "workspace-write", "expected_sandbox": "workspace-write",
                  "session_id": f"session-review-{repetition}", "input_tokens": 40,
                  "cached_input_tokens": 5, "output_tokens": 20,
                  "reasoning_output_tokens": 5, "total_tokens": 60, "duration_seconds": .3},

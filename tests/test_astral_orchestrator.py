@@ -214,6 +214,13 @@ class MarketplaceTests(unittest.TestCase):
         self.assertTrue(discovered.is_file())
         self.assertEqual(discovered.resolve().parents[2], plugin_root)
 
+    def test_portable_manifest_matches_codex_precedence_fields(self):
+        codex_manifest = load_json(MANIFEST)
+        portable_manifest = load_json(PORTABLE_MANIFEST)
+
+        for field in ("author", "description", "keywords"):
+            self.assertEqual(portable_manifest[field], codex_manifest[field])
+
     def test_portability_docs_limit_non_codex_routes_to_observed_capabilities(self):
         portability = " ".join(read(PORTABILITY).lower().split())
         skill = " ".join(read(SKILL).lower().split())

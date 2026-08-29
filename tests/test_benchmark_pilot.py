@@ -248,7 +248,7 @@ class BenchmarkPilotTests(unittest.TestCase):
                 "prompt = args[-1]\n"
                 "target = root / 'plugins/astral-orchestrator/scripts/run-agent.py'\n"
                 "if sandbox == 'workspace-write' and target.is_file():\n"
-                "    target.write_text(target.read_text(encoding='utf-8').replace(chr(34) + 'sandbox' + chr(34) + ': ' + chr(34) + 'workspace-write' + chr(34), chr(34) + 'sandbox' + chr(34) + ': ' + chr(34) + 'read-only' + chr(34)), encoding='utf-8')\n"
+                "    target.write_text(target.read_text(encoding='utf-8').replace(chr(34) + 'sandbox' + chr(34) + ': ' + chr(34) + 'read-only' + chr(34), chr(34) + 'sandbox' + chr(34) + ': ' + chr(34) + 'workspace-write' + chr(34)), encoding='utf-8')\n"
                 "session = 'fake-' + uuid.uuid4().hex\n"
                 "print(json.dumps({'type':'thread.started','thread_id':session}))\n"
                 "if 'Astral completion review' in prompt:\n"

@@ -14,6 +14,11 @@
 - Limited reviewer output to one verdict and at most three findings; a small direct repair
   is verified by Sol without launching another reviewer.
 
+### Fixed
+
+- Aligned the portable and Codex manifest fields that OpenAI normalizes so upload
+  conversion cannot silently change the author, description, or keywords.
+
 ## 3.6.0 — 2026-08-21
 
 ### Added

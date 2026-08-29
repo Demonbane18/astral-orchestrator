@@ -97,6 +97,9 @@ if not re.fullmatch(r"(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?", port
     raise SystemExit("portable manifest name violates the Agent Plugins name contract")
 if portable_manifest.get("version") != manifest.get("version"):
     raise SystemExit("Codex and portable manifest versions must match")
+for field in ("author", "description", "keywords"):
+    if portable_manifest.get(field) != manifest.get(field):
+        raise SystemExit(f"Codex and portable manifest {field} must match")
 if any(field in portable_manifest for field in ("skills", "interface")):
     raise SystemExit("portable manifest must rely on fixed discovery, not Codex fields")
 for field in ("description", "homepage", "repository", "license"):

@@ -21,4 +21,4 @@ with tempfile.TemporaryDirectory() as directory:
     assert evidence["role"] == "reviewer"
     assert evidence["model"] == "gpt-5.6-sol"
     assert evidence["effort"] == "high"
-    assert evidence["sandbox"] == "read-only"
+    assert evidence["sandbox"] == "workspace-write"

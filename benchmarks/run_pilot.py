@@ -44,7 +44,7 @@ EXPECTED_SANDBOXES = {
     "single-sol": "workspace-write",
     "orchestrator": "read-only",
     "terra": "workspace-write",
-    "reviewer": "read-only",
+    "reviewer": "workspace-write",
 }
 VARIANTS = ("single-sol-xhigh", "single-sol-max", "astral-guided")
 RUBRIC = """Fixed 100-point rubric (fixed-100-point-v1): correctness 45, completeness 20,
@@ -540,8 +540,8 @@ def internal_review_prompt(
         "diff": current_diff(worktree, case["allowed_paths"]),
     }
     return (
-        "Perform a fresh read-only Astral completion review after the objective checks. "
-        "Do not edit files. Inspect correctness, completeness, regressions, scope, and the "
+        "Perform one concise Astral completion review after the objective checks. "
+        "Fix only bounded obvious issues. Inspect correctness, regressions, scope, and the "
         "actual check evidence. Return exactly one first line: `VERDICT: ship`, "
         "`VERDICT: fix-first`, or `VERDICT: rethink`, followed by concise findings.\n\n"
         + json.dumps(packet, sort_keys=True)
@@ -559,7 +559,7 @@ def run_internal_reviewer(
 ) -> dict[str, Any]:
     model, effort, instructions = read_profile("reviewer")
     return run_model(
-        codex, worktree, "reviewer", model, effort, "read-only",
+        codex, worktree, "reviewer", model, effort, "workspace-write",
         internal_review_prompt(case, worktree, check_results),
         timeout_seconds, instructions, deadline,
     )

@@ -20,7 +20,7 @@
     {
       "id": "launcher-telemetry",
       "title": "Exact-process telemetry",
-      "task": "Repair the controlled production launcher regression. The documented reviewer route must retain its read-only sandbox in dry-run route evidence; the acceptance test never starts Codex. Edit only run-agent.py, then run the supplied acceptance check.",
+      "task": "Repair the controlled production launcher regression. The documented reviewer route must retain its workspace-write sandbox in dry-run route evidence; the acceptance test never starts Codex. Edit only run-agent.py, then run the supplied acceptance check.",
       "allowed_paths": ["plugins/astral-orchestrator/scripts/run-agent.py"],
       "immutable_paths": ["benchmarks/pilot/cases/check_launcher.py", "benchmarks/pilot/cases/launcher-regression.patch"],
       "setup_patch": "benchmarks/pilot/cases/launcher-regression.patch",
