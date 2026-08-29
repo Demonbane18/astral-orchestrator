@@ -12,7 +12,7 @@ fixed-route, or reviewer contract.
 | Orchestrator | Primary session | `gpt-5.6-sol` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
 | Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
 | Context worker | Built-in `worker`, or matching `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
-| Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Fresh final review; requests a read-only sandbox when the matching profile is used |
+| Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
 
 The main session owns lane selection and remains accountable for the combined result.
 Do not silently substitute a model, effort, or differently configured custom role. On a
@@ -29,21 +29,20 @@ Never silently downgrade a value that Codex rejects.
 ## Live Astral status updates
 
 Codex plugins cannot pin a permanent native UI widget. Keep the user informed through a
-compact **Astral status** panel in substantive progress commentary. Use the reusable
+compact **Astral status** panel only when the route or phase changes. Use the reusable
 panel in `work-templates.md` for the Sol primary, each selected worker, and the fresh
 reviewer when review is required. For Singularity, use only the Sol primary row and do
 not repeat unchanged updates. For Comet work, say that workers are not needed; for
 any reviewer that is not yet required, say so instead of implying it is running.
 
-Publish the panel at these points:
+Publish the panel only at these decision points:
 
 - preflight, after recording the requested route and available primary evidence;
 - launch, after a native spawn or exact-process request is made;
-- evidence, when a task/session id, runtime metadata, sandbox result, command result, or
-  reviewer verdict is received;
+- evidence, only when it changes whether the route may continue;
 - state changes, including when a lane is blocked, fails, returns, or verification
   completes;
-- completion and failure, as part of the handoff or blocked report; and
+- completion or failure, as part of the handoff or blocked report; and
 - for long-running work, a periodic update only when there is new observable progress or
   enough elapsed time that silence would be misleading. Do not spam unchanged panels.
 
@@ -197,16 +196,16 @@ collaboration.spawn_agent({
 })
 ```
 
-The packet must name the intended Astral role, model, effort, ownership, boundaries, and
-checks, and forbid downstream delegation. `agent_type: "worker"` is intentional for
+The packet must name the intended Astral role, model, effort, ownership, boundaries,
+checks, and whether downstream delegation is allowed. `agent_type: "worker"` is intentional for
 Luna and Terra implementation, while `agent_type: "default"` is intentional for a
 reviewer without its matching custom profile. The explicit model and reasoning effort
 preserve Astral's configured route. Do not treat a task name as an agent type.
 
 Custom agent file values take precedence over explicit spawn values. Use an Astral custom
 agent type only if its installed profile is byte-exact and its fixed model and effort
-match the effective lane settings. It may then supply a fixed capability such as the
-reviewer profile's read-only request. A custom profile that conflicts with a requested
+match the effective lane settings. It may then supply a fixed capability such as concise
+bounded review-and-repair. A custom profile that conflicts with a requested
 setting is not a reason to launch a nested process on a v2 host: use the appropriate
 built-in native agent with the explicit values instead (`worker` for Luna or Terra,
 `default` for reviewer). A custom effort remains a per-lane setting, not a reason to use
@@ -225,7 +224,7 @@ python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt
 The launcher reads the shipped profile, reads the effective effort settings, pins the
 model and configured effort on `codex exec`, injects the profile's developer
 instructions that forbid further delegation, and selects workspace-write for workers
-or read-only for the reviewer. Before either a dry run or launch, it checks a small set of
+and the reviewer. Before either a dry run or launch, it checks a small set of
 Codex runtimes supplied by Astral, the host, the installed app, and the current command
 environment. It selects the first runtime whose `codex features list` check proves that
 the active user configuration and model catalog can be parsed. This check does not send
@@ -249,7 +248,8 @@ task name, and spawn with explicit `agent_type`, `task_name`, `model`,
 (Luna/Terra), built-in default (reviewer), or a matching custom role; in every case the
 packet is complete and standalone. For a legacy exact-process lane, launch a new process
 for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header, Codex startup header,
-session id, final response, and exit status. Both mechanisms forbid downstream delegation.
+session id, final response, and exit status. Both mechanisms allow downstream delegation
+only when the complete packet explicitly authorizes it and supplies the child contract.
 
 After launch, collect runtime evidence showing:
 
@@ -261,8 +261,7 @@ After launch, collect runtime evidence showing:
 - the returned task or process session id identifies that lane;
 - `model` equals the role's required model;
 - `effort` equals the role's configured effort; and
-- for the reviewer, the observed sandbox is `read-only`, or only for the guarded fallback,
-  `workspace-write`.
+- for the reviewer, the requested sandbox is `workspace-write`.
 
 Use trustworthy launch or startup metadata when it exposes all fields. If it omits a field, resolve
 the bundled `../../scripts/inspect-agent-runtime.sh` relative to this skill. When spawn
@@ -283,69 +282,48 @@ to work around a missing or conflicting optional custom profile.
 
 ## Parallel and serial work
 
-Parallel execution is allowed only when worker cards have independent outcomes and
-non-overlapping file or system ownership. Tell each worker it is not alone and must
-preserve concurrent edits.
+Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. Model the
+work as a small dependency graph and keep a ready queue of cards whose prerequisites are
+complete. Launch every ready independent card concurrently up to observed host capacity.
+This parallel rule applies without requiring Constellation; Constellation adds explicit
+capacity-aware model selection for larger fan-out.
 
-Use serial execution when:
+Hierarchical delegation is allowed when it is faster than routing every leaf through Sol.
+A packet that authorizes downstream delegation must name the child boundary, exact model
+and effort, checks, maximum scope, and non-overlapping ownership. The parent worker owns
+integration and evidence for its subtree and may spawn bounded child workers only while
+capacity remains. Use the shallowest useful hierarchy, and never create a coordination-only
+parent or assign the same file/system to two live lanes. Child lanes inherit the same
+rules and may delegate again only when their own packet explicitly authorizes it.
+
+Comet (Quick) and Singularity never spawn workers. Reviewers and planning probes do not
+create implementation children; hierarchy is for bounded implementation only.
+
+Serial execution is required only when:
 
 - two cards touch the same file;
 - one card consumes another card's output;
 - an interface must be settled before implementation;
 - a user confirmation gates later work;
-- verification of one card determines whether the next should run.
+- verification of one card determines whether the next should run; or
+- observed capacity cannot fit another ready card.
 
-The orchestrator inspects every returned change before another lane builds on it.
+Tell each worker it is not alone and must preserve concurrent edits. Sol or the owning
+parent inspects every returned change before another dependent lane builds on it.
 
-## Review isolation
+## Efficient review and repair
 
-The matching reviewer profile requests a read-only sandbox, and the legacy exact-process
-launcher passes that mode explicitly. A built-in v2 reviewer receives the same complete
-behaviorally read-only review packet, but the host still controls the effective sandbox.
-Record the observed sandbox and never overstate isolation. In Event Horizon mode, prefer hard
-read-only isolation: require the exact pinned Sol `model`, configured reviewer
-`reasoning_effort`, a distinct unique reviewer `task_name`, `fork_turns: "none"`, and
-observed read-only access (`read-only`); requested read-only access alone is insufficient. Do not weaken this
-safeguard when a custom profile is unavailable or when the built-in native default is used.
+Follow YAGNI. Event Horizon uses one exact Sol reviewer in workspace-write with no special
+isolation. Give it only the outcome, boundaries, actual change set, and smallest relevant
+checks. Do not snapshot the workspace, compute fingerprints, ask for sandbox
+authorization, or turn review into a second documentation project.
 
-Only if hard read-only could not be provisioned may Sol use a behavioral-read-only fallback.
-Because a native host may reveal the effective sandbox only after launch, use this sequence:
+The reviewer may fix a small, obvious issue directly and run the smallest affected check.
+It returns one verdict line—`ship`, `fix-first`, or `rethink`—plus at most three findings.
+Do not launch a second reviewer for a bounded direct repair: Sol inspects the actual fix
+and reruns the affected check. A change that needs architecture, scope, or safety judgment
+returns to Sol as `rethink` instead of expanding the reviewer task.
 
-1. Sol primary captures the protected baseline before launching each reviewer. Record the exact
-   `git status --short` output and enumerate all pre-existing dirty and untracked paths from
-   that snapshot. Recursively enumerate each pre-existing untracked directory without following
-   symlinks. Record the relative path set and type for every descendant, regular-file content
-   fingerprints, and symlink target text without following it; represent other path types by
-   their own type. Also capture the allowlisted review-scope fingerprint for the actual review
-   scope. This baseline detects content edits in already-untracked regular files, but makes no
-   detection claim outside the protected baseline and actual review scope. The complete reviewer
-   packet always forbids edits, formatting, file creation/deletion, staging, commits, and any
-   other mutation or state-changing command, even while the effective sandbox is not yet known.
-2. After that reviewer launches, Sol inspects the effective reviewer sandbox. Observed
-   `read-only` satisfies hard isolation. Only observably workspace-write, not a requested or
-   inferred value, is eligible for the weaker fallback.
-3. If the user already authorized this fallback before launch and Sol captured the protected
-   baseline, the same fresh reviewer may qualify. Otherwise discard its discovery verdict before
-   asking for explicit user authorization. Explain that hard isolation is unavailable; that
-   blocking confirmation ends the current turn.
-4. After explicit user authorization, Sol captures a new protected baseline and launches a new
-   fresh reviewer. Use the same mutation-free packet. Accept its verdict only when its effective
-   sandbox is observably workspace-write and the primary-owned post-return comparison passes.
-
-Missing sandbox evidence, `danger-full-access`, or any broader/unrecognized sandbox does not
-qualify and leaves Event Horizon review incomplete. After the reviewer returns, Sol performs the
-protected-baseline comparison. Compare the exact status snapshot, the protected relative path
-set and types, regular-file content fingerprints, symlink target text, and the allowlisted
-review-scope fingerprint with their pre-launch values. If any protected value changed, discard
-the review and leave Event Horizon incomplete; do not auto-revert user-owned changes. The
-reviewer reports only its own reviewer-only mutation statement—what it did or did not mutate.
-Sol owns this comparison and the final handoff's mutation-check result. A clean fallback may
-return `ship`, `fix-first`, or
-`rethink`, but the handoff must state observed workspace-write, behavioral-read-only fallback,
-no hard isolation, the authorization evidence, and the mutation-check result. Never call it
-hard-isolated.
-
-High-risk Pulsar, Morph, and Constellation work inherits this exact Event Horizon rule. After
-any fix, create a new native reviewer with explicit `agent_type`, its own distinct unique
-`task_name`, exact `model`, configured `reasoning_effort`, and `fork_turns: "none"`, or a new
-reviewer process; never reuse the previous review context.
+High-risk Pulsar, Morph, and Constellation work inherits the same concise Event Horizon
+confirmation and review-and-repair rule. Sandbox mode is operational context, not an
+acceptance gate; report it only when it affected execution or remains uncertain.

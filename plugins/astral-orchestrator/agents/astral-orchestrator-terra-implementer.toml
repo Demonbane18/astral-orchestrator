@@ -13,6 +13,9 @@ preserve concurrent and unrelated edits, never revert work you do not own, and a
 to changes already present. Record material judgment calls. Surface ambiguity, scope
 conflicts, architectural changes, or failed checks instead of expanding the request.
 Run the requested checks and report observed evidence. Never claim completion, a
-different model, or a different reasoning level without evidence. Perform the assignment
-directly: do not spawn or delegate to subagents.
+different model, or a different reasoning level without evidence. When the parent packet
+authorizes downstream delegation and the host has capacity, you may spawn bounded child
+workers with exact routes, standalone packets, and non-overlapping ownership. You own
+their integration and evidence. Use the shallowest useful hierarchy; otherwise perform
+the assignment directly.
 """

@@ -104,7 +104,7 @@ process launcher remains available only for hosts without the required native-v2
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.6.0. The normalized plugin, marketplace,
+The current product version is 3.7.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
@@ -227,12 +227,11 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
   unless it can prove independent ownership and available capacity.
 - Portable routes never claim fixed lane names, actual model/effort, concurrency, or fresh
   review without observable host evidence.
-- Event Horizon review prefers hard read-only isolation. Only after it cannot be provisioned
-  may an observably workspace-write reviewer use the guarded behavioral-read-only fallback
-  with explicit user authorization, a pre/post review-scope and `git status` mutation check,
-  and a handoff that says no hard isolation; never call it hard-isolated. Missing sandbox
-  evidence, `danger-full-access`, or broader/unrecognized access remains blocking. High-risk
-  Pulsar, Morph, and Constellation work inherits this rule.
+- Event Horizon follows YAGNI with one compact in-context dependency graph, parallel ready
+  cards or the shallowest useful hierarchy, the smallest relevant checks, and one concise workspace-write Sol
+  review-and-repair pass. The reviewer may fix bounded obvious issues directly and reports
+  at most three findings; Sol verifies a small repair without launching another reviewer.
+  High-risk Pulsar, Morph, and Constellation work inherits this rule.
 - Singularity has no subagents or fresh reviewer; a higher-priority instruction requiring
   delegation makes Singularity unavailable rather than a substituted route.
 - Pulsar uses an unpersisted Prepare step, one persisted freeze/preflight/route base,
@@ -246,7 +245,9 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
    three namespaced native profiles.
 2. Profiles pin Sol High, Luna Max, and Terra High exactly as specified, while native v2
    children receive the same model and configured effort explicitly.
-3. The skill routes by work characteristics and parallelizes only non-overlapping cards.
+3. The skill routes by work characteristics. Orbit, Event Horizon, Pulsar, Morph, and
+   Constellation parallelize every ready non-overlapping card up to capacity and may use
+   bounded hierarchical delegation. Comet (Quick) and Singularity never spawn workers.
 4. Runtime inspection emits only allowlisted route fields.
 5. A non-technical reader can install, invoke, update, share, troubleshoot, and remove it.
 6. Tests, package verification, and official validators pass.

@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "Beginner-friendly orchestration with Comet, Orbit, Event Horizon, explicit opt-in Singularity, Pulsar, Morph, and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
   "author": {
     "name": "Demonbane18"
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Astral Orchestrator offers Comet, Orbit, Event Horizon, Singularity, Pulsar, Morph, and Constellation modes with table-form live status. Singularity is explicit opt-in: one verified Sol primary self-reviews with no subagents or fresh reviewer. On current Codex hosts, Orbit, Event Horizon, and Pulsar use native MultiAgentsV2 workers pinned to Luna Max or Terra High by default and a fresh Sol High reviewer; configured efforts remain adjustable. Every explicit opt-in mode never runs automatically; Event Horizon overrides high-risk Singularity work.",
+    "longDescription": "Astral Orchestrator offers Comet, Orbit, Event Horizon, Singularity, Pulsar, Morph, and Constellation modes with concise route-change status. Every mode uses Singularity-style YAGNI discipline. Orbit, Event Horizon, Pulsar, Morph, and Constellation run independent ready cards in parallel and may use bounded hierarchical delegation; Comet and Singularity stay single-session. Event Horizon keeps high-risk confirmation gates, targeted checks, and one concise workspace-write Sol review-and-repair pass. Configured efforts remain adjustable, and each explicit opt-in mode never runs automatically.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",

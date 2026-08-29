@@ -1,10 +1,16 @@
 # Astral Orchestrator work templates
 
 Load only the template needed for the next action. Replace every angle-bracketed field.
+Follow YAGNI: keep plans in context, use the smallest relevant checks, and do not create
+documents or evidence packets that are not required deliverables. Event Horizon review
+uses workspace-write so a reviewer can repair a bounded issue without another prompt.
+Orbit, Event Horizon, Pulsar, Morph, and Constellation may run independent cards in
+parallel or use bounded hierarchical delegation. Comet (Quick) and Singularity never
+spawn workers.
 
 ## Astral status panel
 
-Use this compact panel in every substantive progress update while Astral is active. It
+Use this compact panel only when the route or phase changes while Astral is active. It
 is progress commentary, not a permanent native UI widget. Keep one row for the Sol
 primary, one for each selected worker, and one for the fresh reviewer when required.
 Use `not needed` when a lane will not be used, and use `planned` for a required reviewer
@@ -88,7 +94,15 @@ You own only:
 
 You are not alone in the codebase. Preserve concurrent and unrelated edits, do not
 revert work you do not own, and adapt to changes already present.
-Perform this assignment directly. Do not spawn or delegate to another agent.
+
+DOWNSTREAM DELEGATION
+<Allowed or not allowed. Default to allowed for a coherent independent subtree when the
+host has capacity.>
+When allowed, you may spawn bounded child workers only with exact model and effort,
+standalone packets, non-overlapping ownership, and focused checks. You own integration
+and evidence for the subtree. Use the shallowest useful hierarchy; do not create a
+coordination-only child or delegate the same card twice. When not allowed or not useful,
+perform the assignment directly.
 
 DONE WHEN
 - <Acceptance condition.>
@@ -112,17 +126,14 @@ RETURN
 - Gaps: unfinished work or remaining uncertainty, or none
 ```
 
-## Fresh review
+## Concise review and repair
 
 ```text
 ROLE
-Perform a fresh review. Remain behaviorally read-only: no edits, formatting, file
-creation/deletion, staging, commits, implementation, or any other mutation or
-state-changing command. Perform the review directly; do not spawn or delegate to another agent.
-
-ISOLATION
-<observed hard read-only, or behavioral-read-only fallback only when the effective sandbox is
-observably workspace-write after explicit user authorization. Never call it hard-isolated.>
+Perform one concise review-and-repair pass in workspace-write. Fix a bounded, obvious
+issue directly when that is faster than returning it. Do not broaden scope, redesign
+architecture, create process documents, stage, commit, or publish. Perform the review
+directly; do not spawn or delegate to another agent.
 
 OUTCOME
 <The user's requested result.>
@@ -137,11 +148,12 @@ CHANGE SET
 <Complete diff or exact base/head revisions plus allowed files.>
 
 CHECKS
-- <Command or inspection> -> <actual observed evidence>
+- <Smallest relevant check> -> <actual observed evidence>
 
 REVIEW
 Inspect the actual files and complete change set. Judge correctness, completeness,
 regressions, scope discipline, interface preservation, test adequacy, and material risk.
+If you make a small repair, inspect it and run the smallest affected check.
 
 VERDICT
 Return exactly one:
@@ -150,15 +162,9 @@ Return exactly one:
 - rethink — architecture, scope, or assumptions must change.
 
 REPORT
-- Verdict: ship, fix-first, or rethink
-- Route: observed agent path, model, effort, sandbox, and task id
-- Isolation: hard read-only, or behavioral-read-only fallback; state no hard isolation and
-  authorization evidence for a fallback
-- Mutation statement (reviewer-only): what the reviewer did or did not mutate; do not report a
-  Sol-owned comparison or final mutation-check result
-- Reason: decisive evidence-based reason
-- Findings: precise references and required fixes, or none
-- Residual risk: most important remaining risk, or none
+- One verdict line: ship, fix-first, or rethink
+- Findings: at most three concise actionable findings, or none
+- Repairs: bounded files changed and focused checks run, or none
 ```
 
 ## Plain-language handoff
@@ -174,11 +180,7 @@ CHECKS
 - <Check> -> <observed result.>
 
 REVIEW
-<Independent review, self-review, or incomplete review, plus verdict when applicable.>
-
-MUTATION CHECK
-<Sol primary's post-return comparison of the protected baseline and actual review scope, with
-the mutation-check result.>
+<Concise review-and-repair or labeled self-review, plus verdict.>
 
 NOTES
 <Remaining risk, assumption, limitation, or user action; omit when none.>

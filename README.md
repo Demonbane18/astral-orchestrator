@@ -2,13 +2,13 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.6.0 is an installable, open-source Codex plugin. Its delegated
+Astral Orchestrator v3.7.0 is an installable, open-source Codex plugin. Its delegated
 routes keep Sol responsible for the plan and final decisions, use Luna for focused work
 or Terra for context-heavy implementation, then use a fresh Sol reviewer to check the
 finished change. Singularity is the deliberate one-Sol exception for eligible work.
 
 Install it now from this public GitHub marketplace source. The official ChatGPT/Codex
-directory is a separate publication surface and may lag until the v3.6.0 directory upload
+directory is a separate publication surface and may lag until the v3.7.0 directory upload
 is published. Astral Orchestrator is an independent open-source project, not affiliated
 with or endorsed by OpenAI.
 
@@ -33,6 +33,18 @@ or fresh reviewer; Morph and Constellation do not change the verified Sol primar
 fresh Sol reviewer.
 
 ## What Astral Orchestrator does
+
+Astral follows **JUST DO IT** and **YAGNI**. Every mode borrows Singularity's economy:
+Sol thinks once, keeps plans in context, delegates only useful bounded execution, and
+runs the smallest relevant checks. Event Horizon keeps its consequential-action
+confirmation gates while using one concise workspace-write review-and-repair pass instead
+of a read-only isolation and fingerprint cycle.
+
+Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. They launch
+ready independent cards in parallel up to available capacity and may use bounded
+hierarchical delegation when a parent owns a coherent subtree. The parent owns integration,
+children receive non-overlapping ownership, and Astral uses the shallowest useful hierarchy.
+Comet (Quick) and Singularity never spawn workers.
 
 For Orbit, Event Horizon, Pulsar, Morph, and Constellation work, Astral Orchestrator gives
 you a repeatable way to:
@@ -149,21 +161,20 @@ Orbit-style routing.
 |---|---|---|
 | Comet | Tiny, obvious, easy-to-undo work | Sol works directly and self-reviews at the configured orchestrator effort. |
 | Orbit (default) | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews it. |
-| Event Horizon | Credentials, payments, private data, production, migrations, or major changes | Visible plan, confirmation gates, pinned workers, strict verification, and hard read-only reviewer evidence. |
+| Event Horizon | Credentials, payments, private data, production, migrations, or major changes | One compact dependency graph, necessary confirmation gates, parallel ready cards or a bounded hierarchy, targeted checks, and one concise workspace-write review-and-repair pass. |
 | Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One verified Sol primary completes one compact card at the configured orchestrator effort, with no subagents or fresh reviewer and one proportional verification pass. |
-| Pulsar (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical card, records private local evidence, routes one pinned worker, and requests fresh Sol review. |
-| Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed or native model | Sol remains the configured primary, the worker receives an exact model id and requested effort, and fresh Sol reviews the result. |
-| Constellation (explicit opt-in) | Several independent, ready cards | Sol proves independent ownership and host capacity, starts a cost-aware non-Sol first wave, integrates it, and requests one fresh Sol review. |
+| Pulsar (explicit opt-in) | A deliberately evidence-oriented request | Sol freezes one canonical dependency graph; its selected parent lane may fan out ready independent items before one integrated review. |
+| Morph (explicit opt-in) | Bounded worker cards that need user-selected routed or native models | Sol remains the configured primary; independent Morph cards may run in parallel or participate in an authorized hierarchy. |
+| Constellation (explicit opt-in) | Several independent, ready cards | Sol proves ownership and capacity, starts cost-aware parallel or hierarchical waves, integrates them, and requests one fresh Sol review. |
 
 Astral Orchestrator raises safeguards when a request is riskier than the selected mode.
 It does not broaden the work you asked for.
 Singularity, Pulsar, Morph, and Constellation are never automatic; Orbit remains
-recommended for normal work. Event Horizon overrides Singularity and safeguards override either
-opt-in worker mode whenever the risk requires confirmation, serial routing, or observed
-hard read-only review isolation. If hard read-only cannot be provisioned, only an observably
-workspace-write reviewer may use the guarded behavioral-read-only fallback after explicit user
-authorization; Astral records its mutation check and never calls it hard-isolated. Missing
-sandbox evidence, `danger-full-access`, or broader/unrecognized access remains a blocker.
+recommended for normal work. Event Horizon overrides Singularity only where the risk
+requires stronger confirmation, acceptance criteria, or serial routing. It keeps
+Singularity discipline for everything else: YAGNI, no duplicate planning documents, the
+smallest relevant checks, and one workspace-write reviewer that may fix a bounded obvious
+issue directly. A small repair does not trigger a second reviewer cycle.
 
 ### Legacy prompt migration
 
@@ -204,7 +215,7 @@ the orchestrator effort and start a new task. Sol uses one work card, keeps no m
 five active steps with one in progress, loads targeted context, uses the smallest
 sufficient intervention, and performs one proportional verification pass before its one
 self-review. High-risk work switches to Event Horizon, including its confirmation gates and
-independent reviewer requirements. All modes run the primary checker; Singularity requires
+concise review-and-repair pass. All modes run the primary checker; Singularity requires
 observed/verified Sol model and effort, must stop on unavailable evidence, and user
 confirmation cannot satisfy or override that requirement.
 
@@ -354,7 +365,8 @@ Pulsar freezes exactly one canonical card and its checks before routing. If Luna
 Terra is ambiguous, Sol sends exactly one behaviorally read-only probe to each lane with
 the identical card; this is not hard sandbox isolation. The non-secret tracker files are
 owner-only and resumable under a private `/tmp` path derived from effective UID plus
-repository-root and frozen-card SHA-256 prefixes. Only the selected lane edits; fixes
+repository-root and frozen-card SHA-256 prefixes. The selected parent lane owns integration
+and may launch ready independent items in parallel or through a bounded hierarchy; fixes
 need fresh verification and a new Sol reviewer.
 
 ## Benchmarking Astral against a single-Sol control
@@ -403,12 +415,11 @@ set as a reason to investigate before making a product claim.
   during inference when the user explicitly configures that route; local packet handling
   does not make external processing local. There is no analytics collection, extra network
   client, API key, or background service.
-- A fresh reviewer is required after worker-produced Orbit, Pulsar, Morph, or
-  Constellation work. Event Horizon mode—and high-risk Pulsar, Morph, or Constellation work—
-  prefers hard read-only review isolation. A behavioral-read-only fallback is allowed only
-  for an observably workspace-write reviewer after explicit user authorization; it compares
-  the pre/post review scope and status, reports no hard isolation and the mutation-check
-  result, and the handoff must never call it hard-isolated.
+- A concise reviewer is used after worker-produced Orbit, Pulsar, Morph, or Constellation
+  work. Event Horizon mode—and high-risk inherited work—uses workspace-write with no
+  special isolation so the reviewer can fix bounded obvious issues directly. It reports
+  one verdict and at most three findings; Sol verifies a small repair without another
+  reviewer cycle.
 
 ## Updating and the 3.0 migration
 

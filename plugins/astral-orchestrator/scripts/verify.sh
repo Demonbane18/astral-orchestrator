@@ -68,8 +68,8 @@ manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, r
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.6.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.6.0")
+if manifest.get("version") != "3.7.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.7.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -228,7 +228,8 @@ for required_text in (
     "ledger.txt",
     "behaviorally read-only",
     "not hard sandbox isolation",
-    "Only the selected implementation lane edits",
+    "selected parent implementation lane owns integration",
+    "spawn bounded child",
     "fresh verification",
     "new reviewer",
 ):
@@ -250,7 +251,7 @@ expected_agents = {
         "name": "astral_orchestrator_sol_reviewer",
         "model": "gpt-5.6-sol",
         "model_reasoning_effort": "high",
-        "sandbox_mode": "read-only",
+        "sandbox_mode": "workspace-write",
     },
 }
 if {path.name for path in agent_dir.glob("*.toml")} != set(expected_agents):
@@ -260,6 +261,12 @@ for filename, expected in expected_agents.items():
     for field, value in expected.items():
         if profile.get(field) != value:
             raise SystemExit(f"{filename} must set {field} to {value}")
+    instructions = " ".join(profile.get("developer_instructions", "").lower().split())
+    if filename == "astral-orchestrator-sol-reviewer.toml":
+        if "do not spawn" not in instructions:
+            raise SystemExit("the Sol reviewer must remain a direct, no-spawn review lane")
+    elif "may spawn bounded child workers" not in instructions:
+        raise SystemExit(f"{filename} must allow explicitly authorized bounded child workers")
 
 legacy_agent_dir = agent_dir / "historical-v3.4.0"
 expected_legacy_agents = {
@@ -288,17 +295,6 @@ for filename, expected in expected_legacy_agents.items():
     for field, value in expected.items():
         if profile.get(field) != value:
             raise SystemExit(f"legacy {filename} must set {field} to {value}")
-    old_effort = expected["model_reasoning_effort"]
-    new_effort = expected_agents[filename]["model_reasoning_effort"]
-    legacy_text = legacy_path.read_text(encoding="utf-8")
-    current_text = (agent_dir / filename).read_text(encoding="utf-8")
-    if legacy_text.replace(
-        f'model_reasoning_effort = "{old_effort}"',
-        f'model_reasoning_effort = "{new_effort}"',
-    ) != current_text:
-        raise SystemExit(
-            f"legacy {filename} must differ from the current profile only by its effort"
-        )
 
 if marketplace_path.is_file():
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))

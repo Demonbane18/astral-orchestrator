@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+## 3.7.0 — 2026-08-29
+
+### Changed
+
+- Made every multi-agent mode follow Singularity-style YAGNI while launching ready
+  independent cards in parallel and permitting bounded hierarchical delegation. Comet
+  (Quick) and Singularity remain the two no-spawn modes.
+- Replaced the hard read-only reviewer gate and workspace fingerprint fallback with one
+  workspace-write Sol review-and-repair pass that may fix bounded obvious issues directly.
+- Limited reviewer output to one verdict and at most three findings; a small direct repair
+  is verified by Sol without launching another reviewer.
+
 ## 3.6.0 — 2026-08-21
 
 ### Added

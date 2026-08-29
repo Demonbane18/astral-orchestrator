@@ -10,6 +10,22 @@ effort accountable for planning, routing, integration, and final decisions; use 
 workers for bounded execution; and keep the process understandable to a non-technical
 user.
 
+## Execution economy
+
+Follow **JUST DO IT** and **YAGNI**. Use Singularity discipline in every mode: Sol does
+the thinking once, keeps the request narrow, and delegates only when a bounded worker
+will materially improve execution. No duplicate planning document, spec,
+research report, or evidence ledger unless the user requested it, the repository requires
+it, or it is itself the deliverable.
+
+Prefer the smallest relevant checks. Run long or full suites only when repository rules,
+a broad change surface, or a release gate requires them. Do not rerun unchanged checks.
+Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes: launch every
+ready independent card concurrently when capacity exists, and allow bounded hierarchical
+delegation when it removes a real bottleneck. Use the shallowest useful hierarchy.
+Comet and Singularity never spawn. Security risk strengthens confirmation and acceptance
+criteria; it does not justify unrelated documentation or repeated review cycles.
+
 Read [references/modes-and-risk.md](references/modes-and-risk.md) for mode, risk, and
 confirmation decisions. Before spawning a Codex lane or using Singularity, read
 [references/routing-and-preflight.md](references/routing-and-preflight.md) and
@@ -45,12 +61,12 @@ serial portable Constellation fallback; never claim Sol/Luna/Terra unless observ
 
 Codex plugins cannot pin a permanent native UI widget. The reliable portable surface is
 progress commentary and status updates. While Astral is active, include a compact
-**Astral status** panel in every progress update that contains substantive progress.
-Show the Sol primary, each selected worker, and the fresh reviewer when required, with
+**Astral status** panel only when the route or phase changes.
+Show the Sol primary, each selected worker, and the reviewer when required, with
 lane, role, requested and observed model and effort, state, and evidence. A requested
 route is not observed route evidence: use the template and routing guide to label it
-plainly. Keep the panel current through preflight, running work, review, and handoff
-without inventing activity or repeating unchanged detail.
+plainly. Keep the panel current without inventing activity, repeating unchanged detail,
+or dumping evidence that does not affect the next decision.
 Always emit it as an actual GitHub-flavored Markdown table with a header separator row;
 never fence it and never use plain pipe text.
 
@@ -62,9 +78,10 @@ never fence it and never use plain pipe text.
   Sol routes bounded execution to Luna or Terra at their configured effort and integrates
   it.
 - **Event Horizon** — high-impact, hard-to-reverse, security-sensitive, financial, privacy,
-  production, migration, or explicitly thorough work. Use visible planning, strict
-  confirmation gates, pinned implementation lanes, and a fresh Sol review at the
-  configured reviewer effort.
+  production, migration, or explicitly thorough work. Apply Singularity discipline with
+  multi-agent execution: use the minimum confirmation gates needed for consequential
+  actions, parallelize ready independent cards, use the smallest relevant checks, and run
+  one concise workspace-write Sol review-and-repair pass after integration.
 - **Singularity (explicit opt-in)** — meaningful low- or medium-risk work that is larger
   than Comet, but stays in one verified Sol primary session at the configured
   orchestrator effort. Do not spawn subagents, planning probes, worker lanes, or a fresh
@@ -97,7 +114,7 @@ On Codex, Astral Orchestrator v3 uses these exact models. Their default efforts 
 - main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
 - focused worker: `astral_orchestrator_luna_implementer` (Luna Max);
 - context-heavy worker: `astral_orchestrator_terra_implementer` (Terra High);
-- fresh reviewer: `astral_orchestrator_sol_reviewer` (Sol High, requested read-only).
+- reviewer: `astral_orchestrator_sol_reviewer` (Sol High, workspace-write review-and-repair).
 
 Resolve the bundled `../../scripts/configure-effort.py` and run it with `--show --json`
 to obtain the effective effort for all four lanes. Missing settings mean the defaults
@@ -125,7 +142,7 @@ preserving the requested-versus-observed route evidence.
 
 Custom agent file values take precedence over explicit spawn values. Therefore use an
 Astral custom role only when its fixed model and effort match the effective settings and
-the role adds a needed fixed capability, such as the reviewer's read-only request. In all
+the role adds a needed fixed capability. In all
 other v2 cases, deliberately choose the appropriate built-in native agent rather than
 silently substituting model or effort. A failed native v2 route blocks the lane; it does
 not fall through to a process merely because profiles are absent or customized.
@@ -171,9 +188,11 @@ unsafe. Otherwise state the smallest reasonable assumption and continue. A block
 clarification or confirmation ends the current turn: make no dependent change and
 return one direct question immediately. Do not wait silently in the same turn.
 
-For Orbit or Event Horizon work, split execution into the fewest useful non-overlapping work
-cards. Pulsar freezes exactly one canonical work card; it may describe multiple bounded
-items inside that card, but one selected lane owns all edits. Singularity keeps one card
+Keep the card in the current message or working context; no duplicate planning document
+is needed. For every multi-agent mode, turn the request into the smallest dependency graph
+that exposes independent cards without inventing work. Pulsar freezes exactly one canonical work card; it may describe multiple bounded
+items inside that card, and one selected parent lane owns integration while authorized
+children may own independent items. Singularity keeps one card
 with no more than five active steps and one in progress. Morph uses a separately
 selected exact worker model only for its bounded card. Constellation may fan out only cards proven
 independent by its reference. Keep requirements,
@@ -194,15 +213,21 @@ Select each lane by the work, never by prestige:
   execution.
 
 Give every worker the complete implementation contract from the template: outcome,
-ownership, done-when conditions, interfaces and boundaries, and exact checks. State
-that it is not alone in the codebase, must preserve unrelated edits, must do the work
-directly, and must not spawn or delegate further.
+ownership, done-when conditions, interfaces and boundaries, exact checks, and whether
+downstream delegation is allowed. State that it is not alone in the codebase and must
+preserve unrelated edits.
 
-Parallelize only independent cards with non-overlapping ownership. Run dependent work
-or shared-file edits serially. Do not spawn agents merely to make the run look busy.
-Orbit, Event Horizon, and Pulsar implementation must use at least one pinned worker whenever bounded
-execution exists; answer-only, planning-only, and blocked requests need no worker. Morph
-and Constellation use only their explicit worker rules and never weaken Event Horizon safeguards.
+Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. Launch every
+ready independent card concurrently up to observed host capacity. A parent worker may
+spawn bounded child workers only when its packet explicitly allows it, assigns exact
+non-overlapping ownership, pins each child route, and makes the parent responsible for
+integration and evidence. Use the shallowest useful hierarchy; do not add coordination-only
+parents or duplicate a card at two levels. Comet and Singularity never spawn.
+
+Serial execution is required only when cards share ownership, depend on another output or
+interface decision, wait on a confirmation gate, or exceed available capacity. Do not
+serialize ready independent work merely for convenience, and do not spawn agents merely
+to make the run look busy. Answer-only, planning-only, and blocked requests need no worker.
 
 ## 5. Integrate and verify
 
@@ -211,7 +236,7 @@ Treat every worker report as a claim, not proof:
 1. Inspect the actual files and complete accumulated change set.
 2. Confirm every change stays within its work card and preserves user-owned edits.
 3. Resolve cross-lane interfaces in the primary session.
-4. Run the relevant tests, lint, build, validators, or artifact inspections.
+4. Run the smallest relevant checks: focused tests, lint, build, validators, or artifact inspections.
 5. Compare observed evidence with every **Done when** item.
 
 Never claim a check passed if it was not run. Fix failures through the appropriate
@@ -228,30 +253,30 @@ pinned lane, rerun affected checks, and inspect the result again.
   use the built-in native default with those explicit values and a complete review packet.
   For a no-change or answer-only request with no worker, label primary-session Sol
   self-review plainly.
-- **Event Horizon:** always use the exact Sol reviewer lane. Prefer observed hard read-only
-  isolation; observed read-only isolation remains required whenever it is provisioned. Only the
-  guarded behavioral-read-only fallback in the routing guide may use an
-  observably workspace-write reviewer, after explicit user authorization; never call it
-  hard-isolated.
+- **Event Horizon:** use one concise review-and-repair pass with the exact Sol reviewer
+  lane after a worker-produced change. The reviewer uses workspace-write with no special
+  isolation, may fix bounded obvious issues directly, and runs the smallest affected
+  check. Return one verdict line and at most three findings. Do not launch a second
+  reviewer for a small repair; Sol inspects the fix and reruns the affected check.
 - **Singularity:** do not spawn a reviewer. Sol self-reviews once using the actual change
   set and verification evidence; this is not independent review.
-- **Pulsar:** use the normal fresh Sol reviewer after the selected worker. High-risk
-  Pulsar work also inherits Event Horizon confirmation and hard read-only isolation or its
-  guarded behavioral-read-only fallback.
-- **Morph and Constellation:** use the normal fresh exact Sol reviewer after integrated worker
-changes. Event Horizon risk still requires hard read-only isolation or its guarded
-behavioral-read-only fallback.
+- **Pulsar:** use the normal Sol reviewer after the selected worker. High-risk Pulsar
+  work inherits Event Horizon confirmation and concise review-and-repair.
+- **Morph and Constellation:** use the normal exact Sol reviewer after integrated worker
+  changes. Event Horizon risk still requires its confirmation gates and concise
+  review-and-repair.
 
-Give the fresh reviewer only the outcome, acceptance conditions, boundaries, complete
-change set, and verification evidence. Accept exactly one verdict: **ship**,
-**fix-first**, or **rethink**. A fix invalidates the old verdict; verify again and request
-a new fresh reviewer, never a follow-up to the earlier reviewer. A `rethink` verdict
-returns architecture or scope decisions to the Sol primary and may require user direction.
+Give the reviewer only the outcome, acceptance conditions, boundaries, complete change
+set, and focused verification evidence. Accept exactly one verdict: **ship**,
+**fix-first**, or **rethink**, followed by at most three actionable findings. The reviewer
+may fix a small, obvious issue directly; Sol then inspects that repair and reruns the
+smallest relevant checks without starting another reviewer cycle. A `rethink` verdict
+returns architecture or scope decisions to Sol and may require user direction.
 
-If the reviewer route or required isolation cannot be proven, stop and report review
-as incomplete. The fallback needs explicit user authorization, observed workspace-write,
-and the routing guide's mutation check; do not replace it with self-review or claim an
-independent review.
+If the exact reviewer route cannot be proven, Sol performs and labels a concise
+primary-session self-review unless an external policy explicitly requires independent
+review. Do not manufacture isolation evidence or block ordinary completion on sandbox
+mode alone.
 
 ## 7. Hand off plainly
 
@@ -259,9 +284,9 @@ Lead with the outcome. Then state:
 
 - what changed in everyday language;
 - which lane handled each bounded part;
-- the observed role, model, and effort evidence;
+- the observed role, model, and effort only when it affected routing or remains uncertain;
 - which checks ran and their concrete results;
-- the fresh review verdict or clearly labeled self-review;
+- the review-and-repair verdict or clearly labeled self-review;
 - any limitation, remaining risk, or user action.
 
 Do not bury a failed check, missing route proof, incomplete review, assumption, or

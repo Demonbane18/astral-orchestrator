@@ -1,8 +1,8 @@
 # Constellation mode
 
 Constellation is an explicit opt-in: use it only when the user explicitly names it. Constellation has one configured
-Sol primary and one fresh Sol reviewer on its exact route. It is a constrained fan-out for independently
-owned cards, not a request to fill every available slot or to replace Sol’s integration role.
+Sol primary and one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
+for independently owned cards, not a request to fill every available slot or to replace Sol’s integration role.
 
 ## Model and effort contract
 
@@ -54,9 +54,12 @@ user-selected routed model follows Morph mode and includes its exact model id an
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
 Sol primary, and then recalculate readiness and capacity before every later wave.
 
-Tell every worker it is not alone in the codebase, owns only its card, must preserve other
-edits, and must not spawn or delegate. Treat every report as a claim: inspect actual files,
-run the declared checks, and integrate only after the evidence is sufficient.
+Tell every worker it is not alone in the codebase, owns only its card, and must preserve
+other edits. A packet may authorize the worker to spawn bounded child workers with exact
+routes and non-overlapping ownership; that parent owns integration for its subtree. Use
+the shallowest useful hierarchy and recalculate remaining capacity before every child
+wave. Treat every report as a claim: inspect actual files, run the declared checks, and
+integrate only after the evidence is sufficient.
 
 ## Portable-host route
 
@@ -74,8 +77,8 @@ worker or fresh reviewer context cannot be proven, stop.
 
 ## Review and risk
 
-After integration and verification, start one new fresh exact Sol reviewer for the combined
-change set. Event Horizon safeguards override Constellation whenever risk requires user
-confirmation, observed read-only reviewer isolation, or serial execution. A failed worker,
+After integration and verification, start one fresh exact Sol reviewer for a concise
+review-and-repair pass on the combined change set. Event Horizon safeguards override Constellation whenever risk
+requires user confirmation or serial execution. A failed worker,
 failed check, or uncertain shared interface stops the affected route rather than expanding
 the Constellation.

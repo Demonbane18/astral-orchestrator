@@ -11,7 +11,7 @@ or more of `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_tur
 
 The design focuses on usability without weakening the route contract. Its seven primary
 modes are Comet for tiny self-session work, Orbit as the default project route, Event
-Horizon for high-risk gates and read-only review, Singularity for bounded single-agent
+Horizon for high-risk gates and concise repair-capable review, Singularity for bounded single-agent
 work, Pulsar for explicit evidence, and opt-in Morph and Constellation specialist routes.
 Singularity is an explicit low-/medium-risk route: one verified Sol performs the work,
 no subagents are spawned, no fresh reviewer is used, and one proportional self-review
@@ -19,12 +19,11 @@ checks the result. Event Horizon overrides Singularity whenever its higher-risk 
 applies. The design gives non-technical users a two-command GitHub install with optional
 namespaced native profiles, and refuses to silently downgrade a requested model or effort.
 
-Event Horizon prefers hard read-only reviewer isolation. When the host cannot provision it,
-the only exception is an observably workspace-write behavioral-read-only fallback with explicit
-user authorization, a pre/post mutation check, and a handoff that states no hard isolation;
-never call it hard-isolated. Missing sandbox evidence, `danger-full-access`, or any
-broader/unrecognized access remains blocking. High-risk Pulsar, Morph, and Constellation work
-inherits this safeguard.
+Event Horizon applies Singularity discipline to multi-agent work: YAGNI, one compact
+in-context dependency graph, parallel ready cards or the shallowest useful hierarchy,
+the smallest relevant checks, and one concise workspace-write review-and-repair pass. The reviewer may fix bounded obvious
+issues directly and reports at most three findings. High-risk Pulsar, Morph, and
+Constellation work inherits this safeguard.
 
 ## Current MultiAgentsV2 native route
 
@@ -107,17 +106,20 @@ proven, stop rather than silently substituting another model, effort, or route.
    for bounded low-/medium-risk work; and Orbit, Event Horizon, Pulsar, Morph, and
    Constellation use explicit native v2 routes whenever the host exposes them. Event
    Horizon overrides Singularity for high-risk work.
-6. **Honest host boundary.** The reviewer requests read-only access, records the
-   effective sandbox, and does not overclaim host-enforced isolation.
-7. **Native-first explicit routing.** Current MultiAgentsV2 hosts receive explicit
+6. **Efficient review.** The reviewer uses workspace-write, fixes bounded obvious issues
+   directly, and returns one verdict plus at most three findings.
+7. **Useful concurrency.** Orbit, Event Horizon, Pulsar, Morph, and Constellation launch
+   independent ready cards in parallel and may authorize bounded child workers. Comet
+   (Quick) and Singularity remain strictly single-session.
+8. **Native-first explicit routing.** Current MultiAgentsV2 hosts receive explicit
    `agent_type`, `task_name`, `model`, `reasoning_effort`, and `fork_turns` values with a
    complete packet. Built-in native worker/default routes keep missing or customized
    optional profiles from changing the requested route.
-8. **Upgrade-resistant effort controls.** Users can tune all four lanes without editing
+9. **Upgrade-resistant effort controls.** Users can tune all four lanes without editing
    profiles. Custom profile values take precedence, so matching profiles are used only
    when their fixed model and effort agree; otherwise native built-ins receive explicit
    values. Unsupported values fail clearly instead of being downgraded.
-9. **Explicit Pulsar evidence.** Pulsar freezes one work card and checks, records a
+10. **Explicit Pulsar evidence.** Pulsar freezes one work card and checks, records a
    non-secret local phase ledger, and probes both candidate lanes only for ambiguity.
 
 ## Version 3 identity migration

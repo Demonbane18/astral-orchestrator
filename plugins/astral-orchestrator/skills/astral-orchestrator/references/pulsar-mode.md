@@ -30,8 +30,9 @@ an execution attempt repeats only after a `fix-first` verdict.
    evidence.
 4. **Route.** Sol applies the deterministic rules below; a planning probe is allowed only
    for genuine Luna/Terra ambiguity.
-5. **Attempt N — Implementation.** Start with attempt `1`. Only the one selected
-   implementation lane edits the frozen card's bounded items.
+5. **Attempt N — Implementation.** Start with attempt `1`. The selected parent lane owns
+   integration for the frozen graph and launches every ready independent item concurrently
+   up to capacity. It may use the shallowest useful hierarchy for coherent subtrees.
 6. **Attempt N — Verification.** Run the frozen checks and record their observed results.
 7. **Attempt N — Review.** Obtain a fresh normal Sol reviewer. On `ship`, continue to
    Complete. On `fix-first`, finish the current Review occurrence, increment the attempt
@@ -105,7 +106,7 @@ repository or records.
 ## Candidate planning probes
 
 When only Luna/Terra selection is ambiguous, Sol requests exactly one Luna probe and one
-Terra probe. Both probes receive the identical frozen card and acceptance checks. A probe
+Terra probe concurrently. Both probes receive the identical frozen card and acceptance checks. A probe
 is behaviorally read-only: it must not edit, format, create, delete, or run a
 state-changing command. That instruction is not hard sandbox isolation. Probes cannot
 change the card, requirements, architecture, safety boundaries, acceptance checks, files,
@@ -180,7 +181,10 @@ scorecard JSONL schema.
 
 ## Implementation and review
 
-Only the selected implementation lane edits. The other candidate lane does not receive
-implementation ownership. The normal fresh Sol reviewer reviews every worker-produced
-Pulsar change. High-risk Pulsar work inherits Event Horizon confirmation gates and observed
-read-only isolation requirements.
+The selected parent implementation lane owns integration. It may spawn bounded child
+workers for frozen items with non-overlapping ownership, exact routes, and standalone
+packets; the other planning-probe candidate receives no implementation ownership. Record
+every parent and child route in the implementation event without creating extra phases.
+The normal Sol reviewer reviews the integrated Pulsar change once. High-risk Pulsar work
+inherits Event Horizon confirmation gates and its concise workspace-write review-and-repair
+pass.

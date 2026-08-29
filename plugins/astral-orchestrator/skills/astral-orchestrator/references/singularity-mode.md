@@ -18,8 +18,9 @@ Singularity: Orbit remains the default.
   changes and observed evidence.
 - If a higher-priority instruction requires delegation, report Singularity unavailable
   instead of pretending the one-session route ran.
-- **Event Horizon overrides Singularity** for high-risk work. Keep Event Horizon confirmation gates,
-  pinned lanes, and independent reviewer requirements.
+- **Event Horizon overrides Singularity** for high-risk work. Keep Event Horizon confirmation
+  gates and one concise workspace-write review-and-repair pass while retaining Singularity's
+  YAGNI execution discipline.
 
 ## Token-disciplined execution
 

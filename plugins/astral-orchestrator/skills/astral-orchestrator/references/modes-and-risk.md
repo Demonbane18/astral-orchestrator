@@ -9,11 +9,16 @@ confirmation or a fresh review.
 |---|---|---|---|---|
 | Comet | Small, obvious, reversible work | Mental or one sentence | Sol at configured effort | Sol self-review at configured effort |
 | Orbit (default) | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
-| Event Horizon | Consequential or explicitly thorough work | Visible plan | Strict pinned implementation lanes at configured effort | Fresh Sol review at configured effort with hard read-only isolation, or a guarded behavioral-read-only fallback |
+| Event Horizon | Consequential or explicitly thorough work | One compact in-context dependency graph; YAGNI | Parallel ready cards or a bounded hierarchy using Singularity discipline | One concise workspace-write Sol review-and-repair pass with at most three findings |
 | Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol primary at configured orchestrator effort; no subagents | One Sol self-review using actual changes and evidence; no fresh reviewer |
-| Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen work card and named checks | Sol selects one pinned worker; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
-| Morph (explicit opt-in) | A bounded worker card that needs a user-selected routed model | Compact work card plus exact worker model and requested effort | Sol remains the configured primary; only the worker uses the explicit Morph route | Fresh exact Sol review at configured effort |
+| Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen dependency graph and named checks | One parent lane may fan out independent frozen items; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
+| Morph (explicit opt-in) | Bounded cards that need user-selected routed models | Compact cards plus exact worker models and requested efforts | Sol remains primary; independent Morph cards may run in parallel or form an authorized hierarchy | Fresh exact Sol review at configured effort |
 | Constellation (explicit opt-in) | Several independently owned, ready cards | Sol proves independence and capacity before a concurrent first wave | Cost-aware non-Sol workers by default; capacity-limited fan-out | One fresh exact Sol review after integrated verification |
+
+Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. They launch
+ready independent cards in parallel up to observed capacity and may use hierarchical
+delegation when an owning parent can split a coherent subtree into non-overlapping child
+cards. Use the shallowest useful hierarchy. Comet (Quick) and Singularity never spawn.
 
 Orbit is the default. A user can simply say “Use Astral Orchestrator” without learning the
 mode system. Pulsar is never auto-selected: use it only when the user explicitly names
@@ -68,10 +73,10 @@ Typical signs:
 - Production infrastructure, external publishing, or messages sent to other people
 - Broad public interfaces, concurrency, cryptography, or a large blast radius
 
-Use Event Horizon even if the user asked for Comet. Explain that the risk raises the safeguards,
-not the scope. High-risk Pulsar work keeps its evidence-oriented routing and also
-inherits Event Horizon confirmation and hard read-only isolation safeguards, including its
-guarded behavioral-read-only fallback.
+Use Event Horizon even if the user asked for Comet. Explain that the risk raises the
+confirmation and acceptance safeguards, not the scope or paperwork. High-risk Pulsar
+work keeps its evidence-oriented routing and inherits Event Horizon confirmation plus
+its concise review-and-repair pass.
 Event Horizon overrides Singularity. Its safeguards also override Morph or Constellation whenever the work has this level of risk: keep
 the exact Sol primary and reviewer, use the required confirmation gates, and serialize any
 card whose safety, interface, or verification depends on another card.
@@ -92,24 +97,25 @@ extra confirmation when they are already within the request.
 
 ## Review availability and route failure
 
-Fresh review means a separate agent context that did not implement the change and is
-instructed to remain behaviorally read-only.
+Review means a separate Sol context when a worker changed files. It uses workspace-write
+with no special isolation so it can fix bounded, obvious issues directly.
 
 - Use the pinned Sol reviewer for Event Horizon work and every Orbit, Pulsar, Morph, or Constellation
   worker-produced change.
-- If the exact reviewer role, model, or effort cannot be proven, stop and report the
-  independent review as incomplete. Do not silently substitute self-review.
-- Prefer observed hard read-only isolation for Event Horizon and inherited high-risk Pulsar,
-  Morph, or Constellation review. Only after hard read-only cannot be provisioned may an
-  observably workspace-write reviewer use the guarded behavioral-read-only fallback, with
-  explicit user authorization and the routing guide's mutation check. Missing sandbox
-  evidence, `danger-full-access`, or broader/unrecognized access remains blocking; never
-  call it hard-isolated.
+- If the exact reviewer role, model, or effort cannot be proven, use and label a concise
+  Sol self-review unless an external policy explicitly requires independent review.
+- Event Horizon and inherited high-risk Pulsar, Morph, or Constellation review use one
+  workspace-write review-and-repair pass. Do not request sandbox authorization, capture
+  mutation fingerprints, or launch a second reviewer for a small direct repair.
 - Comet work and truly trivial answer-only Orbit work may use a clearly labeled Sol
   self-review at the configured orchestrator effort because no independent implementation
   was performed.
 
 ## Proportionality checks
+
+Follow YAGNI and use the smallest relevant checks. Long suites, persistent planning
+documents, and extra review cycles need a repository rule, broad change surface, release
+gate, or concrete unresolved risk.
 
 Before adding a process step, ask:
 

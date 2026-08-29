@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "A seven-mode project-delivery skill with Comet, Orbit, Event Horizon, token-disciplined Singularity, Pulsar, Morph, and Constellation routes.",
   "author": {
     "name": "Demonbane18",

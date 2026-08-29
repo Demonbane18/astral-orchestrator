@@ -49,7 +49,7 @@ ROLE_CONTRACTS = {
         "agent_name": "astral_orchestrator_sol_reviewer",
         "model": "gpt-5.6-sol",
         "effort": "high",
-        "sandbox": "read-only",
+        "sandbox": "workspace-write",
     },
 }
 MAX_PROMPT_BYTES = 1_048_576
@@ -150,8 +150,8 @@ def main() -> int:
             fail(
                 f"{profile_path.name} must set {profile_field} to {contract[field]}"
             )
-    if args.role == "reviewer" and profile.get("sandbox_mode") != "read-only":
-        fail("the reviewer profile must request a read-only sandbox")
+    if args.role == "reviewer" and profile.get("sandbox_mode") != "workspace-write":
+        fail("the reviewer profile must request a workspace-write sandbox")
 
     instructions = profile.get("developer_instructions")
     if not isinstance(instructions, str) or not instructions.strip():

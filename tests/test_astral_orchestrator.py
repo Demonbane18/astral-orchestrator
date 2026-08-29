@@ -130,7 +130,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.6.0")
+        self.assertEqual(manifest["version"], "3.7.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -190,7 +190,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.6.0")
+        self.assertEqual(manifest["version"], "3.7.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -323,7 +323,7 @@ class SkillContractTests(unittest.TestCase):
 
         for required in (
             "astral status",
-            "every progress update",
+            "only when the route or phase changes",
             "requested",
             "observed",
             "model",
@@ -604,7 +604,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("run-agent.py", routing)
         self.assertIn("exact-process", routing)
         self.assertIn("exact pinned sol", routing)
-        self.assertIn("observed read-only access", routing)
+        self.assertIn("workspace-write", routing)
 
     def test_current_multiagents_v2_prefers_explicit_native_spawns(self):
         documents = {
@@ -697,8 +697,8 @@ class SkillContractTests(unittest.TestCase):
         )
 
         self.assertIn("careful", skill)
-        self.assertIn("observed read-only isolation", skill)
-        self.assertIn("do not weaken", routing)
+        self.assertIn("review-and-repair", skill)
+        self.assertIn("no special isolation", routing)
 
     def test_companion_agent_profiles_pin_exact_models_and_effort(self):
         expected = {
@@ -716,7 +716,7 @@ class SkillContractTests(unittest.TestCase):
                 "name": "astral_orchestrator_sol_reviewer",
                 "model": "gpt-5.6-sol",
                 "model_reasoning_effort": "high",
-                "sandbox_mode": "read-only",
+                "sandbox_mode": "workspace-write",
             },
         }
 
@@ -726,25 +726,32 @@ class SkillContractTests(unittest.TestCase):
             for field, value in fields.items():
                 self.assertEqual(profile.get(field), value, f"{filename}: {field}")
             self.assertIn("developer_instructions", profile)
-            self.assertIn(
-                "do not spawn",
-                profile["developer_instructions"].lower(),
-                filename,
+            instructions = " ".join(
+                profile["developer_instructions"].lower().split()
             )
+            if filename == "astral-orchestrator-sol-reviewer.toml":
+                self.assertIn("do not spawn", instructions, filename)
+            else:
+                self.assertIn("may spawn bounded child workers", instructions, filename)
+                self.assertNotIn("do not spawn or delegate", instructions, filename)
 
     def test_agent_installer_migrates_only_byte_exact_v340_worker_profiles(self):
-        expected_effort_replacements = {
-            "astral-orchestrator-luna-implementer.toml": (b'"xhigh"', b'"max"'),
-            "astral-orchestrator-terra-implementer.toml": (b'"xhigh"', b'"high"'),
-            "astral-orchestrator-sol-reviewer.toml": (b'"high"', b'"high"'),
-        }
-        for filename, (prior_effort, current_effort) in expected_effort_replacements.items():
-            prior = (LEGACY_AGENTS / filename).read_bytes()
-            self.assertEqual(
-                prior.replace(prior_effort, current_effort),
-                (AGENTS / filename).read_bytes(),
-                f"{filename} must remain the exact shipped v3.4.0 profile apart from its migrated effort",
+        for filename in (
+            "astral-orchestrator-luna-implementer.toml",
+            "astral-orchestrator-terra-implementer.toml",
+        ):
+            legacy = tomllib.loads(read(LEGACY_AGENTS / filename))
+            current = tomllib.loads(read(AGENTS / filename))
+            self.assertEqual(legacy["model_reasoning_effort"], "xhigh")
+            self.assertIn("do not spawn", legacy["developer_instructions"].lower())
+            self.assertIn(
+                "may spawn bounded child workers",
+                " ".join(current["developer_instructions"].lower().split()),
             )
+
+        reviewer = tomllib.loads(read(AGENTS / "astral-orchestrator-sol-reviewer.toml"))
+        self.assertEqual(reviewer["sandbox_mode"], "workspace-write")
+        self.assertIn("review-and-repair", reviewer["developer_instructions"].lower())
 
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "agents"
@@ -1521,7 +1528,8 @@ class SkillContractTests(unittest.TestCase):
                 f"developer_instructions={json.dumps(launcher.MORPH_DEVELOPER_INSTRUCTIONS)}",
                 config_overrides,
             )
-            self.assertIn("must not spawn or delegate", launcher.MORPH_DEVELOPER_INSTRUCTIONS)
+            self.assertIn("may spawn bounded child workers", launcher.MORPH_DEVELOPER_INSTRUCTIONS)
+            self.assertNotIn("must not spawn or delegate", launcher.MORPH_DEVELOPER_INSTRUCTIONS)
             route_header = output.getvalue()
             self.assertIn("ASTRAL_ORCHESTRATOR_ROUTE ", route_header)
             self.assertNotIn(prompt_text.strip(), route_header)
@@ -1544,7 +1552,7 @@ class SkillContractTests(unittest.TestCase):
                 "astral_orchestrator_sol_reviewer",
                 "gpt-5.6-sol",
                 "high",
-                "read-only",
+                "workspace-write",
             ),
         }
         with tempfile.TemporaryDirectory() as directory:
@@ -1913,80 +1921,107 @@ reviewer = "xhigh"
         self.assertIn("destructive", modes)
         self.assertIn("credentials", modes)
 
-    def test_event_horizon_workspace_write_review_fallback_is_guarded_and_truthful(self):
+    def test_event_horizon_is_yagni_fast_and_uses_one_concise_review_and_repair_pass(self):
         documents = {
             "SKILL.md": " ".join(read(SKILL).lower().split()),
             "modes-and-risk.md": " ".join(read(MODES).lower().split()),
             "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
             "work-templates.md": " ".join(read(TEMPLATES).lower().split()),
             "README.md": " ".join(read(ROOT / "README.md").lower().split()),
-            "SPEC.md": " ".join(read(SPEC).lower().split()),
-            "IMPROVEMENTS.md": " ".join(
-                read(ROOT / "docs/IMPROVEMENTS.md").lower().split()
-            ),
         }
 
         for label, document in documents.items():
             with self.subTest(document=label):
-                self.assertIn("behavioral-read-only fallback", document)
-                self.assertIn("hard read-only", document)
-                self.assertIn("explicit user authorization", document)
-                self.assertIn("observably workspace-write", document)
-                self.assertIn("never call it hard-isolated", document)
+                self.assertIn("yagni", document)
+                self.assertIn("smallest relevant checks", document)
+                self.assertIn("workspace-write", document)
+
+        skill = documents["SKILL.md"]
+        for required in (
+            "just do it",
+            "singularity discipline",
+            "no duplicate planning document",
+            "launch every ready independent card concurrently",
+            "one concise review-and-repair pass",
+            "at most three findings",
+        ):
+            self.assertIn(required, skill)
 
         routing = documents["routing-and-preflight.md"]
-        for required in (
-            "allowlisted review-scope fingerprint",
+        for removed in (
+            "behavioral-read-only fallback",
+            "hard read-only",
             "protected baseline",
-            "pre-existing dirty and untracked paths",
-            "recursively enumerate each pre-existing untracked directory",
-            "relative path set",
-            "regular files",
-            "without following symlinks",
-            "symlink target text",
-            "other path types",
-            "git status",
-            "after launch",
-            "discovery verdict",
-            "new fresh reviewer",
-            "already authorized",
-            "danger-full-access",
-            "discard the review",
-            "do not auto-revert",
-            "file creation/deletion",
-            "staging",
-            "commits",
+            "allowlisted review-scope fingerprint",
             "mutation-check result",
+        ):
+            self.assertNotIn(removed, routing)
+        for required in (
+            "no special isolation",
+            "fix a small, obvious issue directly",
+            "do not launch a second reviewer",
+            "one verdict line",
+            "at most three findings",
         ):
             self.assertIn(required, routing)
 
-        ordered_steps = (
-            "Sol primary captures the protected baseline before launching each reviewer.",
-            "After that reviewer launches, Sol inspects the effective reviewer sandbox.",
-            "discard its discovery verdict before asking for explicit user authorization.",
-            "After explicit user authorization, Sol captures a new protected baseline and launches a new fresh reviewer.",
-            "After the reviewer returns, Sol performs the protected-baseline comparison.",
+        reviewer = tomllib.loads(
+            read(AGENTS / "astral-orchestrator-sol-reviewer.toml")
         )
-        positions = [routing.find(step.lower()) for step in ordered_steps]
-        self.assertTrue(all(position >= 0 for position in positions))
-        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(reviewer["sandbox_mode"], "workspace-write")
+        instructions = " ".join(reviewer["developer_instructions"].lower().split())
+        self.assertIn("fix bounded, obvious issues directly", instructions)
+        self.assertIn("at most three findings", instructions)
 
-        templates = documents["work-templates.md"]
+    def test_multi_agent_modes_parallelize_ready_work_and_allow_bounded_hierarchies(self):
+        skill = " ".join(read(SKILL).lower().split())
+        modes = " ".join(read(MODES).lower().split())
+        routing = " ".join(read(ROUTING).lower().split())
+        templates = " ".join(read(TEMPLATES).lower().split())
+        readme = " ".join(read(ROOT / "README.md").lower().split())
+
+        for document in (skill, modes, routing, templates, readme):
+            self.assertIn("orbit, event horizon, pulsar, morph, and constellation", document)
+            self.assertIn("parallel", document)
+            self.assertIn("hierarchical", document)
+
         for required in (
-            "no edits, formatting, file creation/deletion, staging, commits",
-            "behavioral-read-only fallback",
-            "no hard isolation",
-            "mutation-check result",
+            "launch every ready independent card concurrently",
+            "use the shallowest useful hierarchy",
+            "comet and singularity never spawn",
+            "serial execution is required only when",
         ):
-            self.assertIn(required, templates)
+            self.assertIn(required, skill)
 
-        reviewer_packet = templates.split("## plain-language handoff", 1)[0]
-        handoff = templates.split("## plain-language handoff", 1)[1]
-        self.assertIn("mutation statement", reviewer_packet)
-        self.assertIn("reviewer-only", reviewer_packet)
-        self.assertNotIn("- mutation-check result:", reviewer_packet)
-        self.assertIn("sol primary's post-return comparison", handoff)
-        self.assertIn("mutation-check result", handoff)
+        for required in (
+            "dependency graph",
+            "ready queue",
+            "parent worker owns integration",
+            "may spawn bounded child workers",
+        ):
+            self.assertIn(required, routing)
+
+        self.assertIn("downstream delegation", templates)
+        self.assertIn("may spawn bounded child workers", templates)
+
+        for filename in (
+            "astral-orchestrator-luna-implementer.toml",
+            "astral-orchestrator-terra-implementer.toml",
+        ):
+            instructions = " ".join(
+                tomllib.loads(read(AGENTS / filename))["developer_instructions"].lower().split()
+            )
+            self.assertIn("may spawn bounded child workers", instructions, filename)
+            self.assertNotIn("do not spawn or delegate", instructions, filename)
+
+        morph_launcher = load_script("run_morph_agent_hierarchy", RUN_MORPH_AGENT)
+        morph_instructions = morph_launcher.MORPH_DEVELOPER_INSTRUCTIONS.lower()
+        self.assertIn("may spawn bounded child workers", morph_instructions)
+        self.assertNotIn("must not spawn or delegate", morph_instructions)
+
+        self.assertIn("no worker is spawned", skill)
+        self.assertIn("singularity", skill)
+        self.assertIn("do not spawn subagents", skill)
 
     def test_unavailable_confirmation_returns_control_immediately(self):
         skill = read(SKILL).lower()

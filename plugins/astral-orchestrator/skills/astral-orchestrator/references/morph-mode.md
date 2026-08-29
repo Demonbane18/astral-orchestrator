@@ -9,9 +9,10 @@ required. Only a bounded worker card may use a user-selected model.
 
 1. Complete the normal primary preflight and prove the configured Sol primary. Morph does
    not enable a non-Sol primary or a non-Sol final reviewer.
-2. Record one private worker card with its exact ownership, exact `provider/model` or
-   native model identifier, and requested effort. Keep non-overlapping work serial unless
-   the user also explicitly selects Constellation.
+2. Record one private packet per worker card with exact ownership, exact `provider/model`
+   or native model identifier, requested effort, and downstream-delegation permission.
+   Launch ready cards with non-overlapping ownership in parallel up to observed capacity;
+   Morph does not require Constellation for ordinary safe concurrency.
 3. Resolve `../../scripts/run-morph-agent.py`, write the card to a private regular file,
    and require a successful dry run:
 
@@ -70,15 +71,19 @@ worker context, actual provider/model selection, and a separate fresh reviewer c
 Record actual and requested provider, model, and effort separately. A requested effort is
 not evidence that the provider accepted or natively supported it.
 
-Give the external or non-OpenAI worker only its bounded private packet; it must perform the
-card directly and must not spawn or delegate. It may receive the packet as part of provider
+Give the external or non-OpenAI worker only its bounded private packet. When the observed
+host supports child spawning and the packet authorizes it, the worker may spawn bounded
+children with exact routes and non-overlapping ownership; otherwise it performs the card
+directly. It may receive the packet as part of provider
 inference, so say that plainly. After the worker exits, including a failure, remove only that
 exact private packet with a narrow host operation. If any required capability is absent or
 unobservable, stop rather than attempting a Codex fallback or claiming a fixed Astral lane.
 
 ## Review and risk
 
-After a Morph worker changes anything, Sol integrates and verifies the actual change set,
-then starts a new exact fresh Sol reviewer using the normal route. Event Horizon safeguards
-override Morph whenever risk requires confirmation, observed read-only review isolation,
-or serial routing. Morph never changes those requirements.
+Morph participates in the normal parallel and hierarchical multi-agent graph. Sol or an
+authorized parent owns integration across every Morph subtree. After Morph workers change
+anything, Sol verifies the integrated change set, then starts one exact fresh Sol reviewer
+for a concise review-and-repair pass using the normal route. Event Horizon
+safeguards override Morph whenever risk requires confirmation or serial routing, while
+keeping the same concise workspace-write review. Morph never changes those requirements.

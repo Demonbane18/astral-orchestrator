@@ -347,11 +347,11 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_6_0_on_current_pages(self):
+    def test_current_version_copy_is_v3_7_0_on_current_pages(self):
         for page in ("home", "install", "support"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.6.0", content)
+                self.assertIn("v3.7.0", content)
 
     def test_homepage_explains_live_astral_status(self):
         home = " ".join(page_text(PAGES["home"]).lower().split())
@@ -881,7 +881,8 @@ class WebsiteContractTests(unittest.TestCase):
             "Pulsar · opt-in",
             "deliberately slower, evidence-oriented",
             "never auto-selected",
-            "one canonical work card",
+            "One fixed graph, parallel ready items",
+            "one canonical dependency graph",
             "deterministic Sol/Luna/Terra routing",
             "identical read-only probes",
             "private, resumable evidence",
