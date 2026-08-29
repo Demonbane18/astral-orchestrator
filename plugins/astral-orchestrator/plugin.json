@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
   "version": "3.7.0",
-  "description": "Beginner-friendly orchestration with Comet, Orbit, Event Horizon, explicit opt-in Singularity, Pulsar, Morph, and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
+  "description": "Astral Orchestrator helps people plan, complete, and check projects in Codex by choosing an appropriate workflow and coordinating the work.",
   "author": {
     "name": "Demonbane18"
   },

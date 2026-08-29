@@ -152,19 +152,23 @@ class MarketplaceTests(unittest.TestCase):
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
         self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
         description = interface["longDescription"].lower()
-        for mode in (
-            "comet",
-            "orbit",
-            "event horizon",
-            "singularity",
-            "pulsar",
-            "morph",
-            "constellation",
+        for required_text in (
+            "finished, checked work",
+            "suitable workflow",
+            "manageable pieces",
+            "extra safeguards",
+            "risky changes",
+            "clear outcome",
         ):
-            self.assertIn(mode, description)
-        self.assertIn("opt-in", description)
-        self.assertIn("never runs automatically", description)
-        self.assertNotIn("slower", description)
+            self.assertIn(required_text, description)
+        for jargon in (
+            "yagni",
+            "bounded hierarchical",
+            "workspace-write",
+            "ready cards",
+            "sol review",
+        ):
+            self.assertNotIn(jargon, description)
 
         prompts = interface["defaultPrompt"]
         self.assertGreaterEqual(len(prompts), 2)
@@ -2636,8 +2640,8 @@ class UserExperienceTests(unittest.TestCase):
 
         self.assertIn("configured effort", read(MODES).lower())
         self.assertIn("configured effort", read(ROOT / "AGENTS.md").lower())
-        self.assertIn(
-            "configured efforts",
+        self.assertNotIn(
+            "configured effort",
             load_json(MANIFEST)["interface"]["longDescription"].lower(),
         )
         self.assertIn(

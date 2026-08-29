@@ -1,7 +1,7 @@
 {
   "name": "astral-orchestrator",
   "version": "3.7.0",
-  "description": "Beginner-friendly orchestration with Comet, Orbit, Event Horizon, explicit opt-in Singularity, Pulsar, Morph, and Constellation modes for planning, delegating, verifying, and reviewing project work in Codex.",
+  "description": "Astral Orchestrator helps people plan, complete, and check projects in Codex by choosing an appropriate workflow and coordinating the work.",
   "author": {
     "name": "Demonbane18"
   },
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Simple, risk-aware delivery for any project.",
-    "longDescription": "Astral Orchestrator offers Comet, Orbit, Event Horizon, Singularity, Pulsar, Morph, and Constellation modes with concise route-change status. Every mode uses Singularity-style YAGNI discipline. Orbit, Event Horizon, Pulsar, Morph, and Constellation run independent ready cards in parallel and may use bounded hierarchical delegation; Comet and Singularity stay single-session. Event Horizon keeps high-risk confirmation gates, targeted checks, and one concise workspace-write Sol review-and-repair pass. Configured efforts remain adjustable, and each explicit opt-in mode never runs automatically.",
+    "longDescription": "Astral Orchestrator helps you turn an idea or request into finished, checked work in Codex. Tell it what you want to accomplish, and it chooses a suitable workflow, breaks larger jobs into manageable pieces, coordinates the work, and checks the result. It can move quickly for simple tasks or add extra safeguards for risky changes, so you spend less time managing the process and more time reviewing a clear outcome.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",
