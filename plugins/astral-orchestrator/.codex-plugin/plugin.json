@@ -1,7 +1,7 @@
 {
   "name": "astral-orchestrator",
   "version": "3.7.0",
-  "description": "Astral Orchestrator helps people plan, complete, and check projects in Codex by choosing an appropriate workflow and coordinating the work.",
+  "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "Demonbane18"
   },
@@ -18,8 +18,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Astral Orchestrator",
-    "shortDescription": "Plan and complete projects",
-    "longDescription": "Astral Orchestrator helps you turn an idea or request into finished, checked work in Codex. Tell it what you want to accomplish, and it chooses a suitable workflow, breaks larger jobs into manageable pieces, coordinates the work, and checks the result. It can move quickly for simple tasks or add extra safeguards for risky changes, so you spend less time managing the process and more time reviewing a clear outcome.",
+    "shortDescription": "Auto-match GPT teams to tasks",
+    "longDescription": "Astral Orchestrator automatically chooses the right GPT models and how much effort each should use, then coordinates them as a team. Give it a goal and it breaks the work into focused tasks, runs independent tasks together when helpful, checks the results, and brings everything into one clear outcome. Simple jobs stay fast, while risky changes get extra safeguards, so you get finished, verified work without managing multiple agents yourself.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",

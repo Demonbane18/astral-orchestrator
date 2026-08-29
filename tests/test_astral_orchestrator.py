@@ -151,16 +151,20 @@ class MarketplaceTests(unittest.TestCase):
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
         self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
-        self.assertEqual(interface["shortDescription"], "Plan and complete projects")
+        self.assertEqual(interface["shortDescription"], "Auto-match GPT teams to tasks")
         self.assertLessEqual(len(interface["shortDescription"]), 30)
         description = interface["longDescription"].lower()
         for required_text in (
-            "finished, checked work",
-            "suitable workflow",
-            "manageable pieces",
+            "automatically chooses",
+            "right gpt models",
+            "how much effort",
+            "coordinates them as a team",
+            "focused tasks",
+            "independent tasks",
             "extra safeguards",
             "risky changes",
             "clear outcome",
+            "without managing multiple agents",
         ):
             self.assertIn(required_text, description)
         for jargon in (

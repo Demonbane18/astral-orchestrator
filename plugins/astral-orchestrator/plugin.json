@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
   "version": "3.7.0",
-  "description": "Astral Orchestrator helps people plan, complete, and check projects in Codex by choosing an appropriate workflow and coordinating the work.",
+  "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "Demonbane18"
   },
