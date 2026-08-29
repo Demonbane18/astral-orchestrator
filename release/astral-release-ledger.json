@@ -406,6 +406,60 @@
       "evidence": "OpenAI Platform accepted the plugin-root v3.6.0 ZIP with SHA-256 1f826b3d08ce3b6faaf69cd71f082fa45f5c2e17adcec2dd61c1359178af1b74 and created draft appsub_6a87c6dca5d08191b0c309d955966099. Opera GX verified version 3.6.0, seven-mode description including Singularity, the restored published subtitle, production website/support/privacy/terms URLs, three starter prompts, and inherited icons. Skill scanning remains in progress; all four policy/legal attestations remain unchecked and Confirm and submit is disabled.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a87c6dca5d08191b0c309d955966099",
       "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.6.0",
+      "status": "approved",
+      "observed_at": "2026-08-25T22:28:53+08:00",
+      "evidence": "OpenAI Platform in Opera GX displayed Astral Orchestrator v3.6.0 as the released version and locked it from editing; the Plugins list showed v3.6.0 Published with View in Directory.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a87c6dca5d08191b0c309d955966099",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.6.0",
+      "status": "published",
+      "observed_at": "2026-08-25T22:28:53+08:00",
+      "evidence": "Public ChatGPT Plugins Directory in Opera GX displayed Astral Orchestrator v3.6.0, seven-mode metadata, three starter prompts, publisher identity, capabilities, and public policy links.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
+      "commit": "794e6f86f0e0f7452335ed0ad1d8d2815a172f2f"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.6.0",
+      "status": "draft",
+      "observed_at": "2026-08-25T22:35:00+08:00",
+      "evidence": "OpenAI Platform accepted the corrected plugin-root v3.6.0 ZIP from commit bdf5bf1 with SHA-256 f1db6287bb9bc73c7f98341f2478ce3f77cebf684d72311916c1a7c77ee7b9eb and created draft appsub_6a8da79602bc8191894c8c82f263a1bf under the existing Astral Orchestrator listing. Opera GX verified the published subtitle, production website/support/privacy/terms URLs, seven-mode description, inherited icons and capabilities, and three starter prompts. Skill scanning remains in progress; all four policy/legal attestations remain unchecked and Confirm and submit is disabled.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a8da79602bc8191894c8c82f263a1bf",
+      "commit": "bdf5bf1903eed1a5568efe23102896b782319b12"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.7.0",
+      "status": "installable",
+      "observed_at": "2026-08-29T17:06:27+08:00",
+      "evidence": "Public main resolves to 513d451 and the public Codex manifest reports v3.7.0 with concise YAGNI review and parallel or hierarchical multi-agent routing.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/tree/main",
+      "commit": "513d451102dd09ede47e2aefd7552249eb05b252"
+    },
+    {
+      "surface": "source",
+      "version": "3.7.0",
+      "status": "verified",
+      "observed_at": "2026-08-29T17:06:27+08:00",
+      "evidence": "Public main commit 513d451 contains YAGNI-first Event Horizon review-and-repair plus parallel and bounded hierarchical delegation for Orbit, Event Horizon, Pulsar, Morph, and Constellation; 150 tests, package verification, skill validation, plugin validation, and git diff checks passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/513d451102dd09ede47e2aefd7552249eb05b252",
+      "commit": "513d451102dd09ede47e2aefd7552249eb05b252"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.6.0",
+      "status": "approved",
+      "observed_at": "2026-08-29T17:14:45+08:00",
+      "evidence": "OpenAI Platform Plugins list in Opera GX displayed the newer corrected Astral Orchestrator v3.6.0 submission as Approved with a Publish action, while a separate v3.6.0 row remained Published in the directory.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a8da79602bc8191894c8c82f263a1bf",
+      "commit": "bdf5bf1903eed1a5568efe23102896b782319b12"
     }
   ]
 }
