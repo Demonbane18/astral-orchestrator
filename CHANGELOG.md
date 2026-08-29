@@ -9,8 +9,8 @@
 - Made every multi-agent mode follow Singularity-style YAGNI while launching ready
   independent cards in parallel and permitting bounded hierarchical delegation. Comet
   (Quick) and Singularity remain the two no-spawn modes.
-- Rewrote the marketplace descriptions in plain language so people can understand what
-  Astral does and why it is useful without knowing its internal modes or agent terminology.
+- Rewrote the marketplace subtitle and descriptions in plain language so people can
+  understand what Astral does without knowing its internal modes or agent terminology.
 - Replaced the hard read-only reviewer gate and workspace fingerprint fallback with one
   workspace-write Sol review-and-repair pass that may fix bounded obvious issues directly.
 - Limited reviewer output to one verdict and at most three findings; a small direct repair

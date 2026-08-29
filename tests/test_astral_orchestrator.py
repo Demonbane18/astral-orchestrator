@@ -151,6 +151,8 @@ class MarketplaceTests(unittest.TestCase):
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
         self.assertEqual(interface["logo"], "./skills/astral-orchestrator/assets/icon.png")
+        self.assertEqual(interface["shortDescription"], "Plan and complete projects")
+        self.assertLessEqual(len(interface["shortDescription"]), 30)
         description = interface["longDescription"].lower()
         for required_text in (
             "finished, checked work",

@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Astral Orchestrator",
-    "shortDescription": "Simple, risk-aware delivery for any project.",
+    "shortDescription": "Plan and complete projects",
     "longDescription": "Astral Orchestrator helps you turn an idea or request into finished, checked work in Codex. Tell it what you want to accomplish, and it chooses a suitable workflow, breaks larger jobs into manageable pieces, coordinates the work, and checks the result. It can move quickly for simple tasks or add extra safeguards for risky changes, so you spend less time managing the process and more time reviewing a clear outcome.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
