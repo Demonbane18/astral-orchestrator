@@ -505,6 +505,23 @@
       "evidence": "Production deployment dpl_29Z5CWBpxnLkeQCmf2zyzhbrsJ8F is Ready and aliased to astral-orchestrator.vercel.app; cache-busted checks served v3.8.0, all docs routes, Hypernova contract copy, and configured security headers.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.7.0",
+      "status": "published",
+      "observed_at": "2026-08-30T00:57:30Z",
+      "evidence": "Public ChatGPT Plugins Directory in Opera GX displayed Astral Orchestrator version 3.7.0, the published seven-mode description, and its three starter prompts; the authenticated OpenAI Platform linked the same 3.7.0 row as Published with View in Directory.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.8.0",
+      "status": "draft",
+      "observed_at": "2026-08-30T00:58:04Z",
+      "evidence": "OpenAI Platform accepted the Astral Orchestrator v3.8.0 skills-only ZIP with SHA-256 4d4a1ada3f2596e9e58d20fc44b882874cef6671c9f605b686641b5ef1e283ff and created draft appsub_6a937fd3aa188191b0b379d99e11dceb. Opera GX verified Version 3.8.0 and the generated description explicitly includes Hypernova. No fields were edited, no policy or legal attestations were accepted, and the draft was not submitted.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a937fd3aa188191b0b379d99e11dceb",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
     }
   ]
 }
