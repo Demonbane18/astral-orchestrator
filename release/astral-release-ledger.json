@@ -469,6 +469,42 @@
       "evidence": "Commit fcdac8d aligns the Agent Plugins and Codex author, description, and keywords so OpenAI normalization cannot change listing metadata; the stale read-only reviewer benchmark now matches the workspace-write contract. All 151 tests, package verification, skill validation, plugin validation, and git diff checks passed. The rebuilt upload ZIP reports SHA-256 320490002559a8ee5c2a194468d2e4c09d43fa26782ccef63726ba2e3032a9ba.",
       "url": "https://github.com/Demonbane18/astral-orchestrator/commit/fcdac8d5605158bb7d7effde92e369ab9f6897da",
       "commit": "fcdac8d5605158bb7d7effde92e369ab9f6897da"
+    },
+    {
+      "surface": "source",
+      "version": "3.8.0",
+      "status": "verified",
+      "observed_at": "2026-08-30T00:39:32Z",
+      "evidence": "Validated merged main commit b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4 with manifests at 3.8.0; 167 tests, package verification, both skill validators, plugin validation, setup dry-run, Opera GX QA, and fresh observed Sol Ultra SHIP review passed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.8.0",
+      "status": "published",
+      "observed_at": "2026-08-30T00:39:32Z",
+      "evidence": "Public v3.8.0 annotated tag resolves to b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4; release asset astral-orchestrator-3.8.0.zip reports and independently matches SHA-256 0f21bcc719fefd98cced572029a966246a2f86830a1c32866391bed93f04b500.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.8.0",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.8.0",
+      "status": "installable",
+      "observed_at": "2026-08-30T00:39:32Z",
+      "evidence": "Public main marketplace JSON exposes astral-orchestrator as AVAILABLE and the referenced public plugin manifest reports version 3.8.0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/blob/main/.agents/plugins/marketplace.json",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.8.0",
+      "status": "deployed",
+      "observed_at": "2026-08-30T00:39:32Z",
+      "evidence": "Production deployment dpl_29Z5CWBpxnLkeQCmf2zyzhbrsJ8F is Ready and aliased to astral-orchestrator.vercel.app; cache-busted checks served v3.8.0, all docs routes, Hypernova contract copy, and configured security headers.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
     }
   ]
 }
