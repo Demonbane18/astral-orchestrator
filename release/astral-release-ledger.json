@@ -522,6 +522,15 @@
       "evidence": "OpenAI Platform accepted the Astral Orchestrator v3.8.0 skills-only ZIP with SHA-256 4d4a1ada3f2596e9e58d20fc44b882874cef6671c9f605b686641b5ef1e283ff and created draft appsub_6a937fd3aa188191b0b379d99e11dceb. Opera GX verified Version 3.8.0 and the generated description explicitly includes Hypernova. No fields were edited, no policy or legal attestations were accepted, and the draft was not submitted.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a937fd3aa188191b0b379d99e11dceb",
       "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.8.0",
+      "status": "draft",
+      "observed_at": "2026-08-30T01:06:15Z",
+      "evidence": "OpenAI Platform completed the automated Astral Orchestrator v3.8.0 skill scan with status Passed. Opera GX verified the three Hypernova-aware starter prompts. The draft remains unsubmitted: its generated developer name and four public URL fields still need the approved v3.7.0 values copied with user authorization, and all four policy or legal attestations remain unchecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a937fd3aa188191b0b379d99e11dceb",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
     }
   ]
 }
