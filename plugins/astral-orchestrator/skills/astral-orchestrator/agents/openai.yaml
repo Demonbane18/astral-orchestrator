@@ -3,4 +3,4 @@ interface:
   short_description: "Sol-led, risk-aware delivery for any project"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  default_prompt: "$astral-orchestrator: Orbit default; Comet tiny; Event Horizon high-risk; Pulsar/Singularity/Morph/Constellation on request."
+  default_prompt: "$astral-orchestrator: Orbit; Comet tiny; Event Horizon high-risk; opt-ins: Singularity/Pulsar/Morph/Constellation/Hypernova."

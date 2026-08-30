@@ -36,6 +36,7 @@ MORPH = PLUGIN / "skills/astral-orchestrator/references/morph-mode.md"
 CONSTELLATION = PLUGIN / "skills/astral-orchestrator/references/constellation-mode.md"
 PULSAR = PLUGIN / "skills/astral-orchestrator/references/pulsar-mode.md"
 SINGULARITY = PLUGIN / "skills/astral-orchestrator/references/singularity-mode.md"
+HYPERNOVA = PLUGIN / "skills/astral-orchestrator/references/hypernova-mode.md"
 AGENTS = PLUGIN / "agents"
 LEGACY_AGENTS = AGENTS / "historical-v3.4.0"
 INSTALL_AGENTS = PLUGIN / "scripts/install-agents.sh"
@@ -58,6 +59,15 @@ ROUTING_EXCALIDRAW = ROOT / "assets/diagrams/routing-and-verification.excalidraw
 SCORECARD_DIAGRAM = ROOT / "assets/diagrams/outcome-scorecard.svg"
 SCORECARD_EXCALIDRAW = ROOT / "assets/diagrams/outcome-scorecard.excalidraw"
 SPEC = ROOT / "docs/SPEC.md"
+WEBSITE_HOME = ROOT / "website/index.html"
+WEBSITE_DOCS = ROOT / "website/docs/index.html"
+WEBSITE_DOCS_GETTING_STARTED = ROOT / "website/docs/getting-started/index.html"
+WEBSITE_DOCS_MODES = ROOT / "website/docs/modes/index.html"
+WEBSITE_DOCS_ROUTING = ROOT / "website/docs/routing/index.html"
+WEBSITE_DOCS_SAFETY = ROOT / "website/docs/safety/index.html"
+WEBSITE_DOCS_EVIDENCE = ROOT / "website/docs/evidence/index.html"
+WEBSITE_DOCS_MAINTENANCE = ROOT / "website/docs/maintenance/index.html"
+WEBSITE_DOCS_CONTRIBUTING = ROOT / "website/docs/contributing/index.html"
 RELEASE_SKILL = ROOT / "skills/track-astral-releases/SKILL.md"
 RELEASE_SKILL_METADATA = ROOT / "skills/track-astral-releases/agents/openai.yaml"
 RELEASE_SURFACES = ROOT / "skills/track-astral-releases/references/release-surfaces.md"
@@ -130,7 +140,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.7.0")
+        self.assertEqual(manifest["version"], "3.8.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -146,7 +156,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.6"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.8"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -189,6 +199,7 @@ class MarketplaceTests(unittest.TestCase):
             "pulsar",
             "morph",
             "constellation",
+            "hypernova",
         ):
             self.assertIn(mode, prompt_text)
 
@@ -200,7 +211,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.7.0")
+        self.assertEqual(manifest["version"], "3.8.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -268,14 +279,15 @@ class MarketplaceTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, readme)
 
-    def test_readme_safety_qualifies_external_morph_packet_processing(self):
-        readme = " ".join(read(ROOT / "README.md").lower().split())
+    def test_canonical_routing_docs_qualify_external_morph_packet_processing(self):
+        routing_docs = " ".join(read(WEBSITE_DOCS_ROUTING).lower().split())
 
-        self.assertIn("legacy local process route", readme)
-        self.assertIn("external morph provider can receive its bounded worker packet", readme)
-        self.assertNotIn("work packets remain local", readme)
+        self.assertIn("legacy exact-process launcher", routing_docs)
+        self.assertIn("provider may be external", routing_docs)
+        self.assertIn("bounded worker packet", routing_docs)
+        self.assertNotIn("work packets remain local", routing_docs)
 
-    def test_openai_metadata_keeps_shared_icon_and_seven_mode_aware_prompt(self):
+    def test_openai_metadata_keeps_shared_icon_and_eight_mode_aware_prompt(self):
         metadata = read(OPENAI_METADATA)
 
         self.assertIn('icon_small: "./assets/icon.png"', metadata)
@@ -295,6 +307,7 @@ class MarketplaceTests(unittest.TestCase):
             "singularity",
             "morph",
             "constellation",
+            "hypernova",
         ):
             self.assertIn(mode, prompt.lower())
 
@@ -303,12 +316,12 @@ class SkillContractTests(unittest.TestCase):
     def test_primary_mode_names_use_the_cosmic_taxonomy_with_legacy_aliases(self):
         skill = " ".join(read(SKILL).split())
         modes = " ".join(read(MODES).split())
-        readme = " ".join(read(ROOT / "README.md").split())
-        website = " ".join(read(ROOT / "website/index.html").split())
+        modes_docs = " ".join(read(WEBSITE_DOCS_MODES).split())
+        website = " ".join(read(WEBSITE_HOME).split())
         metadata = read(OPENAI_METADATA)
 
         for current_name in ("Comet", "Orbit", "Event Horizon", "Pulsar"):
-            for surface in (skill, modes, readme, website, metadata):
+            for surface in (skill, modes, modes_docs, website, metadata):
                 self.assertIn(current_name, surface)
 
         self.assertIn("Orbit (default)", skill)
@@ -321,7 +334,7 @@ class SkillContractTests(unittest.TestCase):
             ("Measured", "Pulsar"),
         ):
             self.assertRegex(skill, rf"{legacy_name}[^.]*{current_name}")
-            self.assertRegex(readme, rf"{legacy_name}[^.]*{current_name}")
+            self.assertRegex(modes_docs, rf"{legacy_name}[^<]*{current_name}")
 
         self.assertTrue(PULSAR.is_file())
         self.assertIn("pulsar-mode.md", skill)
@@ -404,10 +417,10 @@ class SkillContractTests(unittest.TestCase):
             template_states = set(row.split("|")[5].strip().strip("<>").split("/"))
             self.assertEqual(template_states, declared_states)
 
-    def test_readme_has_copy_ready_mode_prompts_and_constellation_route_answer(self):
-        readme = " ".join(read(ROOT / "README.md").lower().split())
+    def test_canonical_modes_docs_have_copy_ready_prompts_and_constellation_contract(self):
+        modes_docs = " ".join(read(WEBSITE_DOCS_MODES).lower().split())
 
-        self.assertIn("sample prompts for every mode", readme)
+        self.assertIn("copy-ready mode starters", modes_docs)
         for mode in (
             "comet",
             "orbit",
@@ -416,16 +429,19 @@ class SkillContractTests(unittest.TestCase):
             "pulsar",
             "morph",
             "constellation",
+            "hypernova",
         ):
-            self.assertRegex(readme, rf"{mode}[^.]*use astral orchestrator")
+            self.assertRegex(modes_docs, rf"{mode}[^.]*use astral")
+        constellation = " ".join(read(CONSTELLATION).lower().split())
         for required in (
             "sol high is sufficient",
             "sol ultra is not required",
             "custom worker model and effort",
-            "available concurrency",
+            "host-advertised available slots",
+            "first wave concurrently",
             "non-overlapping ownership",
         ):
-            self.assertIn(required, readme)
+            self.assertIn(required, constellation)
 
     def test_constellation_documents_default_sol_high_and_custom_worker_routes(self):
         constellation = " ".join(read(CONSTELLATION).lower().split())
@@ -444,7 +460,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn(required, constellation)
         self.assertNotIn("runtime evidence before launch", constellation)
 
-    def test_skill_uses_seven_plain_language_modes_and_loads_opt_in_references_on_demand(self):
+    def test_skill_uses_eight_plain_language_modes_and_loads_opt_in_references_on_demand(self):
         skill = read(SKILL)
         modes = read(MODES)
 
@@ -456,6 +472,7 @@ class SkillContractTests(unittest.TestCase):
             "Pulsar",
             "Morph",
             "Constellation",
+            "Hypernova",
         ):
             self.assertIn(mode, skill)
             self.assertIn(mode, modes)
@@ -464,10 +481,12 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("when the user explicitly names pulsar", skill.lower())
         self.assertIn("when the user explicitly names morph", skill.lower())
         self.assertIn("when the user explicitly names constellation", skill.lower())
+        self.assertIn("when the user explicitly names hypernova", skill.lower())
         self.assertTrue(MORPH.is_file())
         self.assertTrue(CONSTELLATION.is_file())
         self.assertTrue(PULSAR.is_file())
         self.assertTrue(SINGULARITY.is_file())
+        self.assertTrue(HYPERNOVA.is_file())
 
         morph = " ".join(read(MORPH).lower().split())
         constellation = read(CONSTELLATION).lower()
@@ -549,20 +568,200 @@ class SkillContractTests(unittest.TestCase):
 
         for surface in (
             read(ROUTING),
-            read(ROOT / "README.md"),
+            read(WEBSITE_DOCS_ROUTING),
             read(ROOT / "docs/SPEC.md"),
-            read(ROOT / "website/index.html"),
+            read(WEBSITE_HOME),
         ):
             normalized_surface = " ".join(surface.lower().split())
             self.assertIn("singularity", normalized_surface)
+            self.assertIn("singularity and hypernova", normalized_surface)
             self.assertIn("unavailable", normalized_surface)
-            self.assertIn("user confirmation cannot", normalized_surface)
+            self.assertRegex(
+                normalized_surface,
+                r"confirmation cannot (?:satisfy or )?override",
+            )
 
-        readme = " ".join(read(ROOT / "README.md").lower().split())
-        self.assertIn("https://github.com/blavkgokuvnn/single-agent-skills", readme)
-        self.assertIn("anecdotal", readme)
-        one_model_faq = readme.split("can i use only one model?", 1)[1].split("###", 1)[0]
-        self.assertIn("singularity", one_model_faq)
+        notice = " ".join(read(NOTICE).lower().split())
+        self.assertIn("https://github.com/blavkgokuvnn/single-agent-skills", notice)
+        self.assertIn("anecdotal", singularity)
+        modes_docs = " ".join(read(WEBSITE_DOCS_MODES).lower().split())
+        self.assertIn("singularity and hypernova are opposites", modes_docs)
+        self.assertIn("one verified sol primary", modes_docs)
+
+    def test_hypernova_is_the_sol_ultra_performance_first_opposite_of_singularity(self):
+        hypernova = " ".join(read(HYPERNOVA).lower().split())
+        skill = " ".join(read(SKILL).lower().split())
+        modes = " ".join(read(MODES).lower().split())
+        routing = " ".join(read(ROUTING).lower().split())
+        templates = " ".join(read(TEMPLATES).lower().split())
+
+        for required in (
+            "explicit opt-in",
+            "opposite of singularity",
+            "gpt-5.6-sol",
+            "ultra",
+            "every implementation lane",
+            "fresh reviewer",
+            "maximum safely available concurrency",
+            "host-advertised capacity",
+            "primary consumes one slot",
+            "fork_turns: \"none\"",
+            "native multiagentsv2",
+            "no legacy exact-process fallback",
+            "no silent downgrade",
+            "speed and throughput over token efficiency",
+            "event horizon safeguards",
+            "does not bypass safety",
+        ):
+            self.assertIn(required, hypernova)
+
+        for surface in (skill, modes, routing, templates):
+            self.assertIn("hypernova", surface)
+            self.assertIn("sol ultra", surface)
+
+        self.assertIn("--require-sol-ultra", hypernova)
+        self.assertIn("--require-sol-ultra", routing)
+        self.assertNotIn("luna", hypernova)
+        self.assertNotIn("terra", hypernova)
+        self.assertNotIn("configured orchestrator effort", hypernova)
+
+    def test_primary_checker_accepts_hypernova_sol_ultra_without_changing_normal_settings(self):
+        thread_id = "87654321-4321-4321-4321-cba987654321"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sessions = root / "sessions"
+            sessions.mkdir()
+            rollout = sessions / f"rollout-hypernova-{thread_id}.jsonl"
+            rollout.write_text(
+                "\n".join(
+                    (
+                        json.dumps(
+                            {
+                                "type": "session_meta",
+                                "payload": {"id": thread_id, "model_provider": "openai"},
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "turn_context",
+                                "payload": {
+                                    "model": "gpt-5.6-sol",
+                                    "effort": "ultra",
+                                    "sandbox_policy": {"type": "workspace-write"},
+                                    "permission_profile": {"type": "managed"},
+                                    "cwd": str(ROOT),
+                                },
+                            }
+                        ),
+                    )
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            settings = root / "effort-levels.toml"
+            settings.write_text(
+                '[effort]\norchestrator = "high"\nluna = "max"\nterra = "high"\nreviewer = "high"\n',
+                encoding="utf-8",
+            )
+
+            normal = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_PRIMARY),
+                    "--thread-id",
+                    thread_id,
+                    "--sessions-dir",
+                    str(sessions),
+                    "--settings-file",
+                    str(settings),
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(normal.returncode, 0)
+            self.assertEqual(json.loads(normal.stdout)["status"], "mismatch")
+
+            hypernova = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_PRIMARY),
+                    "--thread-id",
+                    thread_id,
+                    "--sessions-dir",
+                    str(sessions),
+                    "--settings-file",
+                    str(settings),
+                    "--require-sol-ultra",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(hypernova.returncode, 0, hypernova.stdout + hypernova.stderr)
+            evidence = json.loads(hypernova.stdout)
+            self.assertEqual(evidence["status"], "match")
+            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["expected_effort"], "ultra")
+            self.assertEqual(evidence["observed_effort"], "ultra")
+            self.assertEqual(
+                settings.read_text(encoding="utf-8"),
+                '[effort]\norchestrator = "high"\nluna = "max"\nterra = "high"\nreviewer = "high"\n',
+            )
+
+    def test_hypernova_requires_exact_native_spawns_capacity_and_fresh_review(self):
+        documents = {
+            "hypernova": " ".join(read(HYPERNOVA).lower().split()),
+            "routing": " ".join(read(ROUTING).lower().split()),
+            "templates": " ".join(read(TEMPLATES).lower().split()),
+            "spec": " ".join(read(SPEC).lower().split()),
+        }
+        for label, document in documents.items():
+            for required in (
+                'agent_type: "worker"',
+                'agent_type: "default"',
+                'model: "gpt-5.6-sol"',
+                'reasoning_effort: "ultra"',
+                'fork_turns: "none"',
+                "unique lowercase",
+                "built-in",
+                "sol ultra",
+            ):
+                with self.subTest(document=label, required=required):
+                    self.assertIn(required, document)
+
+        hypernova = documents["hypernova"]
+        for required in (
+            "workers cannot delegate",
+            "do not invent work",
+            "recalculate",
+            "discard its output",
+            "sol high",
+            "custom profile",
+            "user confirmation cannot",
+            "unavailable",
+            "mismatch",
+            "invalid",
+            "go nuts",
+        ):
+            self.assertIn(required, hypernova)
+
+        self.assertRegex(
+            hypernova,
+            r"worker count = min\(ready independent cards, observed available slots - 1 primary\)",
+        )
+        portability = " ".join(read(PORTABILITY).lower().split())
+        portable_hosts = " ".join(
+            read(PLUGIN / "skills/astral-orchestrator/references/portable-hosts.md")
+            .lower()
+            .split()
+        )
+        for document in (portability, portable_hosts):
+            self.assertIn("hypernova is", document)
+            self.assertIn("codex-native only", document)
+            self.assertIn("no portable", document)
 
     def test_pulsar_state_sequence_templates_and_safe_state_are_explicit(self):
         pulsar = " ".join(read(PULSAR).lower().split())
@@ -625,7 +824,9 @@ class SkillContractTests(unittest.TestCase):
 
     def test_current_multiagents_v2_prefers_explicit_native_spawns(self):
         documents = {
-            "README.md": " ".join(read(ROOT / "README.md").lower().split()),
+            "website/docs/routing/index.html": " ".join(
+                read(WEBSITE_DOCS_ROUTING).lower().split()
+            ),
             "SKILL.md": " ".join(read(SKILL).lower().split()),
             "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
             "SPEC.md": " ".join(read(SPEC).lower().split()),
@@ -1944,7 +2145,7 @@ reviewer = "xhigh"
             "modes-and-risk.md": " ".join(read(MODES).lower().split()),
             "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
             "work-templates.md": " ".join(read(TEMPLATES).lower().split()),
-            "README.md": " ".join(read(ROOT / "README.md").lower().split()),
+            "SPEC.md": " ".join(read(SPEC).lower().split()),
         }
 
         for label, document in documents.items():
@@ -1995,9 +2196,9 @@ reviewer = "xhigh"
         modes = " ".join(read(MODES).lower().split())
         routing = " ".join(read(ROUTING).lower().split())
         templates = " ".join(read(TEMPLATES).lower().split())
-        readme = " ".join(read(ROOT / "README.md").lower().split())
+        spec = " ".join(read(SPEC).lower().split())
 
-        for document in (skill, modes, routing, templates, readme):
+        for document in (skill, modes, routing, templates, spec):
             self.assertIn("orbit, event horizon, pulsar, morph, and constellation", document)
             self.assertIn("parallel", document)
             self.assertIn("hierarchical", document)
@@ -2592,44 +2793,61 @@ class CodexRuntimeResolutionTests(unittest.TestCase):
 
 
 class UserExperienceTests(unittest.TestCase):
-    def test_readme_covers_the_complete_nontechnical_journey(self):
-        readme = read(ROOT / "README.md").lower()
+    def test_canonical_public_docs_cover_the_complete_nontechnical_journey(self):
+        pages = {
+            "home": read(WEBSITE_DOCS).lower(),
+            "getting": read(WEBSITE_DOCS_GETTING_STARTED).lower(),
+            "modes": read(WEBSITE_DOCS_MODES).lower(),
+            "routing": read(WEBSITE_DOCS_ROUTING).lower(),
+            "safety": read(WEBSITE_DOCS_SAFETY).lower(),
+            "maintenance": read(WEBSITE_DOCS_MAINTENANCE).lower(),
+            "contributing": read(WEBSITE_DOCS_CONTRIBUTING).lower(),
+        }
 
         for topic in (
-            "quick install",
-            "what astral orchestrator does",
-            "requirements",
-            "installation",
-            "first use",
+            "getting started",
             "modes",
-            "configurable effort levels",
-            "how routing and verification work",
+            "routing and runtime",
             "safety and privacy",
-            "updating and the 3.0 migration",
-            "uninstalling",
-            "troubleshooting",
-            "frequently asked questions",
-            "sharing",
-            "contributor commands",
-            "license",
-            "sol advisor attribution",
+            "maintenance",
+            "contributing",
         ):
-            self.assertIn(topic, readme)
-        self.assertIn("use astral orchestrator", readme)
-        self.assertIn("no api key", readme)
-        self.assertIn("sol high", readme)
-        self.assertIn("luna max", readme)
-        self.assertIn("terra high", readme)
-        self.assertIn("three companion profiles", readme)
-        self.assertIn("--remove", readme)
-        self.assertIn("cannot grant access to models", readme)
-        self.assertIn("codex plugin list --marketplace astral-orchestrator", readme)
-        self.assertIn("configurable effort levels", readme)
-        self.assertIn("configure-effort.sh", readme)
-        self.assertIn("minimal", readme)
-        self.assertIn("ultra", readme)
-        self.assertIn("model-dependent", readme)
-        self.assertIn("https://github.com/demonbane18/astral-orchestrator", readme)
+            self.assertIn(topic, pages["home"])
+        for required in (
+            "requirements",
+            "github marketplace install",
+            "first use",
+            "three companion profiles",
+            "cannot grant access to a model",
+        ):
+            self.assertIn(required, pages["getting"])
+        self.assertIn("eight modes", pages["modes"])
+        for required in (
+            "sol high",
+            "luna max",
+            "terra high",
+            "configure-effort.sh",
+            "minimal",
+            "ultra",
+            "model- and account-dependent",
+        ):
+            self.assertIn(required, pages["routing"])
+        self.assertIn("no api key", pages["safety"])
+        for required in (
+            "updating",
+            "uninstall",
+            "troubleshooting",
+            "codex plugin list --marketplace astral-orchestrator",
+            "--remove",
+        ):
+            self.assertIn(required, pages["maintenance"])
+        for required in (
+            "essential repository checks",
+            "license",
+            "sol advisor",
+            "https://github.com/demonbane18/astral-orchestrator",
+        ):
+            self.assertIn(required, pages["contributing"])
 
     def test_effort_tools_are_packaged_and_routing_respects_custom_values(self):
         self.assertTrue(CONFIGURE_EFFORT.is_file())
@@ -2655,30 +2873,25 @@ class UserExperienceTests(unittest.TestCase):
             read(ROOT / "docs/IMPROVEMENTS.md").lower(),
         )
 
-    def test_readme_explains_heuristic_routing_and_the_local_benchmark(self):
-        readme = " ".join(read(ROOT / "README.md").lower().split())
+    def test_canonical_docs_explain_routing_and_the_local_benchmark(self):
+        getting = " ".join(read(WEBSITE_DOCS_GETTING_STARTED).lower().split())
+        routing = " ".join(read(WEBSITE_DOCS_ROUTING).lower().split())
+        evidence = " ".join(read(WEBSITE_DOCS_EVIDENCE).lower().split())
 
-        self.assertIn("installable, open-source codex plugin", readme)
-        self.assertIn("v3.2.0", readme)
         self.assertIn(
             "codex plugin marketplace add demonbane18/astral-orchestrator --ref main",
-            readme,
+            getting,
         )
-        self.assertIn("codex plugin add astral-orchestrator@astral-orchestrator", readme)
-        self.assertIn("official chatgpt/codex directory", readme)
-        self.assertIn("separate publication surface", readme)
-        self.assertIn("mode determines whether to delegate", readme)
-        self.assertIn("work characteristics choose sol, luna, or terra", readme)
-        self.assertIn("instruction-context loading only", readme)
-        self.assertIn("does not prove every multi-agent run uses fewer total tokens", readme)
-        self.assertNotIn("mermaid", readme)
-        self.assertIn("single-sol", readme)
-        self.assertIn("repeated trials", readme)
-        self.assertIn("identical acceptance checks", readme)
-        self.assertIn("benchmark-scorecard.py", readme)
-        self.assertIn("requested reasoning level/budget", readme)
-        self.assertIn("increase latency and usage", readme)
-        self.assertIn("do not guarantee a better answer", readme)
+        self.assertIn("codex plugin add astral-orchestrator@astral-orchestrator", getting)
+        self.assertIn("requested reasoning budget", routing)
+        self.assertIn("increase latency and usage", routing)
+        self.assertIn("do not guarantee a better result", routing)
+        self.assertIn("static instruction-context measurements", evidence)
+        self.assertIn("does not prove astral beats single-sol", evidence)
+        self.assertIn("at least two jsonl trials per strategy and case", evidence)
+        self.assertIn("identical acceptance checks", evidence)
+        self.assertIn("benchmark-scorecard.py", evidence)
+        self.assertIn("benchmarks/readme.md", evidence)
 
         for svg, source in (
             (ROUTING_DIAGRAM, ROUTING_EXCALIDRAW),
@@ -2686,8 +2899,6 @@ class UserExperienceTests(unittest.TestCase):
         ):
             self.assertTrue(svg.is_file(), svg)
             self.assertTrue(source.is_file(), source)
-            self.assertIn(svg.relative_to(ROOT).as_posix(), readme)
-            self.assertIn(source.relative_to(ROOT).as_posix(), readme)
             self.assertEqual(ET.parse(svg).getroot().tag, "{http://www.w3.org/2000/svg}svg")
             excalidraw = load_json(source)
             self.assertEqual(excalidraw["type"], "excalidraw")
@@ -2746,7 +2957,7 @@ class UserExperienceTests(unittest.TestCase):
             self.assertEqual(evidence["model"], "gpt-5.6-terra")
             self.assertEqual(evidence["effort"], "high")
 
-    def test_readme_publishes_banner_footprint_and_ori_eval_attribution(self):
+    def test_readme_banner_and_canonical_evidence_publish_footprint_and_attribution(self):
         readme = read(ROOT / "README.md")
         first_lines = readme.lstrip().splitlines()
 
@@ -2762,30 +2973,24 @@ class UserExperienceTests(unittest.TestCase):
             self.assertIn(visible_element, first_lines[0])
         self.assertIn("# Astral Orchestrator", first_lines[:4])
 
+        evidence = read(WEBSITE_DOCS_EVIDENCE)
         for figure in ("3,403", "4,722", "10,223", "12,401", "5,501", "53.8%"):
-            self.assertIn(figure, readme)
-        footprint = " ".join(
-            readme.split("## Pulsar instruction-context footprint", 1)[1]
-            .split("## Configurable effort levels", 1)[0]
-            .split()
-        )
-        self.assertIn("current v3.6.0 core `SKILL.md` measures **3,403 tokens**", footprint)
-        self.assertIn("Orbit/full measures **10,223 tokens**", footprint)
-        self.assertIn("Pulsar measures **12,401 tokens**", footprint)
-        self.assertIn("Comet loads the core skill and mode/risk reference only", footprint)
-        self.assertIn("instruction-context loading only", footprint)
-        self.assertIn("quality, latency, or price", footprint)
-        self.assertIn("total tokens for a complete run", footprint)
+            self.assertIn(figure, evidence)
+        footprint = " ".join(evidence.lower().split())
+        self.assertIn("published v3.6.0 measurement", footprint)
+        self.assertIn("comet loads the core skill and mode/risk reference only", footprint)
+        self.assertIn("static instruction-context measurements", footprint)
+        self.assertIn("not task quality, latency, price, or total-run tokens", footprint)
 
-        self.assertIn("https://openrouter.ai/ori/eval", readme)
-        self.assertIn("https://openrouter.ai/skills/spawn-ori-eval", readme)
-        attribution = " ".join(readme.lower().split())
+        self.assertIn("https://openrouter.ai/ori/eval", evidence)
+        self.assertIn("https://openrouter.ai/skills/spawn-ori-eval", evidence)
+        attribution = footprint
         self.assertIn("openrouter's ori eval", attribution)
         self.assertIn("inspired by", attribution)
-        self.assertIn("pinned codex gpt-5.6 sol/terra/luna lanes", attribution)
-        self.assertIn("does not run or depend on ori or openrouter", attribution)
-        self.assertIn("worker-produced orbit, pulsar, morph, or constellation work", attribution)
-        self.assertIn("orbit, event horizon, and pulsar require the three", attribution)
+        self.assertIn("astral does not run ori or openrouter", attribution)
+        routing = " ".join(read(WEBSITE_DOCS_ROUTING).lower().split())
+        for model in ("gpt-5.6-sol", "gpt-5.6-luna", "gpt-5.6-terra"):
+            self.assertIn(model, routing)
 
     def test_editable_diagrams_preserve_rendered_labels_and_comet_handoff(self):
         namespace = {"svg": "http://www.w3.org/2000/svg"}
@@ -2874,14 +3079,9 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("tiktoken==0.13.0", benchmark_guide)
         self.assertIn("measure_instruction_context.py", benchmark_guide)
 
-        readme = read(ROOT / "README.md")
-        footprint_section = " ".join(
-            readme.split("## Pulsar instruction-context footprint", 1)[1]
-            .split("## Configurable effort levels", 1)[0]
-            .split()
-        )
-        self.assertIn("older v3.2.0 snapshot is preserved as historical evidence", footprint_section)
-        self.assertIn("benchmarks/context-footprint-2026-08-21.json", footprint_section)
+        evidence_docs = " ".join(read(WEBSITE_DOCS_EVIDENCE).lower().split())
+        self.assertIn("benchmarks/context-footprint-2026-08-21.json", evidence_docs)
+        self.assertIn("stable historical keys", evidence_docs)
 
     def test_current_context_footprint_matches_the_cosmic_v360_instruction_set(self):
         evidence = load_json(CONTEXT_FOOTPRINT_CURRENT)
@@ -2909,14 +3109,14 @@ class UserExperienceTests(unittest.TestCase):
         )
         self.assertEqual(evidence["quick_vs_full"], {"tokens_avoided": 5501, "percent_avoided": 53.8})
 
-        readme = read(ROOT / "README.md")
-        self.assertIn("benchmarks/context-footprint-2026-08-21.json", readme)
-        self.assertIn("stable historical bundle keys", readme)
+        evidence_docs = read(WEBSITE_DOCS_EVIDENCE).lower()
+        self.assertIn("benchmarks/context-footprint-2026-08-21.json", evidence_docs)
+        self.assertIn("stable historical keys", evidence_docs)
 
-    def test_current_improvements_describe_all_seven_v360_modes(self):
+    def test_current_improvements_describe_all_eight_v380_modes(self):
         improvements = read(ROOT / "docs/IMPROVEMENTS.md")
 
-        self.assertIn("current Astral Orchestrator v3.6 design", improvements)
+        self.assertIn("current Astral Orchestrator v3.8 design", improvements)
         for mode in (
             "Comet",
             "Orbit",
@@ -2925,6 +3125,7 @@ class UserExperienceTests(unittest.TestCase):
             "Pulsar",
             "Morph",
             "Constellation",
+            "Hypernova",
         ):
             with self.subTest(mode=mode):
                 self.assertIn(mode, improvements)
@@ -2933,6 +3134,8 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("no fresh reviewer is used", improvements)
         self.assertIn("one proportional self-review", improvements)
         self.assertIn("Event Horizon overrides Singularity", improvements)
+        self.assertIn("performance-first opposite of Singularity", improvements)
+        self.assertIn("mandatory fresh built-in", improvements)
 
     def test_setup_helper_has_safe_non_mutating_dry_run(self):
         setup = ROOT / "scripts/setup.sh"
@@ -2952,7 +3155,7 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("DRY RUN", result.stdout)
         self.assertIn("command -v python3", setup_text)
         self.assertIn("sys.version_info >= (3, 11)", setup_text)
-        self.assertIn("python 3.11", read(ROOT / "README.md").lower())
+        self.assertIn("python 3.11", read(WEBSITE_DOCS_GETTING_STARTED).lower())
 
     def test_original_license_and_attribution_are_preserved(self):
         license_text = read(LICENSE)
@@ -2973,11 +3176,22 @@ class UserExperienceTests(unittest.TestCase):
         )
         self.assertIn("Permission is hereby granted, free of charge", notice)
 
-    def test_notices_and_v360_changelog_record_the_current_taxonomy(self):
+    def test_notices_and_changelog_record_the_current_taxonomy(self):
         notice = read(NOTICE)
         changelog = read(ROOT / "CHANGELOG.md")
 
-        self.assertIn("Comet, Orbit, Event Horizon,\nand Pulsar modes", notice)
+        self.assertIn("It adds eight modes", notice)
+        for mode in (
+            "Comet",
+            "Orbit",
+            "Event Horizon",
+            "Singularity",
+            "Hypernova",
+            "Pulsar",
+            "Morph",
+            "Constellation",
+        ):
+            self.assertIn(mode, notice)
         self.assertIn("advisory prompt aliases", notice)
         self.assertEqual(PLUGIN_NOTICE.read_bytes(), NOTICE.read_bytes())
         v360 = changelog.split("## 3.6.0 — 2026-08-21", 1)[1].split("## 3.5.0", 1)[0]

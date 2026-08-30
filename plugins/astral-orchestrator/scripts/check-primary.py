@@ -68,6 +68,14 @@ def parse_args() -> argparse.Namespace:
         default=default_settings_path(),
         help=argparse.SUPPRESS,
     )
+    parser.add_argument(
+        "--require-sol-ultra",
+        action="store_true",
+        help=(
+            "Require gpt-5.6-sol at Ultra for explicit Hypernova mode without "
+            "changing the persisted normal-mode effort settings."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -132,7 +140,7 @@ def main() -> int:
     except EffortSettingsError:
         emit("invalid", "effort-settings-invalid", "unknown")
         return 1
-    expected_effort = efforts["orchestrator"]
+    expected_effort = "ultra" if args.require_sol_ultra else efforts["orchestrator"]
 
     thread_id = args.thread_id
     if thread_id is None:

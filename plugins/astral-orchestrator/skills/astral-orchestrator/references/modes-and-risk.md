@@ -11,6 +11,7 @@ confirmation or a fresh review.
 | Orbit (default) | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
 | Event Horizon | Consequential or explicitly thorough work | One compact in-context dependency graph; YAGNI | Parallel ready cards or a bounded hierarchy using Singularity discipline | One concise workspace-write Sol review-and-repair pass with at most three findings |
 | Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol primary at configured orchestrator effort; no subagents | One Sol self-review using actual changes and evidence; no fresh reviewer |
+| Hypernova (explicit opt-in) | Maximum safe native speed and throughput | Smallest real dependency graph; never invent work | Observed Sol Ultra primary plus maximum safe waves of built-in Sol Ultra workers | Mandatory fresh built-in Sol Ultra reviewer; no self-review fallback |
 | Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen dependency graph and named checks | One parent lane may fan out independent frozen items; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
 | Morph (explicit opt-in) | Bounded cards that need user-selected routed models | Compact cards plus exact worker models and requested efforts | Sol remains primary; independent Morph cards may run in parallel or form an authorized hierarchy | Fresh exact Sol review at configured effort |
 | Constellation (explicit opt-in) | Several independently owned, ready cards | Sol proves independence and capacity before a concurrent first wave | Cost-aware non-Sol workers by default; capacity-limited fan-out | One fresh exact Sol review after integrated verification |
@@ -19,18 +20,23 @@ Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. Th
 ready independent cards in parallel up to observed capacity and may use hierarchical
 delegation when an owning parent can split a coherent subtree into non-overlapping child
 cards. Use the shallowest useful hierarchy. Comet (Quick) and Singularity never spawn.
+Hypernova is also multi-agent, but it uses only exact built-in Sol Ultra lanes, fills the
+maximum safely available native MultiAgentsV2 capacity, and prohibits worker delegation.
 
 Orbit is the default. A user can simply say “Use Astral Orchestrator” without learning the
 mode system. Pulsar is never auto-selected: use it only when the user explicitly names
 it. It is intentionally slower and more model-intensive, so recommend Orbit for normal
 work.
-Singularity, Morph, and Constellation are also explicit opt-in. They are never selected merely because another
-model is available or because concurrent work would be convenient. Read their dedicated
-references before using either mode.
+Singularity, Morph, Constellation, and Hypernova are also explicit opt-in. They are never
+selected merely because another model is available or because concurrent work would be
+convenient. Read the selected mode's dedicated reference before execution. “Go nuts” may
+mean use Hypernova's maximum safe native capacity only after explicit mode selection; it
+does not bypass safety, scope, confirmation, or authorization.
 
 On a non-Codex host, Comet, Orbit, Event Horizon, and Pulsar retain their documented modes but do
 not acquire a generic replacement for their fixed Codex routes. Only explicitly selected Morph
 or Constellation may use portable-host rules, and only after those capabilities are observed.
+Hypernova is Codex-native only and has no portable or serial fallback.
 
 ## Risk levels
 
@@ -45,7 +51,8 @@ Typical signs:
 
 Use Comet when the task is also small and obvious. For meaningful low- or medium-risk
 work that the user explicitly wants completed in one verified Sol session, use
-Singularity; otherwise use Orbit.
+Singularity. Use Hypernova only when the user explicitly requests its performance-first
+Sol Ultra route; otherwise use Orbit.
 
 ### Medium risk
 
@@ -61,6 +68,9 @@ reviewer effort. Answer-only
 or no-change Orbit work may use a clearly labeled primary-session self-review.
 Singularity is also available only by explicit opt-in when the bounded multi-step work can
 stay in one Sol session; it has no subagents or fresh reviewer and does not weaken Event Horizon.
+Hypernova is available only by explicit opt-in when its observed Sol Ultra primary,
+native controls, capacity, implementation lanes, and mandatory fresh reviewer can all be
+proven. It never falls back to another mode, route, model, effort, or self-review.
 
 ### High risk
 
@@ -80,6 +90,9 @@ its concise review-and-repair pass.
 Event Horizon overrides Singularity. Its safeguards also override Morph or Constellation whenever the work has this level of risk: keep
 the exact Sol primary and reviewer, use the required confirmation gates, and serialize any
 card whose safety, interface, or verification depends on another card.
+High-risk Hypernova cards inherit the same Event Horizon confirmation gates and required
+safety dependencies while retaining exact Sol Ultra lanes. Maximum concurrency never
+makes a gated or dependent card ready.
 
 ## User confirmation gate
 
@@ -102,6 +115,9 @@ with no special isolation so it can fix bounded, obvious issues directly.
 
 - Use the pinned Sol reviewer for Event Horizon work and every Orbit, Pulsar, Morph, or Constellation
   worker-produced change.
+- Hypernova always uses a fresh built-in native `default` reviewer at Sol Ultra. Its Sol
+  High custom reviewer is ineligible, and failure to prove the fresh exact route blocks
+  completion rather than allowing self-review.
 - If the exact reviewer role, model, or effort cannot be proven, use and label a concise
   Sol self-review unless an external policy explicitly requires independent review.
 - Event Horizon and inherited high-risk Pulsar, Morph, or Constellation review use one

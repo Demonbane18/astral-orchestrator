@@ -1,6 +1,6 @@
 # Portability boundary
 
-Astral Orchestrator 3.7.0 ships two additive manifests in one package:
+Astral Orchestrator 3.8.0 ships two additive manifests in one package:
 
 - `plugin.json` is the root Agent Plugins 1.0 manifest. It supplies portable package
   identity and lets compatible hosts discover the `skills/astral-orchestrator/SKILL.md`
@@ -26,10 +26,15 @@ some Agent Plugins components; it is not evidence that every client supports Ast
 Orchestrator’s model routing or multi-worker workflow.
 
 On a non-Codex host, only an explicitly requested Morph or Constellation route may run.
-Comet, Orbit, Event Horizon, Pulsar, and Singularity do not acquire generic replacements
+Comet, Orbit, Event Horizon, Pulsar, Singularity, and Hypernova do not acquire generic replacements
 for their fixed Codex contracts. Singularity is unavailable there because it requires one
 verified Sol primary at the configured orchestrator effort; it must not be relabeled as a
 generic single-agent route.
+Hypernova is **Codex-native only** because it requires an observed Sol Ultra primary, all
+five native MultiAgentsV2 controls, observed host-advertised capacity, built-in Sol Ultra
+workers, and a mandatory fresh built-in Sol Ultra reviewer. It has no legacy process,
+portable, serial, self-review, model, or effort fallback. There is **no portable
+fallback**, and generic multi-agent behavior must not be relabeled as Hypernova.
 Before doing so, Astral requires observable evidence of the capabilities the route needs:
 
 - choosing a specific provider/model and reporting the actual selected provider/model;

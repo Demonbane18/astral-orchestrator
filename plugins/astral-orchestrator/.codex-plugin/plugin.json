@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "Demonbane18"
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Auto-match GPT teams to tasks",
-    "longDescription": "Astral Orchestrator automatically chooses the right GPT models and how much effort each should use, then coordinates them as a team. Give it a goal and it breaks the work into focused tasks, runs independent tasks together when helpful, checks the results, and brings everything into one clear outcome. Simple jobs stay fast, while risky changes get extra safeguards, so you get finished, verified work without managing multiple agents yourself.",
+    "longDescription": "Astral Orchestrator automatically chooses the right GPT models and how much effort each should use, then coordinates them as a team. Give it a goal and it breaks the work into focused tasks, runs independent tasks together when helpful, checks the results, and brings everything into one clear outcome. Simple jobs stay fast, while risky changes get extra safeguards, so you get finished, verified work without managing multiple agents yourself. Explicitly choose Hypernova for high-speed work by an all-Sol Ultra team.",
     "developerName": "Astral Orchestrator Contributors",
     "category": "Productivity",
     "brandColor": "#0B1020",
@@ -31,8 +31,8 @@
     "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
       "Use Astral: Orbit default; Comet tiny; Event Horizon high-risk; Singularity one verified Sol session.",
-      "Use Astral in Pulsar or Morph mode for this explicit opt-in request.",
-      "Use Astral in Constellation mode for an explicit opt-in independent-card request."
+      "Use Astral in Pulsar, Morph, or Constellation mode for this explicit opt-in request.",
+      "Use Astral in Hypernova mode for high-speed all-Sol Ultra execution with exact-route checks."
     ]
   }
 }
