@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 3.8.0 — 2026-08-30
+
+### Added
+
+- Added explicit opt-in Hypernova, a Codex-native performance route that requires an
+  observed Sol Ultra primary, runs independent built-in Sol Ultra workers within
+  available capacity, and requires a fresh Sol Ultra reviewer without route fallbacks.
+- Kept Event Horizon confirmation, safety, scope, and external-action authorization
+  gates for consequential Hypernova work; speed never bypasses those boundaries.
+
+### Changed
+
+- Turned the root README into a concise installation and mode entry point, with detailed
+  getting-started, routing, safety, evidence, maintenance, and contribution guidance
+  moving to the canonical public documentation site.
+
 ## 3.7.0 — 2026-08-29
 
 ### Changed

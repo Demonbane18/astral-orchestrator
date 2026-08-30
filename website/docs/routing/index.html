@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Astral Orchestrator model routing, effort settings, native controls, route evidence, capacity, and provider boundaries."><meta name="theme-color" content="#f4f2ec">
+    <title>Routing and runtime · Astral Orchestrator docs</title>
+    <link rel="icon" type="image/png" href="../../assets/astral-orchestrator-favicon-32.png"><link rel="apple-touch-icon" href="../../assets/astral-orchestrator-touch-icon.png"><link rel="stylesheet" href="../../assets/site.css"><script src="../../assets/site.js"></script>
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true"></div><a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="shell header-inner">
+      <a class="brand" href="../../" aria-label="Astral Orchestrator home"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16.5" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.4" stroke-dasharray="2.5 4"></circle><path d="M20 6.5 L22.9 17.1 L33.5 20 L22.9 22.9 L20 33.5 L17.1 22.9 L6.5 20 L17.1 17.1 Z"></path><circle cx="28.3" cy="5.7" r="2.2" fill="#2ea6dc"></circle><circle cx="5.7" cy="28.3" r="2.6" fill="#8a6cdb"></circle></svg><span class="brand-word">Astral <em>Orchestrator</em></span></a>
+      <nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Home</a></li><li><a href="../">Docs</a></li><li><a href="../../install/">Install</a></li><li><a href="../../support/">Support</a></li><li><a href="../../privacy/">Privacy</a></li><li><a href="../../terms/">Terms</a></li></ul></nav>
+      <div class="header-actions"><a class="star-button" href="https://github.com/Demonbane18/astral-orchestrator" target="_blank" rel="noopener" aria-label="Open Astral Orchestrator on GitHub in a new tab"><span class="star-button-part">GitHub</span></a><button class="theme-toggle" type="button" data-theme-toggle data-choice="system" aria-label="Theme: system. Activate for light theme."><svg data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle></svg><svg data-theme-icon="dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"></path></svg><svg data-theme-icon="system" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3z"></path></svg></button></div>
+    </div></header>
+    <main id="main-content">
+      <header class="page-header docs-page-header"><div class="shell"><p class="eyebrow">Docs · Routing and runtime</p><h1>Prove the route that actually ran.</h1><p class="page-lede">Astral separates requested settings from observed evidence, pins every standard lane, and stops rather than disguising a mismatch.</p></div></header>
+      <section class="section"><div class="shell docs-layout">
+        <nav class="docs-nav" aria-label="Documentation"><p class="docs-nav-label">Documentation</p><ul><li><a href="../">Overview</a></li><li><a href="../getting-started/">Getting started</a></li><li><a href="../modes/">Modes</a></li><li><a href="./" aria-current="page">Routing and runtime</a></li><li><a href="../safety/">Safety and privacy</a></li><li><a href="../evidence/">Evidence and benchmarks</a></li><li><a href="../maintenance/">Maintenance</a></li><li><a href="../contributing/">Contributing</a></li></ul></nav>
+        <article class="doc-content">
+          <section aria-labelledby="lane-map">
+            <h2 id="lane-map">Pinned lanes and default efforts</h2>
+            <div class="table-scroll"><table><thead><tr><th scope="col">Responsibility</th><th scope="col">Model</th><th scope="col">Default</th></tr></thead><tbody>
+              <tr><td>Main orchestrator and final decisions</td><td><code>gpt-5.6-sol</code></td><td><strong>Sol High</strong></td></tr>
+              <tr><td>Focused, narrow, fully specified work</td><td><code>gpt-5.6-luna</code></td><td><strong>Luna Max</strong></td></tr>
+              <tr><td>Context-heavy implementation, debugging, integration, or moderate refactoring</td><td><code>gpt-5.6-terra</code></td><td><strong>Terra High</strong></td></tr>
+              <tr><td>Fresh final review</td><td><code>gpt-5.6-sol</code></td><td><strong>Reviewer Sol High</strong></td></tr>
+              <tr><td>Every Hypernova lane</td><td><code>gpt-5.6-sol</code></td><td><strong>Sol Ultra</strong>, fixed</td></tr>
+            </tbody></table></div>
+            <p>Normal lane effort comes from the persisted per-lane settings, not an improvised prompt choice. Hypernova is the exception: its primary, every implementation worker, and fresh reviewer are fixed to Sol Ultra without changing the persisted normal settings.</p>
+          </section>
+
+          <section aria-labelledby="effort-settings">
+            <h2 id="effort-settings">Configure normal lane effort</h2>
+            <p>Reasoning effort is a requested reasoning budget. Higher values can increase latency and usage and do not guarantee a better result.</p>
+            <h3>Show effective settings</h3><pre><code>sh scripts/configure-effort.sh --show</code></pre>
+            <h3>Change one lane</h3><pre><code>sh scripts/configure-effort.sh --luna medium</code></pre>
+            <h3>Set several lanes or restore defaults</h3><pre><code>sh scripts/configure-effort.sh --orchestrator high --luna medium --terra high --reviewer high
+sh scripts/configure-effort.sh --reset</code></pre>
+            <p>Allowed labels are minimal, low, medium, high, xhigh, max, and ultra. Max and Ultra are model- and account-dependent. A rejected value is an error, never a silent fallback. Settings persist outside the plugin cache at <code>~/.codex/astral-orchestrator/effort-levels.toml</code>, or under <code>CODEX_HOME</code> when set.</p>
+          </section>
+
+          <section aria-labelledby="primary-proof">
+            <h2 id="primary-proof">Primary proof comes first</h2>
+            <p>Every mode runs the local primary checker before execution. When <code>CODEX_THREAD_ID</code> and local rollout evidence are available, it checks the observed model and effort and emits only <strong>allowlisted route fields</strong>—never prompt or session contents.</p>
+            <p>For a normal route, the checker compares the primary with the configured orchestrator effort. For Hypernova, the authoritative strict invocation is:</p>
+            <pre><code>python3 check-primary.py --require-sol-ultra</code></pre>
+            <p>That strict flag requires observed <code>gpt-5.6-sol</code> at Ultra while leaving persisted normal effort settings unchanged. A <strong>mismatch or invalid result blocks</strong> every route. When evidence is unavailable, only modes whose contracts permit it may ask once for user confirmation and must label it user-confirmed. Singularity and Hypernova require observed proof; confirmation cannot override it.</p>
+          </section>
+
+          <section aria-labelledby="native-controls">
+            <h2 id="native-controls">Five native MultiAgentsV2 controls</h2>
+            <p>Before native delegation, Astral verifies that <code>collaboration.spawn_agent</code> exposes all five controls:</p>
+            <ol><li><code>agent_type</code></li><li><code>task_name</code></li><li><code>model</code></li><li><code>reasoning_effort</code></li><li><code>fork_turns</code></li></ol>
+            <p>A current native route sends a complete standalone packet with a unique task name, exact model and effort, and <code>fork_turns: "none"</code>. A matching optional profile may be selected only when its fixed values agree; profile values take precedence.</p>
+            <p>For ordinary delegated modes, a host missing one or more native controls may use the bundled legacy exact-process launcher only where that mode permits it. The launcher emits an <code>ASTRAL_ORCHESTRATOR_ROUTE</code> header with allowlisted route facts and never the task packet, instructions, secrets, or file contents. Hypernova is native-only and has no such fallback.</p>
+            <p class="doc-callout--important doc-callout"><strong>Task name is not proof.</strong> Requested is not observed. Missing or mismatched native controls, model, effort, fork history, capacity, or required review evidence blocks the lane and produces the smallest corrective action.</p>
+          </section>
+
+          <section aria-labelledby="status-truth">
+            <h2 id="status-truth">Astral status stays truthful</h2>
+            <p>Substantive progress updates use a real GitHub-flavored Markdown table. Each row shows lane, role, requested and observed model and effort, lifecycle state, and the evidence that affects the next decision. A route begins as requested and becomes observed only after runtime proof.</p>
+            <div class="table-scroll"><table><thead><tr><th scope="col">Field</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>Requested</td><td>The planned route; never presented as execution proof.</td></tr><tr><td>Observed</td><td>Allowlisted runtime evidence that confirms what actually ran.</td></tr><tr><td>State</td><td>Queued, running, completed, blocked, or another truthful lifecycle value.</td></tr><tr><td>Evidence</td><td>Only facts that materially affect acceptance or the next action.</td></tr></tbody></table></div>
+          </section>
+
+          <section aria-labelledby="morph-provider">
+            <h2 id="morph-provider">Morph and external-provider disclosure</h2>
+            <p>Morph can use an OpenCodex-routed <code>provider/model</code> or another user-selected native model only for a bounded worker card. The provider may be external and may receive the bounded worker packet during inference.</p>
+            <p>Astral <strong>does not install OpenCodex</strong>, change <code>~/.opencodex</code>, start a service, or install a provider package. Astral does not handle credentials. It does not claim that every provider supports native effort semantics. Provider support and effort semantics remain capability-dependent, and a failure blocks the worker rather than silently changing route.</p>
+            <p>“No network client” means Astral adds no client, service, or credential handler; it does not mean provider traffic is local. Review the provider's terms and your workplace rules before sending sensitive material.</p>
+          </section>
+
+          <section aria-labelledby="capacity-routing">
+            <h2 id="capacity-routing">Capacity, Constellation, and Hypernova</h2>
+            <p>Constellation starts concurrent work only after Sol proves independent cards, non-overlapping ownership, suitable cost-aware workers, and host-advertised capacity after the primary consumes one slot. When capacity or independence is uncertain, Constellation may use serial Orbit-style routing.</p>
+            <p>Hypernova instead requires observed native capacity and exact Sol Ultra routes. It launches the maximum safe ready wave, recalculates capacity between waves, and blocks rather than treating a different route as equivalent. Dependent or safety-sensitive cards may be sequenced within the exact native contract.</p>
+          </section>
+        </article>
+      </div></section>
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><div><a class="brand" href="../../"><span class="brand-word">Astral <em>Orchestrator</em></span></a><p class="footer-note">Independent open-source software. Not affiliated with or endorsed by OpenAI.</p></div><nav aria-label="Footer navigation"><ul class="footer-links"><li><a href="../../">Home</a></li><li><a href="../">Docs</a></li><li><a href="../../install/">Install</a></li><li><a href="../../support/">Support</a></li><li><a href="../../privacy/">Privacy</a></li><li><a href="../../terms/">Terms</a></li><li><a href="https://github.com/Demonbane18/astral-orchestrator">GitHub</a></li></ul></nav></div></footer>
+  </body>
+</html>

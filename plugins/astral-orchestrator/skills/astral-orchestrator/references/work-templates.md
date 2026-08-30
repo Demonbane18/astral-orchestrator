@@ -6,7 +6,8 @@ documents or evidence packets that are not required deliverables. Event Horizon 
 uses workspace-write so a reviewer can repair a bounded issue without another prompt.
 Orbit, Event Horizon, Pulsar, Morph, and Constellation may run independent cards in
 parallel or use bounded hierarchical delegation. Comet (Quick) and Singularity never
-spawn workers.
+spawn workers. Hypernova uses maximum safely available native Sol Ultra waves and never
+allows its workers or reviewer to delegate.
 
 ## Astral status panel
 
@@ -33,6 +34,11 @@ restrained interval for long-running work. Do not repeat it merely to create act
 
 For Singularity, emit only the Sol primary row from this panel. Do not add worker or
 fresh-reviewer placeholders: Singularity has no subagents and no fresh reviewer.
+
+For Hypernova, replace every requested model and effort with exact Sol Ultra, name the
+built-in `worker` or built-in `default` route, and include observed capacity and the safe
+wave calculation in evidence. Do not label requested values as observed. Missing or
+mismatched evidence blocks the route and the output is discarded.
 
 ## Work card
 
@@ -75,6 +81,41 @@ CHECKS
 Keep no more than five active steps, with one in progress. Use the smallest sufficient
 intervention; stop after DONE first passes unless evidence is ambiguous, contradictory,
 or defective. Sol self-reviews once using the actual change set and evidence.
+
+## Hypernova wave card
+
+```text
+OUTCOME
+<Observable result and why maximum safe native concurrency helps.>
+
+READY INDEPENDENT CARDS
+- <Card id>: <exact non-overlapping ownership and done condition>
+
+CAPACITY
+- Observed available slots: <count and evidence>
+- Primary consumes one slot.
+- Worker count: min(<ready independent count>, <available slots> - 1 primary) = <wave size>
+
+ROUTE
+- Primary: observed gpt-5.6-sol, Ultra
+- Every implementation lane: built-in worker, gpt-5.6-sol, Ultra
+- Fresh reviewer: built-in default, gpt-5.6-sol, Ultra
+- Every spawn: distinct unique lowercase task name, fork_turns: "none"
+- Downstream delegation: forbidden
+
+BOUNDARIES
+- Do not invent work to fill capacity.
+- Keep gated, dependent, or overlapping cards out of the ready set.
+- High-risk cards inherit Event Horizon confirmation safeguards.
+
+CHECKS
+- <Focused checks and concrete pass evidence.>
+```
+
+Recalculate readiness and observed capacity after every integrated wave. Missing native
+controls, capacity, exact runtime evidence, or the mandatory fresh review blocks
+Hypernova; do not use a legacy, process, portable, serial, self-review, model, or effort
+fallback.
 
 ## Implementation delegation
 
@@ -126,6 +167,48 @@ RETURN
 - Gaps: unfinished work or remaining uncertainty, or none
 ```
 
+## Hypernova implementation delegation
+
+```text
+ROLE
+Built-in native worker, requested gpt-5.6-sol at Ultra. Implement the exact bounded card
+directly. Do not spawn or delegate to another agent.
+
+SPAWN CONTRACT
+- agent_type: "worker"
+- task_name: "<unique_lowercase_task_name>"
+- model: "gpt-5.6-sol"
+- reasoning_effort: "ultra"
+- fork_turns: "none"
+
+OUTCOME
+<Paste the Hypernova card outcome.>
+
+OWNERSHIP
+You own only:
+- <Exact non-overlapping file set or bounded responsibility.>
+
+You are not alone in the codebase. Preserve concurrent and unrelated edits, do not
+revert work you do not own, and adapt to changes already present.
+
+DOWNSTREAM DELEGATION
+Not allowed. Perform the assignment directly.
+
+DONE WHEN
+- <Acceptance condition.>
+
+BOUNDARIES
+- <Scope, safety, and Event Horizon confirmation limits.>
+
+CHECKS
+- Run: <exact command>
+  Pass means: <concrete result>
+
+RETURN
+- Status, exact files changed, exact checks/results, decisions, and gaps
+- Observed route evidence when available; requested values alone are not proof
+```
+
 ## Concise review and repair
 
 ```text
@@ -166,6 +249,40 @@ REPORT
 - Findings: at most three concise actionable findings, or none
 - Repairs: bounded files changed and focused checks run, or none
 ```
+
+## Hypernova mandatory fresh review
+
+```text
+ROLE
+Fresh built-in native default reviewer, requested gpt-5.6-sol at Ultra. Review directly;
+do not spawn or delegate to another agent. The Sol High custom reviewer is ineligible.
+
+SPAWN CONTRACT
+- agent_type: "default"
+- task_name: "<unique_lowercase_reviewer_task_name>"
+- model: "gpt-5.6-sol"
+- reasoning_effort: "ultra"
+- fork_turns: "none"
+
+OUTCOME
+<The user's requested result.>
+
+BOUNDARIES
+- <Required compatibility, scope limits, and safety constraints.>
+
+CHANGE SET AND EVIDENCE
+<Complete accepted change set, focused checks, wave sizes, and observed lane routes.>
+
+REVIEW
+Inspect correctness, completeness, regressions, ownership, checks, safety gates, and the
+exact Hypernova route. Reject requested-only, missing, or mismatched lane evidence.
+
+VERDICT
+Return ship, fix-first, or rethink with at most three actionable findings.
+```
+
+Require matching fresh reviewer runtime evidence before accepting the verdict. If the
+route is unavailable or mismatched, block completion; there is no self-review fallback.
 
 ## Plain-language handoff
 

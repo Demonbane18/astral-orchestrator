@@ -4,6 +4,10 @@ Use this reference only after the core skill has established that the host is no
 and the user explicitly selected Morph or Constellation. The package format can make the
 skill discoverable; it does not provide an orchestration runtime.
 
+Hypernova is Codex-native only. A non-Codex host cannot run or relabel Hypernova even if
+it advertises Sol, Ultra effort, workers, or concurrency. Hypernova has no portable or
+serial portable fallback.
+
 ## Capability record
 
 Before starting a portable worker, record the host name/version when exposed and observable evidence

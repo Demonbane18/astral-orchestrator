@@ -18,15 +18,56 @@ PAGES = {
     "support": WEBSITE / "support" / "index.html",
     "privacy": WEBSITE / "privacy" / "index.html",
     "terms": WEBSITE / "terms" / "index.html",
+    "docs": WEBSITE / "docs" / "index.html",
+    "docs-getting-started": WEBSITE / "docs" / "getting-started" / "index.html",
+    "docs-modes": WEBSITE / "docs" / "modes" / "index.html",
+    "docs-routing": WEBSITE / "docs" / "routing" / "index.html",
+    "docs-safety": WEBSITE / "docs" / "safety" / "index.html",
+    "docs-evidence": WEBSITE / "docs" / "evidence" / "index.html",
+    "docs-maintenance": WEBSITE / "docs" / "maintenance" / "index.html",
+    "docs-contributing": WEBSITE / "docs" / "contributing" / "index.html",
 }
 
 EXPECTED_DESTINATIONS = {
-    "home": {"./", "install/", "support/", "privacy/", "terms/"},
-    "install": {"../", "./", "../support/", "../privacy/", "../terms/"},
-    "support": {"../", "./", "../install/", "../privacy/", "../terms/"},
-    "privacy": {"../", "../install/", "../support/", "./", "../terms/"},
-    "terms": {"../", "../install/", "../support/", "../privacy/", "./"},
+    "home": {"./", "docs/", "install/", "support/", "privacy/", "terms/"},
+    "install": {"../", "../docs/", "./", "../support/", "../privacy/", "../terms/"},
+    "support": {"../", "../docs/", "./", "../install/", "../privacy/", "../terms/"},
+    "privacy": {"../", "../docs/", "../install/", "../support/", "./", "../terms/"},
+    "terms": {"../", "../docs/", "../install/", "../support/", "../privacy/", "./"},
+    "docs": {"../", "./", "../install/", "../support/", "../privacy/", "../terms/"},
+    "docs-getting-started": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-modes": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-routing": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-safety": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-evidence": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-maintenance": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
+    "docs-contributing": {
+        "../../", "../", "../../install/", "../../support/", "../../privacy/", "../../terms/",
+    },
 }
+
+DOC_PAGE_NAMES = tuple(name for name in PAGES if name.startswith("docs"))
+DOC_SECTIONS = (
+    "getting-started",
+    "modes",
+    "routing",
+    "safety",
+    "evidence",
+    "maintenance",
+    "contributing",
+)
 
 RESOURCE_ATTRIBUTES = {
     "audio": ("src",),
@@ -163,10 +204,13 @@ class PageParser(HTMLParser):
         self.resources = []
         self.inline_styles = []
         self.style_blocks = []
+        self.ids = []
         self._style_block = None
 
     def handle_starttag(self, tag, attrs):
         attributes = {name.lower(): value for name, value in attrs}
+        if "id" in attributes:
+            self.ids.append(attributes["id"])
         if tag in {"h1", "h2", "h3"}:
             self.headings.append(tag)
         if tag == "a" and "href" in attributes:
@@ -258,10 +302,55 @@ def parse_page(path: Path) -> PageParser:
     return parser
 
 
+def resolve_internal_page_link(source: Path, href: str):
+    """Resolve a local clean-URL page link and return its page plus fragment."""
+    if "\\" in href:
+        raise ValueError(f"link must use URL slashes: {href!r}")
+
+    parsed = urlsplit(href)
+    if parsed.scheme or parsed.netloc or href.startswith("//"):
+        return None, parsed.fragment
+
+    website_root = WEBSITE.resolve()
+    link_path = unquote(parsed.path)
+    candidate = (
+        website_root / link_path.lstrip("/")
+        if link_path.startswith("/")
+        else source.parent / link_path
+    ).resolve()
+    if not link_path:
+        candidate = source.resolve()
+    elif candidate.is_dir() or not candidate.suffix:
+        candidate = candidate / "index.html"
+
+    try:
+        candidate.relative_to(website_root)
+    except ValueError as error:
+        raise ValueError(f"link escapes website/: {href!r}") from error
+    if not candidate.is_file():
+        raise ValueError(f"link does not resolve to a website page: {href!r}")
+    return candidate, unquote(parsed.fragment)
+
+
 class WebsiteContractTests(unittest.TestCase):
     def test_all_public_pages_exist_and_have_one_h1(self):
         self.assertEqual(
-            set(PAGES), {"home", "install", "support", "privacy", "terms"}
+            set(PAGES),
+            {
+                "home",
+                "install",
+                "support",
+                "privacy",
+                "terms",
+                "docs",
+                "docs-getting-started",
+                "docs-modes",
+                "docs-routing",
+                "docs-safety",
+                "docs-evidence",
+                "docs-maintenance",
+                "docs-contributing",
+            },
         )
         for name, path in PAGES.items():
             with self.subTest(page=name):
@@ -289,6 +378,59 @@ class WebsiteContractTests(unittest.TestCase):
                     f"{name} is missing navigation destinations",
                 )
 
+    def test_every_page_has_global_docs_navigation(self):
+        docs_hrefs = {
+            "home": "docs/",
+            "install": "../docs/",
+            "support": "../docs/",
+            "privacy": "../docs/",
+            "terms": "../docs/",
+            "docs": "./",
+            **{name: "../" for name in DOC_PAGE_NAMES if name != "docs"},
+        }
+        for name, path in PAGES.items():
+            with self.subTest(page=name):
+                page = page_text(path)
+                self.assertIn(f'href="{docs_hrefs[name]}">Docs</a>', page)
+
+    def test_docs_pages_have_complete_local_navigation(self):
+        for name in DOC_PAGE_NAMES:
+            with self.subTest(page=name):
+                page = page_text(PAGES[name])
+                links = set(parse_page(PAGES[name]).links)
+                self.assertIn('aria-label="Documentation"', page)
+                expected = {"./", *[f"{section}/" for section in DOC_SECTIONS]}
+                if name != "docs":
+                    current = name.removeprefix("docs-")
+                    expected = {
+                        "./" if section == current else f"../{section}/"
+                        for section in DOC_SECTIONS
+                    }
+                    expected.add("../")
+                self.assertTrue(
+                    expected.issubset(links),
+                    f"{name} is missing documentation navigation destinations",
+                )
+
+    def test_every_page_has_unique_ids_and_resolvable_internal_links(self):
+        for name, path in PAGES.items():
+            with self.subTest(page=name):
+                parser = parse_page(path)
+                self.assertEqual(
+                    len(parser.ids), len(set(parser.ids)), f"{name} has duplicate ids"
+                )
+                for href in parser.links:
+                    with self.subTest(page=name, href=href):
+                        target, fragment = resolve_internal_page_link(path, href)
+                        if target is None:
+                            continue
+                        if fragment:
+                            self.assertIn(
+                                fragment,
+                                parse_page(target).ids,
+                                f"{href!r} points to a missing fragment",
+                            )
+
     def test_homepage_explains_routing_and_links_the_repository(self):
         home = page_text(PAGES["home"])
         for phrase in (
@@ -300,13 +442,13 @@ class WebsiteContractTests(unittest.TestCase):
         ):
             self.assertIn(phrase, home)
 
-    def test_homepage_presents_exactly_seven_modes(self):
+    def test_homepage_presents_exactly_eight_modes(self):
         home = page_text(PAGES["home"])
-        self.assertIn("Seven modes", home)
-        self.assertIn("Seven delivery modes", home)
+        self.assertIn("Eight modes", home)
+        self.assertIn("Eight delivery modes", home)
         self.assertEqual(
             len(re.findall(r'<article class="mode-card(?: [^"]+)?"', home)),
-            7,
+            8,
         )
         expected_tags = {
             "comet": "Comet",
@@ -316,6 +458,7 @@ class WebsiteContractTests(unittest.TestCase):
             "pulsar": "Pulsar · opt-in",
             "morph": "Morph · explicit",
             "constellation": "Constellation · capacity-aware",
+            "hypernova": "Hypernova · explicit",
         }
         for mode, label in expected_tags.items():
             with self.subTest(mode=mode):
@@ -347,11 +490,31 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_7_0_on_current_pages(self):
-        for page in ("home", "install", "support"):
+    def test_homepage_contrasts_singularity_with_hypernova(self):
+        home = " ".join(page_text(PAGES["home"]).lower().split())
+        for phrase in (
+            "opposite of singularity",
+            "explicit opt-in",
+            "sol ultra",
+            "maximum safely available concurrency",
+            "host-advertised capacity",
+            "primary consumes one slot",
+            "native multiagentsv2 only",
+            "no downgrade or fallback",
+            "speed and throughput over token efficiency",
+            "safety still applies",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, home)
+
+    def test_current_version_copy_is_v3_8_0_on_current_pages(self):
+        for page in ("home", "install", "support", "docs"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.7.0", content)
+                self.assertIn("v3.8.0", content)
+        for path in WEBSITE.rglob("*.html"):
+            with self.subTest(no_stale_version=path.relative_to(WEBSITE)):
+                self.assertNotIn("v3.7.0", page_text(path))
 
     def test_homepage_explains_live_astral_status(self):
         home = " ".join(page_text(PAGES["home"]).lower().split())
@@ -380,26 +543,232 @@ class WebsiteContractTests(unittest.TestCase):
         ):
             self.assertIn(phrase, install)
 
-    def test_readme_describes_public_clone_and_download_options(self):
-        readme = page_text(ROOT / "README.md").lower()
-        self.assertIn("public repository", readme)
-        self.assertIn("download the public repository", readme)
+    def test_docs_migrate_exact_install_update_uninstall_and_contributor_commands(self):
+        getting_started = page_text(PAGES["docs-getting-started"])
+        maintenance = page_text(PAGES["docs-maintenance"])
+        contributing = page_text(PAGES["docs-contributing"])
+        evidence = page_text(PAGES["docs-evidence"])
+        routing = page_text(PAGES["docs-routing"])
+
+        commands_by_page = {
+            "getting-started": (
+                "codex plugin marketplace add Demonbane18/astral-orchestrator --ref main",
+                "codex plugin add astral-orchestrator@astral-orchestrator",
+                "git clone https://github.com/Demonbane18/astral-orchestrator.git",
+                "cd astral-orchestrator",
+                "sh scripts/setup.sh --dry-run",
+                "sh scripts/setup.sh",
+            ),
+            "maintenance": (
+                "codex plugin marketplace upgrade astral-orchestrator",
+                "codex plugin add astral-orchestrator@astral-orchestrator",
+                "sh scripts/setup.sh --refresh",
+                "codex plugin remove astral-orchestrator@astral-orchestrator",
+                "sh plugins/astral-orchestrator/scripts/install-agents.sh --remove",
+                "codex plugin marketplace remove astral-orchestrator",
+                "codex plugin list --marketplace astral-orchestrator",
+            ),
+            "contributing": (
+                "python3 -B -m unittest discover -s tests -v",
+                "sh plugins/astral-orchestrator/scripts/verify.sh",
+                "sh scripts/setup.sh --dry-run",
+                "git diff --check",
+            ),
+            "evidence": (
+                "python3 plugins/astral-orchestrator/scripts/benchmark-scorecard.py benchmarks/trials.jsonl",
+                "python3 plugins/astral-orchestrator/scripts/benchmark-scorecard.py --format json benchmarks/trials.jsonl",
+            ),
+            "routing": (
+                "sh scripts/configure-effort.sh --show",
+                "sh scripts/configure-effort.sh --luna medium",
+                "sh scripts/configure-effort.sh --orchestrator high --luna medium --terra high --reviewer high",
+                "sh scripts/configure-effort.sh --reset",
+            ),
+        }
+        content_by_page = {
+            "getting-started": getting_started,
+            "maintenance": maintenance,
+            "contributing": contributing,
+            "evidence": evidence,
+            "routing": routing,
+        }
+        for page, commands in commands_by_page.items():
+            for command in commands:
+                with self.subTest(page=page, command=command):
+                    self.assertIn(command, content_by_page[page])
+
+    def test_docs_preserve_mode_default_opt_in_and_legacy_alias_contracts(self):
+        modes = " ".join(page_text(PAGES["docs-modes"]).lower().split())
+        for phrase in (
+            "orbit (default)",
+            "singularity (explicit opt-in)",
+            "pulsar (explicit opt-in)",
+            "morph (explicit opt-in)",
+            "constellation (explicit opt-in)",
+            "hypernova (explicit opt-in)",
+            "quick maps to comet",
+            "guided maps to orbit",
+            "careful maps to event horizon",
+            "measured maps to pulsar",
+            "legacy alias never changes",
+            "raises safeguards",
+            "does not broaden the work",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, modes)
+
+    def test_docs_define_the_full_hypernova_contract(self):
+        modes = " ".join(page_text(PAGES["docs-modes"]).lower().split())
+        routing = " ".join(page_text(PAGES["docs-routing"]).lower().split())
+        hypernova = modes.split('id="hypernova"', 1)[1].split("</section>", 1)[0]
+        for phrase in (
+            "explicit opt-in",
+            "opposite of singularity",
+            "gpt-5.6-sol",
+            "ultra",
+            "every implementation lane",
+            "mandatory fresh",
+            "built-in-default reviewer",
+            "maximum safely available concurrency",
+            "host-advertised capacity",
+            "primary consumes one slot",
+            'fork_turns: "none"',
+            "native multiagentsv2 only",
+            "no legacy exact-process fallback",
+            "no serial fallback",
+            "no self-review fallback",
+            "no model or effort downgrade",
+            "speed and throughput over token efficiency",
+            "event horizon confirmation gates",
+            "does not bypass safety or authorization",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, hypernova)
+        self.assertNotIn("luna", hypernova)
+        self.assertNotIn("terra", hypernova)
+        self.assertIn("python3 check-primary.py --require-sol-ultra", routing)
+
+    def test_docs_preserve_routing_models_controls_and_status_truthfulness(self):
+        routing = " ".join(page_text(PAGES["docs-routing"]).lower().split())
+        for phrase in (
+            "gpt-5.6-sol",
+            "gpt-5.6-luna",
+            "gpt-5.6-terra",
+            "sol high",
+            "luna max",
+            "terra high",
+            "reviewer sol high",
+            "agent_type",
+            "task_name",
+            "model",
+            "reasoning_effort",
+            "fork_turns",
+            "requested is not observed",
+            "task name is not proof",
+            "allowlisted route fields",
+            "mismatch or invalid result blocks",
+            "astral_orchestrator_route",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, routing)
+
+    def test_docs_disclose_morph_external_provider_and_safety_limits(self):
+        routing = " ".join(page_text(PAGES["docs-routing"]).lower().split())
+        safety = " ".join(page_text(PAGES["docs-safety"]).lower().split())
+        for phrase in (
+            "provider may be external",
+            "bounded worker packet",
+            "provider traffic is local",
+            "does not install opencodex",
+            "does not handle credentials",
+            "native effort semantics",
+            "failure blocks the worker",
+        ):
+            with self.subTest(route_phrase=phrase):
+                self.assertIn(phrase, routing)
+        for phrase in (
+            "no analytics collection",
+            "no extra network client",
+            "no api key",
+            "no background service",
+            "explicit confirmation gate",
+            "workspace-write with no special isolation",
+            "never overwritten",
+            "only shipped files that still match exactly",
+            "https://github.com/demonbane18/astral-orchestrator/blob/main/license",
+            "https://github.com/demonbane18/astral-orchestrator/blob/main/notice.md",
+        ):
+            with self.subTest(safety_phrase=phrase):
+                self.assertIn(phrase, safety)
+
+    def test_docs_preserve_committed_benchmarks_and_caveats(self):
+        evidence = " ".join(page_text(PAGES["docs-evidence"]).split())
+        for phrase in (
+            "3,403",
+            "4,722",
+            "10,223",
+            "12,401",
+            "5,501",
+            "53.8%",
+            "static instruction-context measurements",
+            "not task quality, latency, price, or total-run tokens",
+            "published v3.6.0 measurement",
+            "100+ automated tests",
+            "package verification",
+            "does not prove Astral beats single-Sol",
+            "invalid exploratory evidence",
+            "fresh review found protocol defects",
+            "No valid outcome comparison exists.",
+            "does not publish outcome, token, time, or quality numbers",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, evidence)
+
+    def test_docs_contributing_page_preserves_license_and_attribution_links(self):
+        contributing = page_text(PAGES["docs-contributing"]).lower()
+        for link in (
+            "https://github.com/demonbane18/astral-orchestrator/blob/main/license",
+            "https://github.com/demonbane18/astral-orchestrator/blob/main/notice.md",
+            "https://github.com/dannymac180/sol-advisor",
+            "https://github.com/blavkgokuvnn/single-agent-skills",
+            "https://openrouter.ai/ori/eval",
+        ):
+            with self.subTest(link=link):
+                self.assertIn(link, contributing)
+
+    def test_getting_started_describes_public_clone_and_download_options(self):
+        getting_started = page_text(PAGES["docs-getting-started"]).lower()
+        self.assertIn("public repository", getting_started)
+        self.assertIn("download the public repository", getting_started)
         self.assertIn(
-            "git clone https://github.com/demonbane18/astral-orchestrator.git", readme
+            "git clone https://github.com/demonbane18/astral-orchestrator.git",
+            getting_started,
         )
-        self.assertNotIn("private repository", readme)
-        self.assertNotIn("private github repository", readme)
-        self.assertNotIn("repository is currently private", readme)
+        self.assertNotIn("private repository", getting_started)
+        self.assertNotIn("private github repository", getting_started)
+        self.assertNotIn("repository is currently private", getting_started)
 
     def test_support_page_links_to_public_help_routes_without_support_promises(self):
         support = page_text(PAGES["support"]).lower()
         self.assertIn(
             "https://github.com/demonbane18/astral-orchestrator/issues", support
         )
-        self.assertIn("readme", support)
+        self.assertIn("../docs/", support)
+        self.assertIn("../docs/maintenance/", support)
+        self.assertNotIn("readme", support)
         self.assertIn("useful issue", support)
         self.assertNotIn("guaranteed support", support)
         self.assertNotIn("private support", support)
+
+    def test_install_and_support_use_canonical_docs_instead_of_the_readme(self):
+        install = page_text(PAGES["install"]).lower()
+        support = page_text(PAGES["support"]).lower()
+        self.assertIn("../docs/getting-started/", install)
+        self.assertIn("../docs/maintenance/", install)
+        self.assertIn("../docs/", support)
+        self.assertIn("../docs/maintenance/", support)
+        self.assertNotIn("readme", install)
+        self.assertNotIn("readme", support)
 
     def test_privacy_policy_states_the_local_no_collection_posture(self):
         privacy = page_text(PAGES["privacy"]).lower()
@@ -510,6 +879,32 @@ class WebsiteContractTests(unittest.TestCase):
     def test_site_javascript_degrades_without_match_media(self):
         script = page_text(WEBSITE / "assets" / "site.js")
         self.assertIn('typeof window.matchMedia === "function"', script)
+
+    def test_docs_css_is_responsive_focus_visible_and_overflow_safe(self):
+        stylesheet = page_text(WEBSITE / "assets" / "site.css")
+        for selector in (
+            ".docs-layout",
+            ".docs-nav",
+            ".doc-content",
+            ".table-scroll",
+        ):
+            with self.subTest(selector=selector):
+                self.assertIn(selector, stylesheet)
+        self.assertRegex(
+            stylesheet,
+            r"\.table-scroll\s*\{[^}]*overflow-x:\s*auto;",
+        )
+        self.assertRegex(stylesheet, r"pre\s*\{[^}]*overflow-x:\s*auto;")
+        self.assertRegex(
+            stylesheet,
+            r"\.docs-nav a\s*\{[^}]*min-height:\s*2\.75rem;",
+        )
+        self.assertIn(":focus-visible", stylesheet)
+        self.assertIn("@media (max-width: 48rem)", stylesheet)
+        self.assertRegex(
+            stylesheet,
+            r"@media \(max-width: 48rem\)\s*\{[\s\S]*?\.docs-layout\s*\{[^}]*grid-template-columns:\s*1fr;",
+        )
 
     def test_semantic_gold_and_focus_colors_meet_contrast_requirements(self):
         stylesheet = page_text(WEBSITE / "assets" / "site.css")
@@ -873,7 +1268,7 @@ class WebsiteContractTests(unittest.TestCase):
         home = page_text(PAGES["home"])
         for phrase in (
             "v3.6.0",
-            "Seven modes",
+            "Eight modes",
             "Comet",
             "Orbit · default",
             "Event Horizon",
@@ -891,9 +1286,9 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_homepage_publishes_the_current_instruction_context_measurements(self):
+    def test_canonical_pages_publish_the_current_instruction_context_measurements(self):
         public_evidence = {
-            "README": " ".join(page_text(ROOT / "README.md").split()),
+            "docs": " ".join(page_text(PAGES["docs-evidence"]).split()),
             "homepage": " ".join(page_text(PAGES["home"]).split()),
         }
         benchmark = json.loads(
@@ -944,23 +1339,16 @@ class WebsiteContractTests(unittest.TestCase):
                 with self.subTest(document=document, statement=statement):
                     self.assertIn(statement, evidence)
 
-        readme = public_evidence["README"]
+        docs = public_evidence["docs"]
         homepage = public_evidence["homepage"]
-        for link in (
-            "benchmarks/README.md",
-            "benchmarks/context-footprint-2026-08-21.json",
-            "benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
-        ):
-            with self.subTest(readme_link=link):
-                self.assertIn(link, readme)
-
         for link in (
             "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/README.md",
             "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/context-footprint-2026-08-21.json",
             "https://github.com/Demonbane18/astral-orchestrator/blob/main/benchmarks/results/2026-08-04-invalid-pilot/INVALID.md",
         ):
-            with self.subTest(homepage_link=link):
-                self.assertIn(link, homepage)
+            for document, evidence in (("docs", docs), ("homepage", homepage)):
+                with self.subTest(document=document, link=link):
+                    self.assertIn(link, evidence)
 
     def test_homepage_instruction_context_bar_widths_match_current_evidence(self):
         benchmark = json.loads(
@@ -1003,7 +1391,12 @@ class WebsiteContractTests(unittest.TestCase):
         for name, path in PAGES.items():
             with self.subTest(page=name):
                 page = page_text(path)
-                icon_prefix = "assets/" if name == "home" else "../assets/"
+                if name == "home":
+                    icon_prefix = "assets/"
+                elif name.startswith("docs-"):
+                    icon_prefix = "../../assets/"
+                else:
+                    icon_prefix = "../assets/"
                 self.assertIn(
                     f'<link rel="icon" type="image/png" href="{icon_prefix}astral-orchestrator-favicon-32.png">',
                     page,

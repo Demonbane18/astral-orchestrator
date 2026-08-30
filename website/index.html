@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Astral Orchestrator is a local, open-source Codex plugin with delegated Sol, Luna, and Terra routes plus a deliberate one-Sol Singularity mode.">
+    <meta name="description" content="Astral Orchestrator is a local, open-source Codex plugin with eight exact delivery modes, from one-session Singularity to all-Sol-Ultra Hypernova.">
     <meta name="theme-color" content="#f4f2ec">
     <title>Astral Orchestrator · turn a request into a checked result</title>
     <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
@@ -28,6 +28,7 @@
         <nav class="site-nav" aria-label="Primary navigation">
           <ul>
             <li><a href="./" aria-current="page">Home</a></li>
+            <li><a href="docs/">Docs</a></li>
             <li><a href="#how-it-works">How it works</a></li>
             <li><a href="#evidence">Results</a></li>
             <li><a href="install/">Install</a></li>
@@ -59,7 +60,7 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.7.0 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.8.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
               For its normal delegated route, Astral Orchestrator gives bigger work a clear route through Codex:
@@ -67,7 +68,8 @@
               <span class="hl">Luna</span> or <span class="hl">Terra</span> implements
               a bounded piece, and a <span class="hl">fresh Sol review</span> checks
               the result before it comes back to you. Singularity is the deliberate
-              one-Sol exception for eligible work.
+              one-Sol exception for eligible work; Hypernova is its all-Sol-Ultra,
+              performance-first opposite.
             </p>
             <div class="hero-actions">
               <a class="button button-primary" href="install/">Get the install command</a>
@@ -76,7 +78,7 @@
             <ul class="hero-facts">
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>3 pinned lanes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Fresh review when delegated</li>
-              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Seven delivery modes</li>
+              <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Eight delivery modes</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>Live route status</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>No project-operated backend</li>
               <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 11.3 2.9 8 1.5 9.4l4.7 4.7 8-8L12.8 4.7z"></path></svg>MIT licensed</li>
@@ -194,7 +196,7 @@
           <div class="section-intro" data-reveal>
             <div>
               <p class="eyebrow">Pick an altitude</p>
-              <h2 id="modes-title">Seven modes, one steady hand.</h2>
+              <h2 id="modes-title">Eight modes, one steady hand.</h2>
             </div>
             <p>
               Tell Astral how careful to be. It <span class="hl">raises safeguards</span>
@@ -241,6 +243,16 @@
               </p>
               <p class="mode-best"><strong>Best for:</strong> disciplined multi-step work that does not need delegation.</p>
             </article>
+            <article class="mode-card mode-card--hypernova" data-reveal>
+              <span class="mode-tag mode-tag--hypernova">Hypernova · explicit</span>
+              <h3>All-Sol-Ultra throughput</h3>
+              <p>
+                This <span class="hl">explicit opt-in</span> uses an observed Sol Ultra
+                primary, independent built-in Sol Ultra workers, and a mandatory fresh
+                Sol Ultra reviewer at the maximum safely available concurrency.
+              </p>
+              <p class="mode-best"><strong>Best for:</strong> maximum throughput when speed matters more than token efficiency.</p>
+            </article>
             <article class="mode-card mode-card--pulsar" data-reveal>
               <span class="mode-tag mode-tag--pulsar">Pulsar · opt-in</span>
               <h3>Slower by design</h3>
@@ -274,17 +286,29 @@
               <p class="mode-best"><strong>Best for:</strong> parallelizable work with a proven serial fallback.</p>
             </article>
           </div>
+          <aside class="mode-guard" data-reveal aria-labelledby="singularity-hypernova-title">
+            <h3 id="singularity-hypernova-title">Singularity versus Hypernova</h3>
+            <p>
+              Hypernova is the <strong>opposite of Singularity</strong>: Singularity keeps
+              eligible work in one verified Sol session, while Hypernova fills safe
+              <strong>host-advertised capacity</strong> after the <strong>primary consumes one slot</strong>.
+              Hypernova is <strong>native MultiAgentsV2 only</strong>, with no downgrade or fallback,
+              and chooses <strong>speed and throughput over token efficiency</strong>. Safety still applies:
+              high-risk cards inherit Event Horizon confirmation and authorization gates.
+              <a href="docs/modes/#hypernova">Read the exact Hypernova contract.</a>
+            </p>
+          </aside>
           <aside class="mode-guard" data-reveal aria-labelledby="mode-guard-title">
             <h3 id="mode-guard-title">Automatic primary checker</h3>
             <p>
               All modes first look for <strong>allowlisted local model/effort evidence</strong>.
-              When evidence is absent, only non-Singularity modes can use a
-              <strong>one-time user confirmation</strong>. Singularity requires observed,
-              verified Sol model and effort, must stop on unavailable evidence, and user
-              confirmation cannot satisfy or override that requirement. <strong>Mismatch or
-              invalid evidence blocks</strong> every route. Singularity uses <strong>one verified
-              Sol session</strong> with no subagents or fresh reviewer, and Event Horizon takes over
-              for high-risk work. Morph does not claim
+              When evidence is absent, only modes other than Singularity and Hypernova can
+              use a <strong>one-time user confirmation</strong>. Singularity and Hypernova
+              require observed, verified Sol model and exact effort, must stop on unavailable
+              evidence, and user confirmation cannot satisfy or override either requirement.
+              <strong>Mismatch or invalid evidence blocks</strong> every route. Singularity uses
+              <strong>one verified Sol session</strong> with no subagents or fresh reviewer, and
+              Event Horizon takes over for high-risk work. Morph does not claim
               every provider has native effort semantics, and Constellation does not claim
               every host supports multi-agent orchestration: when capacity or
               independence is uncertain, use the <strong>serial fallback</strong>.
@@ -567,8 +591,8 @@
         <div class="shell two-up">
           <article class="plain-card" data-reveal>
             <h2 id="next-title">Need a hand?</h2>
-            <p>Start with the README, then use the public issue tracker for bugs, confusing behavior, or improvement ideas.</p>
-            <p><a href="support/">Read support guidance</a></p>
+            <p>Start with the canonical docs, then use the public issue tracker for bugs, confusing behavior, or improvement ideas.</p>
+            <p><a href="docs/">Open documentation</a> <span aria-hidden="true">·</span> <a href="support/">Read support guidance</a></p>
           </article>
           <article class="plain-card" data-reveal>
             <h2>Want the facts first?</h2>
@@ -596,6 +620,7 @@
         <nav aria-label="Footer navigation">
           <ul class="footer-links">
             <li><a href="./">Home</a></li>
+            <li><a href="docs/">Docs</a></li>
             <li><a href="install/">Install</a></li>
             <li><a href="support/">Support</a></li>
             <li><a href="privacy/">Privacy</a></li>

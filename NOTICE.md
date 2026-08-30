@@ -9,10 +9,11 @@ Its original copyright and permission notice are preserved in this repository's 
 
 Astral Orchestrator v3 retains the architect → implementation → verification → fresh
 review pattern and adapts Sol Advisor's model-specific routing, companion-profile
-installation, and allowlisted runtime inspection. It adds Comet, Orbit, Event Horizon,
-and Pulsar modes, namespaced profiles, conflict-safe removal, configurable effort
-settings, and a Python standard-library inspector for a broader audience. The former
-Quick, Guided, Careful, and Measured names remain advisory prompt aliases.
+installation, and allowlisted runtime inspection. It adds eight modes—Comet, Orbit,
+Event Horizon, Singularity, Hypernova, Pulsar, Morph, and Constellation—plus namespaced
+profiles, conflict-safe removal, configurable effort settings, and a Python
+standard-library inspector for a broader audience. The former Quick, Guided, Careful,
+and Measured names remain advisory prompt aliases.
 
 Astral Orchestrator is not endorsed by or affiliated with Daniel McAteer. See
 [docs/IMPROVEMENTS.md](https://github.com/Demonbane18/astral-orchestrator/blob/main/docs/IMPROVEMENTS.md) for the design comparison.
