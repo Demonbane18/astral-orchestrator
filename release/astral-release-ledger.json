@@ -531,6 +531,24 @@
       "evidence": "OpenAI Platform completed the automated Astral Orchestrator v3.8.0 skill scan with status Passed. Opera GX verified the three Hypernova-aware starter prompts. The draft remains unsubmitted: its generated developer name and four public URL fields still need the approved v3.7.0 values copied with user authorization, and all four policy or legal attestations remain unchecked.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a937fd3aa188191b0b379d99e11dceb",
       "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.8.0",
+      "status": "approved",
+      "observed_at": "2026-08-30T01:48:49Z",
+      "evidence": "Authenticated OpenAI Platform in Opera GX listed Astral Orchestrator v3.8.0 as Published with View in Directory after the user completed the policy or legal attestations and publication. The automated skill scan had previously reported Passed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a937fd3aa188191b0b379d99e11dceb",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.8.0",
+      "status": "published",
+      "observed_at": "2026-08-30T01:48:50Z",
+      "evidence": "After a forced refresh in Opera GX, the public ChatGPT Plugins Directory displayed Astral Orchestrator version 3.8.0, the Hypernova description and starter prompt, developer Astral Orchestrator Contributors, and the published website, privacy, and terms links.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
+      "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
     }
   ]
 }
