@@ -556,6 +556,24 @@
       "status": "draft",
       "observed_at": "2026-09-04T21:05:00Z",
       "evidence": "Prepared focused Astra-primary update and author JOHN PAUL FURIGAY FUSIN. Diff reviewed and manifests parsed; tests and full verification suite skipped at user request. Worker defaults and deferred mode workflows unchanged."
+    },
+    {
+      "surface": "github_release",
+      "version": "3.9.0",
+      "status": "published",
+      "observed_at": "2026-09-04T21:05:19+00:00",
+      "evidence": "gh release view confirms public v3.9.0 at merged PR #13 commit. Asset astral-orchestrator-3.9.0.zip SHA256 9c389c89e3cce587335758efba5ee80d59a926bb276a8d59317a4b1d975904bd matches local exact-commit archive.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.9.0",
+      "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.9.0",
+      "status": "installable",
+      "observed_at": "2026-09-04T21:05:19+00:00",
+      "evidence": "gh api confirms marketplace JSON and main plugin manifest are reachable; manifest 3.9.0 names author/developer JOHN PAUL FURIGAY FUSIN. Global Codex configuration unchanged.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator",
+      "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
     }
   ]
 }
