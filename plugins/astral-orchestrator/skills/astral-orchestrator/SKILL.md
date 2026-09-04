@@ -1,14 +1,25 @@
 ---
 name: astral-orchestrator
-description: "Orchestrate project work with a Sol lead, fixed Luna and Terra lanes, explicit opt-in Singularity and Hypernova modes, configurable reasoning effort, and verified results. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation or disciplined one-session work, wants maximum safe native Sol Ultra concurrency, wants to change effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation."
+description: "Orchestrate project work with an Astra lead, fixed Luna and Terra lanes, explicit opt-in Singularity and Hypernova modes, configurable reasoning effort, and verified results. Use when the user invokes Astral Orchestrator, asks for real multi-agent delegation or disciplined one-session work, wants maximum safe native Sol Ultra concurrency, wants to change effort levels, wants a request built or fixed end to end, requests risk-aware execution, or wants model-routed implementation."
 ---
 
 # Astral Orchestrator
 
-Own the result from request to verified handoff. Keep the Sol primary at its configured
+Own the result from request to verified handoff. Keep the Astra primary at its configured
 effort accountable for planning, routing, integration, and final decisions; use pinned
 workers for bounded execution; and keep the process understandable to a non-technical
 user.
+
+## Primary model update
+
+The main orchestrator is now Astra (`gpt-6-astra`), High by default. In the existing
+mode guides and templates, references to Sol **as the primary or orchestrator** mean
+Astra, including Astra Ultra for the Hypernova primary. Label that primary Astra in
+status updates. Sol implementation workers and reviewers keep their existing routes.
+The existing `--require-sol-ultra` checker flag remains a compatibility alias for the
+Astra Ultra primary check; `--require-astra-ultra` is also accepted. Worker defaults,
+review requirements, and mode workflows are unchanged. This rule takes precedence over
+older primary-model wording in the references below.
 
 ## Execution economy
 
@@ -123,7 +134,7 @@ without permission.
 
 On Codex, Astral Orchestrator v3 uses these exact models. Their default efforts are:
 
-- main orchestrator: **Sol High** (`gpt-5.6-sol`, reasoning `high`);
+- main orchestrator: **Astra High** (`gpt-6-astra`, reasoning `high`);
 - focused worker: `astral_orchestrator_luna_implementer` (Luna Max);
 - context-heavy worker: `astral_orchestrator_terra_implementer` (Terra High);
 - reviewer: `astral_orchestrator_sol_reviewer` (Sol High, workspace-write review-and-repair).
@@ -134,7 +145,7 @@ above. For every mode, resolve and run `../../scripts/check-primary.py` first. H
 passes `--require-sol-ultra`; that mode-specific requirement does not mutate the persisted
 normal-mode effort settings. The checker uses the host's local rollout inspector and
 `CODEX_THREAD_ID` when available, then exits zero only when the observed primary is
-`gpt-5.6-sol` at the applicable effort: the configured orchestrator effort normally, or
+`gpt-6-astra` at the applicable effort: the configured orchestrator effort normally, or
 Ultra for Hypernova. If its allowlisted JSON says unavailable, modes other than
 Singularity and Hypernova may ask the user once to confirm the model and effort; record
 that as **user-confirmed**, not observed evidence. The checker never asks the user itself.

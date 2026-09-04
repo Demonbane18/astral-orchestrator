@@ -549,6 +549,13 @@
       "evidence": "After a forced refresh in Opera GX, the public ChatGPT Plugins Directory displayed Astral Orchestrator version 3.8.0, the Hypernova description and starter prompt, developer Astral Orchestrator Contributors, and the published website, privacy, and terms links.",
       "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc",
       "commit": "b6806eafa0fa9ae1fd253a39b4d7eb4dedcf24a4"
+    },
+    {
+      "surface": "source",
+      "version": "3.9.0",
+      "status": "draft",
+      "observed_at": "2026-09-04T21:05:00Z",
+      "evidence": "Prepared focused Astra-primary update and author JOHN PAUL FURIGAY FUSIN. Diff reviewed and manifests parsed; tests and full verification suite skipped at user request. Worker defaults and deferred mode workflows unchanged."
     }
   ]
 }

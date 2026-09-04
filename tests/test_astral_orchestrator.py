@@ -140,7 +140,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.8.0")
+        self.assertEqual(manifest["version"], "3.9.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -156,7 +156,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.8"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.9"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -211,7 +211,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.8.0")
+        self.assertEqual(manifest["version"], "3.9.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -625,7 +625,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertNotIn("terra", hypernova)
         self.assertNotIn("configured orchestrator effort", hypernova)
 
-    def test_primary_checker_accepts_hypernova_sol_ultra_without_changing_normal_settings(self):
+    def test_primary_checker_accepts_hypernova_astra_ultra_without_changing_normal_settings(self):
         thread_id = "87654321-4321-4321-4321-cba987654321"
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -645,7 +645,7 @@ class SkillContractTests(unittest.TestCase):
                             {
                                 "type": "turn_context",
                                 "payload": {
-                                    "model": "gpt-5.6-sol",
+                                    "model": "gpt-6-astra",
                                     "effort": "ultra",
                                     "sandbox_policy": {"type": "workspace-write"},
                                     "permission_profile": {"type": "managed"},
@@ -703,7 +703,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(hypernova.returncode, 0, hypernova.stdout + hypernova.stderr)
             evidence = json.loads(hypernova.stdout)
             self.assertEqual(evidence["status"], "match")
-            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["expected_model"], "gpt-6-astra")
             self.assertEqual(evidence["expected_effort"], "ultra")
             self.assertEqual(evidence["observed_effort"], "ultra")
             self.assertEqual(
@@ -1324,7 +1324,7 @@ class SkillContractTests(unittest.TestCase):
                             {
                                 "type": "turn_context",
                                 "payload": {
-                                    "model": "gpt-5.6-sol",
+                                    "model": "gpt-6-astra",
                                     "effort": "high",
                                     "sandbox_policy": {"type": "workspace-write"},
                                     "permission_profile": {"type": "managed"},
@@ -1358,9 +1358,9 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(matched.returncode, 0, matched.stdout + matched.stderr)
             evidence = json.loads(matched.stdout)
             self.assertEqual(evidence["status"], "match")
-            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["expected_model"], "gpt-6-astra")
             self.assertEqual(evidence["expected_effort"], "high")
-            self.assertEqual(evidence["observed_model"], "gpt-5.6-sol")
+            self.assertEqual(evidence["observed_model"], "gpt-6-astra")
             self.assertEqual(evidence["observed_effort"], "high")
             self.assertEqual(evidence["thread_id"], thread_id)
             self.assertNotIn("secret", matched.stdout)
@@ -1438,7 +1438,7 @@ class SkillContractTests(unittest.TestCase):
                             {
                                 "type": "turn_context",
                                 "payload": {
-                                    "model": "gpt-5.6-sol",
+                                    "model": "gpt-6-astra",
                                     "effort": "high",
                                     "sandbox_policy": {"type": "workspace-write"},
                                     "permission_profile": {"type": "managed"},
