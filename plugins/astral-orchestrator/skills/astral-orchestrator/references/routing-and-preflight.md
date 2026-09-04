@@ -1,5 +1,8 @@
 # Routing and preflight
 
+Astra replaces Sol only as the primary. Apply the primary-model update in `../SKILL.md`
+to older primary wording below; all worker and reviewer routes remain unchanged.
+
 Use this reference for every Codex run that needs primary-route proof. The purpose is to prove
 that work used the intended lanes, not merely to request them. Morph and Constellation add worker
 rules only when the user explicitly selects those modes; they do not alter this primary,
@@ -10,11 +13,11 @@ three roles with exact Sol Ultra native routes defined below and in `hypernova-m
 
 | Role | Native v2 agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
-| Orchestrator | Primary session | `gpt-5.6-sol` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
+| Orchestrator | Primary session | `gpt-6-astra` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
 | Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
 | Context worker | Built-in `worker`, or matching `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
 | Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
-| Hypernova primary | Primary session | `gpt-5.6-sol` | `ultra` | Architecture, maximum-safe-wave planning, integration, and acceptance |
+| Hypernova primary | Primary session | `gpt-6-astra` | `ultra` | Architecture, maximum-safe-wave planning, integration, and acceptance |
 | Hypernova implementation | Built-in `worker` only | `gpt-5.6-sol` | `ultra` | Every independently owned ready implementation card |
 | Hypernova reviewer | Fresh built-in `default` only | `gpt-5.6-sol` | `ultra` | Mandatory exact-route review after integrated verification |
 
@@ -86,7 +89,7 @@ Before execution in any mode:
    Its optional `--thread-id` defaults to `CODEX_THREAD_ID`; use `--sessions-dir` only for
    local test evidence. It invokes the bundled runtime inspector rather than reading
    rollout content itself, emits allowlisted JSON, and exits zero only when the observed
-   primary model is `gpt-5.6-sol` and its effort equals the configured orchestrator effort,
+   primary model is `gpt-6-astra` and its effort equals the configured orchestrator effort,
    or exact Ultra when `--require-sol-ultra` is present. When its status is `unavailable`,
    a mode other than Singularity or Hypernova may obtain one explicit user confirmation
    and label it user-supplied rather than observed. Singularity and Hypernova require an

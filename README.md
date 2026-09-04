@@ -2,8 +2,8 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.8.0 is an installable, open-source Codex plugin that turns a goal
-into routed, verified work. Sol keeps the plan and final decisions, Astral coordinates
+Astral Orchestrator v3.9.0 is an installable, open-source Codex plugin that turns a goal
+into routed, verified work. Astra keeps the plan and final decisions, Astral coordinates
 the right model and effort for each bounded task, and checks run before handoff.
 
 Version 3.8.0 adds Hypernova: an explicit, performance-first all-Sol Ultra option for
@@ -11,6 +11,9 @@ maximum safe throughput when the exact native route is available.
 
 Astral Orchestrator is an independent open-source project. It is not affiliated with or
 endorsed by OpenAI.
+
+Version 3.9.0 changes only the main orchestrator to `gpt-6-astra`
+(Astra High by default). Worker defaults and mode workflows remain unchanged.
 
 ## Quick Install
 
@@ -26,7 +29,7 @@ Start a new Codex task after installation so Codex can discover the plugin.
 ## Requirements
 
 - A current Codex CLI or desktop app with plugins enabled.
-- Access to `gpt-5.6-sol`, `gpt-5.6-luna`, and `gpt-5.6-terra` for their fixed routes.
+- Access to `gpt-6-astra`, `gpt-5.6-sol`, `gpt-5.6-luna`, and `gpt-5.6-terra` for their fixed routes.
 - Python 3.11 or newer; Astral's local tools use only the standard library.
 - For Hypernova only: native multi-agent controls and `gpt-5.6-sol` with Ultra effort.
 

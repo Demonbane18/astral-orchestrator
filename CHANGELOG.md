@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 3.9.0 — 2026-09-05
+
+### Changed
+
+- Replaced only the main orchestrator with Astra, High by default. Hypernova uses
+  Astra Ultra as its primary; worker and reviewer routes remain unchanged.
+- Kept the existing Ultra checker flag and added `--require-astra-ultra` as an alias.
+- Set the plugin author and developer name to JOHN PAUL FURIGAY FUSIN.
+- Left Measured/Pulsar, Morph, and Constellation workflows unchanged.
+
 ## 3.8.0 — 2026-08-30
 
 ### Added

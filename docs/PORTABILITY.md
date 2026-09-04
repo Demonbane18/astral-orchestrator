@@ -1,6 +1,6 @@
 # Portability boundary
 
-Astral Orchestrator 3.8.0 ships two additive manifests in one package:
+Astral Orchestrator 3.9.0 ships two additive manifests in one package:
 
 - `plugin.json` is the root Agent Plugins 1.0 manifest. It supplies portable package
   identity and lets compatible hosts discover the `skills/astral-orchestrator/SKILL.md`

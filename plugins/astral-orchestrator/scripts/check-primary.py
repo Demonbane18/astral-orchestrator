@@ -24,7 +24,7 @@ from effort_settings import (  # noqa: E402
 )
 
 
-EXPECTED_MODEL = "gpt-5.6-sol"
+EXPECTED_MODEL = "gpt-6-astra"
 THREAD_ID_PATTERN = re.compile(
     r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 )
@@ -50,7 +50,7 @@ def fail(message: str) -> NoReturn:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Check whether the current primary is the configured Astral Sol route."
+        description="Check whether the current primary is the configured Astral Astra route."
     )
     parser.add_argument(
         "--thread-id",
@@ -70,9 +70,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--require-sol-ultra",
+        "--require-astra-ultra",
         action="store_true",
         help=(
-            "Require gpt-5.6-sol at Ultra for explicit Hypernova mode without "
+            "Require gpt-6-astra at Ultra for explicit Hypernova mode without "
             "changing the persisted normal-mode effort settings."
         ),
     )

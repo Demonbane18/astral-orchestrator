@@ -73,7 +73,7 @@ codex plugin add astral-orchestrator@astral-orchestrator
 printf '%s\n' \
   '' \
   'Astral Orchestrator and its three model-routed agents are installed.' \
-  'Start a new Codex task with gpt-5.6-sol and your configured effort (High by default), then say:' \
+  'Start a new Codex task with gpt-6-astra and your configured effort (High by default), then say:' \
   'Use Astral Orchestrator to orchestrate this request and verify every lane.' \
   '' \
   'Optional: run sh scripts/configure-effort.sh --show to view effort settings.'

@@ -1,4 +1,4 @@
-# Spec: Astral Orchestrator v3.8
+# Spec: Astral Orchestrator v3.9
 
 ## Objective
 
@@ -149,7 +149,7 @@ reviewer. The mode-specific primary checker flag leaves normal effort settings u
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.8.0. The normalized plugin, marketplace,
+The current product version is 3.9.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
