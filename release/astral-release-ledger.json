@@ -574,6 +574,15 @@
       "evidence": "gh api confirms marketplace JSON and main plugin manifest are reachable; manifest 3.9.0 names author/developer JOHN PAUL FURIGAY FUSIN. Global Codex configuration unchanged.",
       "url": "https://github.com/Demonbane18/astral-orchestrator",
       "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.9.0",
+      "status": "draft",
+      "observed_at": "2026-09-04T21:13:47+00:00",
+      "evidence": "Opera GX upload confirmed version 3.9.0, developer JOHN PAUL FURIGAY FUSIN, Astra-led description and three prompts. Restored website/support/privacy/terms URLs; draft saved, skill Scanning. Uploaded published archive SHA256 9c389c89e3cce587335758efba5ee80d59a926bb276a8d59317a4b1d975904bd.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9b342cf5588191b7e9d12ba318968d",
+      "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
     }
   ]
 }
