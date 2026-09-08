@@ -1,14 +1,14 @@
 # Morph mode
 
 Morph is an explicit opt-in: use it only when the user explicitly names it. Morph keeps the configured
-`gpt-5.6-sol` Sol primary responsible for requirements, architecture, decomposition,
+`gpt-6-astra` Astra primary responsible for requirements, architecture, decomposition,
 integration, verification, and the final decision. The normal exact Sol reviewer remains
 required. Only a bounded worker card may use a user-selected model.
 
 ## Codex route: before launch
 
-1. Complete the normal primary preflight and prove the configured Sol primary. Morph does
-   not enable a non-Sol primary or a non-Sol final reviewer.
+1. Complete the normal primary preflight and prove the configured Astra primary. Morph does
+   not enable a non-Astra primary or a non-Sol final reviewer.
 2. Record one private packet per worker card with exact ownership, exact `provider/model`
    or native model identifier, requested effort, and downstream-delegation permission.
    Launch ready cards with non-overlapping ownership in parallel up to observed capacity;

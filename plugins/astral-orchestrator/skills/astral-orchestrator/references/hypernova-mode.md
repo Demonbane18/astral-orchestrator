@@ -1,26 +1,24 @@
 # Hypernova mode
 
 Hypernova is an **explicit opt-in**, Codex-native performance mode. It is the
-**opposite of Singularity**: Singularity minimizes coordination and token use in one Sol
+**opposite of Singularity**: Singularity minimizes coordination and token use in one Astra
 session, while Hypernova favors **speed and throughput over token efficiency** by using
 the maximum safely available concurrency. Never auto-select Hypernova.
 
-The primary, every implementation lane, and the mandatory fresh reviewer must each be
-`gpt-5.6-sol` at **Ultra**. Hypernova is not permission to widen the request, skip checks,
-or weaken confirmation boundaries.
+The Astra primary uses its configured session effort. Every implementation lane and
+the mandatory fresh reviewer default to `gpt-5.6-sol` at **Ultra**. The user may
+explicitly select `gpt-6-astra` at **Max** or **Ultra** for workers and/or fresh review.
+An Astra Light primary can therefore launch Astra Ultra workers. Record each selected
+child route before launch; primary effort never caps child effort. No silent downgrade
+or substitution is allowed after route selection. Hypernova is not permission to widen
+the request, skip checks, or weaken confirmation boundaries.
 
 ## Blocking preflight
 
-Run the primary checker with its mode-specific flag:
-
-```text
-python3 check-primary.py --require-sol-ultra
-```
-
-`--require-sol-ultra` checks the already-started primary against Sol Ultra without
-changing or persisting the normal orchestrator effort setting. Hypernova requires an
-**observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence blocks the
-mode; user confirmation cannot replace runtime evidence.
+Run `python3 check-primary.py` with no Ultra flag. It accepts the configured orchestrator
+effort observed in the running Astra session, independently of saved defaults. Hypernova
+requires an **observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence
+blocks the mode; user confirmation cannot replace runtime evidence.
 
 Inspect `collaboration.spawn_agent` and require all five native MultiAgentsV2 controls:
 
@@ -39,7 +37,10 @@ downgrade**. If the native controls or capacity cannot be observed, stop.
 ## Exact native route
 
 Use the built-in native `worker` for every implementation lane. Do not use a custom
-worker profile. Every implementation spawn must use:
+worker profile. The default implementation spawn is below. For an explicitly selected Astra route,
+set `model: "gpt-6-astra"` and `reasoning_effort: "max"` or `"ultra"`. Verify that
+the host advertises the selected route before launch. Every implementation spawn must use
+the same native controls:
 
 ```text
 collaboration.spawn_agent({
@@ -88,7 +89,8 @@ blocked or capacity changes.
 ## Mandatory fresh Sol Ultra review
 
 After all accepted worker output is integrated and the focused checks pass, launch one
-fresh built-in native `default` reviewer:
+fresh built-in native `default` reviewer. The default is Sol Ultra; an explicitly
+selected Astra Max/Ultra reviewer uses its selected model and effort in the same packet:
 
 ```text
 collaboration.spawn_agent({
@@ -122,7 +124,7 @@ authorization, focused verification, exact runtime evidence, or the fresh review
 
 ## Handoff
 
-Report the observed primary, every accepted worker, and the fresh reviewer as exact Sol
-Ultra lanes. State the wave sizes and capacity evidence, checks run, review verdict, and
+Report the observed Astra primary effort and each accepted worker/reviewer model and
+effort separately. Do not label the primary Ultra unless runtime evidence says Ultra. State the wave sizes and capacity evidence, checks run, review verdict, and
 any blocked or discarded lane. Never describe a requested route, mismatched output, or a
 fallback as successful Hypernova execution.

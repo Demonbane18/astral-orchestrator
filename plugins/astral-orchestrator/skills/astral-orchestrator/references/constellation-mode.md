@@ -1,17 +1,18 @@
 # Constellation mode
 
 Constellation is an explicit opt-in: use it only when the user explicitly names it. Constellation has one configured
-Sol primary and one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
+Astra primary and one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
 for independently owned cards, not a request to fill every available slot or to replace Sol’s integration role.
 
 ## Model and effort contract
 
-The default primary and fresh reviewer stay on `gpt-5.6-sol` at Sol High. **Sol High is sufficient** for both
-Constellation Sol roles; **Sol Ultra is not required**. Constellation does not silently raise, lower, or substitute
-the configured Sol model or effort.
+The primary stays on `gpt-6-astra` at its selected session effort. The fresh reviewer
+defaults to `gpt-5.6-sol` at High. **Sol High is sufficient** for review; **Sol Ultra is not required**. Primary and child
+efforts are independent. Never silently substitute a selected route.
 
 Ordinary fixed-route cards remain Luna or Terra at their configured efforts. A Constellation card may use a
-**custom worker model and effort only as an explicit Morph card**. That Morph card must record the exact model id,
+**custom worker model and effort only as an explicit Morph card**, except an explicitly
+selected native Astra worker uses the standard built-in worker route from SKILL.md. That Morph card must record the exact model id,
 requested effort, route availability, and runtime evidence before its worker is accepted. Record requested and
 observed provider/model/effort separately: requested effort is not upstream-native unless that behavior is
 independently observed.
@@ -52,7 +53,7 @@ exact routes, verification, and review; it merely removes unsupported concurrenc
 Use Luna or Terra for ordinary fixed-route cards. A card that explicitly needs a
 user-selected routed model follows Morph mode and includes its exact model id and requested
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
-Sol primary, and then recalculate readiness and capacity before every later wave.
+Astra primary, and then recalculate readiness and capacity before every later wave.
 
 Tell every worker it is not alone in the codebase, owns only its card, and must preserve
 other edits. A packet may authorize the worker to spawn bounded child workers with exact

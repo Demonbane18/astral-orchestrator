@@ -6,13 +6,13 @@ documents or evidence packets that are not required deliverables. Event Horizon 
 uses workspace-write so a reviewer can repair a bounded issue without another prompt.
 Orbit, Event Horizon, Pulsar, Morph, and Constellation may run independent cards in
 parallel or use bounded hierarchical delegation. Comet (Quick) and Singularity never
-spawn workers. Hypernova uses maximum safely available native Sol Ultra waves and never
+spawn workers. Hypernova uses maximum safely available native waves on the selected child routes and never
 allows its workers or reviewer to delegate.
 
 ## Astral status panel
 
 Use this compact panel only when the route or phase changes while Astral is active. It
-is progress commentary, not a permanent native UI widget. Keep one row for the Sol
+is progress commentary, not a permanent native UI widget. Keep one row for the Astra
 primary, one for each selected worker, and one for the fresh reviewer when required.
 Use `not needed` when a lane will not be used, and use `planned` for a required reviewer
 that is waiting to launch. Write `not yet required` only in the evidence field as an
@@ -23,7 +23,7 @@ the header separator row below: never fence it and never use plain pipe text.
 
 | Lane | Role | Model | Effort | State | Evidence |
 |---|---|---|---|---|---|
-| Sol primary | requested: primary session; observed: <primary runtime or not yet available> | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence> |
+| Astra primary | requested: primary session; observed: <primary runtime or not yet available> | requested: gpt-6-astra; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence> |
 | Worker <card> | requested: worker, matching astral_orchestrator_luna_implementer profile, matching astral_orchestrator_terra_implementer profile, or Morph worker; observed: <agent type or Morph route / not yet available> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence> |
 | Fresh reviewer | requested: default or matching astral_orchestrator_sol_reviewer profile; observed: <agent type or not yet available> | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable> |
 
@@ -32,10 +32,11 @@ Use `planned`, `requested`, `launched`, `running`, `returned`, `verified`, `bloc
 panel at preflight, launch, new evidence, state changes, completion, failure, and at a
 restrained interval for long-running work. Do not repeat it merely to create activity.
 
-For Singularity, emit only the Sol primary row from this panel. Do not add worker or
+For Singularity, emit only the Astra primary row from this panel. Do not add worker or
 fresh-reviewer placeholders: Singularity has no subagents and no fresh reviewer.
 
-For Hypernova, replace every requested model and effort with exact Sol Ultra, name the
+For Hypernova, record the Astra session effort separately and each selected child route
+(Sol Ultra by default or explicit Astra Max/Ultra). Name the
 built-in `worker` or built-in `default` route, and include observed capacity and the safe
 wave calculation in evidence. Do not label requested values as observed. Missing or
 mismatched evidence blocks the route and the output is discarded.
@@ -80,7 +81,7 @@ CHECKS
 
 Keep no more than five active steps, with one in progress. Use the smallest sufficient
 intervention; stop after DONE first passes unless evidence is ambiguous, contradictory,
-or defective. Sol self-reviews once using the actual change set and evidence.
+or defective. Astra self-reviews once using the actual change set and evidence.
 
 ## Hypernova wave card
 
@@ -97,9 +98,9 @@ CAPACITY
 - Worker count: min(<ready independent count>, <available slots> - 1 primary) = <wave size>
 
 ROUTE
-- Primary: observed gpt-5.6-sol, Ultra
-- Every implementation lane: built-in worker, gpt-5.6-sol, Ultra
-- Fresh reviewer: built-in default, gpt-5.6-sol, Ultra
+- Primary: observed gpt-6-astra, <selected session effort>
+- Every implementation lane: built-in worker, Sol Ultra or explicitly selected Astra Max/Ultra
+- Fresh reviewer: built-in default, Sol Ultra or explicitly selected Astra Max/Ultra
 - Every spawn: distinct unique lowercase task name, fork_turns: "none"
 - Downstream delegation: forbidden
 
@@ -171,7 +172,7 @@ RETURN
 
 ```text
 ROLE
-Built-in native worker, requested gpt-5.6-sol at Ultra. Implement the exact bounded card
+Built-in native worker, requested <selected model and effort: Sol Ultra by default or explicit Astra Max/Ultra>. Implement the exact bounded card
 directly. Do not spawn or delegate to another agent.
 
 SPAWN CONTRACT
@@ -254,7 +255,7 @@ REPORT
 
 ```text
 ROLE
-Fresh built-in native default reviewer, requested gpt-5.6-sol at Ultra. Review directly;
+Fresh built-in native default reviewer, requested <selected model and effort: Sol Ultra by default or explicit Astra Max/Ultra>. Review directly;
 do not spawn or delegate to another agent. The Sol High custom reviewer is ineligible.
 
 SPAWN CONTRACT

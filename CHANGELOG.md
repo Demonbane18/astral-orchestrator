@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 3.10.0 - 2026-09-08
+
+### Changed
+
+- Allow any supported observed Astra primary effort in every mode, including Hypernova,
+  without requiring it to match the saved High default or changing the running session.
+- Let worker-capable modes use explicitly selected native Astra workers independently of
+  primary effort. Hypernova supports explicit Astra Max/Ultra workers and fresh review,
+  while retaining Sol Ultra as its default child route.
+- Keep strict Ultra checker flags as optional compatibility checks, not mode requirements.
+- Preserve runtime evidence, concurrency limits, fresh review, and authorization rules.
+
+
 ## 3.9.0 — 2026-09-05
 
 ### Changed

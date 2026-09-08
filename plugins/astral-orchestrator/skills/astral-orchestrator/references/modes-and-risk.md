@@ -7,20 +7,20 @@ confirmation or a fresh review.
 
 | Mode | Best for | Planning | Agent route | Review |
 |---|---|---|---|---|
-| Comet | Small, obvious, reversible work | Mental or one sentence | Sol at configured effort | Sol self-review at configured effort |
+| Comet | Small, obvious, reversible work | Mental or one sentence | Sol at configured effort | Astra self-review at configured effort |
 | Orbit (default) | Normal project work | Compact work card | Luna or Terra at configured effort | Fresh Sol review at configured effort after every worker-produced change |
 | Event Horizon | Consequential or explicitly thorough work | One compact in-context dependency graph; YAGNI | Parallel ready cards or a bounded hierarchy using Singularity discipline | One concise workspace-write Sol review-and-repair pass with at most three findings |
-| Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol primary at configured orchestrator effort; no subagents | One Sol self-review using actual changes and evidence; no fresh reviewer |
-| Hypernova (explicit opt-in) | Maximum safe native speed and throughput | Smallest real dependency graph; never invent work | Observed Sol Ultra primary plus maximum safe waves of built-in Sol Ultra workers | Mandatory fresh built-in Sol Ultra reviewer; no self-review fallback |
+| Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Astra primary at configured orchestrator effort; no subagents | One Astra self-review using actual changes and evidence; no fresh reviewer |
+| Hypernova (explicit opt-in) | Maximum safe native speed and throughput | Smallest real dependency graph; never invent work | Observed Astra primary at its selected effort plus maximum safe waves of built-in selected workers (Sol Ultra default or explicit Astra Max/Ultra) | Mandatory fresh built-in selected reviewer; no self-review fallback |
 | Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen dependency graph and named checks | One parent lane may fan out independent frozen items; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
-| Morph (explicit opt-in) | Bounded cards that need user-selected routed models | Compact cards plus exact worker models and requested efforts | Sol remains primary; independent Morph cards may run in parallel or form an authorized hierarchy | Fresh exact Sol review at configured effort |
+| Morph (explicit opt-in) | Bounded cards that need user-selected routed models | Compact cards plus exact worker models and requested efforts | Astra remains primary; independent Morph cards may run in parallel or form an authorized hierarchy | Fresh exact Sol review at configured effort |
 | Constellation (explicit opt-in) | Several independently owned, ready cards | Sol proves independence and capacity before a concurrent first wave | Cost-aware non-Sol workers by default; capacity-limited fan-out | One fresh exact Sol review after integrated verification |
 
 Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. They launch
 ready independent cards in parallel up to observed capacity and may use hierarchical
 delegation when an owning parent can split a coherent subtree into non-overlapping child
 cards. Use the shallowest useful hierarchy. Comet (Quick) and Singularity never spawn.
-Hypernova is also multi-agent, but it uses only exact built-in Sol Ultra lanes, fills the
+Hypernova is also multi-agent, but it uses exact selected built-in child lanes (Sol Ultra by default or explicit Astra Max/Ultra), fills the
 maximum safely available native MultiAgentsV2 capacity, and prohibits worker delegation.
 
 Orbit is the default. A user can simply say “Use Astral Orchestrator” without learning the
@@ -68,7 +68,7 @@ reviewer effort. Answer-only
 or no-change Orbit work may use a clearly labeled primary-session self-review.
 Singularity is also available only by explicit opt-in when the bounded multi-step work can
 stay in one Sol session; it has no subagents or fresh reviewer and does not weaken Event Horizon.
-Hypernova is available only by explicit opt-in when its observed Sol Ultra primary,
+Hypernova is available only by explicit opt-in when its observed Astra primary at its selected effort,
 native controls, capacity, implementation lanes, and mandatory fresh reviewer can all be
 proven. It never falls back to another mode, route, model, effort, or self-review.
 
@@ -88,10 +88,10 @@ confirmation and acceptance safeguards, not the scope or paperwork. High-risk Pu
 work keeps its evidence-oriented routing and inherits Event Horizon confirmation plus
 its concise review-and-repair pass.
 Event Horizon overrides Singularity. Its safeguards also override Morph or Constellation whenever the work has this level of risk: keep
-the exact Sol primary and reviewer, use the required confirmation gates, and serialize any
+the exact Astra primary and reviewer, use the required confirmation gates, and serialize any
 card whose safety, interface, or verification depends on another card.
 High-risk Hypernova cards inherit the same Event Horizon confirmation gates and required
-safety dependencies while retaining exact Sol Ultra lanes. Maximum concurrency never
+safety dependencies while retaining exact selected child lanes. Maximum concurrency never
 makes a gated or dependent card ready.
 
 ## User confirmation gate
@@ -115,11 +115,12 @@ with no special isolation so it can fix bounded, obvious issues directly.
 
 - Use the pinned Sol reviewer for Event Horizon work and every Orbit, Pulsar, Morph, or Constellation
   worker-produced change.
-- Hypernova always uses a fresh built-in native `default` reviewer at Sol Ultra. Its Sol
+- Hypernova always uses a fresh built-in native `default` reviewer at Sol Ultra by default,
+or explicitly selected Astra Max/Ultra. Its Sol
   High custom reviewer is ineligible, and failure to prove the fresh exact route blocks
   completion rather than allowing self-review.
 - If the exact reviewer role, model, or effort cannot be proven, use and label a concise
-  Sol self-review unless an external policy explicitly requires independent review.
+  Astra self-review unless an external policy explicitly requires independent review.
 - Event Horizon and inherited high-risk Pulsar, Morph, or Constellation review use one
   workspace-write review-and-repair pass. Do not request sandbox authorization, capture
   mutation fingerprints, or launch a second reviewer for a small direct repair.

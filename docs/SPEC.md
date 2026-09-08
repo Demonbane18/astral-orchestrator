@@ -1,5 +1,15 @@
 # Spec: Astral Orchestrator v3.9
 
+## Current Astra effort contract
+
+Version 3.10.0 supersedes older fixed-primary wording below. Every mode accepts the
+supported effort observed in the Astra session. High is a saved preference, not a gate;
+Hypernova does not require an Ultra primary. Worker effort is independent. Worker-capable
+modes allow explicitly selected native Astra workers, including Max/Ultra under a Light
+primary. Hypernova defaults to Sol Ultra children or uses explicitly selected Astra
+Max/Ultra workers and/or fresh review. Exact child evidence and all mode safeguards remain.
+
+
 ## Objective
 
 Provide a beginner-friendly Codex plugin with an additive portable skill package that delivers observable model-routed
@@ -149,7 +159,7 @@ reviewer. The mode-specific primary checker flag leaves normal effort settings u
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.9.0. The normalized plugin, marketplace,
+The current product version is 3.10.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at

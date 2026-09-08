@@ -17,8 +17,8 @@ Keep the installed experience simple for people who do not write code.
 
 - Use plain language and explain unavoidable technical terms on first use.
 - Keep the core `SKILL.md` concise; put detailed templates in `references/`.
-- Require the exact Astra primary and Sol, Luna, and Terra lane models at their configured efforts for
-  Orbit and Event Horizon execution; never silently substitute a different route.
+- Require the exact Astra primary at its selected session effort and the selected child routes at their configured effort for
+  every mode. Primary effort never caps worker effort; never silently substitute a route.
 - Keep Comet mode as the explicit single-session option for tiny work.
 - Use only built-in local tools at runtime; do not add an API key or external service.
 - Preserve the original Sol Advisor MIT notice and attribution.

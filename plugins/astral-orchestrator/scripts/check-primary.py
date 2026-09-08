@@ -25,6 +25,7 @@ from effort_settings import (  # noqa: E402
 
 
 EXPECTED_MODEL = "gpt-6-astra"
+PRIMARY_EFFORTS = ("none", "light", *ALLOWED_EFFORTS)
 THREAD_ID_PATTERN = re.compile(
     r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 )
@@ -73,7 +74,7 @@ def parse_args() -> argparse.Namespace:
         "--require-astra-ultra",
         action="store_true",
         help=(
-            "Require gpt-6-astra at Ultra for explicit Hypernova mode without "
+            "Explicit opt-in strict Ultra check; no mode requires this flag. Checks without "
             "changing the persisted normal-mode effort settings."
         ),
     )
@@ -141,7 +142,7 @@ def main() -> int:
     except EffortSettingsError:
         emit("invalid", "effort-settings-invalid", "unknown")
         return 1
-    expected_effort = "ultra" if args.require_sol_ultra else efforts["orchestrator"]
+    expected_effort = "ultra" if args.require_sol_ultra else "any-supported"
 
     thread_id = args.thread_id
     if thread_id is None:
@@ -214,7 +215,7 @@ def main() -> int:
         or not isinstance(observed_model, str)
         or not MODEL_PATTERN.fullmatch(observed_model)
         or not isinstance(observed_effort, str)
-        or observed_effort not in ALLOWED_EFFORTS
+        or observed_effort not in PRIMARY_EFFORTS
     ):
         emit(
             "invalid",
@@ -224,6 +225,8 @@ def main() -> int:
         )
         return 1
 
+    if not args.require_sol_ultra:
+        expected_effort = observed_effort
     matches = observed_model == EXPECTED_MODEL and observed_effort == expected_effort
     emit(
         "match" if matches else "mismatch",

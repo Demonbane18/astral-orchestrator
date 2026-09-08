@@ -140,7 +140,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.9.0")
+        self.assertEqual(manifest["version"], "3.10.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -211,7 +211,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.9.0")
+        self.assertEqual(manifest["version"], "3.10.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -373,7 +373,7 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "astral status",
             "lane | role | model | effort | state | evidence",
-            "sol primary",
+            "astra primary",
             "fresh reviewer",
             "morph worker",
             "use `planned`",
@@ -397,7 +397,7 @@ class SkillContractTests(unittest.TestCase):
         status_block = status_section
         panel_rows = [
             line for line in status_block.splitlines()
-            if line.startswith(("| sol primary |", "| worker <card> |", "| fresh reviewer |"))
+            if line.startswith(("| astra primary |", "| worker <card> |", "| fresh reviewer |"))
         ]
         self.assertEqual(len(panel_rows), 3)
         role_cells = [row.split("|")[2].strip() for row in panel_rows]
@@ -520,7 +520,7 @@ class SkillContractTests(unittest.TestCase):
         singularity = " ".join(read(SINGULARITY).lower().split())
         for required in (
             "explicit opt-in",
-            "one verified sol primary",
+            "one verified astra primary",
             "do not spawn",
             "smallest sufficient intervention",
             "no more than five active steps",
@@ -543,7 +543,7 @@ class SkillContractTests(unittest.TestCase):
             "larger than comet",
             "no subagents",
             "no fresh reviewer",
-            "only the sol primary row",
+            "only the astra primary row",
             "start a new task",
             "higher-priority instruction",
         ):
@@ -619,11 +619,11 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("hypernova", surface)
             self.assertIn("sol ultra", surface)
 
-        self.assertIn("--require-sol-ultra", hypernova)
+        self.assertIn("with no ultra flag", hypernova)
         self.assertIn("--require-sol-ultra", routing)
         self.assertNotIn("luna", hypernova)
         self.assertNotIn("terra", hypernova)
-        self.assertNotIn("configured orchestrator effort", hypernova)
+        self.assertIn("configured orchestrator effort", hypernova)
 
     def test_primary_checker_accepts_hypernova_astra_ultra_without_changing_normal_settings(self):
         thread_id = "87654321-4321-4321-4321-cba987654321"
@@ -680,8 +680,8 @@ class SkillContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            self.assertNotEqual(normal.returncode, 0)
-            self.assertEqual(json.loads(normal.stdout)["status"], "mismatch")
+            self.assertEqual(normal.returncode, 0)
+            self.assertEqual(json.loads(normal.stdout)["status"], "match")
 
             hypernova = subprocess.run(
                 [
@@ -1367,7 +1367,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotIn("prompt", matched.stdout)
 
             rollout.write_text(
-                rollout.read_text(encoding="utf-8").replace('"high"', '"low"'),
+                rollout.read_text(encoding="utf-8").replace('"gpt-6-astra"', '"gpt-5.6-sol"'),
                 encoding="utf-8",
             )
             mismatched = subprocess.run(

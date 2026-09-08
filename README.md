@@ -2,18 +2,16 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.9.0 is an installable, open-source Codex plugin that turns a goal
+Astral Orchestrator v3.10.0 is an installable, open-source Codex plugin that turns a goal
 into routed, verified work. Astra keeps the plan and final decisions, Astral coordinates
 the right model and effort for each bounded task, and checks run before handoff.
 
-Version 3.8.0 adds Hypernova: an explicit, performance-first all-Sol Ultra option for
-maximum safe throughput when the exact native route is available.
+Version 3.10.0 accepts the selected Astra effort in every mode, including Hypernova.
+A Light or Medium primary can launch explicitly selected Astra Max or Ultra workers.
+Hypernova keeps Sol Ultra children as its default. Route checks and fresh review remain.
 
 Astral Orchestrator is an independent open-source project. It is not affiliated with or
 endorsed by OpenAI.
-
-Version 3.9.0 changes only the main orchestrator to `gpt-6-astra`
-(Astra High by default). Worker defaults and mode workflows remain unchanged.
 
 ## Quick Install
 

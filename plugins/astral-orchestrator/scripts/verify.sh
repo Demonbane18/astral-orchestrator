@@ -69,8 +69,8 @@ manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, r
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.9.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.9.0")
+if manifest.get("version") != "3.10.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.10.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -177,7 +177,7 @@ for required_text in ("Low risk", "Medium risk", "High risk", "User confirmation
 singularity = " ".join(singularity_path.read_text(encoding="utf-8").lower().split())
 for required_text in (
     "explicit opt-in",
-    "one verified sol primary",
+    "one verified astra primary",
     "do not spawn",
     "smallest sufficient intervention",
     "no more than five active steps",
