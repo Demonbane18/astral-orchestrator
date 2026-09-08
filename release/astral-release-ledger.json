@@ -583,6 +583,30 @@
       "evidence": "Opera GX upload confirmed version 3.9.0, developer JOHN PAUL FURIGAY FUSIN, Astra-led description and three prompts. Restored website/support/privacy/terms URLs; draft saved, skill Scanning. Uploaded published archive SHA256 9c389c89e3cce587335758efba5ee80d59a926bb276a8d59317a4b1d975904bd.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9b342cf5588191b7e9d12ba318968d",
       "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
+    },
+    {
+      "surface": "source",
+      "version": "3.10.0",
+      "status": "verified",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Commit 23c063e93298def2ad8c2f99d681dca40cafdde0 passed 169 tests, verify.sh, both skill validators and plugin validation. Exact-commit ZIP SHA256 00141a384e594f2c24aac87216905a4e0688a4fb11889cd94330fb63fa977a98. Local only; no GitHub push or website deployment.",
+      "commit": "23c063e93298def2ad8c2f99d681dca40cafdde0"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.9.0",
+      "status": "approved",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Opera GX portal shows released version 3.9.0 and plugin management lists 3.9.0 Published. Public directory not independently rechecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9b342cf5588191b7e9d12ba318968d"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "failed",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Upload attempt selected verified ZIP in Opera GX Open file dialog; subsequent computer-use calls failed with ScreenCaptureKit -3812 invalid parameter, including after reset. Upload acceptance and draft creation remain UNVERIFIED; inspect existing drafts before retrying.",
+      "url": "https://platform.openai.com/plugins"
     }
   ]
 }
