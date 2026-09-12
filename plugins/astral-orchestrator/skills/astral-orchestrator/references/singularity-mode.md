@@ -1,20 +1,22 @@
 # Singularity mode
 
 Singularity is an **explicit opt-in** for meaningful low- or medium-risk work that is
-larger than Comet but does not need multi-agent orchestration. It uses **one verified Sol
+larger than Comet but does not need multi-agent orchestration. It uses **one verified Astra
 primary** at the configured orchestrator effort from start to finish. Never auto-select
 Singularity: Orbit remains the default.
 
 ## Route and boundary
 
-- Verify the Sol primary with the normal primary-session preflight before work starts.
-- Singularity requires observed/verified Sol model and effort. If `check-primary.py`
+- Follow [primary-verification.md](primary-verification.md) before work starts. Do not
+  load child routing or worker templates for this single-session mode.
+- Singularity requires observed/verified Astra model and effort. If `check-primary.py`
   reports unavailable, unavailable evidence blocks Singularity; user confirmation cannot
   override that requirement. A `mismatch` or `invalid` result also blocks the route.
-- Use the configured orchestrator effort; do not force Max or change global settings. A
-  user who wants Sol Max must configure the orchestrator effort and **start a new task**.
+- Use the verified current Astra session at the configured orchestrator effort. Once
+  its route matches, do not change settings or restart solely to enter Singularity.
+  An actual checker mismatch remains blocking; never silently change global settings.
 - Do not spawn subagents, planning probes, worker lanes, or a fresh reviewer: there are
-  **no subagents** and no fresh reviewer. Sol self-reviews once against the actual
+  **no subagents** and no fresh reviewer. Astra self-reviews once against the actual
   changes and observed evidence.
 - If a higher-priority instruction requires delegation, report Singularity unavailable
   instead of pretending the one-session route ran.
@@ -34,7 +36,7 @@ configuration or workflow, narrow edit, then new abstraction. Park detours outsi
 card. Stop once DONE first passes and perform **one proportional verification pass**;
 continue only when evidence is ambiguous, contradictory, or defective.
 
-Use a compact Astral status panel with **only the Sol primary row**. Update it when there
+Use a compact Astral status panel with **only the Astra primary row**. Update it when there
 is new evidence or state, not merely to repeat unchanged work.
 
 ## Evidence and provenance

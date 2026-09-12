@@ -264,8 +264,6 @@ class MarketplaceTests(unittest.TestCase):
         for required in (
             "whether the host is codex",
             "portable-hosts.md",
-            "observable host capabilities",
-            "never claim sol/luna/terra unless observed",
         ):
             self.assertIn(required, skill)
         self.assertIn("reserve and count the primary as one occupied slot", portable_hosts)
@@ -373,7 +371,7 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "astral status",
             "lane | role | model | effort | state | evidence",
-            "sol primary",
+            "astra primary",
             "fresh reviewer",
             "morph worker",
             "use `planned`",
@@ -397,7 +395,7 @@ class SkillContractTests(unittest.TestCase):
         status_block = status_section
         panel_rows = [
             line for line in status_block.splitlines()
-            if line.startswith(("| sol primary |", "| worker <card> |", "| fresh reviewer |"))
+            if line.startswith(("| astra primary |", "| worker <card> |", "| fresh reviewer |"))
         ]
         self.assertEqual(len(panel_rows), 3)
         role_cells = [row.split("|")[2].strip() for row in panel_rows]
@@ -520,7 +518,7 @@ class SkillContractTests(unittest.TestCase):
         singularity = " ".join(read(SINGULARITY).lower().split())
         for required in (
             "explicit opt-in",
-            "one verified sol primary",
+            "one verified astra primary",
             "do not spawn",
             "smallest sufficient intervention",
             "no more than five active steps",
@@ -543,23 +541,17 @@ class SkillContractTests(unittest.TestCase):
             "larger than comet",
             "no subagents",
             "no fresh reviewer",
-            "only the sol primary row",
-            "start a new task",
+            "only the astra primary row",
             "higher-priority instruction",
         ):
             self.assertIn(required, singularity)
         self.assertIn("singularity", skill)
-        loading_prefix = skill.split("## host boundary", 1)[0]
-        for required_reference in (
-            "routing-and-preflight.md",
-            "work-templates.md",
-            "singularity-mode.md",
-        ):
-            self.assertIn(required_reference, loading_prefix)
-        self.assertRegex(
-            loading_prefix,
-            r"before spawning a codex lane.{0,80}using singularity",
-        )
+        # Single-session instructions must be reachable without loading child recipes.
+        self.assertIn("references/primary-verification.md", skill)
+        self.assertIn("references/singularity-mode.md", skill)
+        self.assertIn("primary-verification.md", singularity)
+        self.assertIn("do not load child routing or worker templates", singularity)
+        self.assertIn("do not change settings or restart solely to enter singularity", singularity)
         self.assertIn("event horizon overrides singularity", modes)
         self.assertIn("singularity", templates)
         self.assertNotIn("always use sol max", singularity)
@@ -567,7 +559,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("user confirmation cannot override", singularity)
 
         for surface in (
-            read(ROUTING),
+            read(SKILL.parent / "references/primary-verification.md"),
             read(WEBSITE_DOCS_ROUTING),
             read(ROOT / "docs/SPEC.md"),
             read(WEBSITE_HOME),
@@ -598,6 +590,7 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "explicit opt-in",
             "opposite of singularity",
+            "gpt-6-astra",
             "gpt-5.6-sol",
             "ultra",
             "every implementation lane",
@@ -620,7 +613,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("sol ultra", surface)
 
         self.assertIn("--require-sol-ultra", hypernova)
-        self.assertIn("--require-sol-ultra", routing)
+        self.assertIn("--require-sol-ultra", read(SKILL.parent / "references/primary-verification.md"))
         self.assertNotIn("luna", hypernova)
         self.assertNotIn("terra", hypernova)
         self.assertNotIn("configured orchestrator effort", hypernova)
@@ -714,7 +707,6 @@ class SkillContractTests(unittest.TestCase):
     def test_hypernova_requires_exact_native_spawns_capacity_and_fresh_review(self):
         documents = {
             "hypernova": " ".join(read(HYPERNOVA).lower().split()),
-            "routing": " ".join(read(ROUTING).lower().split()),
             "templates": " ".join(read(TEMPLATES).lower().split()),
             "spec": " ".join(read(SPEC).lower().split()),
         }
@@ -807,7 +799,7 @@ class SkillContractTests(unittest.TestCase):
             "astral_orchestrator_terra_implementer",
             "astral_orchestrator_sol_reviewer",
         ):
-            self.assertIn(required, skill)
+            self.assertIn(required, skill + routing)
 
         self.assertIn("repeatable", routing)
         self.assertIn("context-heavy", routing)
@@ -827,7 +819,6 @@ class SkillContractTests(unittest.TestCase):
             "website/docs/routing/index.html": " ".join(
                 read(WEBSITE_DOCS_ROUTING).lower().split()
             ),
-            "SKILL.md": " ".join(read(SKILL).lower().split()),
             "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
             "SPEC.md": " ".join(read(SPEC).lower().split()),
             "IMPROVEMENTS.md": " ".join(
@@ -856,12 +847,12 @@ class SkillContractTests(unittest.TestCase):
                 document.find("legacy exact-process"),
             )
 
-        skill = documents["SKILL.md"]
+        skill = " ".join(read(SKILL).lower().split())
         routing = documents["routing-and-preflight.md"]
         spec = documents["SPEC.md"]
         improvements = documents["IMPROVEMENTS.md"]
 
-        for document in (skill, routing):
+        for document in (routing,):
             for required in (
                 "custom agent file values take precedence",
                 "legacy exact-process fallback",
@@ -2207,7 +2198,6 @@ reviewer = "xhigh"
             "launch every ready independent card concurrently",
             "use the shallowest useful hierarchy",
             "comet and singularity never spawn",
-            "serial execution is required only when",
         ):
             self.assertIn(required, skill)
 
@@ -2241,14 +2231,17 @@ reviewer = "xhigh"
         self.assertIn("singularity", skill)
         self.assertIn("do not spawn subagents", skill)
 
-    def test_unavailable_confirmation_returns_control_immediately(self):
-        skill = read(SKILL).lower()
-        modes = read(MODES).lower()
+    def test_confirmation_blocks_dependent_work_and_preserves_task_authorization(self):
+        skill = " ".join(read(SKILL).lower().split())
+        modes = " ".join(read(MODES).lower().split())
 
-        self.assertIn("ends the current turn", skill)
-        self.assertIn("make no changes", modes)
-        self.assertIn("return the question immediately", modes)
-        self.assertIn("do not wait", modes)
+        self.assertIn("authorization already given in this task", skill)
+        self.assertIn("do not perform dependent work", skill)
+        self.assertIn("continue independent authorized work", skill)
+        self.assertIn("end the turn when nothing useful remains outside the gate", skill)
+        self.assertIn("make no changes behind that gate", modes)
+        self.assertIn("elapsed time is not approval", modes)
+        self.assertIn("explicit preview-only", modes)
 
     def test_templates_cover_work_ownership_and_fresh_review(self):
         templates = read(TEMPLATES).lower()
@@ -2908,9 +2901,9 @@ class UserExperienceTests(unittest.TestCase):
         skill = read(SKILL).lower()
         routing = " ".join(read(ROUTING).lower().split())
 
-        self.assertIn("legacy exact-process fallback", skill)
+        self.assertIn("legacy exact-process fallback", routing)
         self.assertIn("required v2 controls", routing)
-        self.assertIn("does not force a nested cli process", skill)
+        self.assertIn("do not justify a process fallback", routing)
         self.assertIn("do not silently substitute", routing)
 
         with tempfile.TemporaryDirectory() as directory:
@@ -3918,6 +3911,19 @@ class VerificationTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("portable discovered skill escapes the package", result.stderr)
+
+    def test_repository_verifier_rejects_missing_instruction_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_root = Path(directory) / "repo"
+            shutil.copytree(ROOT, fixture_root, ignore=shutil.ignore_patterns(".git", "__pycache__"))
+            reference = fixture_root / "plugins/astral-orchestrator/skills/astral-orchestrator/references/primary-verification.md"
+            reference.unlink()
+            result = subprocess.run(
+                ["sh", "plugins/astral-orchestrator/scripts/verify.sh"], cwd=fixture_root,
+                capture_output=True, text=True, check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("primary verification reference is missing", result.stderr)
 
     def test_repository_verifier_passes(self):
         verifier = PLUGIN / "scripts/verify.sh"

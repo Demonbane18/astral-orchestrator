@@ -17,8 +17,9 @@ Keep the installed experience simple for people who do not write code.
 
 - Use plain language and explain unavoidable technical terms on first use.
 - Keep the core `SKILL.md` concise; put detailed templates in `references/`.
-- Require the exact Astra primary and Sol, Luna, and Terra lane models at their configured efforts for
-  Orbit and Event Horizon execution; never silently substitute a different route.
+- Require the exact Astra primary and selected child routes at their configured effort
+  for every mode, including the explicit Hypernova Ultra contract. Keep primary and
+  worker effort settings independent; never silently substitute a route.
 - Keep Comet mode as the explicit single-session option for tiny work.
 - Use only built-in local tools at runtime; do not add an API key or external service.
 - Preserve the original Sol Advisor MIT notice and attribution.
@@ -30,5 +31,10 @@ Keep the installed experience simple for people who do not write code.
 ## Boundaries
 
 - Always run the test and verification commands after behavior or packaging changes.
-- Ask before publishing, pushing, or changing a user's global Codex configuration.
+- Ask before publishing, pushing, or changing a user's global Codex configuration unless
+  that target and effect were already explicitly authorized in this task. Carry that
+  authorization across turns; ask again only when the target or effect changes.
+- Complete authorized local preparation and verification while a consequential action
+  awaits approval. Block dependent work, continue independent work, and respect explicit
+  preview-only or user-review pauses.
 - Never add secrets, analytics, network calls, or destructive setup steps.

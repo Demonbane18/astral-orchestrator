@@ -3,10 +3,10 @@
 Pulsar is an explicit opt-in route for a user who wants a deliberately slower,
 evidence-oriented execution record. Never auto-select Pulsar: recommend Orbit for
 normal work. It adds no Ori, OpenRouter, API, network service, secret, analytics, or
-dynamic model selection. It uses the existing pinned `gpt-5.6-sol`, `gpt-5.6-luna`, and
-`gpt-5.6-terra` lanes at their configured efforts.
+dynamic model selection. It uses the Astra primary and existing pinned `gpt-5.6-sol`,
+`gpt-5.6-luna`, and `gpt-5.6-terra` child lanes at their configured efforts.
 
-Sol retains requirements, architecture, safety decisions, decomposition, integration,
+Astra retains requirements, architecture, safety decisions, decomposition, integration,
 and final routing. Pulsar does not make a worker an independent owner of those choices.
 
 ## One executable state sequence
@@ -17,7 +17,7 @@ the order `implementation`, `verification`, `review`, followed by `complete`. Th
 phase includes any permitted planning probes. Freeze, preflight, and route occur once;
 an execution attempt repeats only after a `fix-first` verdict.
 
-1. **Prepare (unpersisted).** Sol constructs and canonicalizes the one work card in
+1. **Prepare (unpersisted).** Astra constructs and canonicalizes the one work card in
    memory, derives its repository/card run path, validates every existing state path, and
    asks the single resume/archive question before any writes. A matching run asks exactly:
    “Resume this Pulsar run or archive it and start a new one?” End the turn for that
@@ -28,17 +28,19 @@ an execution attempt repeats only after a `fix-first` verdict.
    started`, write the canonical card, then record `freeze finished`.
 3. **Preflight.** Run the normal Orbit/Event Horizon route preflight and record observed route
    evidence.
-4. **Route.** Sol applies the deterministic rules below; a planning probe is allowed only
+4. **Route.** Astra applies the deterministic rules below; a planning probe is allowed only
    for genuine Luna/Terra ambiguity.
 5. **Attempt N — Implementation.** Start with attempt `1`. The selected parent lane owns
    integration for the frozen graph and launches every ready independent item concurrently
    up to capacity. It may use the shallowest useful hierarchy for coherent subtrees.
 6. **Attempt N — Verification.** Run the frozen checks and record their observed results.
-7. **Attempt N — Review.** Obtain a fresh normal Sol reviewer. On `ship`, continue to
-   Complete. On `fix-first`, finish the current Review occurrence, increment the attempt
+7. **Attempt N — Review.** Apply the common Codex review availability rule. Normally
+   obtain a fresh Sol reviewer; label a permitted self-review in the verdict evidence.
+   On `ship`, continue to Complete. On `fix-first`, finish the current Review occurrence, increment the attempt
    number, and start the new attempt at Implementation; it requires fresh verification
-   and a new reviewer. `rethink` does not mutate the frozen card: finish the Review
-   occurrence, stop, and ask to archive this run and start a new frozen card.
+   and a new review, using a new reviewer when independent review is required. `rethink`
+   does not mutate the frozen card: finish the Review occurrence, stop, and ask to archive
+   this run and start a new frozen card.
 8. **Complete.** Complete is allowed only after a `ship` verdict. Record that verdict and
    its observed evidence. Never reconstruct an event from memory.
 
@@ -92,7 +94,7 @@ one LF. Its schema version is `1` and keys appear in this fixed order:
 schema_version, outcome, done_when, boundaries, checks
 ```
 
-Use only those keys. `done_when`, `boundaries`, and `checks` are arrays in Sol-frozen
+Use only those keys. `done_when`, `boundaries`, and `checks` are arrays in Astra-frozen
 order. Strings are Unicode NFC; convert CRLF and CR to LF; do not trim or add whitespace.
 Encode as UTF-8 without a BOM, set `ensure_ascii` to false, use `,` and `:` separators
 with no spaces, and append one LF. This canonical UTF-8 LF serialization is the only
@@ -105,12 +107,12 @@ repository or records.
 
 ## Candidate planning probes
 
-When only Luna/Terra selection is ambiguous, Sol requests exactly one Luna probe and one
+When only Luna/Terra selection is ambiguous, Astra requests exactly one Luna probe and one
 Terra probe concurrently. Both probes receive the identical frozen card and acceptance checks. A probe
 is behaviorally read-only: it must not edit, format, create, delete, or run a
 state-changing command. That instruction is not hard sandbox isolation. Probes cannot
 change the card, requirements, architecture, safety boundaries, acceptance checks, files,
-or systems. They do not implement, and Sol still chooses the route.
+or systems. They do not implement, and Astra still chooses the route.
 
 ### Pulsar planning probe
 
@@ -134,13 +136,13 @@ REPORT ONLY
 BOUNDARIES
 - Do not change the work card, requirements, architecture, safety boundaries, acceptance
   checks, files, or systems.
-- Sol retains the final route decision.
+- Astra retains the final route decision.
 ```
 
 ## Deterministic lane selection
 
-Keep the work with Sol while requirements, architecture, safety boundaries, public
-interfaces, decomposition, or acceptance conditions are unsettled. After Sol settles
+Keep the work with Astra while requirements, architecture, safety boundaries, public
+interfaces, decomposition, or acceptance conditions are unsettled. After Astra settles
 them, choose Luna only when every condition is true:
 
 - the card is fully specified;
@@ -148,7 +150,7 @@ them, choose Luna only when every condition is true:
 - no debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag
   is present.
 
-Choose Terra when any listed flag is present. If probes materially disagree, Sol records
+Choose Terra when any listed flag is present. If probes materially disagree, Astra records
 the decisive facts and defaults to Terra. Never route by prestige, popularity, or a
 silent fallback. Requested and observed role, model, effort, and task or session identity
 must be recorded as facts; unknown values remain unknown.
@@ -188,3 +190,7 @@ every parent and child route in the implementation event without creating extra 
 The normal Sol reviewer reviews the integrated Pulsar change once. High-risk Pulsar work
 inherits Event Horizon confirmation gates and its concise workspace-write review-and-repair
 pass.
+
+Apply the common Codex [review availability rule](modes-and-risk.md#review-availability-and-route-failure).
+Keep the explicit resume/archive decision and frozen-card grammar. A permitted self-review
+must be labeled as such in its verdict evidence; it never counts as a fresh reviewer.

@@ -1,13 +1,13 @@
 # Hypernova mode
 
 Hypernova is an **explicit opt-in**, Codex-native performance mode. It is the
-**opposite of Singularity**: Singularity minimizes coordination and token use in one Sol
+**opposite of Singularity**: Singularity minimizes coordination and token use in one Astra
 session, while Hypernova favors **speed and throughput over token efficiency** by using
 the maximum safely available concurrency. Never auto-select Hypernova.
 
-The primary, every implementation lane, and the mandatory fresh reviewer must each be
-`gpt-5.6-sol` at **Ultra**. Hypernova is not permission to widen the request, skip checks,
-or weaken confirmation boundaries.
+The primary must be `gpt-6-astra` at **Ultra**. Every implementation lane and the
+mandatory fresh reviewer must be `gpt-5.6-sol` at **Ultra**. Hypernova is not permission
+to widen the request, skip checks, or weaken confirmation boundaries.
 
 ## Blocking preflight
 
@@ -17,7 +17,7 @@ Run the primary checker with its mode-specific flag:
 python3 check-primary.py --require-sol-ultra
 ```
 
-`--require-sol-ultra` checks the already-started primary against Sol Ultra without
+`--require-sol-ultra` checks the already-started primary against Astra Ultra without
 changing or persisting the normal orchestrator effort setting. Hypernova requires an
 **observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence blocks the
 mode; user confirmation cannot replace runtime evidence.
@@ -122,7 +122,7 @@ authorization, focused verification, exact runtime evidence, or the fresh review
 
 ## Handoff
 
-Report the observed primary, every accepted worker, and the fresh reviewer as exact Sol
-Ultra lanes. State the wave sizes and capacity evidence, checks run, review verdict, and
+Report the observed primary as Astra Ultra, and every accepted worker and fresh reviewer
+as Sol Ultra. State the wave sizes and capacity evidence, checks run, review verdict, and
 any blocked or discarded lane. Never describe a requested route, mismatched output, or a
 fallback as successful Hypernova execution.
