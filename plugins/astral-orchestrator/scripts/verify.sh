@@ -161,9 +161,6 @@ for required_text in (
     "Morph",
     "Constellation",
     "Sol High",
-    "astral_orchestrator_luna_implementer",
-    "astral_orchestrator_terra_implementer",
-    "astral_orchestrator_sol_reviewer",
     "verification",
 ):
     if required_text not in skill:
@@ -177,7 +174,7 @@ for required_text in ("Low risk", "Medium risk", "High risk", "User confirmation
 singularity = " ".join(singularity_path.read_text(encoding="utf-8").lower().split())
 for required_text in (
     "explicit opt-in",
-    "one verified sol primary",
+    "one verified astra primary",
     "do not spawn",
     "smallest sufficient intervention",
     "no more than five active steps",
@@ -193,6 +190,7 @@ hypernova = " ".join(hypernova_path.read_text(encoding="utf-8").lower().split())
 for required_text in (
     "explicit opt-in",
     "opposite of singularity",
+    "gpt-6-astra",
     "gpt-5.6-sol",
     "ultra",
     "maximum safely available concurrency",
@@ -228,17 +226,36 @@ for required_text in ("Work card", "Implementation delegation", "Fresh review", 
         raise SystemExit(f"work templates are missing: {required_text}")
 
 routing = routing_path.read_text(encoding="utf-8")
+for role in ("astral_orchestrator_luna_implementer", "astral_orchestrator_terra_implementer", "astral_orchestrator_sol_reviewer"):
+    if role not in routing:
+        raise SystemExit(f"routing role is missing: {role}")
 for required_text in (
     "gpt-5.6-sol",
     "gpt-5.6-luna",
     "gpt-5.6-terra",
     "Do not silently substitute",
     "runtime evidence",
-    "--require-sol-ultra",
     "Hypernova",
 ):
     if required_text not in routing:
         raise SystemExit(f"routing contract is missing: {required_text}")
+
+# A moved instruction must remain packaged and reachable through its relative links.
+primary_path = skill_path.parent / "references/primary-verification.md"
+if not primary_path.is_file():
+    raise SystemExit("primary verification reference is missing")
+for document in skill_path.parent.rglob("*.md"):
+    for target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", document.read_text(encoding="utf-8")):
+        if "://" in target or target.startswith("#"):
+            continue
+        relative = target.split("#", 1)[0]
+        resolved = (document.parent / relative).resolve()
+        try:
+            resolved.relative_to(skill_path.parent.resolve())
+        except ValueError:
+            raise SystemExit(f"instruction reference escapes skill: {document.name}: {target}")
+        if not resolved.is_file():
+            raise SystemExit(f"instruction reference is missing: {document.name}: {target}")
 
 pulsar = " ".join(pulsar_path.read_text(encoding="utf-8").split())
 for required_text in (

@@ -1,14 +1,14 @@
 # Constellation mode
 
 Constellation is an explicit opt-in: use it only when the user explicitly names it. Constellation has one configured
-Sol primary and one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
-for independently owned cards, not a request to fill every available slot or to replace Sol’s integration role.
+Astra primary and normally one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
+for independently owned cards, not a request to fill every available slot or to replace Astra’s integration role.
 
 ## Model and effort contract
 
-The default primary and fresh reviewer stay on `gpt-5.6-sol` at Sol High. **Sol High is sufficient** for both
-Constellation Sol roles; **Sol Ultra is not required**. Constellation does not silently raise, lower, or substitute
-the configured Sol model or effort.
+The primary stays on `gpt-6-astra` at its configured effort. The fresh reviewer
+defaults to `gpt-5.6-sol` at High. **Sol High is sufficient** for review; **Sol Ultra is not required**. Primary and child
+efforts are independent. Never silently substitute a selected route.
 
 Ordinary fixed-route cards remain Luna or Terra at their configured efforts. A Constellation card may use a
 **custom worker model and effort only as an explicit Morph card**. That Morph card must record the exact model id,
@@ -27,7 +27,7 @@ than substituting a route.
 
 ## Prove that a concurrent first wave is safe
 
-Before launching, Sol must write a complete card for every candidate and prove all of the
+Before launching, Astra must write a complete card for every candidate and prove all of the
 following:
 
 - each ready card has an independent outcome and non-overlapping file and system ownership;
@@ -41,7 +41,7 @@ Launch the first wave concurrently only after those facts are recorded. Its maxi
 count is the minimum of ready independent cards, suitable configured roster entries, and
 the host-advertised available slots minus the primary’s one slot. Do not hard-code four or
 five simultaneous children. Do not spawn extra Sol implementers by default; reserve Sol
-for the primary and fresh review, and prefer cost-aware non-Sol workers.
+for fresh review, and prefer cost-aware non-Sol workers.
 
 If independence, ownership, ready status, model availability, or capacity cannot be
 proven, fall back to serial Orbit-style routing. The fallback keeps the same work cards,
@@ -52,7 +52,7 @@ exact routes, verification, and review; it merely removes unsupported concurrenc
 Use Luna or Terra for ordinary fixed-route cards. A card that explicitly needs a
 user-selected routed model follows Morph mode and includes its exact model id and requested
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
-Sol primary, and then recalculate readiness and capacity before every later wave.
+Astra primary, and then recalculate readiness and capacity before every later wave.
 
 Tell every worker it is not alone in the codebase, owns only its card, and must preserve
 other edits. A packet may authorize the worker to spawn bounded child workers with exact
@@ -82,3 +82,6 @@ review-and-repair pass on the combined change set. Event Horizon safeguards over
 requires user confirmation or serial execution. A failed worker,
 failed check, or uncertain shared interface stops the affected route rather than expanding
 the Constellation.
+
+Apply the common Codex [review availability rule](modes-and-risk.md#review-availability-and-route-failure).
+Portable-host fresh-context requirements remain mandatory.
