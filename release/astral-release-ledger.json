@@ -664,6 +664,24 @@
       "evidence": "Local merge commit 5f26eb5 integrates upstream PR #14 with the Sol-or-Astra primary and independent Astra worker-effort changes. All 170 tests, verify.sh, official skill and plugin validators, setup dry-run, and git diff checks passed. Integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0.",
       "url": "https://github.com/Demonbane18/astral-orchestrator/commit/5f26eb5",
       "commit": "5f26eb5"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "superseded",
+      "observed_at": "2026-09-13T02:38:19Z",
+      "evidence": "Superseded before submission because upstream PR #14 changed the packaged instruction structure after this draft was uploaded. Direct refreshed Opera GX inspection still showed it as Draft, not submitted.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60657305c81918c11cc235288e0dd",
+      "commit": "47461a2f4bad4feb40bea8adc389f91c8e5eefea"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "draft",
+      "observed_at": "2026-09-13T02:38:20Z",
+      "evidence": "Opera GX accepted integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0 and created a new Astral Orchestrator 3.11.0 draft. Imported Sol-or-Astra primary description is correct; skill scan is in progress. Public URLs and policy attestations remain incomplete; no final submission was performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60c5da6e081918ccd71b1575495b5",
+      "commit": "5f26eb5"
     }
   ]
 }
