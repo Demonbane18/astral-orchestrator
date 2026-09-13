@@ -655,6 +655,15 @@
       "observed_at": "2026-09-13T02:13:08Z",
       "evidence": "Opera GX accepted the corrected 126 KB plugin-only ZIP after its Agent Plugins and Codex manifests were validated. The upload created submission appsub_6aa60657305c81918c11cc235288e0dd. Draft scan state and submission readiness remain to be verified; no attestations or review submission were performed.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60657305c81918c11cc235288e0dd"
+    },
+    {
+      "surface": "source",
+      "version": "3.11.0",
+      "status": "verified",
+      "observed_at": "2026-09-13T02:34:55Z",
+      "evidence": "Local merge commit 5f26eb5 integrates upstream PR #14 with the Sol-or-Astra primary and independent Astra worker-effort changes. All 170 tests, verify.sh, official skill and plugin validators, setup dry-run, and git diff checks passed. Integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/5f26eb5",
+      "commit": "5f26eb5"
     }
   ]
 }
