@@ -1081,6 +1081,7 @@ p {
 }
 
 .route-step--sol,
+.route-step--astra,
 .route-step--review {
   border-left-color: var(--gold-bright);
 }
@@ -1123,6 +1124,7 @@ p {
 }
 
 .route-step--sol .route-number,
+.route-step--astra .route-number,
 .route-step--review .route-number {
   color: var(--gold);
   background: var(--gold-soft);
@@ -1207,7 +1209,7 @@ p {
 .route-branches {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   padding: 1.1rem;
   border: 1px dashed var(--line-strong);
@@ -2025,6 +2027,10 @@ pre code > span::before {
 }
 
 @media (max-width: 48rem) {
+  .route-branches {
+    grid-template-columns: 1fr;
+  }
+
   .header-inner {
     row-gap: 0.35rem;
   }

@@ -607,6 +607,22 @@
       "observed_at": "2026-09-08T06:22:48.739061+00:00",
       "evidence": "Upload attempt selected verified ZIP in Opera GX Open file dialog; subsequent computer-use calls failed with ScreenCaptureKit -3812 invalid parameter, including after reset. Upload acceptance and draft creation remain UNVERIFIED; inspect existing drafts before retrying.",
       "url": "https://platform.openai.com/plugins"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "draft",
+      "observed_at": "2026-09-08T06:36:51.844132+00:00",
+      "evidence": "Opera GX refreshed draft confirms version 3.10.0 and updated Astra primary/worker independence content. Skill remains Scanning. Submit page explicitly says Skills is incomplete; Wait for scanning to complete; Confirm and submit is disabled. No scan error, ETA, or retry control shown. Existing policy checkboxes already checked; no attestation or submission performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "submitted",
+      "observed_at": "2026-09-13T01:58:39Z",
+      "evidence": "The user confirmed in this task that OpenAI accepted submission appsub_6a9faa1f1a508191b437109b0ce14ae0. Approval and public-directory publication remain unverified independent states.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
     }
   ]
 }

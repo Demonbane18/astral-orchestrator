@@ -1,14 +1,15 @@
-![Animated outer-space Astral Orchestrator banner with Sol at the center, Luna and Terra orbiting, twinkling stars, and a passing comet.](assets/brand/astral-orchestrator-banner.gif)
+![Animated outer-space Astral Orchestrator banner with a bright primary star at the center, worker lanes orbiting, twinkling stars, and a passing comet.](assets/brand/astral-orchestrator-banner.gif)
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.10.0 is an installable, open-source Codex plugin that turns a goal
-into routed, verified work. Astra keeps the plan and final decisions, Astral coordinates
-the right model and effort for each bounded task, and checks run before handoff.
+Astral Orchestrator v3.11.0 is an installable, open-source Codex plugin that turns a goal
+into routed, verified work. The Sol or Astra model already running your task remains the
+primary orchestrator. Astral selects bounded workers and checks the result before handoff.
 
-Version 3.10.0 accepts the selected Astra effort in every mode, including Hypernova.
-A Light or Medium primary can launch explicitly selected Astra Max or Ultra workers.
-Hypernova keeps Sol Ultra children as its default. Route checks and fresh review remain.
+Version 3.11.0 restores Sol as a supported primary alongside Astra. It detects the current
+model and effort instead of forcing a lead. Astra is also available as a configurable
+worker, Medium by default, when its added reasoning is worth the cost. Mandatory Astral
+status updates show the primary and every child route throughout the run.
 
 Astral Orchestrator is an independent open-source project. It is not affiliated with or
 endorsed by OpenAI.
@@ -27,9 +28,10 @@ Start a new Codex task after installation so Codex can discover the plugin.
 ## Requirements
 
 - A current Codex CLI or desktop app with plugins enabled.
-- Access to `gpt-6-astra`, `gpt-5.6-sol`, `gpt-5.6-luna`, and `gpt-5.6-terra` for their fixed routes.
+- Access to Sol or Astra for the primary and to any worker models selected for the run.
 - Python 3.11 or newer; Astral's local tools use only the standard library.
-- For Hypernova only: native multi-agent controls and `gpt-5.6-sol` with Ultra effort.
+- For Hypernova only: native multi-agent controls and access to its selected exact child
+  route—Sol Ultra by default or Astra at the configured effort.
 
 Astral stops when an exact required model, effort, or route cannot be proven. It never
 silently substitutes a different one, and model availability depends on your account.
@@ -49,14 +51,14 @@ workflow.
 
 | Mode | Best for | Route in brief |
 |---|---|---|
-| Comet | Tiny, obvious, reversible work | Sol completes the change directly and self-reviews. |
-| Orbit (default) | Normal changes and projects | Sol plans, Luna or Terra implements bounded work, and fresh Sol reviews. |
+| Comet | Tiny, obvious, reversible work | The detected Sol or Astra primary completes the change and self-reviews. |
+| Orbit (default) | Normal changes and projects | The primary plans, Astra/Luna/Terra handles bounded work, and fresh Sol reviews. |
 | Event Horizon | High-risk or hard-to-reverse work | Necessary confirmation gates, targeted checks, and one fresh review-and-repair pass. |
-| Singularity (opt-in) | Meaningful work suited to one session | One verified Sol completes and self-reviews a compact card; no subagents. |
-| Pulsar (opt-in) | Deliberately evidence-oriented work | Sol freezes one card and acceptance checks, then records non-secret route evidence. |
-| Morph (opt-in) | A bounded card needing a selected worker model | Sol stays primary and reviewer while the chosen worker route is proven. |
-| Constellation (opt-in) | Several independent, ready cards | Work fans out only within observed capacity, then Sol integrates and reviews it. |
-| Hypernova (opt-in) | Maximum throughput when speed matters more than token efficiency | An observed Sol Ultra primary launches independent built-in Sol Ultra workers and requires a fresh Sol Ultra reviewer. |
+| Singularity (opt-in) | Meaningful work suited to one session | One verified primary completes and self-reviews a compact card; no subagents. |
+| Pulsar (opt-in) | Deliberately evidence-oriented work | The primary freezes one card and records non-secret route evidence. |
+| Morph (opt-in) | A bounded card needing a selected worker model | The detected session stays primary while the chosen worker route is proven. |
+| Constellation (opt-in) | Several independent, ready cards | Work fans out within observed capacity, then the primary integrates and Sol reviews it. |
+| Hypernova (opt-in) | Maximum native throughput | The detected primary launches safe native waves using Sol Ultra or configured Astra workers, followed by fresh review. |
 
 Hypernova is Codex-native, performance-first, and never automatic. It requires the exact
 native route for every lane and has no process, portable, lower-effort, alternate-model,

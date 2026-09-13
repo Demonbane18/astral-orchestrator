@@ -435,6 +435,7 @@ class WebsiteContractTests(unittest.TestCase):
         home = page_text(PAGES["home"])
         for phrase in (
             "Sol",
+            "Astra takes difficult reasoning",
             "Luna",
             "Terra",
             "fresh Sol review",
@@ -483,7 +484,7 @@ class WebsiteContractTests(unittest.TestCase):
             "one primary consumes a slot",
             "serial fallback",
             "does not claim every provider has native effort semantics",
-            "one verified sol session",
+            "one verified sol or astra primary",
             "no subagents or fresh reviewer",
             "does not claim every host supports multi-agent orchestration",
         ):
@@ -507,11 +508,11 @@ class WebsiteContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)
 
-    def test_current_version_copy_is_v3_8_0_on_current_pages(self):
+    def test_current_version_copy_is_v3_11_0_on_current_pages(self):
         for page in ("home", "install", "support", "docs"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.8.0", content)
+                self.assertIn("v3.11.0", content)
         for path in WEBSITE.rglob("*.html"):
             with self.subTest(no_stale_version=path.relative_to(WEBSITE)):
                 self.assertNotIn("v3.7.0", page_text(path))
@@ -522,8 +523,9 @@ class WebsiteContractTests(unittest.TestCase):
             "live astral status",
             "requested and observed",
             "model and effort",
-            "sol high is sufficient",
-            "sol ultra is not required",
+            "first user-facing progress update",
+            "before and after every child launch",
+            "final handoff",
         ):
             self.assertIn(phrase, home)
 
@@ -580,8 +582,8 @@ class WebsiteContractTests(unittest.TestCase):
             ),
             "routing": (
                 "sh scripts/configure-effort.sh --show",
-                "sh scripts/configure-effort.sh --luna medium",
-                "sh scripts/configure-effort.sh --orchestrator high --luna medium --terra high --reviewer high",
+                "sh scripts/configure-effort.sh --astra medium",
+                "sh scripts/configure-effort.sh --astra medium --luna max --terra high --reviewer high",
                 "sh scripts/configure-effort.sh --reset",
             ),
         }
@@ -625,6 +627,7 @@ class WebsiteContractTests(unittest.TestCase):
             "explicit opt-in",
             "opposite of singularity",
             "gpt-5.6-sol",
+            "gpt-6-astra",
             "ultra",
             "every implementation lane",
             "mandatory fresh",
@@ -646,14 +649,17 @@ class WebsiteContractTests(unittest.TestCase):
                 self.assertIn(phrase, hypernova)
         self.assertNotIn("luna", hypernova)
         self.assertNotIn("terra", hypernova)
-        self.assertIn("python3 check-primary.py --require-sol-ultra", routing)
+        self.assertIn("--require-sol-ultra", routing)
+        self.assertIn("--require-astra-ultra", routing)
 
     def test_docs_preserve_routing_models_controls_and_status_truthfulness(self):
         routing = " ".join(page_text(PAGES["docs-routing"]).lower().split())
         for phrase in (
             "gpt-5.6-sol",
+            "gpt-6-astra",
             "gpt-5.6-luna",
             "gpt-5.6-terra",
+            "astra medium",
             "sol high",
             "luna max",
             "terra high",
@@ -1278,7 +1284,7 @@ class WebsiteContractTests(unittest.TestCase):
             "never auto-selected",
             "One fixed graph, parallel ready items",
             "one canonical dependency graph",
-            "deterministic Sol/Luna/Terra routing",
+            "deterministic Astra/Luna/Terra routing",
             "identical read-only probes",
             "private, resumable evidence",
             "fresh Sol review",

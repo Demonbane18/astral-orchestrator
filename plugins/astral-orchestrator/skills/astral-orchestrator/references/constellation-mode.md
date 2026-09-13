@@ -1,16 +1,19 @@
 # Constellation mode
 
-Constellation is an explicit opt-in: use it only when the user explicitly names it. Constellation has one configured
-Astra primary and one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
+Constellation is an explicit opt-in: use it only when the user explicitly names it.
+Constellation has one detected Sol or Astra primary and one fresh Sol reviewer on its
+exact route. It is a capacity-aware parallel or hierarchical fan-out
 for independently owned cards, not a request to fill every available slot or to replace Sol’s integration role.
 
 ## Model and effort contract
 
-The primary stays on `gpt-6-astra` at its selected session effort. The fresh reviewer
+The current `gpt-5.6-sol` or `gpt-6-astra` primary stays at its observed effort. The fresh reviewer
 defaults to `gpt-5.6-sol` at High. **Sol High is sufficient** for review; **Sol Ultra is not required**. Primary and child
 efforts are independent. Never silently substitute a selected route.
 
-Ordinary fixed-route cards remain Luna or Terra at their configured efforts. A Constellation card may use a
+Ordinary fixed-route cards remain Luna or Terra at their configured efforts. Astra is
+available at its configured effort when its reasoning benefit justifies the added cost.
+A Constellation card may use a
 **custom worker model and effort only as an explicit Morph card**, except an explicitly
 selected native Astra worker uses the standard built-in worker route from SKILL.md. That Morph card must record the exact model id,
 requested effort, route availability, and runtime evidence before its worker is accepted. Record requested and
@@ -28,7 +31,7 @@ than substituting a route.
 
 ## Prove that a concurrent first wave is safe
 
-Before launching, Sol must write a complete card for every candidate and prove all of the
+Before launching, the primary must write a complete card for every candidate and prove all of the
 following:
 
 - each ready card has an independent outcome and non-overlapping file and system ownership;
@@ -50,10 +53,11 @@ exact routes, verification, and review; it merely removes unsupported concurrenc
 
 ## Routing and integration
 
-Use Luna or Terra for ordinary fixed-route cards. A card that explicitly needs a
+Use Luna or Terra for ordinary fixed-route cards. Use Astra at its configured effort only
+when its reasoning benefit justifies the cost. A card that explicitly needs a
 user-selected routed model follows Morph mode and includes its exact model id and requested
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
-Astra primary, and then recalculate readiness and capacity before every later wave.
+detected primary, and then recalculate readiness and capacity before every later wave.
 
 Tell every worker it is not alone in the codebase, owns only its card, and must preserve
 other edits. A packet may authorize the worker to spawn bounded child workers with exact

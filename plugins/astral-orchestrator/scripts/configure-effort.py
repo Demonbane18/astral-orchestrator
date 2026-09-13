@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--reset",
         action="store_true",
-        help="Restore all four effort levels to Astral Orchestrator defaults.",
+        help="Restore all five effort levels to Astral Orchestrator defaults.",
     )
     parser.add_argument(
         "--json",
