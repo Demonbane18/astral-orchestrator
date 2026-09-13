@@ -3,8 +3,8 @@
 Pulsar is an explicit opt-in route for a user who wants a deliberately slower,
 evidence-oriented execution record. Never auto-select Pulsar: recommend Orbit for
 normal work. It adds no Ori, OpenRouter, API, network service, secret, analytics, or
-dynamic external model selection. It uses the detected `gpt-5.6-sol` or `gpt-6-astra`
-primary plus configured Astra, Luna, Terra, and Sol reviewer lanes.
+dynamic model selection. It keeps the detected Sol or Astra session primary and uses
+configured `gpt-6-astra`, `gpt-5.6-luna`, `gpt-5.6-terra`, and reviewer lanes.
 
 The primary retains requirements, architecture, safety decisions, decomposition, integration,
 and final routing. Pulsar does not make a worker an independent owner of those choices.
@@ -34,11 +34,13 @@ an execution attempt repeats only after a `fix-first` verdict.
    integration for the frozen graph and launches every ready independent item concurrently
    up to capacity. It may use the shallowest useful hierarchy for coherent subtrees.
 6. **Attempt N — Verification.** Run the frozen checks and record their observed results.
-7. **Attempt N — Review.** Obtain a fresh normal Sol reviewer. On `ship`, continue to
-   Complete. On `fix-first`, finish the current Review occurrence, increment the attempt
+7. **Attempt N — Review.** Apply the common Codex review availability rule. Normally
+   obtain a fresh Sol reviewer; label a permitted self-review in the verdict evidence.
+   On `ship`, continue to Complete. On `fix-first`, finish the current Review occurrence, increment the attempt
    number, and start the new attempt at Implementation; it requires fresh verification
-   and a new reviewer. `rethink` does not mutate the frozen card: finish the Review
-   occurrence, stop, and ask to archive this run and start a new frozen card.
+   and a new review, using a new reviewer when independent review is required. `rethink`
+   does not mutate the frozen card: finish the Review occurrence, stop, and ask to archive
+   this run and start a new frozen card.
 8. **Complete.** Complete is allowed only after a `ship` verdict. Record that verdict and
    its observed evidence. Never reconstruct an event from memory.
 
@@ -110,7 +112,8 @@ Terra probe concurrently. Both probes receive the identical frozen card and acce
 is behaviorally read-only: it must not edit, format, create, delete, or run a
 state-changing command. That instruction is not hard sandbox isolation. Probes cannot
 change the card, requirements, architecture, safety boundaries, acceptance checks, files,
-or systems. They do not implement, and the primary still chooses the route.
+or systems. They do not implement, and the primary still chooses the route. Do not use
+Astra as a planning probe.
 
 ### Pulsar planning probe
 
@@ -148,12 +151,10 @@ them, choose Luna only when every condition is true:
 - no debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag
   is present.
 
-Choose Terra when any listed flag is present. Choose Astra at the configured `astra`
-effort only when the frozen card also requires difficult diagnosis, deep cross-domain
-synthesis, or reasoning that Terra is unlikely to handle efficiently enough. Record the
-specific reason Astra justifies its added cost; do not launch an Astra planning probe.
-If Luna and Terra probes materially disagree, the primary records the decisive facts and
-defaults to Terra unless the Astra criteria independently apply. Never route by prestige, popularity, or a
+Choose Terra when any listed flag is present. Choose Astra only for a bounded difficult
+diagnosis or deep cross-domain synthesis whose reasoning benefit justifies its configured
+cost. If probes materially disagree, the primary records
+the decisive facts and defaults to Terra. Never route by prestige, popularity, or a
 silent fallback. Requested and observed role, model, effort, and task or session identity
 must be recorded as facts; unknown values remain unknown.
 
@@ -192,3 +193,7 @@ every parent and child route in the implementation event without creating extra 
 The normal Sol reviewer reviews the integrated Pulsar change once. High-risk Pulsar work
 inherits Event Horizon confirmation gates and its concise workspace-write review-and-repair
 pass.
+
+Apply the common Codex [review availability rule](modes-and-risk.md#review-availability-and-route-failure).
+Keep the explicit resume/archive decision and frozen-card grammar. A permitted self-review
+must be labeled as such in its verdict evidence; it never counts as a fresh reviewer.

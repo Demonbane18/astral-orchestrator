@@ -5,20 +5,24 @@ Hypernova is an **explicit opt-in**, Codex-native performance mode. It is the
 session, while Hypernova favors **speed and throughput over token efficiency** by using
 the maximum safely available concurrency. Never auto-select Hypernova.
 
-The current Sol or Astra primary uses its observed session effort. Every implementation
-lane and the mandatory fresh reviewer default to `gpt-5.6-sol` at **Ultra**. The user may
-select `gpt-6-astra` at the configured `astra` effort for workers and/or fresh review.
-A lower-effort primary can therefore launch a higher-effort Astra worker. Record each selected
-child route before launch; primary effort never caps child effort. No silent downgrade
-or substitution is allowed after route selection. Hypernova is not permission to widen
-the request, skip checks, or weaken confirmation boundaries.
+The current `gpt-5.6-sol` or `gpt-6-astra` session remains primary at its observed effort.
+Every implementation lane and the mandatory fresh reviewer use one selected exact route:
+`gpt-5.6-sol` at **Ultra** by default or `gpt-6-astra` at the configured `astra` effort.
+Hypernova is not permission
+to widen the request, skip checks, or weaken confirmation boundaries.
 
 ## Blocking preflight
 
-Run `python3 check-primary.py` with no Ultra flag. It accepts the supported model and
-effort observed in the running Sol or Astra session, independently of saved defaults. Hypernova
-requires an **observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence
-blocks the mode; user confirmation cannot replace runtime evidence.
+Run the normal primary checker without a strict flag:
+
+```text
+python3 check-primary.py
+```
+
+The checker accepts the already-started supported primary and its observed effort without
+changing or persisting saved settings. Hypernova requires an
+**observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence blocks the
+mode; user confirmation cannot replace runtime evidence.
 
 Inspect `collaboration.spawn_agent` and require all five native MultiAgentsV2 controls:
 
@@ -37,17 +41,14 @@ downgrade**. If the native controls or capacity cannot be observed, stop.
 ## Exact native route
 
 Use the built-in native `worker` for every implementation lane. Do not use a custom
-worker profile. The default implementation spawn is below. For a selected Astra route,
-set `model: "gpt-6-astra"` and `reasoning_effort` to the configured `astra` value. Verify that
-the host advertises the selected route before launch. Every implementation spawn must use
-the same native controls:
+worker profile. Every implementation spawn must use:
 
 ```text
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-5.6-sol",
-  reasoning_effort: "ultra",
+  model: "gpt-5.6-sol" or "gpt-6-astra",
+  reasoning_effort: "ultra" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova implementation packet>"
 })
@@ -82,30 +83,29 @@ dependency or safety gate can make a later wave smaller; that is safe scheduling
 Hypernova, not permission to switch to a serial fallback. If missing capacity is the
 reason concurrency cannot be proven, Hypernova blocks.
 
-The primary retains requirements, architecture, decomposition, cross-lane integration,
+The detected primary retains requirements, architecture, decomposition, cross-lane integration,
 and acceptance. It does not become an implementation fallback merely because a card is
 blocked or capacity changes.
 
-## Mandatory fresh Sol Ultra review
+## Mandatory fresh selected-route review
 
 After all accepted worker output is integrated and the focused checks pass, launch one
-fresh built-in native `default` reviewer. The default is Sol Ultra; an explicitly
-selected Astra reviewer uses `gpt-6-astra` and the configured `astra` effort in the same packet:
+fresh built-in native `default` reviewer:
 
 ```text
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-5.6-sol",
-  reasoning_effort: "ultra",
+  model: "gpt-5.6-sol" or "gpt-6-astra",
+  reasoning_effort: "ultra" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova review packet>"
 })
 ```
 
-The reviewer task name must be distinct from every worker task name. The existing Sol
-High `astral_orchestrator_sol_reviewer` custom profile is ineligible: custom profile
-values take precedence and would violate the Ultra contract. The reviewer works directly
+The reviewer task name must be distinct from every worker task name. A custom profile
+whose fixed model or effort differs from the selected route is ineligible because custom
+profile values take precedence. The reviewer works directly
 and does not delegate. Require matching runtime evidence before accepting its verdict.
 Missing or mismatched reviewer evidence blocks completion; primary-session self-review
 cannot substitute for the mandatory fresh reviewer.
@@ -124,8 +124,7 @@ authorization, focused verification, exact runtime evidence, or the fresh review
 
 ## Handoff
 
-Report the observed primary model and effort and each accepted worker/reviewer model and
-effort separately. Do not label the primary Ultra unless runtime evidence says Ultra.
-State the wave sizes and capacity evidence, checks run, review verdict, and
+Report the observed primary model and effort, and every accepted worker and fresh reviewer
+on the selected exact route. State the wave sizes and capacity evidence, checks run, review verdict, and
 any blocked or discarded lane. Never describe a requested route, mismatched output, or a
 fallback as successful Hypernova execution.

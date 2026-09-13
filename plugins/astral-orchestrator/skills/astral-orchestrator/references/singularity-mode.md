@@ -7,12 +7,14 @@ Singularity: Orbit remains the default.
 
 ## Route and boundary
 
-- Verify the detected primary with the normal primary-session preflight before work starts.
-- Singularity requires an observed/verified Sol or Astra model and effort. If `check-primary.py`
+- Follow [primary-verification.md](primary-verification.md) before work starts. Do not
+  load child routing or worker templates for this single-session mode.
+- Singularity requires an observed supported Sol or Astra model and effort. If `check-primary.py`
   reports unavailable, unavailable evidence blocks Singularity; user confirmation cannot
   override that requirement. A `mismatch` or `invalid` result also blocks the route.
-- Use the effort already running in the current session; do not force Max or change global
-  settings. A user who wants another primary effort must **start a new task** with it.
+- Use the verified current primary session at its observed effort. Once
+  its route matches, do not change settings or restart solely to enter Singularity.
+  An actual checker mismatch remains blocking; never silently change global settings.
 - Do not spawn subagents, planning probes, worker lanes, or a fresh reviewer: there are
   **no subagents** and no fresh reviewer. The primary self-reviews once against the actual
   changes and observed evidence.
@@ -34,8 +36,8 @@ configuration or workflow, narrow edit, then new abstraction. Park detours outsi
 card. Stop once DONE first passes and perform **one proportional verification pass**;
 continue only when evidence is ambiguous, contradictory, or defective.
 
-Use a compact Astral status panel with **only the Primary row**. Emit it before work and
-again in the final handoff; update it between those checkpoints when evidence changes.
+Use a compact Astral status panel with **only the primary row**. Show it before work and
+again in the final handoff; update it when there is new evidence or state.
 
 ## Evidence and provenance
 

@@ -54,12 +54,13 @@ class FlexiblePrimaryTests(unittest.TestCase):
 
     def test_modes_keep_child_effort_independent_and_nonworker_modes_closed(self):
         base = ROOT / 'plugins/astral-orchestrator/skills/astral-orchestrator'
-        skill = (base / 'SKILL.md').read_text()
-        hypernova = (base / 'references/hypernova-mode.md').read_text()
-        self.assertIn('Comet and Singularity still never spawn', skill)
-        self.assertIn('Worker effort is independent of primary effort', skill)
+        skill = ' '.join((base / 'SKILL.md').read_text().split()).lower()
+        primary = ' '.join((base / 'references/primary-verification.md').read_text().split()).lower()
+        hypernova = ' '.join((base / 'references/hypernova-mode.md').read_text().split()).lower()
+        self.assertIn('comet and singularity never spawn', skill)
+        self.assertIn('primary and child settings are independent', skill)
         self.assertIn('configured `astra` effort', hypernova)
-        self.assertIn('lower-effort primary can therefore launch a higher-effort Astra worker', hypernova)
+        self.assertIn('higher configured worker effort than a light or medium sol or astra primary', primary)
         self.assertIn('mandatory fresh reviewer', hypernova)
         self.assertIn('user confirmation cannot replace runtime evidence', hypernova)
         self.assertIn('workers cannot delegate', hypernova)
