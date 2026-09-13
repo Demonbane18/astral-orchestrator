@@ -623,6 +623,38 @@
       "observed_at": "2026-09-13T01:58:39Z",
       "evidence": "The user confirmed in this task that OpenAI accepted submission appsub_6a9faa1f1a508191b437109b0ce14ae0. Approval and public-directory publication remain unverified independent states.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "source",
+      "version": "3.11.0",
+      "status": "verified",
+      "observed_at": "2026-09-13T02:04:00Z",
+      "evidence": "Local commit 47461a2f4bad4feb40bea8adc389f91c8e5eefea passed all 169 tests, verify.sh, both official skill validators, plugin validation, setup dry-run, git diff checks, and Opera GX QA. Exact plugin upload ZIP SHA256 1393e2d5e17af72633dd8ec4d11036aed5f023c0729fbb8e0290ad1e4eadc113. Local release candidate only; GitHub, Vercel, and OpenAI 3.11 publication remain pending.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/47461a2f4bad4feb40bea8adc389f91c8e5eefea"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "approved",
+      "observed_at": "2026-09-13T02:06:05Z",
+      "evidence": "Direct Opera GX inspection of submission appsub_6a9faa1f1a508191b437109b0ce14ae0 shows Viewing the released version and disabled released metadata for Astral Orchestrator 3.10.0.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.10.0",
+      "status": "published",
+      "observed_at": "2026-09-13T02:06:05Z",
+      "evidence": "Direct Opera GX inspection of the public ChatGPT plugin page shows Astral Orchestrator version 3.10.0 with the released Astra-primary description and prompts.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "draft",
+      "observed_at": "2026-09-13T02:13:08Z",
+      "evidence": "Opera GX accepted the corrected 126 KB plugin-only ZIP after its Agent Plugins and Codex manifests were validated. The upload created submission appsub_6aa60657305c81918c11cc235288e0dd. Draft scan state and submission readiness remain to be verified; no attestations or review submission were performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60657305c81918c11cc235288e0dd"
     }
   ]
 }
