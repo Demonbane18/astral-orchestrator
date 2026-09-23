@@ -857,6 +857,33 @@
       "status": "draft",
       "observed_at": "2026-09-23T16:40:26+08:00",
       "evidence": "Latest local validation: 191 repository tests, package verification, and prior skill/plugin validators passed; direct TypeSafe Adaptive plus OpenCodex CLI/Desktop Luna Low observed; isolated Ares TypeSafe native checkpoint through OpenCodex and Astral primary checker match observed. OpenRouter live key and Desktop Ares checkpoint remain unverified; no publication."
+    },
+    {
+      "surface": "source",
+      "version": "3.13.0",
+      "status": "verified",
+      "observed_at": "2026-09-23T18:02:40+08:00",
+      "evidence": "Merged v3.13.0 into main at 96bb3c1 and pushed; 191 tests and package verification passed; public README and manifest report v3.13.0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/96bb3c1295a85c892ed10ff2892c72b8f7451e9f",
+      "commit": "96bb3c1295a85c892ed10ff2892c72b8f7451e9f"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.13.0",
+      "status": "installable",
+      "observed_at": "2026-09-23T18:02:40+08:00",
+      "evidence": "Public main marketplace lists astral-orchestrator and typesafe-session as AVAILABLE; public Astral manifest reports v3.13.0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/blob/main/.agents/plugins/marketplace.json",
+      "commit": "96bb3c1295a85c892ed10ff2892c72b8f7451e9f"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.13.0",
+      "status": "deployed",
+      "observed_at": "2026-09-23T18:02:40+08:00",
+      "evidence": "Production alias resolves to READY deployment dpl_4xRWgEiJTUDyanQRf8ZGYjfAHBfJ; Opera GX showed v3.13.0 homepage and install page plus Adaptive routing guide.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "96bb3c1295a85c892ed10ff2892c72b8f7451e9f"
     }
   ]
 }
