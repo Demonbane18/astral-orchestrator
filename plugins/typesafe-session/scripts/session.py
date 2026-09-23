@@ -74,7 +74,7 @@ def hook(event: dict[str, object]) -> dict[str, object]:
             state["explicit"] = True
     save_state(path, state)
     return {"hookSpecificOutput": {"hookEventName": name,
-            "additionalContext": f"TypeSafe/Jev is {state['mode']} for this session. "
+            "additionalContext": f"TypeSafe/Jev is {state['mode']} for session {session_id}. "
             "Only use Jev for bounded semantic judgments; permissions and execution remain in code."}}
 
 
