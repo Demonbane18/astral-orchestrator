@@ -742,6 +742,15 @@
       "observed_at": "2026-09-23T00:59:00Z",
       "evidence": "Authenticated OpenAI Platform in Opera GX lists Astral Orchestrator 3.11.0 as Published and separately lists an older 3.11.0 Draft. The opened 3.11.0 submission shows Viewing the released version. The ledger submission statuses stop at approved; the public directory page itself was not observed.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60c5da6e081918ccd71b1575495b5"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.12.0",
+      "status": "deployed",
+      "observed_at": "2026-09-23T01:04:00Z",
+      "evidence": "Final production deployment dpl_7wBZWbKjtkTQaVQnc6V4oGFgArqA is Ready and aliased to astral-orchestrator.vercel.app. Archive of merged main website tree was deployed; Opera GX fetched the alias with v3.12.0, TypeSafe copy, and corrected Pulsar sentence at HTTP 200.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "609f3f13417fb4eb8d3f0f5a6dcc4b182304a3c8"
     }
   ]
 }
