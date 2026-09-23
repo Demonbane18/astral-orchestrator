@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Astral Orchestrator keeps the current Sol or Astra session in charge, routes work to configured model lanes, and shows every agent route while it runs.">
+    <meta name="description" content="Astral Orchestrator keeps the current Sol, Luna, or Astra session in charge, routes work to configured model lanes, and shows every agent route while it runs.">
     <meta name="theme-color" content="#f4f2ec">
     <title>Astral Orchestrator · turn a request into a checked result</title>
     <link rel="icon" type="image/png" href="assets/astral-orchestrator-favicon-32.png">
@@ -60,12 +60,12 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.11.0 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.12.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
-              Astral detects whether your current task uses <span class="hl">Sol or Astra</span>
+              Astral detects whether your current task uses <span class="hl">Sol, Luna, or Astra</span>
               and keeps that session responsible. Bounded work can go to configured
-              <span class="hl">Astra, Luna, or Terra</span> workers, followed by a fresh
+              <span class="hl">Astra, Luna, or Sol</span> workers, followed by a fresh
               Sol review when the mode requires it. A mandatory status panel shows every
               requested and observed route while the work runs.
             </p>
@@ -83,7 +83,7 @@
             </ul>
           </div>
           <div class="hero-orbit">
-            <svg class="orbit-scene" viewBox="0 0 340 340" role="img" aria-label="Orbital diagram: the detected Sol or Astra primary at the center, configured specialist lanes on inner orbits, and a dashed fresh-review ring around them all.">
+            <svg class="orbit-scene" viewBox="0 0 340 340" role="img" aria-label="Orbital diagram: the detected Sol, Luna, or Astra primary at the center, configured specialist lanes on inner orbits, and a dashed fresh-review ring around them all.">
               <circle class="orbit-ring orbit-ring--review" cx="170" cy="170" r="156"></circle>
               <circle class="orbit-ring" cx="170" cy="170" r="112"></circle>
               <circle class="orbit-ring" cx="170" cy="170" r="72"></circle>
@@ -102,9 +102,9 @@
               <path class="orbit-sol" d="M170 136 L176 164 L204 170 L176 176 L170 204 L164 176 L136 170 L164 164 Z"></path>
             </svg>
             <div class="orbit-legend" aria-hidden="true">
-              <span class="orbit-chip"><i class="dot-sol"></i>Sol or Astra · lead</span>
+              <span class="orbit-chip"><i class="dot-sol"></i>Sol, Luna, or Astra · lead</span>
               <span class="orbit-chip"><i class="dot-luna"></i>Luna · narrow</span>
-              <span class="orbit-chip"><i class="dot-terra"></i>Terra · deep</span>
+              <span class="orbit-chip"><i class="dot-terra"></i>Sol · context</span>
               <span class="orbit-chip"><i class="dot-review"></i>fresh review</span>
             </div>
           </div>
@@ -123,7 +123,7 @@
               Delegated work travels with a crew: a captain who owns the plan,
               specialists who fly their leg, and an inspector who signs off before
               landing. Singularity deliberately keeps eligible work in one verified
-              primary session instead. No API key, no project-operated backend,
+              primary session instead. By default, no API key and no project-operated backend,
               <span class="hl">no analytics</span>. Just a steadier way of working.
             </p>
           </div>
@@ -135,7 +135,7 @@
               <h3>Your current model leads</h3>
               <p>
                 <span class="hl">One lead</span> turns your request into an outcome,
-                a plan, and safety boundaries. The detected Sol or Astra session stays responsible for the final
+                a plan, and safety boundaries. The detected Sol, Luna, or Astra session stays responsible for the final
                 call instead of drifting mid-conversation.
               </p>
             </article>
@@ -146,7 +146,7 @@
               <h3>Specialists do the work</h3>
               <p>
                 Astra takes selected deep-reasoning cards, Luna handles narrow repeatable
-                pieces, and Terra handles context-heavy implementation. Each worker receives a <span class="hl">bounded
+                pieces, and Sol handles context-heavy implementation. Each worker receives a <span class="hl">bounded
                 packet</span> instead of your whole conversation history.
               </p>
             </article>
@@ -184,7 +184,7 @@
             <h3>Astra stays deliberate</h3>
             <p>
               Astra is a Medium-default worker for bounded cards whose reasoning depth
-              justifies its cost. Ordinary work stays with Luna or Terra. Primary and child
+              justifies its cost. Ordinary work stays with Luna or Sol. Primary and child
               effort remain independent, and every accepted child needs matching runtime evidence.
             </p>
           </div>
@@ -209,7 +209,7 @@
               <span class="mode-tag mode-tag--comet">Comet</span>
               <h3>Tiny and reversible</h3>
               <p>
-                The detected Sol or Astra primary works directly and self-reviews. No
+                The detected Sol, Luna, or Astra primary works directly and self-reviews. No
                 delegation and no ceremony, just the explicit
                 <span class="hl">single-session option</span> for small jobs.
               </p>
@@ -219,7 +219,7 @@
               <span class="mode-tag mode-tag--orbit">Orbit · default</span>
               <h3>Plan, delegate, verify</h3>
               <p>
-                The primary plans, Astra, Luna, or Terra implements bounded work, and a fresh Sol
+                The primary plans, Astra, Luna, or Sol implements bounded work, and a fresh Sol
                 review checks the result. The everyday route for real project work.
               </p>
               <p class="mode-best"><strong>Best for:</strong> normal changes and projects.</p>
@@ -237,7 +237,7 @@
               <span class="mode-tag mode-tag--singularity">Singularity · explicit</span>
               <h3>One focused session</h3>
               <p>
-                One verified Sol or Astra primary handles meaningful low- or medium-risk work
+                One verified Sol, Luna, or Astra primary handles meaningful low- or medium-risk work
                 larger than Comet. It uses a compact card, targeted context, and one
                 proportional verification pass: <span class="hl">no subagents or fresh reviewer</span>.
               </p>
@@ -248,7 +248,7 @@
               <h3>Maximum native throughput</h3>
               <p>
                 This <span class="hl">explicit opt-in</span> keeps the detected primary,
-                uses Sol Ultra workers by default or Astra at its configured effort, and
+                uses Sol Max workers by default or Astra at its configured effort, and
                 requires a fresh reviewer at the maximum safely available concurrency.
               </p>
               <p class="mode-best"><strong>Best for:</strong> maximum throughput when speed matters more than token efficiency.</p>
@@ -304,7 +304,7 @@
               All modes first look for <strong>allowlisted local model/effort evidence</strong>.
               When evidence is absent, only modes other than Singularity and Hypernova can
               use a <strong>one-time user confirmation</strong>. Singularity and Hypernova
-              require an observed, verified Sol or Astra model and effort, must stop on unavailable
+              require an observed, verified Sol, Luna, or Astra model and effort, must stop on unavailable
               evidence, and user confirmation cannot satisfy or override either requirement.
               <strong>Mismatch or invalid evidence blocks</strong> every route. Singularity uses
               <strong>one verified primary session</strong> with no subagents or fresh reviewer, and
@@ -325,14 +325,14 @@
             </div>
             <p>
               The usual Orbit or Event Horizon route, step by step. The detected primary keeps the outcome
-              and safety boundaries; Astra, Luna, and Terra receive bounded work only after
+              and safety boundaries; Astra, Luna, and Sol receive bounded work only after
               that plan is settled.
             </p>
           </div>
 
           <p class="route-hint" data-reveal>Tap a step to open it. Every lane is touch-friendly.</p>
 
-          <div class="route-map" aria-label="Normal multi-agent route: the detected Sol or Astra session leads. Astra handles selected deep-reasoning work, Luna handles narrow tasks, Terra handles context-heavy implementation, and a fresh Sol review follows checks.">
+          <div class="route-map" aria-label="Normal multi-agent route: the detected Sol, Luna, or Astra session leads. Astra handles selected deep-reasoning work, Luna handles narrow tasks, Sol handles context-heavy implementation, and a fresh Sol review follows checks.">
             <div class="route-step route-step--sol" data-reveal>
               <details open>
                 <summary>
@@ -344,7 +344,7 @@
                   <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
                 </summary>
                 <div class="route-detail">
-                  <p>The current Sol or Astra session settles requirements, architecture, and what <strong>done</strong> means. The primary checker detects its observed model and effort. If that route cannot be proven, Astral stops rather than quietly substituting another model.</p>
+                  <p>The current Sol, Luna, or Astra session settles requirements, architecture, and what <strong>done</strong> means. The primary checker detects its observed model and effort. If that route cannot be proven, Astral stops rather than quietly substituting another model.</p>
                 </div>
               </details>
             </div>
@@ -388,13 +388,13 @@
                   <summary>
                     <span class="route-number">02</span>
                     <span>
-                      <span class="route-title">Terra takes context-heavy work</span>
+                      <span class="route-title">Sol takes context-heavy work</span>
                       <span class="route-tagline">Broader implementation, integration, and debugging.</span>
                     </span>
                     <span class="route-chevron" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 11.5 2.5 6l1.4-1.4L8 8.7l4.1-4.1L13.5 6z"></path></svg></span>
                   </summary>
                   <div class="route-detail">
-                    <p>When the work needs project context, like wiring a feature, chasing a bug across files, or careful refactoring, Terra steps in <strong>after</strong> the primary has settled the plan, at its configured effort.</p>
+                    <p>When the work needs project context, like wiring a feature, chasing a bug across files, or careful refactoring, Sol steps in <strong>after</strong> the primary has settled the plan, at its configured effort.</p>
                   </div>
                 </details>
               </div>
@@ -441,7 +441,7 @@
               <h3>One fixed graph, parallel ready items</h3>
               <p>
                 The primary freezes one canonical dependency graph and named acceptance checks,
-                then uses deterministic Astra/Luna/Terra routing at the configured efforts.
+                then uses deterministic Astra/Luna/Sol routing at the configured efforts.
                 One selected parent owns integration while independent frozen items may
                 run in parallel or through a bounded child hierarchy.
               </p>
@@ -449,7 +449,7 @@
             <article class="pulsar-card" data-reveal>
               <h3>Ambiguity gets the same question</h3>
               <p>
-                Only a genuine Luna/Terra routing ambiguity can trigger optional,
+                Only a genuine Luna/Sol routing ambiguity can trigger optional,
                 identical read-only probes. They receive the same frozen card and
                 checks; the primary records the decisive facts and keeps the final route
                 decision.
@@ -565,6 +565,10 @@
               </p>
             </article>
           </div>
+
+          <p class="scope-note" data-reveal>
+            Optional TypeSafe Jev routing can choose among eligible GPT-6 workers when the session is on. It never changes the running primary or authorizes execution. The separate session plugin is off by default and needs a project-local key; see <a href="docs/routing/">routing setup</a>.
+          </p>
 
           <p class="scope-note" data-reveal>
             Honest scope: these static instruction-context measurements do not measure

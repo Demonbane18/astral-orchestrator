@@ -1,0 +1,27 @@
+{
+  "name": "typesafe-session",
+  "version": "1.0.0",
+  "description": "Opt-in TypeSafe Jev judgments for one Codex session.",
+  "author": {
+    "name": "JOHN PAUL FURIGAY FUSIN"
+  },
+  "homepage": "https://github.com/Demonbane18/astral-orchestrator",
+  "repository": "https://github.com/Demonbane18/astral-orchestrator",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "TypeSafe Session",
+    "shortDescription": "Turn Jev judgments on or off per task",
+    "developerName": "JOHN PAUL FURIGAY FUSIN",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "longDescription": "Turn TypeSafe Jev judgments on or off for the current Codex task. A trusted hook remembers the choice through compaction; project instructions may opt in by default.",
+    "defaultPrompt": [
+      "TypeSafe on",
+      "TypeSafe off",
+      "TypeSafe status"
+    ]
+  }
+}

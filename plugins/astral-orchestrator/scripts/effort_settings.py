@@ -8,12 +8,13 @@ import tomllib
 from pathlib import Path
 
 
-LANES = ("orchestrator", "astra", "luna", "terra", "reviewer")
+LANES = ("orchestrator", "astra", "luna", "sol", "terra", "reviewer")
 ALLOWED_EFFORTS = ("minimal", "low", "medium", "high", "xhigh", "max", "ultra")
 DEFAULT_EFFORTS = {
     "orchestrator": "high",
     "astra": "medium",
     "luna": "max",
+    "sol": "high",
     "terra": "high",
     "reviewer": "high",
 }
@@ -48,7 +49,16 @@ def _validate_efforts(efforts: dict[str, object]) -> dict[str, str]:
                 f"unsupported effort for {lane}: {rendered}; choose from "
                 + ", ".join(ALLOWED_EFFORTS)
             )
+        if lane in {"luna", "sol", "reviewer"} and value == "ultra":
+            raise EffortSettingsError(
+                f"ultra is not supported by the GPT-6 {lane} default route"
+            )
         validated[lane] = value
+    # An older Terra setting carries the context-worker effort forward unless
+    # the user has explicitly configured the new Sol lane.
+    if "terra" in efforts and "sol" not in efforts:
+        if validated["terra"] != "ultra":
+            validated["sol"] = validated["terra"]
     return validated
 
 

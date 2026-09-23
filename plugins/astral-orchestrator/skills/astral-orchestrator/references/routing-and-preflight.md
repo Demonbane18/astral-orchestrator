@@ -2,25 +2,25 @@
 
 Use this reference only before a Codex child launch or when its evidence needs inspection.
 Normal modes keep the detected primary effort and use configured child efforts. Hypernova
-uses Sol Ultra children by default or Astra at its configured effort. Primary verification
+uses Sol Max children by default or Astra at its configured effort. Primary verification
 lives in primary-verification.md.
 
 ## Exact route contract
 
 | Role | Native v2 agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
-| Orchestrator | Primary session | Current `gpt-5.6-sol` or `gpt-6-astra` | Observed session effort | Requirements, architecture, decomposition, cross-lane integration, acceptance |
+| Orchestrator | Primary session | Current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` | Observed session effort | Requirements, architecture, decomposition, cross-lane integration, acceptance |
 | Deep-reasoning worker | Built-in `worker` | `gpt-6-astra` | `medium` | Bounded difficult diagnosis or synthesis whose benefit justifies the cost |
-| Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
-| Context worker | Built-in `worker`, or matching `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
-| Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
-| Hypernova primary | Primary session | Current `gpt-5.6-sol` or `gpt-6-astra` | Observed session effort | Architecture, maximum-safe-wave planning, integration, and acceptance |
-| Hypernova implementation | Built-in `worker` only | `gpt-5.6-sol` by default or `gpt-6-astra` | `ultra` or configured Astra effort | Every independently owned ready implementation card |
+| Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
+| Context worker | Built-in `worker`, or matching `astral_orchestrator_sol_implementer` | `gpt-6-sol` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
+| Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
+| Hypernova primary | Primary session | Current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` | Observed session effort | Architecture, maximum-safe-wave planning, integration, and acceptance |
+| Hypernova implementation | Built-in `worker` only | `gpt-6-sol` by default or `gpt-6-astra` | `max` or configured Astra effort | Every independently owned ready implementation card |
 | Hypernova reviewer | Fresh built-in `default` only | Same selected child model | Same selected child effort | Mandatory exact-route review after integrated verification |
 
 The main session owns lane selection and remains accountable for the combined result.
 Do not silently substitute a model, effort, or differently configured custom role. On a
-current v2 host, deliberately using the built-in native worker for Astra, Luna, or Terra, or the
+current v2 host, deliberately using the built-in native worker for Astra, Luna, or Sol, or the
 built-in native default for a reviewer, with the exact requested model and effort is the
 standard route, not a substitution.
 
@@ -29,6 +29,23 @@ The effective values come from
 use the defaults in the table. Supported setting names are `minimal`, `low`, `medium`,
 `high`, `xhigh`, `max`, and `ultra`; the last two are model- and account-dependent.
 Never silently downgrade a value that Codex rejects.
+GPT-5.6 Sol, Luna, and Terra remain explicit legacy choices only; they are never
+automatic candidates. The exact-process launcher exposes `legacy-luna`, `terra`,
+and `legacy-reviewer` for those older routes; native agents must explicitly pin
+the selected legacy model and effort. GPT-6 Sol and Luna do not support Ultra.
+
+## Optional TypeSafe judgment
+
+The separate TypeSafe Session plugin keeps one task's on/off state. When it is on,
+prepare a short non-sensitive task summary and observed model/effort availability,
+then run `../../scripts/choose-worker.py` with a private JSON input file. The selector
+first enforces mode, delegation permission, settled acceptance, exact user choices,
+and observed availability. Jev Choice selects only among eligible worker models;
+Jev Score may adjust a normal worker's effort within that model's supported range.
+The primary remains in charge of requirements, execution, and authorization. No
+worker is launched from a missing key, unavailable route, invalid answer, or uncertain
+choice; report the reason and continue independent work. When TypeSafe is off, use
+the deterministic lane rules below without an API call.
 
 ## Live Astral status updates
 
@@ -96,7 +113,7 @@ Before Orbit, Event Horizon, or Pulsar delegation:
 3. Optionally run `../../scripts/install-agents.sh --check` to record profile state. A
    matching custom role is usable only when its fixed model and effort equal the effective
    settings, because custom agent file values take precedence over explicit spawn values.
-   Otherwise choose the built-in native worker for Astra, Luna, or Terra, or built-in native
+   Otherwise choose the built-in native worker for Astra, Luna, or Sol, or built-in native
    default for a reviewer, with explicit fields.
 4. Use the bundled launcher only as the legacy exact-process fallback when the host lacks
    one or more required v2 controls—`agent_type`, `task_name`, `model`,
@@ -106,7 +123,7 @@ Before Orbit, Event Horizon, or Pulsar delegation:
 Before Hypernova execution, instead require all five native MultiAgentsV2 controls in
 step 1, observed host-advertised capacity, and at least one safely usable child slot after
 the primary consumes one slot. Use only the built-in `worker` and built-in `default`
-routes with exact Sol Ultra children by default or Astra at the configured effort. Custom
+routes with exact Sol Max children by default or Astra at the configured effort. Custom
 profiles with mismatched fixed values are ineligible. Missing controls or
 capacity block Hypernova; do not run setup, a launcher dry run, or another fallback.
 
@@ -131,7 +148,7 @@ Choose Luna when all of these are true:
 - the owned files are narrow and independent;
 - little architectural or product judgment remains.
 
-Choose Terra when architecture and acceptance are settled but one or more of these are
+Choose Sol when architecture and acceptance are settled but one or more of these are
 true:
 
 - implementation depends on wider repository context;
@@ -144,20 +161,20 @@ diagnosis or deep cross-domain synthesis is worth its added cost.
 
 Keep the decision in the detected primary session at its observed effort when requirements,
 architecture, safety boundaries, public interfaces, or acceptance criteria are unsettled.
-The primary may settle the decision, then issue bounded execution to Astra, Luna, or Terra.
+The primary may settle the decision, then issue bounded execution to Astra, Luna, or Sol.
 For Pulsar, the primary also retains decomposition, integration, and final route selection; use
 its stricter deterministic selection rules rather than a general heuristic.
 
 ## Choose the execution mechanism
 
-On a current MultiAgentsV2 host, prefer native spawning. For standard Astra, Luna, and Terra
+On a current MultiAgentsV2 host, prefer native spawning. For standard Astra, Luna, and Sol
 delegation, use the built-in native worker and explicitly pin every child:
 
 ```text
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-6-astra", "gpt-5.6-luna", or "gpt-5.6-terra",
+  model: "gpt-6-astra", "gpt-6-luna", or "gpt-6-sol",
   reasoning_effort: "<configured lane effort>",
   fork_turns: "none",
   message: "<complete standalone Astral packet>"
@@ -172,20 +189,20 @@ unique lowercase task name:
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-5.6-sol",
+  model: "gpt-6-sol",
   reasoning_effort: "<configured reviewer effort>",
   fork_turns: "none",
   message: "<complete standalone Astral review packet>"
 })
 ```
 
-For Hypernova's exact built-in Sol Ultra or configured Astra worker and reviewer examples, use
+For Hypernova's exact built-in Sol Max or configured Astra worker and reviewer examples, use
 [hypernova-mode.md](hypernova-mode.md#exact-native-route). Do not load or duplicate those
 launch recipes for an ordinary child. Its custom profiles remain ineligible.
 
 The packet must name the intended Astral role, model, effort, ownership, boundaries,
 checks, and whether downstream delegation is allowed. `agent_type: "worker"` is intentional for
-Astra, Luna, and Terra implementation, while `agent_type: "default"` is intentional for a
+Astra, Luna, and Sol implementation, while `agent_type: "default"` is intentional for a
 reviewer without its matching custom profile. The explicit model and reasoning effort
 preserve Astral's configured route. Do not treat a task name as an agent type.
 
@@ -194,7 +211,7 @@ agent type only if its installed profile is byte-exact and its fixed model and e
 match the effective lane settings. It may then supply a fixed capability such as concise
 bounded review-and-repair. A custom profile that conflicts with a requested
 setting is not a reason to launch a nested process on a v2 host: use the appropriate
-built-in native agent with the explicit values instead (`worker` for Astra, Luna, or Terra,
+built-in native agent with the explicit values instead (`worker` for Astra, Luna, or Sol,
 `default` for reviewer). A custom effort remains a per-lane setting, not a reason to use
 a conflicting profile. If that native spawn cannot provide the requested model or effort,
 block the lane; do not silently substitute.
@@ -205,7 +222,7 @@ more required v2 controls—`agent_type`, `task_name`, `model`, `reasoning_effor
 write the complete standalone work packet to a private temporary regular file, then run:
 
 ```text
-python3 run-agent.py --role <luna|terra|reviewer> --workdir <workspace> --prompt-file <packet>
+python3 run-agent.py --role <luna|sol|reviewer> --workdir <workspace> --prompt-file <packet>
 ```
 
 The launcher reads the shipped profile, reads the effective effort settings, pins the
@@ -232,7 +249,7 @@ temporary packet after the process exits. A non-zero exit blocks the lane.
 For a native v2 lane, immediately record the epoch seconds, choose a unique lowercase
 task name, and spawn with explicit `agent_type`, `task_name`, `model`,
 `reasoning_effort`, and `fork_turns: "none"`. Record whether it used the built-in worker
-(Astra/Luna/Terra), built-in default (reviewer), or a matching custom role; in every case the
+(Astra/Luna/Sol), built-in default (reviewer), or a matching custom role; in every case the
 packet is complete and standalone. For a legacy exact-process lane, launch a new process
 for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header, Codex startup header,
 session id, final response, and exit status. Both mechanisms allow downstream delegation
@@ -252,8 +269,8 @@ After launch, collect runtime evidence showing:
 - `effort` equals the role's configured effort; and
 - for the reviewer, the requested sandbox is `workspace-write`.
 
-For Hypernova, require primary evidence to show supported Sol or Astra at its observed
-effort and every child to show the selected exact route: `gpt-5.6-sol` Ultra by default
+For Hypernova, require primary evidence to show supported Sol, Luna, or Astra at its observed
+effort and every child to show the selected exact route: `gpt-6-sol` Max by default
 or `gpt-6-astra` at configured Astra effort. Require built-in `worker` for implementation
 and a fresh built-in `default` for review. Any conflicting custom profile is a mismatch.
 Interrupt mismatched lanes when possible and discard their output.

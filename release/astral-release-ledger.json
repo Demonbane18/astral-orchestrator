@@ -682,6 +682,31 @@
       "evidence": "Opera GX accepted integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0 and created a new Astral Orchestrator 3.11.0 draft. Imported Sol-or-Astra primary description is correct; skill scan is in progress. Public URLs and policy attestations remain incomplete; no final submission was performed.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60c5da6e081918ccd71b1575495b5",
       "commit": "5f26eb5"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.11.0",
+      "status": "installable",
+      "observed_at": "2026-09-23T00:42:00Z",
+      "evidence": "PR #15 merged; public GitHub API returned astral-orchestrator manifest version 3.11.0 from main.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/blob/main/plugins/astral-orchestrator/.codex-plugin/plugin.json",
+      "commit": "98b93e8d4b0aac7acd73f287fd102fb19cb4e95c"
+    },
+    {
+      "surface": "source",
+      "version": "3.12.0",
+      "status": "verified",
+      "observed_at": "2026-09-23T00:42:20Z",
+      "evidence": "Both plugin manifests are v3.12.0; 178 unit tests, Astral package verifier, and direct Python skill/plugin validators passed. Opera GX local pages inspected. GPT-6 Sol Max and Luna Max responded via existing configured Codex route; bare ChatGPT-account path rejected both.",
+      "commit": "dfd7bfa1d159e8c43e40aab0ad879c5ab0826cd7"
+    },
+    {
+      "surface": "source",
+      "version": "3.12.0",
+      "status": "verified",
+      "observed_at": "2026-09-23T00:45:03Z",
+      "evidence": "Final v3.12 source: 179 unit tests pass; Astral verifier and direct plugin/skill validators pass; Opera GX local pages inspected. Exact GPT-6 Sol Max and Luna Max minimal responses observed through configured Codex route; bare ChatGPT-account route rejects both. TypeSafe live API check pending project key.",
+      "commit": "09f91e42eb3eece2643add53e7a407664c5ffd44"
     }
   ]
 }

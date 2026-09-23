@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 3.12.0 - 2026-09-23
+
+### Added
+
+- Support GPT-6 Sol and Luna primaries at their observed session effort, with GPT-6
+  Luna Max focused workers, GPT-6 Sol High context workers and reviewers, and GPT-6
+  Sol Max as the Hypernova default.
+- Add an optional TypeSafe Session companion with per-task on/off/status commands and
+  typed Jev worker selection when a project key is configured.
+
+### Changed
+
+- Keep GPT-5.6 worker routes explicit only. Migrate byte-exact installed profiles and
+  saved context-worker effort without overwriting customized files.
+- Update the README, documentation, and Vercel pages for the new routes and optional
+  TypeSafe data flow. Historical benchmark results remain unchanged.
+
 ## 3.11.0 - 2026-09-13
 
 ### Added

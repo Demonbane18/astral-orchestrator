@@ -267,7 +267,7 @@ class BenchmarkPilotTests(unittest.TestCase):
             fake.chmod(0o755)
             output = directory_path / "output"
             result = subprocess.run(
-                ["python3", str(RUNNER), "--base-ref", "HEAD", "--output-dir", str(output), "--cases", "launcher-telemetry", "--repetitions", "1", "--max-trials", "2", "--skip-max-preflight", "--codex", str(fake), "--timeout-seconds", "10"],
+                ["python3", str(RUNNER), "--base-ref", "6e703ea024f49000f8de86d8bfe8e0e466b2a9ba", "--output-dir", str(output), "--cases", "launcher-telemetry", "--repetitions", "1", "--max-trials", "2", "--skip-max-preflight", "--codex", str(fake), "--timeout-seconds", "10"],
                 cwd=ROOT, check=False, capture_output=True, text=True,
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

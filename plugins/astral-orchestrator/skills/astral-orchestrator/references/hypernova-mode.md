@@ -5,9 +5,9 @@ Hypernova is an **explicit opt-in**, Codex-native performance mode. It is the
 session, while Hypernova favors **speed and throughput over token efficiency** by using
 the maximum safely available concurrency. Never auto-select Hypernova.
 
-The current `gpt-5.6-sol` or `gpt-6-astra` session remains primary at its observed effort.
+The current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session remains primary at its observed effort.
 Every implementation lane and the mandatory fresh reviewer use one selected exact route:
-`gpt-5.6-sol` at **Ultra** by default or `gpt-6-astra` at the configured `astra` effort.
+`gpt-6-sol` at **Max** by default or `gpt-6-astra` at the configured `astra` effort.
 Hypernova is not permission
 to widen the request, skip checks, or weaken confirmation boundaries.
 
@@ -47,8 +47,8 @@ worker profile. Every implementation spawn must use:
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-5.6-sol" or "gpt-6-astra",
-  reasoning_effort: "ultra" or "<configured Astra effort>",
+  model: "gpt-6-sol" or "gpt-6-astra",
+  reasoning_effort: "max" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova implementation packet>"
 })
@@ -96,8 +96,8 @@ fresh built-in native `default` reviewer:
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-5.6-sol" or "gpt-6-astra",
-  reasoning_effort: "ultra" or "<configured Astra effort>",
+  model: "gpt-6-sol" or "gpt-6-astra",
+  reasoning_effort: "max" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova review packet>"
 })

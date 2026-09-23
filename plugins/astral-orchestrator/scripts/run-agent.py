@@ -33,8 +33,15 @@ ROLE_CONTRACTS = {
     "luna": {
         "filename": "astral-orchestrator-luna-implementer.toml",
         "agent_name": "astral_orchestrator_luna_implementer",
-        "model": "gpt-5.6-luna",
+        "model": "gpt-6-luna",
         "effort": "max",
+        "sandbox": "workspace-write",
+    },
+    "sol": {
+        "filename": "astral-orchestrator-sol-implementer.toml",
+        "agent_name": "astral_orchestrator_sol_implementer",
+        "model": "gpt-6-sol",
+        "effort": "high",
         "sandbox": "workspace-write",
     },
     "terra": {
@@ -47,9 +54,25 @@ ROLE_CONTRACTS = {
     "reviewer": {
         "filename": "astral-orchestrator-sol-reviewer.toml",
         "agent_name": "astral_orchestrator_sol_reviewer",
+        "model": "gpt-6-sol",
+        "effort": "high",
+        "sandbox": "workspace-write",
+    },
+    "legacy-luna": {
+        "filename": "historical-v3.11.0/astral-orchestrator-luna-implementer.toml",
+        "agent_name": "astral_orchestrator_luna_implementer",
+        "model": "gpt-5.6-luna",
+        "effort": "max",
+        "sandbox": "workspace-write",
+        "effort_lane": "luna",
+    },
+    "legacy-reviewer": {
+        "filename": "historical-v3.11.0/astral-orchestrator-sol-reviewer.toml",
+        "agent_name": "astral_orchestrator_sol_reviewer",
         "model": "gpt-5.6-sol",
         "effort": "high",
         "sandbox": "workspace-write",
+        "effort_lane": "reviewer",
     },
 }
 MAX_PROMPT_BYTES = 1_048_576
@@ -150,7 +173,7 @@ def main() -> int:
             fail(
                 f"{profile_path.name} must set {profile_field} to {contract[field]}"
             )
-    if args.role == "reviewer" and profile.get("sandbox_mode") != "workspace-write":
+    if args.role in {"reviewer", "legacy-reviewer"} and profile.get("sandbox_mode") != "workspace-write":
         fail("the reviewer profile must request a workspace-write sandbox")
 
     instructions = profile.get("developer_instructions")
@@ -161,7 +184,8 @@ def main() -> int:
         efforts, settings_file_present = load_efforts(args.settings_file)
     except EffortSettingsError as error:
         fail(str(error))
-    configured_effort = efforts[args.role]
+    effort_lane = contract.get("effort_lane", args.role)
+    configured_effort = efforts[effort_lane]
 
     prompt_path = Path(args.prompt_file).expanduser()
     prompt = read_prompt(prompt_path)
@@ -183,7 +207,7 @@ def main() -> int:
         "effort": configured_effort,
         "effort_source": (
             "default"
-            if configured_effort == DEFAULT_EFFORTS[args.role]
+            if configured_effort == DEFAULT_EFFORTS[effort_lane]
             else "custom"
         ),
         "native_profile_compatible": configured_effort == contract["effort"],

@@ -124,7 +124,7 @@ class MarketplaceTests(unittest.TestCase):
 
         self.assertEqual(marketplace["name"], "astral-orchestrator")
         self.assertEqual(marketplace["interface"]["displayName"], "Astral Orchestrator")
-        self.assertEqual(len(marketplace["plugins"]), 1)
+        self.assertEqual(len(marketplace["plugins"]), 2)
 
         entry = marketplace["plugins"][0]
         self.assertEqual(entry["name"], "astral-orchestrator")
@@ -135,12 +135,13 @@ class MarketplaceTests(unittest.TestCase):
         self.assertEqual(entry["policy"]["installation"], "AVAILABLE")
         self.assertEqual(entry["policy"]["authentication"], "ON_INSTALL")
         self.assertEqual(entry["category"], "Productivity")
+        self.assertEqual(marketplace["plugins"][1]["name"], "typesafe-session")
 
     def test_manifest_is_minimal_and_shareable(self):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.11.0")
+        self.assertEqual(manifest["version"], "3.12.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -156,7 +157,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.11"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.12"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -165,9 +166,9 @@ class MarketplaceTests(unittest.TestCase):
         self.assertLessEqual(len(interface["shortDescription"]), 30)
         description = interface["longDescription"].lower()
         for required_text in (
-            "current task is using sol or astra",
+            "current task is using sol, luna, or astra",
             "keeps that session in charge",
-            "configurable astra, luna, or terra workers",
+            "configurable astra, luna, or sol workers",
             "actual model and effort",
             "deeper reasoning",
             "mandatory live status panel",
@@ -207,7 +208,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.11.0")
+        self.assertEqual(manifest["version"], "3.12.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -409,7 +410,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("not yet available", role_cell)
         self.assertIn("worker", role_cells[1])
         self.assertIn("matching astral_orchestrator_luna_implementer profile", role_cells[1])
-        self.assertIn("matching astral_orchestrator_terra_implementer profile", role_cells[1])
+        self.assertIn("matching astral_orchestrator_sol_implementer profile", role_cells[1])
         self.assertIn("morph worker", role_cells[1])
         self.assertIn("agent type or morph route", role_cells[1])
         self.assertIn("default", role_cells[2])
@@ -437,7 +438,7 @@ class SkillContractTests(unittest.TestCase):
         constellation = " ".join(read(CONSTELLATION).lower().split())
         for required in (
             "sol high is sufficient",
-            "sol ultra is not required",
+            "sol max is not required",
             "custom worker model and effort",
             "host-advertised available slots",
             "first wave concurrently",
@@ -450,7 +451,7 @@ class SkillContractTests(unittest.TestCase):
 
         for required in (
             "sol high is sufficient",
-            "sol ultra is not required",
+            "sol max is not required",
             "custom worker model and effort",
             "morph",
             "runtime evidence",
@@ -522,7 +523,7 @@ class SkillContractTests(unittest.TestCase):
         singularity = " ".join(read(SINGULARITY).lower().split())
         for required in (
             "explicit opt-in",
-            "one verified sol or astra primary",
+            "one verified sol, luna, or astra primary",
             "do not spawn",
             "smallest sufficient intervention",
             "no more than five active steps",
@@ -586,7 +587,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("anecdotal", singularity)
         modes_docs = " ".join(read(WEBSITE_DOCS_MODES).lower().split())
         self.assertIn("singularity and hypernova are opposites", modes_docs)
-        self.assertIn("one verified sol or astra primary", modes_docs)
+        self.assertIn("one verified sol, luna, or astra primary", modes_docs)
 
     def test_hypernova_is_the_sol_ultra_performance_first_opposite_of_singularity(self):
         hypernova = " ".join(read(HYPERNOVA).lower().split())
@@ -598,8 +599,8 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "explicit opt-in",
             "opposite of singularity",
-            "gpt-5.6-sol",
-            "ultra",
+            "gpt-6-sol",
+            "max",
             "every implementation lane",
             "fresh reviewer",
             "maximum safely available concurrency",
@@ -617,7 +618,7 @@ class SkillContractTests(unittest.TestCase):
 
         for surface in (skill, modes, routing, templates):
             self.assertIn("hypernova", surface)
-            self.assertIn("sol ultra", surface)
+            self.assertIn("sol max", surface)
 
         self.assertIn("without a strict flag", hypernova)
         primary_verification = " ".join(
@@ -625,8 +626,8 @@ class SkillContractTests(unittest.TestCase):
         )
         self.assertIn("--require-sol-ultra", primary_verification)
         self.assertIn("--require-astra-ultra", primary_verification)
-        self.assertNotIn("luna", hypernova)
-        self.assertNotIn("terra", hypernova)
+        self.assertNotIn('model: "gpt-6-luna"', hypernova)
+        self.assertNotIn('model: "gpt-5.6-terra"', hypernova)
         self.assertIn("configured `astra` effort", hypernova)
 
     def test_primary_checker_accepts_hypernova_astra_ultra_without_changing_normal_settings(self):
@@ -726,14 +727,14 @@ class SkillContractTests(unittest.TestCase):
             for required in (
                 'agent_type: "worker"',
                 'agent_type: "default"',
-                'model: "gpt-5.6-sol"',
+                'model: "gpt-6-sol"',
                 'fork_turns: "none"',
                 "unique lowercase",
                 "built-in",
             ):
                 with self.subTest(document=label, required=required):
                     self.assertIn(required, document)
-            for required in ("gpt-6-astra", "ultra", "configured astra effort"):
+            for required in ("gpt-6-astra", "max", "configured astra effort"):
                 with self.subTest(document=label, selected_route=required):
                     self.assertIn(required, document)
 
@@ -786,7 +787,7 @@ class SkillContractTests(unittest.TestCase):
             "empty or non-decimal result",
             "canonical temp root",
             "/tmp/astral-orchestrator-measured-<effective-uid>",
-            "exactly one luna probe and one terra probe",
+            "exactly one luna probe and one sol probe",
             "identical frozen card",
             "owner-only parent directory",
             "symlink parents",
@@ -809,7 +810,7 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "sol high",
             "astral_orchestrator_luna_implementer",
-            "astral_orchestrator_terra_implementer",
+            "astral_orchestrator_sol_implementer",
             "astral_orchestrator_sol_reviewer",
         ):
             self.assertIn(required, routing)
@@ -897,18 +898,18 @@ class SkillContractTests(unittest.TestCase):
                 document,
             )
 
-        for document in (spec, improvements):
+        for document in (spec,):
             for required in (
                 'agent_type: "worker"',
                 'agent_type: "default"',
                 'task_name: "<unique_lowercase_task_name>"',
                 'task_name: "<unique_lowercase_reviewer_task_name>"',
-                'model: "gpt-6-astra", "gpt-5.6-luna", or "gpt-5.6-terra"',
+                'model: "gpt-6-astra", "gpt-6-luna", or "gpt-6-sol"',
                 'reasoning_effort: "<configured lane effort>"',
                 'reasoning_effort: "<configured reviewer effort>"',
                 'fork_turns: "none"',
                 "luna max",
-                "terra high",
+                "sol high",
                 "configured effort",
                 "custom agent file values take precedence",
                 "legacy exact-process fallback",
@@ -933,8 +934,13 @@ class SkillContractTests(unittest.TestCase):
         expected = {
             "astral-orchestrator-luna-implementer.toml": {
                 "name": "astral_orchestrator_luna_implementer",
-                "model": "gpt-5.6-luna",
+                "model": "gpt-6-luna",
                 "model_reasoning_effort": "max",
+            },
+            "astral-orchestrator-sol-implementer.toml": {
+                "name": "astral_orchestrator_sol_implementer",
+                "model": "gpt-6-sol",
+                "model_reasoning_effort": "high",
             },
             "astral-orchestrator-terra-implementer.toml": {
                 "name": "astral_orchestrator_terra_implementer",
@@ -943,7 +949,7 @@ class SkillContractTests(unittest.TestCase):
             },
             "astral-orchestrator-sol-reviewer.toml": {
                 "name": "astral_orchestrator_sol_reviewer",
-                "model": "gpt-5.6-sol",
+                "model": "gpt-6-sol",
                 "model_reasoning_effort": "high",
                 "sandbox_mode": "workspace-write",
             },
@@ -1016,6 +1022,32 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotEqual(refused.returncode, 0)
             self.assertIn("will not be overwritten", refused.stderr)
             self.assertEqual(destination.read_bytes(), customized)
+
+    def test_agent_installer_migrates_exact_v311_profiles_without_overwriting_custom_work(self):
+        previous = AGENTS / "historical-v3.11.0"
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "agents"
+            target.mkdir()
+            for profile in previous.glob("*.toml"):
+                (target / profile.name).write_bytes(profile.read_bytes())
+            migrated = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
+                cwd=ROOT, check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(migrated.returncode, 0, migrated.stdout + migrated.stderr)
+            for profile in AGENTS.glob("*.toml"):
+                self.assertEqual((target / profile.name).read_bytes(), profile.read_bytes())
+            self.assertIn("MIGRATED", migrated.stdout)
+
+            custom = target / "astral-orchestrator-sol-reviewer.toml"
+            custom.write_bytes(previous.joinpath(custom.name).read_bytes() + b"\n# my changes\n")
+            refused = subprocess.run(
+                ["sh", str(INSTALL_AGENTS), "--target-dir", str(target)],
+                cwd=ROOT, check=False, capture_output=True, text=True,
+            )
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("will not be overwritten", refused.stderr)
+            self.assertIn(b"# my changes", custom.read_bytes())
 
     def test_agent_installer_is_idempotent_and_conflict_safe(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -1369,7 +1401,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(matched.returncode, 0, matched.stdout + matched.stderr)
             evidence = json.loads(matched.stdout)
             self.assertEqual(evidence["status"], "match")
-            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol|gpt-6-astra")
+            self.assertEqual(evidence["expected_model"], "gpt-6-sol|gpt-6-luna|gpt-6-astra|gpt-5.6-sol")
             self.assertEqual(evidence["expected_effort"], "high")
             self.assertEqual(evidence["observed_model"], "gpt-6-astra")
             self.assertEqual(evidence["observed_effort"], "high")
@@ -1767,8 +1799,14 @@ class SkillContractTests(unittest.TestCase):
         expected = {
             "luna": (
                 "astral_orchestrator_luna_implementer",
-                "gpt-5.6-luna",
+                "gpt-6-luna",
                 "max",
+                "workspace-write",
+            ),
+            "sol": (
+                "astral_orchestrator_sol_implementer",
+                "gpt-6-sol",
+                "high",
                 "workspace-write",
             ),
             "terra": (
@@ -1779,7 +1817,7 @@ class SkillContractTests(unittest.TestCase):
             ),
             "reviewer": (
                 "astral_orchestrator_sol_reviewer",
-                "gpt-5.6-sol",
+                "gpt-6-sol",
                 "high",
                 "workspace-write",
             ),
@@ -1973,7 +2011,7 @@ class SkillContractTests(unittest.TestCase):
                     "--terra",
                     "max",
                     "--reviewer",
-                    "ultra",
+                    "max",
                     "--json",
                 ],
                 cwd=ROOT,
@@ -1990,8 +2028,9 @@ class SkillContractTests(unittest.TestCase):
                     "orchestrator": "medium",
                     "astra": "medium",
                     "luna": "low",
+                    "sol": "high",
                     "terra": "max",
-                    "reviewer": "ultra",
+                    "reviewer": "max",
                 },
             )
 
@@ -2017,8 +2056,9 @@ class SkillContractTests(unittest.TestCase):
                     "orchestrator": "medium",
                     "astra": "medium",
                     "luna": "xhigh",
+                    "sol": "high",
                     "terra": "max",
-                    "reviewer": "ultra",
+                    "reviewer": "max",
                 },
             )
 
@@ -2043,6 +2083,7 @@ class SkillContractTests(unittest.TestCase):
                     "orchestrator": "high",
                     "astra": "medium",
                     "luna": "max",
+                    "sol": "high",
                     "terra": "high",
                     "reviewer": "high",
                 },
@@ -2834,7 +2875,7 @@ class UserExperienceTests(unittest.TestCase):
             "requirements",
             "github marketplace install",
             "first use",
-            "three companion profiles",
+            "four companion profiles",
             "cannot grant access to a model",
         ):
             self.assertIn(required, pages["getting"])
@@ -2842,7 +2883,7 @@ class UserExperienceTests(unittest.TestCase):
         for required in (
             "sol high",
             "luna max",
-            "terra high",
+            "sol high",
             "configure-effort.sh",
             "minimal",
             "ultra",
@@ -3007,7 +3048,7 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("inspired by", attribution)
         self.assertIn("astral does not run ori or openrouter", attribution)
         routing = " ".join(read(WEBSITE_DOCS_ROUTING).lower().split())
-        for model in ("gpt-5.6-sol", "gpt-6-astra", "gpt-5.6-luna", "gpt-5.6-terra"):
+        for model in ("gpt-6-sol", "gpt-6-astra", "gpt-6-luna"):
             self.assertIn(model, routing)
 
     def test_editable_diagrams_preserve_rendered_labels_and_comet_handoff(self):

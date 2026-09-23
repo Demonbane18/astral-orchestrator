@@ -352,7 +352,7 @@ def observe_persisted_route(
 def read_profile(role: str) -> tuple[str, str, str]:
     names = {
         "terra": "astral-orchestrator-terra-implementer.toml",
-        "reviewer": "astral-orchestrator-sol-reviewer.toml",
+        "reviewer": "historical-v3.11.0/astral-orchestrator-sol-reviewer.toml",
     }
     with (PROFILE_DIR / names[role]).open("rb") as handle:
         profile = tomllib.load(handle)

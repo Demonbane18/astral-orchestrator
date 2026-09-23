@@ -1,14 +1,14 @@
 # Morph mode
 
 Morph is an explicit opt-in: use it only when the user explicitly names it. Morph keeps the detected
-Sol or Astra primary at its observed effort responsible for requirements, architecture, decomposition,
+Sol, Luna, or Astra primary at its observed effort responsible for requirements, architecture, decomposition,
 integration, verification, and the final decision. The normal exact Sol review route
 applies, with availability handled by the common review rule below. Only a bounded worker
 card may use a user-selected model.
 
 ## Codex route: before launch
 
-1. Complete the normal primary preflight and prove the detected Sol or Astra primary.
+1. Complete the normal primary preflight and prove the detected Sol, Luna, or Astra primary.
    Morph does not replace the current primary or substitute another reviewer model. The
    documented primary self-review fallback is not independent review.
 2. Record one private packet per worker card with exact ownership, exact `provider/model`
@@ -62,7 +62,7 @@ model, requested effort, or process route fails at runtime, stop that worker and
 the smallest corrective action; do not claim that Morph completed.
 
 A user-configured external or non-OpenAI provider can receive the worker packet as part of
-model inference. “No network dependency” means Astral adds no network client, service, or
+model inference. “No network dependency” means the Morph launcher adds no network client, service, or
 credential handling; it does not mean provider traffic or model inference is local.
 
 ## Portable-host route

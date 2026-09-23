@@ -25,9 +25,9 @@ the header separator row below: never fence it and never use plain pipe text.
 
 | Lane | Role | Model | Effort | State | Evidence |
 |---|---|---|---|---|---|
-| Primary | requested: primary session; observed: <primary runtime or not yet available> | requested: detected gpt-5.6-sol or gpt-6-astra; observed: <value or not yet available> | requested: observed session effort; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence> |
-| Worker <card> | requested: built-in worker, matching astral_orchestrator_luna_implementer profile, matching astral_orchestrator_terra_implementer profile, or Morph worker; observed: <agent type or Morph route / not yet available> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence> |
-| Fresh reviewer | requested: default or matching astral_orchestrator_sol_reviewer profile; observed: <agent type or not yet available> | requested: gpt-5.6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable> |
+| Primary | requested: primary session; observed: <primary runtime or not yet available> | requested: detected gpt-6-sol or gpt-6-astra; observed: <value or not yet available> | requested: observed session effort; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <primary checker, user-confirmed fallback, or runtime evidence> |
+| Worker <card> | requested: built-in worker, matching astral_orchestrator_luna_implementer profile, matching astral_orchestrator_sol_implementer profile, or Morph worker; observed: <agent type or Morph route / not yet available> | requested: <model>; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id and matching runtime evidence> |
+| Fresh reviewer | requested: default or matching astral_orchestrator_sol_reviewer profile; observed: <agent type or not yet available> | requested: gpt-6-sol; observed: <value or not yet available> | requested: <configured effort>; observed: <value or not yet available> | <planned/requested/launched/running/returned/verified/blocked/failed/not needed> | <task or session id, runtime evidence, and sandbox when applicable> |
 
 Use `planned`, `requested`, `launched`, `running`, `returned`, `verified`, `blocked`,
 `failed`, or `not needed` only as defined in `routing-and-preflight.md`. Update the
@@ -37,7 +37,7 @@ restrained interval for long-running work. Do not repeat it merely to create act
 For Singularity, emit only the primary row from this panel. Do not add worker or
 fresh-reviewer placeholders: Singularity has no subagents and no fresh reviewer.
 
-For Hypernova, record the detected primary and exact Sol Ultra or configured Astra children. Name the
+For Hypernova, record the detected primary and exact Sol Max or configured Astra children. Name the
 built-in `worker` or built-in `default` route, and include observed capacity and the safe
 wave calculation in evidence. Do not label requested values as observed. Missing or
 mismatched evidence blocks the route and the output is discarded.
@@ -99,8 +99,8 @@ CAPACITY
 - Worker count: min(<ready independent count>, <available slots> - 1 primary) = <wave size>
 
 ROUTE
-- Primary: observed gpt-5.6-sol or gpt-6-astra at current session effort
-- Every implementation lane: built-in worker, gpt-5.6-sol Ultra by default or gpt-6-astra at configured Astra effort
+- Primary: observed gpt-6-sol or gpt-6-astra at current session effort
+- Every implementation lane: built-in worker, gpt-6-sol Max by default or gpt-6-astra at configured Astra effort
 - Fresh reviewer: built-in default on the selected exact child route
 - Every spawn: distinct unique lowercase task name, fork_turns: "none"
 - Downstream delegation: forbidden
@@ -123,7 +123,7 @@ fallback.
 
 ```text
 ROLE
-<built-in Astra worker, astral_orchestrator_luna_implementer, or astral_orchestrator_terra_implementer>
+<built-in Astra worker, astral_orchestrator_luna_implementer, or astral_orchestrator_sol_implementer>
 Implement the bounded work card below. Surface material ambiguity instead of expanding
 scope or redesigning settled decisions. The orchestrator selected this lane because:
 <one concrete routing reason>
@@ -173,15 +173,15 @@ RETURN
 
 ```text
 ROLE
-Built-in native worker, requested gpt-5.6-sol at Ultra by default or gpt-6-astra at the
+Built-in native worker, requested gpt-6-sol at Max by default or gpt-6-astra at the
 configured Astra effort. Implement the exact bounded card
 directly. Do not spawn or delegate to another agent.
 
 SPAWN CONTRACT
 - agent_type: "worker"
 - task_name: "<unique_lowercase_task_name>"
-- model: "gpt-5.6-sol" or "gpt-6-astra"
-- reasoning_effort: "ultra" or "<configured Astra effort>"
+- model: "gpt-6-sol" or "gpt-6-astra"
+- reasoning_effort: "max" or "<configured Astra effort>"
 - fork_turns: "none"
 
 OUTCOME
@@ -267,8 +267,8 @@ do not spawn or delegate to another agent. A mismatched custom reviewer is ineli
 SPAWN CONTRACT
 - agent_type: "default"
 - task_name: "<unique_lowercase_reviewer_task_name>"
-- model: "gpt-5.6-sol" or "gpt-6-astra"
-- reasoning_effort: "ultra" or "<configured Astra effort>"
+- model: "gpt-6-sol" or "gpt-6-astra"
+- reasoning_effort: "max" or "<configured Astra effort>"
 - fork_turns: "none"
 
 OUTCOME

@@ -3,8 +3,8 @@
 Pulsar is an explicit opt-in route for a user who wants a deliberately slower,
 evidence-oriented execution record. Never auto-select Pulsar: recommend Orbit for
 normal work. It adds no Ori, OpenRouter, API, network service, secret, analytics, or
-dynamic model selection. It keeps the detected Sol or Astra session primary and uses
-configured `gpt-6-astra`, `gpt-5.6-luna`, `gpt-5.6-terra`, and reviewer lanes.
+dynamic model selection. It keeps the detected Sol, Luna, or Astra session primary and uses
+configured `gpt-6-astra`, `gpt-6-luna`, `gpt-6-sol`, and reviewer lanes.
 
 The primary retains requirements, architecture, safety decisions, decomposition, integration,
 and final routing. Pulsar does not make a worker an independent owner of those choices.
@@ -29,7 +29,7 @@ an execution attempt repeats only after a `fix-first` verdict.
 3. **Preflight.** Run the normal Orbit/Event Horizon route preflight and record observed route
    evidence.
 4. **Route.** The primary applies the deterministic rules below; a planning probe is allowed only
-   for genuine Luna/Terra ambiguity.
+   for genuine Luna/Sol ambiguity.
 5. **Attempt N — Implementation.** Start with attempt `1`. The selected parent lane owns
    integration for the frozen graph and launches every ready independent item concurrently
    up to capacity. It may use the shallowest useful hierarchy for coherent subtrees.
@@ -107,8 +107,8 @@ repository or records.
 
 ## Candidate planning probes
 
-When only Luna/Terra selection is ambiguous, the primary requests exactly one Luna probe and one
-Terra probe concurrently. Both probes receive the identical frozen card and acceptance checks. A probe
+When only Luna/Sol selection is ambiguous, the primary requests exactly one Luna probe and one
+Sol probe concurrently. Both probes receive the identical frozen card and acceptance checks. A probe
 is behaviorally read-only: it must not edit, format, create, delete, or run a
 state-changing command. That instruction is not hard sandbox isolation. Probes cannot
 change the card, requirements, architecture, safety boundaries, acceptance checks, files,
@@ -119,7 +119,7 @@ Astra as a planning probe.
 
 ```text
 ROLE
-<astral_orchestrator_luna_implementer or astral_orchestrator_terra_implementer>
+<astral_orchestrator_luna_implementer or astral_orchestrator_sol_implementer>
 Provide a planning probe for Pulsar routing only. Remain behaviorally read-only: do not
 edit, format, create, delete, or run a state-changing command. This instruction is not
 hard sandbox isolation. Do not spawn or delegate.
@@ -132,7 +132,7 @@ REPORT ONLY
 - Narrow and repeatable/mechanical: yes/no, with decisive fact
 - Exact checks: yes/no, with decisive fact
 - Flags: debugging, integration, cross-component, context-heavy, moderate ambiguity
-- Recommended lane: Luna or Terra, with decisive facts
+- Recommended lane: Luna or Sol, with decisive facts
 
 BOUNDARIES
 - Do not change the work card, requirements, architecture, safety boundaries, acceptance
@@ -151,10 +151,10 @@ them, choose Luna only when every condition is true:
 - no debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag
   is present.
 
-Choose Terra when any listed flag is present. Choose Astra only for a bounded difficult
+Choose Sol when any listed flag is present. Choose Astra only for a bounded difficult
 diagnosis or deep cross-domain synthesis whose reasoning benefit justifies its configured
 cost. If probes materially disagree, the primary records
-the decisive facts and defaults to Terra. Never route by prestige, popularity, or a
+the decisive facts and defaults to Sol. Never route by prestige, popularity, or a
 silent fallback. Requested and observed role, model, effort, and task or session identity
 must be recorded as facts; unknown values remain unknown.
 

@@ -20,12 +20,12 @@
           <section aria-labelledby="lane-map">
             <h2 id="lane-map">Pinned lanes and default efforts</h2>
             <div class="table-scroll"><table><thead><tr><th scope="col">Responsibility</th><th scope="col">Model</th><th scope="col">Default</th></tr></thead><tbody>
-              <tr><td>Main orchestrator and final decisions</td><td>Current <code>gpt-5.6-sol</code> or <code>gpt-6-astra</code> session</td><td><strong>Observed session effort</strong></td></tr>
+              <tr><td>Main orchestrator and final decisions</td><td>Current <code>gpt-6-sol</code>, <code>gpt-6-luna</code>, or <code>gpt-6-astra</code> session</td><td><strong>Observed session effort</strong></td></tr>
               <tr><td>Selected deep-reasoning work</td><td><code>gpt-6-astra</code></td><td><strong>Astra Medium</strong></td></tr>
-              <tr><td>Focused, narrow, fully specified work</td><td><code>gpt-5.6-luna</code></td><td><strong>Luna Max</strong></td></tr>
-              <tr><td>Context-heavy implementation, debugging, integration, or moderate refactoring</td><td><code>gpt-5.6-terra</code></td><td><strong>Terra High</strong></td></tr>
-              <tr><td>Fresh final review</td><td><code>gpt-5.6-sol</code></td><td><strong>Reviewer Sol High</strong></td></tr>
-              <tr><td>Hypernova children</td><td><code>gpt-5.6-sol</code> by default, or <code>gpt-6-astra</code></td><td><strong>Sol Ultra</strong> or configured Astra effort</td></tr>
+              <tr><td>Focused, narrow, fully specified work</td><td><code>gpt-6-luna</code></td><td><strong>Luna Max</strong></td></tr>
+              <tr><td>Context-heavy implementation, debugging, integration, or moderate refactoring</td><td><code>gpt-6-sol</code></td><td><strong>Sol High</strong></td></tr>
+              <tr><td>Fresh final review</td><td><code>gpt-6-sol</code></td><td><strong>Reviewer Sol High</strong></td></tr>
+              <tr><td>Hypernova children</td><td><code>gpt-6-sol</code> by default, or <code>gpt-6-astra</code></td><td><strong>Sol Max</strong> or configured Astra effort</td></tr>
             </tbody></table></div>
             <p>The model already running the task remains primary at its observed effort. Child effort comes from persisted per-lane settings. Primary effort never caps worker effort, and Astra is chosen only when its reasoning benefit justifies the added cost.</p>
           </section>
@@ -35,15 +35,22 @@
             <p>Reasoning effort is a requested reasoning budget. Higher values can increase latency and usage and do not guarantee a better result.</p>
             <h3>Show effective settings</h3><pre><code>sh scripts/configure-effort.sh --show</code></pre>
             <h3>Change one lane</h3><pre><code>sh scripts/configure-effort.sh --astra medium</code></pre>
-            <h3>Set several lanes or restore defaults</h3><pre><code>sh scripts/configure-effort.sh --astra medium --luna max --terra high --reviewer high
+            <h3>Set several lanes or restore defaults</h3><pre><code>sh scripts/configure-effort.sh --astra medium --luna max --sol high --reviewer high
 sh scripts/configure-effort.sh --reset</code></pre>
             <p>Allowed labels are minimal, low, medium, high, xhigh, max, and ultra. Max and Ultra are model- and account-dependent. A rejected value is an error, never a silent fallback. Settings persist outside the plugin cache at <code>~/.codex/astral-orchestrator/effort-levels.toml</code>, or under <code>CODEX_HOME</code> when set.</p>
+          </section>
+
+          <section aria-labelledby="typesafe-routing">
+            <h2 id="typesafe-routing">Optional TypeSafe worker selection</h2>
+            <p>Install <code>typesafe-session@astral-orchestrator</code> separately and trust its hooks to keep one task's setting through compaction. Use the standalone commands <code>TypeSafe on</code>, <code>TypeSafe off</code>, or <code>TypeSafe status</code>. It starts off unless the project root's <code>AGENTS.md</code> contains <code>TypeSafe session: on</code>; an explicit off wins for the task.</p>
+            <p>When on, code filters routes by the chosen mode, observed model availability, exact user choices, delegation permission, and settled acceptance. TypeSafe Jev Choice selects only among eligible workers; Score may adjust effort within the selected model's supported values. The current primary, authorization, execution, and runtime proof remain under Codex control. An unavailable key or uncertain judgment blocks Jev selection visibly.</p>
+            <p>For local setup, copy the repository's <code>.env.example</code> to an owner-only, git-ignored <code>.env.local</code> in the active project and add <code>TYPESAFE_API_KEY</code>. The key stays local; the website never receives it.</p>
           </section>
 
           <section aria-labelledby="primary-proof">
             <h2 id="primary-proof">Primary proof comes first</h2>
             <p>Every mode runs the local primary checker before execution. When <code>CODEX_THREAD_ID</code> and local rollout evidence are available, it checks the observed model and effort and emits only <strong>allowlisted route fields</strong>—never prompt or session contents.</p>
-            <p>The checker accepts an observed <code>gpt-5.6-sol</code> or <code>gpt-6-astra</code> primary and reports the effort already running. Optional <code>--require-sol-ultra</code> and <code>--require-astra-ultra</code> flags are strict diagnostics; no mode requires them.</p>
+            <p>The checker accepts an observed <code>gpt-6-sol</code>, <code>gpt-6-luna</code>, or <code>gpt-6-astra</code> primary and reports the effort already running. An explicitly selected legacy <code>gpt-5.6-sol</code> primary is also supported. Optional <code>--require-sol-ultra</code> (legacy Sol only) and <code>--require-astra-ultra</code> flags are strict diagnostics; no mode requires them.</p>
             <p>A <strong>mismatch or invalid result blocks</strong> every route. When evidence is unavailable, only modes whose contracts permit it may ask once for user confirmation and must label it user-confirmed. Singularity and Hypernova require observed proof; confirmation cannot override it.</p>
           </section>
 
@@ -66,13 +73,13 @@ sh scripts/configure-effort.sh --reset</code></pre>
             <h2 id="morph-provider">Morph and external-provider disclosure</h2>
             <p>Morph can use an OpenCodex-routed <code>provider/model</code> or another user-selected native model only for a bounded worker card. The provider may be external and may receive the bounded worker packet during inference.</p>
             <p>Astral <strong>does not install OpenCodex</strong>, change <code>~/.opencodex</code>, start a service, or install a provider package. Astral does not handle credentials. It does not claim that every provider supports native effort semantics. Provider support and effort semantics remain capability-dependent, and a failure blocks the worker rather than silently changing route.</p>
-            <p>“No network client” means Astral adds no client, service, or credential handler; it does not mean provider traffic is local. Review the provider's terms and your workplace rules before sending sensitive material.</p>
+            <p>The optional TypeSafe selector is the only bundled external judgment client and runs only when enabled with a project key. This does not imply provider traffic is local. Review the provider's terms and your workplace rules before sending sensitive material.</p>
           </section>
 
           <section aria-labelledby="capacity-routing">
             <h2 id="capacity-routing">Capacity, Constellation, and Hypernova</h2>
             <p>Constellation starts concurrent work only after Sol proves independent cards, non-overlapping ownership, suitable cost-aware workers, and host-advertised capacity after the primary consumes one slot. When capacity or independence is uncertain, Constellation may use serial Orbit-style routing.</p>
-            <p>Hypernova instead requires observed native capacity and exact Sol Ultra routes. It launches the maximum safe ready wave, recalculates capacity between waves, and blocks rather than treating a different route as equivalent. Dependent or safety-sensitive cards may be sequenced within the exact native contract.</p>
+            <p>Hypernova instead requires observed native capacity and exact Sol Max routes. It launches the maximum safe ready wave, recalculates capacity between waves, and blocks rather than treating a different route as equivalent. Dependent or safety-sensitive cards may be sequenced within the exact native contract.</p>
           </section>
         </article>
       </div></section>

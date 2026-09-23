@@ -2,14 +2,15 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.11.0 is an installable, open-source Codex plugin that turns a goal
-into routed, verified work. The Sol or Astra model already running your task remains the
+Astral Orchestrator v3.12.0 is an installable, open-source Codex plugin that turns a goal
+into routed, verified work. The Sol, Luna, or Astra model already running your task remains the
 primary orchestrator. Astral selects bounded workers and checks the result before handoff.
 
-Version 3.11.0 restores Sol as a supported primary alongside Astra. It detects the current
-model and effort instead of forcing a lead. Astra is also available as a configurable
-worker, Medium by default, when its added reasoning is worth the cost. Mandatory Astral
-status updates show the primary and every child route throughout the run.
+Version 3.12.0 adds GPT-6 Sol and Luna primary support. Focused work defaults to
+GPT-6 Luna Max; context-heavy work and fresh review default to GPT-6 Sol High.
+Selected difficult work can use Astra, Medium by default. Hypernova uses GPT-6
+Sol Max by default. Existing GPT-5.6 routes remain available only by explicit choice.
+Mandatory status updates show the primary and every child route throughout the run.
 
 Astral Orchestrator is an independent open-source project. It is not affiliated with or
 endorsed by OpenAI.
@@ -28,10 +29,10 @@ Start a new Codex task after installation so Codex can discover the plugin.
 ## Requirements
 
 - A current Codex CLI or desktop app with plugins enabled.
-- Access to Sol or Astra for the primary and to any worker models selected for the run.
+- Access to a supported Sol, Luna, or Astra primary and to any worker models selected for the run.
 - Python 3.11 or newer; Astral's local tools use only the standard library.
 - For Hypernova only: native multi-agent controls and access to its selected exact child
-  route—Sol Ultra by default or Astra at the configured effort.
+  route—Sol Max by default or Astra at the configured effort.
 
 Astral stops when an exact required model, effort, or route cannot be proven. It never
 silently substitutes a different one, and model availability depends on your account.
@@ -51,14 +52,14 @@ workflow.
 
 | Mode | Best for | Route in brief |
 |---|---|---|
-| Comet | Tiny, obvious, reversible work | The detected Sol or Astra primary completes the change and self-reviews. |
-| Orbit (default) | Normal changes and projects | The primary plans, Astra/Luna/Terra handles bounded work, and fresh Sol reviews. |
+| Comet | Tiny, obvious, reversible work | The detected Sol, Luna, or Astra primary completes the change and self-reviews. |
+| Orbit (default) | Normal changes and projects | The primary plans, Astra/Luna/Sol handles bounded work, and fresh Sol reviews. |
 | Event Horizon | High-risk or hard-to-reverse work | Necessary confirmation gates, targeted checks, and one fresh review-and-repair pass. |
 | Singularity (opt-in) | Meaningful work suited to one session | One verified primary completes and self-reviews a compact card; no subagents. |
 | Pulsar (opt-in) | Deliberately evidence-oriented work | The primary freezes one card and records non-secret route evidence. |
 | Morph (opt-in) | A bounded card needing a selected worker model | The detected session stays primary while the chosen worker route is proven. |
 | Constellation (opt-in) | Several independent, ready cards | Work fans out within observed capacity, then the primary integrates and Sol reviews it. |
-| Hypernova (opt-in) | Maximum native throughput | The detected primary launches safe native waves using Sol Ultra or configured Astra workers, followed by fresh review. |
+| Hypernova (opt-in) | Maximum native throughput | The detected primary launches safe native waves using Sol Max or configured Astra workers, followed by fresh review. |
 
 Hypernova is Codex-native, performance-first, and never automatic. It requires the exact
 native route for every lane and has no process, portable, lower-effort, alternate-model,
@@ -75,11 +76,30 @@ Measured to Pulsar.
 - Astral does not broaden your request or authorize publishing, deployment, credentials,
   destructive actions, or other consequential external changes.
 - Risk can raise safeguards, but a mode name cannot lower required safeguards.
-- The plugin adds no API key, analytics, background service, or paid runtime dependency.
+- Astral runs without an API key, analytics, background service, or paid runtime dependency.
+- The optional TypeSafe Session companion sends a short non-sensitive task summary to
+  TypeSafe only when the current task is on and a project key is configured.
 - External providers selected through Morph may process that bounded work under their own
   terms; Astral does not configure or operate them.
 
 Read the full [Safety and privacy guide](https://astral-orchestrator.vercel.app/docs/safety/).
+
+## Optional TypeSafe routing
+
+Install the companion only if you want Jev to choose among eligible worker routes:
+
+```sh
+codex plugin add typesafe-session@astral-orchestrator
+```
+
+Trust its hooks in Codex for session persistence. In a task, say `TypeSafe on`,
+`TypeSafe off`, or `TypeSafe status`. It is off by default unless the project root's
+`AGENTS.md` contains the exact line `TypeSafe session: on`; an explicit off wins for
+that task. Jev never changes the current primary, authorizes an action, or launches
+a worker. To use it locally, copy `.env.example` to an owner-only `.env.local` in
+your active project and set `TYPESAFE_API_KEY` there. Never commit the key. If the
+key or exact route is unavailable, Astral reports the blockage rather than claiming
+a Jev decision.
 
 ## Update
 

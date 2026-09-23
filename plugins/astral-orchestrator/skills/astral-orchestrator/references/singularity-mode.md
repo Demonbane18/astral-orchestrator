@@ -1,15 +1,15 @@
 # Singularity mode
 
 Singularity is an **explicit opt-in** for meaningful low- or medium-risk work that is
-larger than Comet but does not need multi-agent orchestration. It uses **one verified Sol
-or Astra primary** at the observed session effort from start to finish. Never auto-select
+larger than Comet but does not need multi-agent orchestration. It uses **one verified Sol,
+Luna, or Astra primary** at the observed session effort from start to finish. Never auto-select
 Singularity: Orbit remains the default.
 
 ## Route and boundary
 
 - Follow [primary-verification.md](primary-verification.md) before work starts. Do not
   load child routing or worker templates for this single-session mode.
-- Singularity requires an observed supported Sol or Astra model and effort. If `check-primary.py`
+- Singularity requires an observed supported Sol, Luna, or Astra model and effort. If `check-primary.py`
   reports unavailable, unavailable evidence blocks Singularity; user confirmation cannot
   override that requirement. A `mismatch` or `invalid` result also blocks the route.
 - Use the verified current primary session at its observed effort. Once

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Choose among Astral Orchestrator's eight delivery modes with a detected Sol or Astra primary and configurable worker routes.">
+    <meta name="description" content="Choose among Astral Orchestrator's eight delivery modes with a detected Sol, Luna, or Astra primary and configurable worker routes.">
     <meta name="theme-color" content="#f4f2ec">
     <title>Modes · Astral Orchestrator docs</title>
     <link rel="icon" type="image/png" href="../../assets/astral-orchestrator-favicon-32.png">
@@ -28,14 +28,14 @@
             <div class="table-scroll"><table>
               <thead><tr><th scope="col">Mode</th><th scope="col">Best for</th><th scope="col">Contract</th></tr></thead>
               <tbody>
-                <tr><td><strong>Comet</strong></td><td>Tiny, obvious, easy-to-undo work</td><td>The detected Sol or Astra primary works directly at its observed effort and performs one self-review.</td></tr>
-                <tr><td><strong>Orbit (default)</strong></td><td>Normal changes and projects</td><td>The primary plans, a bounded Astra, Luna, or Terra lane implements, and a fresh Sol reviewer checks the result.</td></tr>
+                <tr><td><strong>Comet</strong></td><td>Tiny, obvious, easy-to-undo work</td><td>The detected Sol, Luna, or Astra primary works directly at its observed effort and performs one self-review.</td></tr>
+                <tr><td><strong>Orbit (default)</strong></td><td>Normal changes and projects</td><td>The primary plans, a bounded Astra, Luna, or Sol lane implements, and a fresh Sol reviewer checks the result.</td></tr>
                 <tr><td><strong>Event Horizon</strong></td><td>Credentials, payments, private data, production, migrations, or major changes</td><td>A compact dependency graph, necessary confirmation gates, targeted checks, and one concise workspace-write review-and-repair pass.</td></tr>
-                <tr><td><strong>Singularity (explicit opt-in)</strong></td><td>Meaningful low- or medium-risk work larger than Comet</td><td>One verified Sol or Astra primary completes one compact card at its observed effort, with no subagents or fresh reviewer.</td></tr>
+                <tr><td><strong>Singularity (explicit opt-in)</strong></td><td>Meaningful low- or medium-risk work larger than Comet</td><td>One verified Sol, Luna, or Astra primary completes one compact card at its observed effort, with no subagents or fresh reviewer.</td></tr>
                 <tr><td><strong>Pulsar (explicit opt-in)</strong></td><td>A deliberately evidence-oriented request</td><td>The primary freezes one canonical graph and may fan out ready independent items before one integrated review.</td></tr>
                 <tr><td><strong>Morph (explicit opt-in)</strong></td><td>A bounded card needing a user-selected routed or native model</td><td>The detected session remains primary; the chosen worker route is proven, and a fresh Sol review remains required.</td></tr>
                 <tr><td><strong>Constellation (explicit opt-in)</strong></td><td>Several independent ready cards</td><td>The primary proves ownership and capacity, launches cost-aware waves, integrates, and requests a fresh Sol review.</td></tr>
-                <tr><td><strong>Hypernova (explicit opt-in)</strong></td><td>Maximum native throughput</td><td>The detected primary launches Sol Ultra workers by default or configured Astra workers and requires fresh review.</td></tr>
+                <tr><td><strong>Hypernova (explicit opt-in)</strong></td><td>Maximum native throughput</td><td>The detected primary launches Sol Max workers by default or configured Astra workers and requires fresh review.</td></tr>
               </tbody>
             </table></div>
             <p>Astral raises safeguards when a request is riskier than the selected mode. It does not broaden the work you asked for. Orbit remains the default; Singularity, Pulsar, Morph, Constellation, and Hypernova are never automatic.</p>
@@ -44,17 +44,17 @@
           <section aria-labelledby="singularity-hypernova">
             <h2 id="singularity-hypernova">Singularity and Hypernova are opposites</h2>
             <div class="mode-contrast">
-              <div><h3>Singularity</h3><p>One verified Sol or Astra primary, one compact card, targeted context, no subagents, no fresh reviewer, and one proportional self-review.</p></div>
-              <div><h3>Hypernova</h3><p>An observed Sol or Astra primary uses as many safe native child lanes as capacity permits, followed by mandatory fresh review. Sol Ultra is the default child route; Astra uses its configured effort.</p></div>
+              <div><h3>Singularity</h3><p>One verified Sol, Luna, or Astra primary, one compact card, targeted context, no subagents, no fresh reviewer, and one proportional self-review.</p></div>
+              <div><h3>Hypernova</h3><p>An observed Sol, Luna, or Astra primary uses as many safe native child lanes as capacity permits, followed by mandatory fresh review. Sol Max is the default child route; Astra uses its configured effort.</p></div>
             </div>
             <p>Neither mode replaces the current primary or changes its effort. Hypernova child routes remain exact and independently verified.</p>
           </section>
 
           <section id="hypernova" aria-labelledby="hypernova-title">
             <h2 id="hypernova-title">Hypernova: the exact performance-first contract</h2>
-            <p>Hypernova is an <strong>explicit opt-in</strong> and the <strong>opposite of Singularity</strong>. It keeps the observed Sol or Astra primary at its current effort. Every implementation lane uses exact <code>gpt-5.6-sol</code> Ultra by default or <code>gpt-6-astra</code> at the configured Astra effort.</p>
+            <p>Hypernova is an <strong>explicit opt-in</strong> and the <strong>opposite of Singularity</strong>. It keeps the observed Sol, Luna, or Astra primary at its current effort. Every implementation lane uses exact <code>gpt-6-sol</code> Max by default or <code>gpt-6-astra</code> at the configured Astra effort.</p>
             <p>It uses the <strong>maximum safely available concurrency</strong> from observed <strong>host-advertised capacity</strong>. The primary consumes one slot; each child has non-overlapping ownership, a unique lowercase task name, and <code>fork_turns: "none"</code>. Wave size is the smaller of ready independent cards and observed available slots after that primary slot, and capacity is recalculated between waves. Workers cannot delegate or invent new work.</p>
-            <p>After integration, a mandatory fresh built-in-default reviewer uses the same selected Sol Ultra or configured Astra route. Hypernova is <strong>native MultiAgentsV2 only</strong>. It has <strong>no legacy exact-process fallback</strong>, no process or portable route, <strong>no serial fallback</strong> for missing capacity or route proof, <strong>no self-review fallback</strong>, and <strong>no model or effort downgrade</strong>. A mismatched lane is discarded. Dependent or safety-sensitive cards can still be sequenced serially inside the exact native route; that sequencing is not a substitute route.</p>
+            <p>After integration, a mandatory fresh built-in-default reviewer uses the same selected Sol Max or configured Astra route. Hypernova is <strong>native MultiAgentsV2 only</strong>. It has <strong>no legacy exact-process fallback</strong>, no process or portable route, <strong>no serial fallback</strong> for missing capacity or route proof, <strong>no self-review fallback</strong>, and <strong>no model or effort downgrade</strong>. A mismatched lane is discarded. Dependent or safety-sensitive cards can still be sequenced serially inside the exact native route; that sequencing is not a substitute route.</p>
             <p>Choose Hypernova for <strong>speed and throughput over token efficiency</strong>. High-risk cards inherit <strong>Event Horizon confirmation gates</strong>. “Go nuts” does not bypass safety or authorization, does not expand scope, and does not approve publishing, deployment, credential use, or destructive work.</p>
           </section>
 
