@@ -769,6 +769,66 @@
       "evidence": "TypeSafe transport now sends an explicit Astral-Orchestrator/3.12.1 User-Agent after Python default was blocked by edge HTTP 403 code 1010. One live synthetic Jev request returned jev-1.13.0 Choice gpt-6-luna and Score 0.24 with confidences 0.82 and 0.64. All 180 unit tests, Astral verifier, direct skill/plugin validators, and diff checks pass. No key value was logged or committed.",
       "url": "https://github.com/Demonbane18/astral-orchestrator/commit/c2de2fc",
       "commit": "c2de2fc"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.12.1",
+      "status": "published",
+      "observed_at": "2026-09-23T01:18:00Z",
+      "evidence": "Public v3.12.1 GitHub release targets merged main 924450b; Astral asset SHA-256 78981a09d7afda564d67cb369359f4644347aaaf2f8d270012079f00701d7e3c and independent TypeSafe Session 1.0.0 asset SHA-256 94c11bcf7fd50a4ae99dad0fd225ab9ef622706dfd13369562902598ee3dfc8a match local archives and GitHub asset digests.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.12.1",
+      "commit": "924450bca234615d061b5e03dd83fbc0a5aefa77"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.12.1",
+      "status": "installable",
+      "observed_at": "2026-09-23T01:18:00Z",
+      "evidence": "Public GitHub API main ref returns Astral plugin manifest version 3.12.1; both Astral and TypeSafe Session marketplace entries remain present.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/blob/main/.agents/plugins/marketplace.json",
+      "commit": "924450bca234615d061b5e03dd83fbc0a5aefa77"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.12.1",
+      "status": "deployed",
+      "observed_at": "2026-09-23T01:18:00Z",
+      "evidence": "Vercel production deployment dpl_6fp1u5Efdcz9ZLLQfxPdLdX9jSpt is Ready and aliased to astral-orchestrator.vercel.app. Opera GX fetched the cache-busted production alias at HTTP 200 and observed v3.12.1, TypeSafe routing copy, and the corrected Pulsar sentence.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "924450bca234615d061b5e03dd83fbc0a5aefa77"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.12.0",
+      "status": "superseded",
+      "observed_at": "2026-09-23T01:22:13Z",
+      "evidence": "The v3.12.0 OpenAI draft was not submitted and is superseded by the TypeSafe transport patch release v3.12.1. It remains in the portal as a draft; no deletion or review submission was performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6ab3267445c88191a9b8bf31596e656f"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.12.1",
+      "status": "draft",
+      "observed_at": "2026-09-23T01:22:13Z",
+      "evidence": "OpenAI Platform in Opera GX created draft appsub_6ab32989ca0081919634c57e10e7b93a from the v3.12.1 Astral ZIP; Plugin Info reports version 3.12.1, GPT-6 Sol/Luna description, and the existing verified developer identity. Public URLs and skill scan still need review. No policy attestations or review submission were performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6ab32989ca0081919634c57e10e7b93a",
+      "commit": "924450bca234615d061b5e03dd83fbc0a5aefa77"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.12.1",
+      "status": "approved",
+      "observed_at": "2026-09-23T01:26:22Z",
+      "evidence": "Authenticated OpenAI Platform in Opera GX lists Astral Orchestrator 3.12.1 as Published with View in Directory after the user completed publication. The ledger submission schema stops at approved; no review submission or policy attestation was performed by Codex.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6ab32989ca0081919634c57e10e7b93a"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.12.1",
+      "status": "published",
+      "observed_at": "2026-09-23T01:26:22Z",
+      "evidence": "Direct read-only Codex browser inspection of the public ChatGPT Plugins page shows Astral Orchestrator version 3.12.1, Sol-Luna-Astra starter prompt and description, verified developer identity, and public website/privacy/terms links.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
     }
   ]
 }
