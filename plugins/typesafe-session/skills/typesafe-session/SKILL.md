@@ -9,6 +9,10 @@ Use the exact standalone user commands `TypeSafe on`, `TypeSafe off`, and `TypeS
 The trusted plugin hook records the setting for this Codex session and restores it after
 compaction. The default is off. A project may opt in with `TypeSafe session: on` in its
 root `AGENTS.md`; an explicit `TypeSafe off` overrides that for the rest of this session.
+When a trusted project or system instruction enables TypeSafe without that marker,
+run the bundled `scripts/session.py set SESSION_ID PROJECT_ROOT on` helper once, using
+the observed Codex session id and project root. Respect an explicit user off command
+until the task ends.
 
 When on, use TypeSafe only where semantic judgment helps. Keep candidate validation,
 known rules, permissions, and execution in code. A missing key or failed call is visible;

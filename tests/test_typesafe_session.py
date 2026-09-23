@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -57,6 +58,18 @@ class SessionToggleTests(unittest.TestCase):
                 self.assertIn("is on", enabled["hookSpecificOutput"]["additionalContext"])
                 status = session.hook({**base, "prompt": "TypeSafe status"})
                 self.assertIn("is on", status["hookSpecificOutput"]["additionalContext"])
+
+    def test_trusted_project_instruction_can_activate_without_marker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            with mock.patch.dict(os.environ, {"CODEX_HOME": str(project / "codex")}, clear=False):
+                self.assertEqual(router.session_mode(SESSION, project), "off")
+                result = subprocess.run(
+                    ["python3", str(ROOT / "plugins/typesafe-session/scripts/session.py"), "set", SESSION, str(project), "on"],
+                    env=os.environ.copy(), capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(router.session_mode(SESSION, project), "on")
 
 
 class RouteSelectionTests(unittest.TestCase):

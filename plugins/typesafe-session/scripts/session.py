@@ -85,8 +85,14 @@ def main() -> int:
         elif len(sys.argv) == 3 and sys.argv[1] == "status":
             path = state_path(sys.argv[2])
             print(json.dumps(read_state(path, os.getcwd()), separators=(",", ":")))
+        elif len(sys.argv) == 5 and sys.argv[1] == "set" and sys.argv[4] in {"on", "off"}:
+            path = state_path(sys.argv[2])
+            project = str(Path(sys.argv[3]).resolve())
+            state = {"project": project, "mode": sys.argv[4], "explicit": True}
+            save_state(path, state)
+            print(json.dumps(state, separators=(",", ":")))
         else:
-            print("usage: session.py hook|status SESSION_ID", file=sys.stderr)
+            print("usage: session.py hook | status SESSION_ID | set SESSION_ID PROJECT_ROOT on|off", file=sys.stderr)
             return 2
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"TypeSafe session error: {error}", file=sys.stderr)
