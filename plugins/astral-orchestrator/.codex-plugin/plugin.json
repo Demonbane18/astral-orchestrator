@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.11.0",
+  "version": "3.12.0",
   "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "JOHN PAUL FURIGAY FUSIN"
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "Astral Orchestrator",
     "shortDescription": "Auto-match GPT teams to tasks",
-    "longDescription": "Astral Orchestrator detects whether your current task is using Sol or Astra and keeps that session in charge. It routes bounded work to configurable Astra, Luna, or Terra workers, verifies the actual model and effort, and requires a fresh review when the mode calls for one. Astra is used deliberately for work that benefits from deeper reasoning, while ordinary work stays on lower-cost routes. A mandatory live status panel shows the primary, every worker, and review state throughout the run.",
+    "longDescription": "Astral Orchestrator detects whether your current task is using Sol, Luna, or Astra and keeps that session in charge. It routes bounded work to configurable Astra, Luna, or Sol workers, verifies the actual model and effort, and requires a fresh review when the mode calls for one. Astra is used deliberately for work that benefits from deeper reasoning, while ordinary work stays on lower-cost routes. A mandatory live status panel shows the primary, every worker, and review state throughout the run.",
     "developerName": "JOHN PAUL FURIGAY FUSIN",
     "category": "Productivity",
     "brandColor": "#0B1020",
@@ -30,7 +30,7 @@
     "composerIcon": "./skills/astral-orchestrator/assets/icon.png",
     "logo": "./skills/astral-orchestrator/assets/icon.png",
     "defaultPrompt": [
-      "Use Astral: detect my Sol or Astra primary; Orbit default; Comet tiny; Event Horizon high-risk; Singularity one session.",
+      "Use Astral: detect my Sol, Luna, or Astra primary; Orbit default; Comet tiny; Event Horizon high-risk; Singularity one session.",
       "Use Astral in Pulsar, Morph, or Constellation mode for this explicit opt-in request.",
       "Use Astral in Hypernova mode with the detected primary, configured workers, mandatory status, and fresh review."
     ]

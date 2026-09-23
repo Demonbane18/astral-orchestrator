@@ -49,7 +49,7 @@
               <h2 id="requirements">Requirements</h2>
               <ul>
                 <li>A current Codex CLI or desktop app with plugins enabled.</li>
-                <li>Access to Sol or Astra for the primary and to each worker model selected for the run.</li>
+                <li>Access to Sol, Luna, or Astra for the primary and to each worker model selected for the run.</li>
                 <li>Python 3.11 or newer; the included local tools use only the standard library.</li>
                 <li>For Hypernova, native MultiAgentsV2 controls plus a supported exact child route.</li>
               </ul>
@@ -72,13 +72,13 @@ codex plugin add astral-orchestrator@astral-orchestrator</code></pre>
 cd astral-orchestrator
 sh scripts/setup.sh --dry-run
 sh scripts/setup.sh</code></pre>
-              <p>The dry run prints planned local changes. Setup registers the checkout, adds the plugin, and installs three companion profiles without overwriting a different file. A missing or customized profile does not weaken normal native routing: Codex can use the built-in native worker for Luna or Terra and the built-in native default for a reviewer with explicit values.</p>
+              <p>The dry run prints planned local changes. Setup registers the checkout, adds the plugin, and installs four companion profiles without overwriting a different file. A missing or customized profile does not weaken normal native routing: Codex can use the built-in native worker for Luna or Sol and the built-in native default for a reviewer with explicit values.</p>
               <p class="doc-callout">Setup cannot grant access to a model or effort your account does not have. Profile values take precedence when a matching profile is selected, so a mismatch blocks that lane.</p>
             </section>
 
             <section aria-labelledby="first-use">
               <h2 id="first-use">First use</h2>
-              <p>Start a new Codex task with Sol or Astra at the effort you want for the primary, then say:</p>
+              <p>Start a new Codex task with Sol, Luna, or Astra at the effort you want for the primary, then say:</p>
               <pre><code>Use Astral Orchestrator to add a search box and verify every lane.</code></pre>
               <p>Orbit is the default, so you do not need to name it. For a different contract, explicitly name <a href="../modes/">one of the other modes</a>. For example:</p>
               <pre><code>Use Astral in Hypernova mode with the detected primary, configured workers, mandatory status, and exact-route checks.</code></pre>

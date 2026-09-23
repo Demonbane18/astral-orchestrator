@@ -69,8 +69,8 @@ manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, r
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 if manifest.get("name") != "astral-orchestrator":
     raise SystemExit("manifest name must be astral-orchestrator")
-if manifest.get("version") != "3.11.0":
-    raise SystemExit("manifest version must be Astral Orchestrator v3.11.0")
+if manifest.get("version") != "3.12.0":
+    raise SystemExit("manifest version must be Astral Orchestrator v3.12.0")
 if manifest.get("skills") != "./skills/":
     raise SystemExit("manifest skills path must be ./skills/")
 if manifest.get("license") != "MIT":
@@ -174,7 +174,7 @@ for required_text in ("Low risk", "Medium risk", "High risk", "User confirmation
 singularity = " ".join(singularity_path.read_text(encoding="utf-8").lower().split())
 for required_text in (
     "explicit opt-in",
-    "one verified sol or astra primary",
+    "one verified sol, luna, or astra primary",
     "do not spawn",
     "smallest sufficient intervention",
     "no more than five active steps",
@@ -191,8 +191,8 @@ for required_text in (
     "explicit opt-in",
     "opposite of singularity",
     "gpt-6-astra",
-    "gpt-5.6-sol",
-    "ultra",
+    "gpt-6-sol",
+    "max",
     "maximum safely available concurrency",
     "host-advertised capacity",
     "primary consumes one slot",
@@ -226,14 +226,13 @@ for required_text in ("Work card", "Implementation delegation", "Fresh review", 
         raise SystemExit(f"work templates are missing: {required_text}")
 
 routing = routing_path.read_text(encoding="utf-8")
-for role in ("astral_orchestrator_luna_implementer", "astral_orchestrator_terra_implementer", "astral_orchestrator_sol_reviewer"):
+for role in ("astral_orchestrator_luna_implementer", "astral_orchestrator_sol_implementer", "astral_orchestrator_sol_reviewer"):
     if role not in routing:
         raise SystemExit(f"routing role is missing: {role}")
 for required_text in (
-    "gpt-5.6-sol",
+    "gpt-6-sol",
     "gpt-6-astra",
-    "gpt-5.6-luna",
-    "gpt-5.6-terra",
+    "gpt-6-luna",
     "Do not silently substitute",
     "runtime evidence",
     "Hypernova",
@@ -265,7 +264,7 @@ for required_text in (
     "repository-root SHA-256 prefix",
     "frozen-card SHA-256 prefix",
     "id -u",
-    "exactly one Luna probe and one Terra probe",
+    "exactly one Luna probe and one Sol probe",
     "card.txt",
     "phase-state.txt",
     "ledger.txt",
@@ -282,8 +281,13 @@ for required_text in (
 expected_agents = {
     "astral-orchestrator-luna-implementer.toml": {
         "name": "astral_orchestrator_luna_implementer",
-        "model": "gpt-5.6-luna",
+        "model": "gpt-6-luna",
         "model_reasoning_effort": "max",
+    },
+    "astral-orchestrator-sol-implementer.toml": {
+        "name": "astral_orchestrator_sol_implementer",
+        "model": "gpt-6-sol",
+        "model_reasoning_effort": "high",
     },
     "astral-orchestrator-terra-implementer.toml": {
         "name": "astral_orchestrator_terra_implementer",
@@ -292,7 +296,7 @@ expected_agents = {
     },
     "astral-orchestrator-sol-reviewer.toml": {
         "name": "astral_orchestrator_sol_reviewer",
-        "model": "gpt-5.6-sol",
+        "model": "gpt-6-sol",
         "model_reasoning_effort": "high",
         "sandbox_mode": "workspace-write",
     },
@@ -344,8 +348,8 @@ if marketplace_path.is_file():
     if marketplace.get("name") != "astral-orchestrator":
         raise SystemExit("marketplace name must be astral-orchestrator")
     entries = marketplace.get("plugins", [])
-    if len(entries) != 1 or entries[0].get("name") != "astral-orchestrator":
-        raise SystemExit("marketplace must contain exactly one astral-orchestrator entry")
+    if [entry.get("name") for entry in entries] != ["astral-orchestrator", "typesafe-session"]:
+        raise SystemExit("marketplace must contain Astral and the optional TypeSafe companion")
 
 for path in (manifest_path, portable_manifest_path, skill_path, modes_path, templates_path, routing_path, pulsar_path, morph_path, constellation_path, singularity_path, hypernova_path, portable_hosts_path, *agent_dir.glob("*.toml"), *legacy_agent_dir.glob("*.toml")):
     text = path.read_text(encoding="utf-8")

@@ -20,8 +20,10 @@ from effort_settings import ALLOWED_EFFORTS  # noqa: E402
 
 
 SUPPORTED_PRIMARY_MODELS = {
-    "gpt-5.6-sol": "Sol",
+    "gpt-6-sol": "Sol",
+    "gpt-6-luna": "Luna",
     "gpt-6-astra": "Astra",
+    "gpt-5.6-sol": "Legacy Sol",
 }
 PRIMARY_EFFORTS = ("none", "light", *ALLOWED_EFFORTS)
 THREAD_ID_PATTERN = re.compile(
@@ -48,7 +50,7 @@ def fail(message: str) -> NoReturn:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Detect whether the current Astral primary is a supported Sol or Astra route."
+        description="Detect the supported model and effort of the current Astral primary."
     )
     parser.add_argument(
         "--thread-id",
@@ -141,7 +143,7 @@ def main() -> int:
         strict_model = "gpt-5.6-sol"
     elif args.require_astra_ultra:
         strict_model = "gpt-6-astra"
-    expected_model = strict_model or "gpt-5.6-sol|gpt-6-astra"
+    expected_model = strict_model or "|".join(SUPPORTED_PRIMARY_MODELS)
     expected_effort = "ultra" if strict_model else "any-supported"
 
     thread_id = args.thread_id

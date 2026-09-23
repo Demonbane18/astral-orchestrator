@@ -1,11 +1,11 @@
 ---
 name: astral-orchestrator
-description: Run Astral Orchestrator when explicitly requested, when an Astral mode is selected, or when configuring Astral model/effort routes. Keeps the current Sol or Astra session primary, supports configurable Astra/Luna/Terra workers, and makes every active route visible.
+description: Run Astral Orchestrator when explicitly requested, when an Astral mode is selected, or when configuring Astral model/effort routes. Keeps the current Sol, Luna, or Astra session primary, supports configurable Astra/Luna/Sol workers, and makes every active route visible.
 ---
 
 # Astral Orchestrator
 
-Own the requested result through verification and handoff. The detected Sol or Astra primary owns
+Own the requested result through verification and handoff. The detected Sol, Luna, or Astra primary owns
 requirements, architecture, routing, integration, and acceptance. Workers own bounded
 execution. Keep the process understandable to a non-technical user.
 
@@ -19,13 +19,13 @@ explicit opt-ins.
 | Mode | Execution and review | Read when selected |
 |---|---|---|
 | Comet | The detected primary works directly and self-reviews; no worker is spawned | Primary verification and applicable risk gates below |
-| Orbit (default) | Delegate useful bounded work to Astra, Luna, or Terra, then review the integrated change set | Child routing before delegation |
+| Orbit (default) | Delegate useful bounded work to Astra, Luna, or Sol, then review the integrated change set | Child routing before delegation |
 | Event Horizon | Consequential or explicitly thorough work; delegated execution and concise Sol review-and-repair | Risk gates and child routing before delegation |
 | Singularity (explicit opt-in) | Meaningful low/medium-risk work in one verified primary session; do not spawn subagents or a fresh reviewer | [Singularity](references/singularity-mode.md) when the user explicitly names Singularity |
 | Pulsar (explicit opt-in) | Deliberately slower evidence-oriented work with a frozen card and resumable state | [Pulsar](references/pulsar-mode.md) when the user explicitly names Pulsar |
 | Morph (explicit opt-in) | Exact user-selected worker model for bounded work | [Morph](references/morph-mode.md) when the user explicitly names Morph |
 | Constellation (explicit opt-in) | Capacity-aware parallel cards with independent ownership | [Constellation](references/constellation-mode.md) when the user explicitly names Constellation |
-| Hypernova (explicit opt-in) | Detected primary and maximum safe native concurrency with Sol Ultra workers by default or configured Astra workers, plus mandatory fresh review | [Hypernova](references/hypernova-mode.md) when the user explicitly names Hypernova |
+| Hypernova (explicit opt-in) | Detected primary and maximum safe native concurrency with Sol Max workers by default or configured Astra workers, plus mandatory fresh review | [Hypernova](references/hypernova-mode.md) when the user explicitly names Hypernova |
 
 Legacy aliases remain advisory: Quick = Comet, Guided = Orbit, Careful = Event Horizon,
 Measured = Pulsar. They do not change routes or safeguards.
@@ -48,23 +48,30 @@ Measured = Pulsar. They do not change routes or safeguards.
 
 ## Model and effort boundaries
 
-The primary is the current `gpt-5.6-sol` or `gpt-6-astra` session at its observed effort.
+The primary is the current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session at its observed effort.
 Do not replace it, require a preferred lead, or compare it with the saved orchestrator
 effort. Primary and child settings are independent. An Astra worker uses the configured
 `astra` effort, including a higher effort than a Light or Medium primary. Hypernova uses
-Sol Ultra children by default or Astra at the configured Astra effort. Comet and
+Sol Max children by default or Astra at the configured Astra effort. Comet and
 Singularity never spawn.
 
 The bundled checker is authoritative for this version. Do not infer runtime support
 from another source version or change global settings automatically to resolve a mismatch.
 
-Normal child defaults are Astra Medium for selected difficult reasoning, Luna Max for mechanical work, Terra High for context-heavy
+Normal child defaults are Astra Medium for selected difficult reasoning, Luna Max for mechanical work, Sol High for context-heavy
 implementation, and Sol High for fresh review. Resolve effective child settings before
 launch; distinguish package defaults, installed profiles, selected settings, and observed
 runtime evidence. Never silently substitute model or effort. Use a custom role only when
 its fixed values match the selected route; otherwise use the exact built-in native route
 specified in the routing guide. Do not reinstall profiles or edit global configuration
 merely because they differ from package defaults.
+
+GPT-5.6 Sol, Luna, and Terra are explicit legacy choices only. When the optional
+TypeSafe Session companion is on, use the typed route selector described in the
+routing guide before a worker launch. It can advise among eligible workers and
+supported efforts, but never changes this primary or grants execution permission.
+If TypeSafe is off, absent, or unavailable, report that fact and apply the normal
+deterministic lane rules; never describe that as a Jev decision.
 
 A mismatched or invalid primary blocks execution in every mode. Unavailable evidence
 blocks Singularity and Hypernova; other modes allow the documented one-time user-confirmed
@@ -99,7 +106,7 @@ execution. Create a delegated card only when its independent work is substantial
 to justify context transfer and integration. Do not split tiny work to fill slots.
 Keep requirements and acceptance decisions in the detected primary; route selected
 difficult reasoning to Astra, mechanical execution to Luna, and context-heavy
-implementation to Terra. Use Astra only when its reasoning benefit justifies its cost.
+implementation to Sol. Use Astra only when its reasoning benefit justifies its cost.
 Honor explicit Morph worker selections.
 Answer-only, planning-only, and blocked requests need no worker.
 

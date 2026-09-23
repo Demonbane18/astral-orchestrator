@@ -60,7 +60,7 @@ class FlexiblePrimaryTests(unittest.TestCase):
         self.assertIn('comet and singularity never spawn', skill)
         self.assertIn('primary and child settings are independent', skill)
         self.assertIn('configured `astra` effort', hypernova)
-        self.assertIn('higher configured worker effort than a light or medium sol or astra primary', primary)
+        self.assertIn('higher configured worker effort than a light or medium sol, luna, or astra primary', primary)
         self.assertIn('mandatory fresh reviewer', hypernova)
         self.assertIn('user confirmation cannot replace runtime evidence', hypernova)
         self.assertIn('workers cannot delegate', hypernova)

@@ -7,12 +7,12 @@ confirmation or a fresh review.
 
 | Mode | Best for | Planning | Agent route | Review |
 |---|---|---|---|---|
-| Comet | Small, obvious, reversible work | Mental or one sentence | Detected Sol or Astra primary at observed effort | Primary self-review at observed effort |
-| Orbit (default) | Normal project work | Compact work card | Astra, Luna, or Terra at configured effort | Fresh Sol review of the integrated change set |
+| Comet | Small, obvious, reversible work | Mental or one sentence | Detected Sol, Luna, or Astra primary at observed effort | Primary self-review at observed effort |
+| Orbit (default) | Normal project work | Compact work card | Astra, Luna, or Sol at configured effort | Fresh Sol review of the integrated change set |
 | Event Horizon | Consequential or explicitly thorough work | One compact in-context dependency graph; YAGNI | Parallel ready cards or a bounded hierarchy using Singularity discipline | One concise workspace-write Sol review-and-repair pass with at most three findings |
-| Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol or Astra primary at observed effort; no subagents | One primary self-review using actual changes and evidence; no fresh reviewer |
-| Hypernova (explicit opt-in) | Maximum safe native speed and throughput | Smallest real dependency graph; never invent work | Observed Sol or Astra primary plus maximum safe waves of Sol Ultra workers by default or Astra at configured effort | Mandatory fresh built-in selected reviewer; no self-review fallback |
-| Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen dependency graph and named checks | One parent lane may fan out independent frozen items; Luna/Terra probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
+| Singularity (explicit opt-in) | Meaningful low- or medium-risk work larger than Comet | One compact card, five active steps maximum | One verified Sol, Luna, or Astra primary at observed effort; no subagents | One primary self-review using actual changes and evidence; no fresh reviewer |
+| Hypernova (explicit opt-in) | Maximum safe native speed and throughput | Smallest real dependency graph; never invent work | Observed Sol, Luna, or Astra primary plus maximum safe waves of Sol Max workers by default or Astra at configured effort | Mandatory fresh built-in selected reviewer; no self-review fallback |
+| Pulsar (explicit opt-in) | A deliberately slower, evidence-oriented route decision | One frozen dependency graph and named checks | One parent lane may fan out independent frozen items; Luna/Sol probes only for routing ambiguity | Fresh Sol review; high-risk work also uses Event Horizon safeguards |
 | Morph (explicit opt-in) | Bounded cards that need user-selected routed models | Compact cards plus exact worker models and requested efforts | Detected session remains primary; independent Morph cards may run in parallel or form an authorized hierarchy | Fresh exact Sol review at configured effort |
 | Constellation (explicit opt-in) | Several independently owned, ready cards | The primary proves independence and capacity before a concurrent first wave | Cost-aware selected workers; capacity-limited fan-out | One fresh exact Sol review after integrated verification |
 
@@ -20,7 +20,7 @@ Orbit, Event Horizon, Pulsar, Morph, and Constellation are multi-agent modes. Th
 useful ready independent cards in parallel up to observed capacity and may use hierarchical
 delegation when an owning parent can split a coherent subtree into non-overlapping child
 cards. Use the shallowest useful hierarchy. Comet (Quick) and Singularity never spawn.
-Hypernova is also multi-agent, but it uses exact built-in Sol Ultra child lanes by default
+Hypernova is also multi-agent, but it uses exact built-in Sol Max child lanes by default
 or configured Astra lanes, fills the
 maximum safely available native MultiAgentsV2 capacity, and prohibits worker delegation.
 

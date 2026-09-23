@@ -1,33 +1,33 @@
-# Spec: Astral Orchestrator v3.11
+# Spec: Astral Orchestrator v3.12
 
 ## Current primary and worker contract
 
-Version 3.11.0 supersedes older fixed-primary wording below. Every mode detects the current
-`gpt-5.6-sol` or `gpt-6-astra` session and keeps it as the primary at its observed effort.
+Version 3.12.0 supersedes older fixed-primary wording below. Every mode detects the current
+`gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session and keeps it as the primary at its observed effort.
 Worker effort is independent. Astra is a configurable worker lane, Medium by default,
 for bounded work whose reasoning benefit justifies its cost. Hypernova defaults to Sol
-Ultra children or uses Astra at the configured effort. Mandatory status appears before
+Max children or uses Astra at the configured effort. Mandatory status appears before
 work, around every child launch, on state changes, and in the final handoff.
 
 
 ## Objective
 
 Provide a beginner-friendly Codex plugin with an additive portable skill package that delivers observable model-routed
-orchestration. The current Sol or Astra task leads at its observed effort, assigns bounded
-work to Astra, Luna, or Terra based on the work, integrates and verifies the result, then
+orchestration. The current Sol, Luna, or Astra task leads at its observed effort, assigns bounded
+work to Astra, Luna, or Sol based on the work, integrates and verifies the result, then
 uses a fresh selected reviewer. Explicit opt-in Morph
 can route only a bounded worker to a user-selected model, and explicit opt-in Constellation
 can fan out independent cards within verified capacity. Each worker lane's reasoning effort
 is configurable without editing profiles and is independent from the primary effort.
 
 Explicit opt-in Singularity is the token-disciplined single-session route for meaningful
-low- or medium-risk work: one verified Sol or Astra primary at its observed effort, one
+low- or medium-risk work: one verified Sol, Luna, or Astra primary at its observed effort, one
 compact work card, no subagents, and one primary self-review. It is distinct from Comet,
 never automatic, and Event Horizon overrides Singularity for high-risk work.
 
-Explicit opt-in Hypernova is the performance-first opposite: an observed Sol or Astra
+Explicit opt-in Hypernova is the performance-first opposite: an observed Sol, Luna, or Astra
 primary uses the maximum safely available native MultiAgentsV2 capacity for real,
-independent cards. Every implementation lane is a built-in Sol Ultra worker by default
+independent cards. Every implementation lane is a built-in Sol Max worker by default
 or a selected Astra worker at the configured effort, and one fresh built-in selected
 reviewer is mandatory. Hypernova is Codex-native only, never
 automatic, never invents work to fill capacity, and has no legacy/process/portable/
@@ -41,20 +41,36 @@ faster, more-ergonomic named-agent enhancement. When an exact route cannot be pr
 the workflow stops rather than claiming a generic fallback was the requested
 orchestration.
 
+## Optional TypeSafe session routing
+
+The separate `typesafe-session` plugin provides exact `TypeSafe on`, `TypeSafe off`, and
+`TypeSafe status` commands. Its trusted lifecycle hook stores only a per-task state;
+the default is off unless the project root opts in with `TypeSafe session: on` in
+`AGENTS.md`. Explicit off takes precedence until the task ends, including after
+compaction. An owner-only project `.env.local` supplies `TYPESAFE_API_KEY` when on.
+
+The route selector filters mode, observed host controls, model and effort availability,
+user choices, delegation permission, and settled acceptance before sending a brief
+non-sensitive task summary and eligible options to TypeSafe Jev. Choice selects a
+worker; Score may adjust a supported effort. The primary, execution, and permission
+decisions remain in Codex. An invalid, uncertain, or unavailable judgment is visible
+and never treated as proof that a worker ran. GPT-5.6 models remain explicit legacy
+options and never enter the default Jev candidate set.
+
 ## Current MultiAgentsV2 native route
 
 On a current Codex **MultiAgentsV2** host, native explicit spawning is the standard route
 for Orbit, Event Horizon, and Pulsar implementation and review lanes. Before spawning,
 inspect `collaboration.spawn_agent` and require these fields: `agent_type`, `task_name`,
 `model`, `reasoning_effort`, and `fork_turns`. Every child receives a complete standalone
-work packet. An Astra, Luna, or Terra implementation uses the built-in native worker with the
+work packet. An Astra, Luna, or Sol implementation uses the built-in native worker with the
 exact model and configured effort:
 
 ```text
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-6-astra", "gpt-5.6-luna", or "gpt-5.6-terra",
+  model: "gpt-6-astra", "gpt-6-luna", or "gpt-6-sol",
   reasoning_effort: "<configured lane effort>",
   fork_turns: "none",
   message: "<complete standalone work packet>"
@@ -62,7 +78,7 @@ collaboration.spawn_agent({
 ```
 
 When a matching custom reviewer profile is unavailable, a reviewer uses the built-in
-native default with `model: "gpt-5.6-sol"`, the configured reviewer effort, its own
+native default with `model: "gpt-6-sol"`, the configured reviewer effort, its own
 distinct unique reviewer `task_name`, `fork_turns: "none"`, and a complete standalone
 review packet. Custom agent file values take precedence over explicit spawn values, so
 use an Astral custom profile only when its fixed model and effort match the effective
@@ -70,12 +86,12 @@ settings and its fixed capability is needed. A missing, customized, or mismatche
 optional profile does not force a nested CLI process on a v2 host; use the appropriate
 built-in native agent with explicit values.
 
-Hypernova does not use the configurable Luna or Terra lanes. The normal primary checker
-verifies the already-started Sol or Astra primary at its observed effort without changing
+Hypernova does not use the configurable Luna or Sol lanes. The normal primary checker
+verifies the already-started Sol, Luna, or Astra primary at its observed effort without changing
 persisted settings. Hypernova then requires all five native controls plus observed
 host-advertised capacity. Every implementation spawn uses the built-in `worker`, a
 distinct unique lowercase `task_name`, `fork_turns: "none"`, and one selected exact route:
-Sol Ultra by default or Astra at the configured Astra effort. Downstream delegation is
+Sol Max by default or Astra at the configured Astra effort. Downstream delegation is
 forbidden. Its mandatory fresh reviewer uses the built-in `default` with the same selected
 model and effort. Any custom profile whose fixed values differ is ineligible.
 
@@ -83,8 +99,8 @@ model and effort. Any custom profile whose fixed values differ is ineligible.
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_hypernova_task_name>",
-  model: "gpt-5.6-sol" or "gpt-6-astra",
-  reasoning_effort: "ultra" or "<configured Astra effort>",
+  model: "gpt-6-sol" or "gpt-6-astra",
+  reasoning_effort: "max" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone packet; downstream delegation forbidden>"
 })
@@ -92,8 +108,8 @@ collaboration.spawn_agent({
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_hypernova_reviewer_task_name>",
-  model: "gpt-5.6-sol" or "gpt-6-astra",
-  reasoning_effort: "ultra" or "<configured Astra effort>",
+  model: "gpt-6-sol" or "gpt-6-astra",
+  reasoning_effort: "max" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone fresh-review packet; downstream delegation forbidden>"
 })
@@ -105,7 +121,7 @@ The reviewer spawn is explicit as well:
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-5.6-sol",
+  model: "gpt-6-sol",
   reasoning_effort: "<configured reviewer effort>",
   fork_turns: "none",
   message: "<complete standalone review packet>"
@@ -144,7 +160,7 @@ documents copy-ready prompts for its six modes, and makes Constellation's defaul
 and custom Morph dry-run-to-runtime evidence sequence explicit and testable.
 
 Version 3.5.0 makes native MultiAgentsV2 spawning the standard Codex route, changes the
-default worker efforts to Luna Max and Terra High, preserves configurable lane efforts,
+default worker efforts to Luna Max and Sol High, preserves configurable lane efforts,
 and guarantees that Astral Status uses a valid unfenced Markdown table. The bundled
 process launcher remains available only for hosts without the required native-v2 fields.
 
@@ -152,8 +168,8 @@ Version 3.6.0 adds explicit one-session Singularity and adopts the Comet, Orbit,
 Horizon, and Pulsar taxonomy. Version 3.7.0 adds the portable Agent Plugins discovery
 surface without weakening Codex route guarantees.
 
-Version 3.8.0 adds explicit Hypernova: observed Sol Ultra end to end, maximum safe native
-waves, no worker delegation or fallback route, and a mandatory fresh built-in Sol Ultra
+Version 3.8.0 adds explicit Hypernova: observed Sol Max end to end, maximum safe native
+waves, no worker delegation or fallback route, and a mandatory fresh built-in Sol Max
 reviewer. The mode-specific primary checker flag leaves normal effort settings unchanged.
 
 ## Identity and migration
@@ -161,7 +177,7 @@ reviewer. The mode-specific primary checker flag leaves normal effort settings u
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.11.0. The normalized plugin, marketplace,
+The current product version is 3.12.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at
@@ -173,8 +189,8 @@ modified automatically.
 ## Assumptions
 
 1. The target is the current Codex plugin and custom-agent format.
-2. The primary task starts with supported Sol or Astra at the effort selected for that
-   session. The default worker efforts are Astra Medium, Luna Max, and Terra High; the
+2. The primary task starts with supported Sol, Luna, or Astra at the effort selected for that
+   session. The default worker efforts are Astra Medium, Luna Max, and Sol High; the
    reviewer default is Sol High.
 3. Recipients have access to the primary and worker models selected for a route.
 4. Optional native custom agents, when installed, live in Codex's personal agents
@@ -194,28 +210,28 @@ modified automatically.
    Astral neither modifies its configuration nor handles provider credentials.
 10. Non-Codex hosts may discover the portable skill but must expose each required Morph or
     Constellation capability before the corresponding portable route can run.
-11. Hypernova runs only on Codex when its primary is observed as supported Sol or Astra,
+11. Hypernova runs only on Codex when its primary is observed as supported Sol, Luna, or Astra,
     all five MultiAgentsV2 controls and host capacity are observed, and an exact built-in
-    Sol Ultra or configured Astra worker and fresh-reviewer route is available.
+    Sol Max or configured Astra worker and fresh-reviewer route is available.
 
 ## Route contract
 
 | Responsibility | Required route |
 |---|---|
-| Requirements, architecture, decomposition, cross-lane integration | Current Sol or Astra primary at its observed effort |
+| Requirements, architecture, decomposition, cross-lane integration | Current Sol, Luna, or Astra primary at its observed effort |
 | Difficult bounded reasoning, cross-domain synthesis, or diagnosis | MultiAgentsV2 native `worker`, explicitly pinned to Astra at configured effort (Medium default) |
 | Narrow, repeatable, fully specified execution | MultiAgentsV2 native `worker`, explicitly pinned to Luna at configured effort (Max default) |
-| Context-heavy implementation, debugging, component/external integration, refactoring | MultiAgentsV2 native `worker`, explicitly pinned to Terra at configured effort (High default) |
+| Context-heavy implementation, debugging, component/external integration, refactoring | MultiAgentsV2 native `worker`, explicitly pinned to Sol at configured effort (High default) |
 | Fresh final review | MultiAgentsV2 native `default`, explicitly pinned to Sol at configured reviewer effort (High default) |
-| Explicit Singularity | One verified Sol or Astra primary at observed effort; no child agents or fresh reviewer |
-| Explicit Hypernova primary | One observed supported Sol or Astra primary at its current effort |
-| Explicit Hypernova implementation | Maximum safe wave of built-in native `worker` lanes, each exact Sol Ultra by default or Astra at configured effort, with no downstream delegation |
+| Explicit Singularity | One verified Sol, Luna, or Astra primary at observed effort; no child agents or fresh reviewer |
+| Explicit Hypernova primary | One observed supported Sol, Luna, or Astra primary at its current effort |
+| Explicit Hypernova implementation | Maximum safe wave of built-in native `worker` lanes, each exact Sol Max by default or Astra at configured effort, with no downstream delegation |
 | Explicit Hypernova review | Mandatory fresh built-in native `default` on the selected exact route; no self-review fallback |
 | Explicit Morph worker | User-selected native or `provider/model` worker at requested effort; detected session remains primary |
 | Explicit Constellation first wave | Cost-aware non-Sol workers by default, only for independent ready cards within advertised capacity |
 
 The default saved efforts are orchestrator High for compatibility, Astra Medium, Luna Max,
-Terra High, and reviewer Sol High. The primary checker uses the running session model and
+Sol High, and reviewer Sol High. The primary checker uses the running session model and
 observed effort; the saved orchestrator value never caps worker effort. Every worker lane
 reads its independent value from the settings file outside the plugin cache.
 Explicit native spawn values are used on current v2 hosts: provide `agent_type`, a unique
@@ -228,7 +244,7 @@ Comet mode is the explicit exception: tiny, reversible work stays in the verifie
 primary at its observed effort. Orbit and Event Horizon use pinned lanes whenever bounded
 execution exists.
 Singularity is an explicit opt-in for larger low- or medium-risk multi-step work in the
-same verified Sol or Astra primary at its observed effort. It never forces Max, starts
+same verified Sol, Luna, or Astra primary at its observed effort. It never forces Max, starts
 no child lanes or planning probes, and uses one primary self-review with actual change and
 verification evidence. It keeps no more than five active steps and one in progress, uses
 the smallest sufficient intervention, and stops after one proportional verification pass
@@ -250,9 +266,9 @@ safety, scope, authorization, confirmation, checks, or the mandatory fresh revie
 Pulsar is never auto-selected. The primary freezes exactly one canonical card and chooses Luna
 only for fully specified narrow mechanical work with exact checks and no flags; any
 debugging, integration, cross-component, context-heavy, or moderate-ambiguity flag uses
-Terra. Astra is selected only for a bounded difficult diagnosis or deep synthesis whose
+Sol. Astra is selected only for a bounded difficult diagnosis or deep synthesis whose
 reasoning benefit justifies the cost; it is never used as a planning probe. Ambiguous
-Luna/Terra routing may use behaviorally read-only probes with the identical card.
+Luna/Sol routing may use behaviorally read-only probes with the identical card.
 Morph and Constellation are never auto-selected. Morph stores the exact worker model id
 and requested effort in each card, but does not claim that a provider accepted native
 effort semantics. Constellation starts only the independent first wave that fits the
@@ -291,7 +307,7 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
   missing optional profile on a current v2 host is handled by the explicit built-in
   native route, not by a silent launcher fallback.
 - The primary checker returns allowlisted `match`, `mismatch`, `invalid`, or `unavailable`
-  JSON and exits zero only for an observed supported Sol or Astra route. When evidence is
+  JSON and exits zero only for an observed supported Sol, Luna, or Astra route. When evidence is
   unavailable, only modes other than Singularity and Hypernova may use the one-time
   user-confirmation fallback. Singularity and Hypernova require an observed supported
   model and effort, must stop on unavailable evidence, and user confirmation cannot
@@ -302,7 +318,7 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
 - Constellation uses only selected worker implementers and falls back to serial routing
   unless it can prove independent ownership and available capacity.
 - Hypernova requires an observed supported primary, every implementation lane on a
-  built-in Sol Ultra worker by default or configured Astra worker, and one mandatory
+  built-in Sol Max worker by default or configured Astra worker, and one mandatory
   fresh built-in selected reviewer. It
   requires all five native controls and observed capacity, forbids downstream delegation,
   discards mismatched output, and has no legacy/process/portable/serial/self-review/model/
@@ -327,12 +343,12 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
 
 1. Two GitHub marketplace commands install the plugin; optional setup installs exactly
    three namespaced native profiles.
-2. Profiles pin Sol High, Luna Max, and Terra High exactly as specified, while native v2
+2. Profiles pin Sol High, Luna Max, and Sol High exactly as specified, while native v2
    children receive the same model and configured effort explicitly.
 3. The skill routes by work characteristics. Orbit, Event Horizon, Pulsar, Morph, and
    Constellation parallelize every ready non-overlapping card up to capacity and may use
    bounded hierarchical delegation. Hypernova fills every safely usable native slot with
-   exact Sol Ultra workers but forbids hierarchy. Comet (Quick) and Singularity never
+   exact Sol Max workers but forbids hierarchy. Comet (Quick) and Singularity never
    spawn workers.
 4. Runtime inspection emits only allowlisted route fields.
 5. A non-technical reader can install, invoke, update, share, troubleshoot, and remove it.
@@ -343,10 +359,10 @@ back to serial Orbit-style routing when capacity or independence cannot be prove
    evidence, fresh verification after fixes, and a new fresh reviewer.
 10. Morph and Constellation remain explicit opt-ins with the detected primary and reviewer
     guarantees preserved.
-11. Singularity remains explicit opt-in, uses one verified Sol or Astra primary with no subagents
+11. Singularity remains explicit opt-in, uses one verified Sol, Luna, or Astra primary with no subagents
     or fresh reviewer, and yields to Event Horizon for high-risk work.
 12. The root portable manifest and fixed `skills/` discovery are verified without changing
     the existing Codex/OpenAI manifest or route contract.
-13. Hypernova remains explicit opt-in and Codex-native only; it uses Sol Ultra by default
+13. Hypernova remains explicit opt-in and Codex-native only; it uses Sol Max by default
     or configured Astra for children and review, fills only the maximum safely available native capacity with real independent
-    work, and completes only after a fresh exact Sol Ultra review.
+    work, and completes only after a fresh exact Sol Max review.

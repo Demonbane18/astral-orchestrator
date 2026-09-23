@@ -1,17 +1,17 @@
 # Constellation mode
 
 Constellation is an explicit opt-in: use it only when the user explicitly names it.
-Constellation keeps the detected Sol or Astra primary at its observed effort and normally
+Constellation keeps the detected Sol, Luna, or Astra primary at its observed effort and normally
 uses one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or
 hierarchical fan-out for independently owned cards, not a request to fill every available slot.
 
 ## Model and effort contract
 
 The primary stays on its detected model and observed effort. The fresh reviewer
-defaults to `gpt-5.6-sol` at High. **Sol High is sufficient** for review; **Sol Ultra is not required**. Primary and child
+defaults to `gpt-6-sol` at High. **Sol High is sufficient** for review; **Sol Max is not required**. Primary and child
 efforts are independent. Never silently substitute a selected route.
 
-Ordinary fixed-route cards use Astra, Luna, or Terra at their configured efforts. Choose
+Ordinary fixed-route cards use Astra, Luna, or Sol at their configured efforts. Choose
 Astra only when a bounded card needs reasoning depth worth its added cost. A Constellation card may use a
 **custom worker model and effort only as an explicit Morph card**. That Morph card must record the exact model id,
 requested effort, route availability, and runtime evidence before its worker is accepted. Record requested and
@@ -51,7 +51,7 @@ exact routes, verification, and review; it merely removes unsupported concurrenc
 
 ## Routing and integration
 
-Use Astra, Luna, or Terra for ordinary fixed-route cards. A card that explicitly needs a
+Use Astra, Luna, or Sol for ordinary fixed-route cards. A card that explicitly needs a
 user-selected routed model follows Morph mode and includes its exact model id and requested
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
 detected primary, and then recalculate readiness and capacity before every later wave.
@@ -66,7 +66,7 @@ integrate only after the evidence is sufficient.
 ## Portable-host route
 
 On a non-Codex host, first read `portable-hosts.md`; do not run Codex preflight scripts or
-claim fixed Luna/Terra routes. A concurrent first wave additionally requires observed model
+claim fixed Luna/Sol routes. A concurrent first wave additionally requires observed model
 selection, separate worker contexts, reported actual/requested effort, host-advertised
 concurrency, and a separate fresh reviewer context. Record the actual provider/model/effort
 for every worker and do not rename requested values as observed ones.

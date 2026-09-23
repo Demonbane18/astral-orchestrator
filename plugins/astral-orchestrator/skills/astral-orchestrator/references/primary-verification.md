@@ -9,7 +9,7 @@ Before execution:
 1. Resolve `../../scripts/configure-effort.py` from the skill directory and run
    `--show --json` to read effective worker settings. Then run the bundled
    `../../scripts/check-primary.py` without a strict flag. It accepts an observed
-   `gpt-5.6-sol` or `gpt-6-astra` primary at the effort already running in the session.
+   `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` primary at the effort already running in the session.
    It does not compare the session with the saved orchestrator value or mutate settings.
    Optional `--require-sol-ultra` and `--require-astra-ultra` flags are strict diagnostics;
    no mode requires them.
@@ -31,7 +31,7 @@ options. A primary effort change applies when the user starts a new task at that
 not through Astral's saved worker settings.
 
 Worker settings remain independent from primary effort. Astra may therefore run at a
-higher configured worker effort than a Light or Medium Sol or Astra primary. Before child
+higher configured worker effort than a Light or Medium Sol, Luna, or Astra primary. Before child
 launch reuse unchanged effective settings,
 or run `configure-effort.py --show --json` if they are not yet known. When an authorized
 settings change is requested, preserve unspecified lanes and use `--reset` only if the

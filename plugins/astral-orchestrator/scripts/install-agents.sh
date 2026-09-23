@@ -7,7 +7,7 @@ usage() {
   printf '%s\n' \
     'Usage: sh install-agents.sh [--target-dir PATH] [--check | --remove]' \
     '' \
-    'Install the three Astral Orchestrator agent profiles.' \
+    'Install the four Astral Orchestrator agent profiles.' \
     'The default destination is $CODEX_HOME/agents when CODEX_HOME is set,' \
     'otherwise $HOME/.codex/agents.' \
     '' \
@@ -25,6 +25,18 @@ fail() {
 script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd) || exit 1
 template_dir=$script_dir/../agents
 legacy_template_dir=$template_dir/historical-v3.4.0
+previous_template_dir=$template_dir/historical-v3.11.0
+
+is_previous_profile() {
+  profile_name=$1
+  profile_path=$2
+  for version_dir in "$legacy_template_dir" "$previous_template_dir"; do
+    if [ -f "$version_dir/$profile_name" ] && cmp -s "$version_dir/$profile_name" "$profile_path"; then
+      return 0
+    fi
+  done
+  return 1
+}
 
 if [ -n "${CODEX_HOME-}" ]; then
   target_dir=$CODEX_HOME/agents
@@ -71,13 +83,16 @@ esac
 
 [ "$target_dir" != "/" ] || fail "refusing to use the filesystem root as the target."
 
-agent_files='astral-orchestrator-luna-implementer.toml astral-orchestrator-terra-implementer.toml astral-orchestrator-sol-reviewer.toml'
+agent_files='astral-orchestrator-luna-implementer.toml astral-orchestrator-sol-implementer.toml astral-orchestrator-terra-implementer.toml astral-orchestrator-sol-reviewer.toml'
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
   [ -f "$template" ] && [ ! -L "$template" ] || fail "profile is missing or unsafe: $template"
-  legacy_template=$legacy_template_dir/$agent_file
-  [ -f "$legacy_template" ] && [ ! -L "$legacy_template" ] || fail "legacy profile fixture is missing or unsafe: $legacy_template"
+  if [ "$agent_file" != 'astral-orchestrator-sol-implementer.toml' ]; then
+    for version_dir in "$legacy_template_dir" "$previous_template_dir"; do
+      [ -f "$version_dir/$agent_file" ] && [ ! -L "$version_dir/$agent_file" ] || fail "legacy profile fixture is missing or unsafe: $version_dir/$agent_file"
+    done
+  fi
 done
 
 preflight_failed=0
@@ -90,7 +105,6 @@ fi
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
-  legacy_template=$legacy_template_dir/$agent_file
   destination=$target_dir/$agent_file
 
   if [ -e "$destination" ] || [ -L "$destination" ]; then
@@ -102,7 +116,7 @@ for agent_file in $agent_files; do
       fi
       preflight_failed=1
     elif ! cmp -s "$template" "$destination"; then
-      if [ "$check_only" -eq 0 ] && cmp -s "$legacy_template" "$destination"; then
+      if [ "$check_only" -eq 0 ] && is_previous_profile "$agent_file" "$destination"; then
         continue
       fi
       if [ "$remove_only" -eq 1 ]; then
@@ -125,10 +139,9 @@ done
 if [ "$remove_only" -eq 1 ]; then
   for agent_file in $agent_files; do
     template=$template_dir/$agent_file
-    legacy_template=$legacy_template_dir/$agent_file
     destination=$target_dir/$agent_file
     if [ -f "$destination" ] && [ ! -L "$destination" ]; then
-      if ! cmp -s "$template" "$destination" && ! cmp -s "$legacy_template" "$destination"; then
+      if ! cmp -s "$template" "$destination" && ! is_previous_profile "$agent_file" "$destination"; then
         fail "destination changed after preflight and will not be removed: $destination"
       fi
       rm -f "$destination" || fail "could not remove exact Astral Orchestrator profile: $destination"
@@ -150,7 +163,6 @@ fi
 
 for agent_file in $agent_files; do
   template=$template_dir/$agent_file
-  legacy_template=$legacy_template_dir/$agent_file
   destination=$target_dir/$agent_file
 
   if [ -e "$destination" ] || [ -L "$destination" ]; then
@@ -158,13 +170,13 @@ for agent_file in $agent_files; do
       printf '%s\n' "ALREADY CURRENT: $destination"
       continue
     fi
-    if [ -f "$destination" ] && [ ! -L "$destination" ] && cmp -s "$legacy_template" "$destination"; then
+    if [ -f "$destination" ] && [ ! -L "$destination" ] && is_previous_profile "$agent_file" "$destination"; then
       staged=$(mktemp "$target_dir/.astral-orchestrator-agent.XXXXXX") || fail "could not stage migrated profile: $destination"
       if ! cp "$template" "$staged"; then
         rm -f "$staged"
         fail "could not stage migrated profile: $destination"
       fi
-      if ! cmp -s "$legacy_template" "$destination"; then
+      if ! is_previous_profile "$agent_file" "$destination"; then
         rm -f "$staged"
         fail "destination changed before migration and will not be overwritten: $destination"
       fi
