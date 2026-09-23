@@ -1,5 +1,5 @@
 {
-  "description": "Remember a TypeSafe on/off choice for the current Codex session.",
+  "description": "Remember independent TypeSafe and Adaptive choices for the current Codex session.",
   "hooks": {
     "SessionStart": [{"hooks": [{"type": "command", "command": "python3 \"$PLUGIN_ROOT/scripts/session.py\" hook", "additionalContextLimit": 350}]}],
     "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "python3 \"$PLUGIN_ROOT/scripts/session.py\" hook", "additionalContextLimit": 350}]}],

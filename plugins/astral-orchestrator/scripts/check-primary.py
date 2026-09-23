@@ -17,6 +17,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from effort_settings import ALLOWED_EFFORTS  # noqa: E402
+from ares_evidence import observed_ares_primary  # noqa: E402
 
 
 SUPPORTED_PRIMARY_MODELS = {
@@ -114,6 +115,7 @@ def emit(
     thread_id: str | None = None,
     observed_model: str | None = None,
     observed_effort: str | None = None,
+    evidence_source: str | None = None,
 ) -> None:
     if status not in ALLOWED_STATUSES or reason not in ALLOWED_REASONS:
         fail("internal primary-evidence contract error")
@@ -130,6 +132,8 @@ def emit(
         evidence["observed_model"] = observed_model
     if observed_effort is not None:
         evidence["observed_effort"] = observed_effort
+    if evidence_source is not None:
+        evidence["evidence_source"] = evidence_source
     print(json.dumps(evidence, separators=(",", ":"), sort_keys=True))
 
 
@@ -181,19 +185,21 @@ def main() -> int:
         thread_id,
     ]
     inspected = subprocess.run(command, check=False, capture_output=True, text=True)
+    evidence_source = None
     if inspected.returncode != 0:
-        emit(
-            "invalid",
-            "runtime-evidence-invalid",
-            expected_effort,
-            expected_model,
-            thread_id=thread_id,
-        )
-        return 1
-
-    try:
-        observed = json.loads(inspected.stdout)
-    except json.JSONDecodeError:
+        ares_home = Path(os.environ.get("ARES_HOME", Path.home() / ".local/share/astra-ares")).expanduser()
+        observed = observed_ares_primary(thread_id, rollouts[0], ares_home / "runs",
+                                         os.environ.get("CODEX_STEP_CONTROLLER_SOCKET"))
+        if observed is not None:
+            evidence_source = "ares-native-checkpoint"
+    elif inspected.returncode == 0:
+        try:
+            observed = json.loads(inspected.stdout)
+        except json.JSONDecodeError:
+            observed = None
+    else:
+        observed = None
+    if observed is None:
         emit(
             "invalid",
             "runtime-evidence-invalid",
@@ -246,6 +252,7 @@ def main() -> int:
         thread_id=thread_id,
         observed_model=observed_model,
         observed_effort=observed_effort,
+        evidence_source=evidence_source,
     )
     return 0 if matches else 1
 

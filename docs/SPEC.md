@@ -2,7 +2,7 @@
 
 ## Current primary and worker contract
 
-Version 3.12.1 supersedes older fixed-primary wording below. Every mode detects the current
+Version 3.13.0 supersedes older fixed-primary wording below. Every mode detects the current
 `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session and keeps it as the primary at its observed effort.
 Worker effort is independent. Astra is a configurable worker lane, Medium by default,
 for bounded work whose reasoning benefit justifies its cost. Hypernova defaults to Sol
@@ -41,18 +41,22 @@ faster, more-ergonomic named-agent enhancement. When an exact route cannot be pr
 the workflow stops rather than claiming a generic fallback was the requested
 orchestration.
 
-## Optional TypeSafe session routing
+## Optional TypeSafe and Adaptive session routing
 
-The separate `typesafe-session` plugin provides exact `TypeSafe on`, `TypeSafe off`, and
-`TypeSafe status` commands. Its trusted lifecycle hook stores only a per-task state;
-the default is off unless the project root opts in with `TypeSafe session: on` in
-`AGENTS.md`. Explicit off takes precedence until the task ends, including after
-compaction. An owner-only project `.env.local` supplies `TYPESAFE_API_KEY` when on.
+The separate `typesafe-session` plugin provides exact `TypeSafe on/off/status` and
+`Adaptive on typesafe`, `Adaptive on openrouter`, `Adaptive off/status` commands.
+Its trusted lifecycle hook stores two independent per-task states; Adaptive defaults
+off, and TypeSafe defaults off unless the project root opts in with `TypeSafe session:
+on` in `AGENTS.md`. Explicit off takes precedence until the task ends, including
+after compaction. An owner-only project `.env.local` supplies the selected provider's
+`TYPESAFE_API_KEY` or `OPENROUTER_API_KEY`.
 
 The route selector filters mode, observed host controls, model and effort availability,
 user choices, delegation permission, and settled acceptance before sending a brief
-non-sensitive task summary and eligible options to TypeSafe Jev. Choice selects a
-worker; Score may adjust a supported effort. The primary, execution, and permission
+non-sensitive task summary and eligible options to the selected Jev provider. TypeSafe
+alone uses Choice for the worker and keeps configured effort. Adaptive uses Choice and
+Score in one request to select a worker and supported effort, including Hypernova
+defaults. The fresh Sol High reviewer and explicit choices remain fixed. The primary, execution, and permission
 decisions remain in Codex. An invalid, uncertain, or unavailable judgment is visible
 and never treated as proof that a worker ran. GPT-5.6 models remain explicit legacy
 options and never enter the default Jev candidate set.
@@ -177,7 +181,7 @@ reviewer. The mode-specific primary checker flag leaves normal effort settings u
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.12.1. The normalized plugin, marketplace,
+The current product version is 3.13.0. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at

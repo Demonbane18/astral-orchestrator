@@ -6,8 +6,10 @@ session, while Hypernova favors **speed and throughput over token efficiency** b
 the maximum safely available concurrency. Never auto-select Hypernova.
 
 The current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session remains primary at its observed effort.
-Every implementation lane and the mandatory fresh reviewer use one selected exact route:
-`gpt-6-sol` at **Max** by default or `gpt-6-astra` at the configured `astra` effort.
+Implementation lanes use `gpt-6-sol` at **Max** by default or `gpt-6-astra`
+at the configured `astra` effort. Adaptive, when enabled, may select another
+eligible model and effort per implementation card. The mandatory fresh reviewer
+always uses `gpt-6-sol` at **High**.
 Hypernova is not permission
 to widen the request, skip checks, or weaken confirmation boundaries.
 
@@ -48,7 +50,7 @@ collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
   model: "gpt-6-sol" or "gpt-6-astra",
-  reasoning_effort: "max" or "<configured Astra effort>",
+  reasoning_effort: "max" or "<configured Astra effort>" or "<Adaptive-selected eligible effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova implementation packet>"
 })
@@ -87,7 +89,7 @@ The detected primary retains requirements, architecture, decomposition, cross-la
 and acceptance. It does not become an implementation fallback merely because a card is
 blocked or capacity changes.
 
-## Mandatory fresh selected-route review
+## Mandatory fresh Sol High review
 
 After all accepted worker output is integrated and the focused checks pass, launch one
 fresh built-in native `default` reviewer:
@@ -96,15 +98,15 @@ fresh built-in native `default` reviewer:
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-6-sol" or "gpt-6-astra",
-  reasoning_effort: "max" or "<configured Astra effort>",
+  model: "gpt-6-sol",
+  reasoning_effort: "high",
   fork_turns: "none",
   message: "<complete standalone Hypernova review packet>"
 })
 ```
 
 The reviewer task name must be distinct from every worker task name. A custom profile
-whose fixed model or effort differs from the selected route is ineligible because custom
+whose fixed model or effort differs from Sol High is ineligible because custom
 profile values take precedence. The reviewer works directly
 and does not delegate. Require matching runtime evidence before accepting its verdict.
 Missing or mismatched reviewer evidence blocks completion; primary-session self-review

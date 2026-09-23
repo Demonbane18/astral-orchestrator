@@ -829,6 +829,34 @@
       "observed_at": "2026-09-23T01:26:22Z",
       "evidence": "Direct read-only Codex browser inspection of the public ChatGPT Plugins page shows Astral Orchestrator version 3.12.1, Sol-Luna-Astra starter prompt and description, verified developer identity, and public website/privacy/terms links.",
       "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "source",
+      "version": "3.13.0",
+      "status": "draft",
+      "observed_at": "2026-09-23T14:50:00+08:00",
+      "evidence": "Isolated codex/astral-adaptive-ares-opencodex branch implements independent Adaptive session routing, direct TypeSafe and OpenRouter adapters, OpenCodex catalog checks, Ares compatibility inspection, and draft documentation; local tests pass; external runtime acceptance and publication remain pending."
+    },
+    {
+      "surface": "source",
+      "version": "3.13.0",
+      "status": "draft",
+      "observed_at": "2026-09-23T14:57:09+08:00",
+      "evidence": "Corrected observation time for the local v3.13.0 draft; isolated branch tests and plugin validation passed, while runtime acceptance and publication remain pending."
+    },
+    {
+      "surface": "source",
+      "version": "3.13.0",
+      "status": "draft",
+      "observed_at": "2026-09-23T16:38:31+08:00",
+      "evidence": "Isolated feature branch: 190 repository tests, package verification, skill and plugin validators passed; live TypeSafe Adaptive selection and OpenCodex CLI/Desktop Luna Low route passed; isolated Ares TypeSafe native checkpoint and OpenCodex route passed. OpenRouter live test and Desktop Ares within-task checkpoint remain unverified. No public surface updated."
+    },
+    {
+      "surface": "source",
+      "version": "3.13.0",
+      "status": "draft",
+      "observed_at": "2026-09-23T16:40:26+08:00",
+      "evidence": "Latest local validation: 191 repository tests, package verification, and prior skill/plugin validators passed; direct TypeSafe Adaptive plus OpenCodex CLI/Desktop Luna Low observed; isolated Ares TypeSafe native checkpoint through OpenCodex and Astral primary checker match observed. OpenRouter live key and Desktop Ares checkpoint remain unverified; no publication."
     }
   ]
 }

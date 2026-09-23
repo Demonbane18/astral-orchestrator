@@ -66,12 +66,16 @@ its fixed values match the selected route; otherwise use the exact built-in nati
 specified in the routing guide. Do not reinstall profiles or edit global configuration
 merely because they differ from package defaults.
 
-GPT-5.6 Sol, Luna, and Terra are explicit legacy choices only. When the optional
-TypeSafe Session companion is on, use the typed route selector described in the
-routing guide before a worker launch. It can advise among eligible workers and
-supported efforts, but never changes this primary or grants execution permission.
-If TypeSafe is off, absent, or unavailable, report that fact and apply the normal
-deterministic lane rules; never describe that as a Jev decision.
+GPT-5.6 Sol, Luna, and Terra are explicit legacy choices only. The optional
+TypeSafe Session companion controls two independent switches. `TypeSafe on` lets
+Jev advise on the worker model while configured efforts remain fixed. `Adaptive on
+typesafe` or `Adaptive on openrouter` lets one Jev request select the eligible
+worker model and effort for each card, including Hypernova defaults. Explicit
+choices and the fresh Sol High reviewer stay fixed. Both switches on still make
+one request. Neither changes this primary or grants execution permission. When
+both are off, use deterministic lane rules and do not claim a Jev decision.
+Comet and Singularity may show an Adaptive recommendation for a later task, but
+never change this primary or spawn a worker.
 
 A mismatched or invalid primary blocks execution in every mode. Unavailable evidence
 blocks Singularity and Hypernova; other modes allow the documented one-time user-confirmed
