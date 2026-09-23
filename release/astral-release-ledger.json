@@ -707,6 +707,41 @@
       "observed_at": "2026-09-23T00:45:03Z",
       "evidence": "Final v3.12 source: 179 unit tests pass; Astral verifier and direct plugin/skill validators pass; Opera GX local pages inspected. Exact GPT-6 Sol Max and Luna Max minimal responses observed through configured Codex route; bare ChatGPT-account route rejects both. TypeSafe live API check pending project key.",
       "commit": "09f91e42eb3eece2643add53e7a407664c5ffd44"
+    },
+    {
+      "surface": "github_release",
+      "version": "3.12.0",
+      "status": "published",
+      "observed_at": "2026-09-23T00:58:27Z",
+      "evidence": "Public GitHub v3.12.0 release targets merged main commit 79f3e59; Astral ZIP SHA-256 cc73ce2a432d815d61964319eb7f8e353b4d3a055e5dfdf2439cafb6696e9044 and companion ZIP SHA-256 5033c795e0b1e3ebc6598da534fa12688d9a3e5bbed575b434cd6c1d37ec4cac match uploaded asset digests.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/releases/tag/v3.12.0",
+      "commit": "79f3e59abba65777ee7451456b75eb77d5783a33"
+    },
+    {
+      "surface": "github_marketplace",
+      "version": "3.12.0",
+      "status": "installable",
+      "observed_at": "2026-09-23T00:58:27Z",
+      "evidence": "Public GitHub API main ref exposes both astral-orchestrator and typesafe-session marketplace entries and the Astral plugin manifest reports 3.12.0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/blob/main/.agents/plugins/marketplace.json",
+      "commit": "79f3e59abba65777ee7451456b75eb77d5783a33"
+    },
+    {
+      "surface": "vercel",
+      "version": "3.12.0",
+      "status": "deployed",
+      "observed_at": "2026-09-23T00:58:27Z",
+      "evidence": "Vercel production deployment dpl_5KEKEbbLPHqhTY7LYwjbe6rTFqzr is Ready and aliased to astral-orchestrator.vercel.app. Opera GX fetched the production alias and routing docs at HTTP 200; home shows v3.12.0 and routing docs show GPT-6 Sol/Luna and TypeSafe setup.",
+      "url": "https://astral-orchestrator.vercel.app/",
+      "commit": "79f3e59abba65777ee7451456b75eb77d5783a33"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "approved",
+      "observed_at": "2026-09-23T00:59:00Z",
+      "evidence": "Authenticated OpenAI Platform in Opera GX lists Astral Orchestrator 3.11.0 as Published and separately lists an older 3.11.0 Draft. The opened 3.11.0 submission shows Viewing the released version. The ledger submission statuses stop at approved; the public directory page itself was not observed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60c5da6e081918ccd71b1575495b5"
     }
   ]
 }
