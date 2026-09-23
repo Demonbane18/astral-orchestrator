@@ -12,6 +12,7 @@ from pathlib import Path
 
 SESSION_ID = re.compile(r"[A-Za-z0-9_-]{8,128}\Z")
 COMMAND = re.compile(r"\s*typesafe\s+(on|off|status)\s*\Z", re.I)
+ADAPTIVE_COMMAND = re.compile(r"\s*adaptive\s+(off|status|on\s+(?:typesafe|openrouter))\s*\Z", re.I)
 MARKER = "TypeSafe session: on"
 
 
@@ -35,9 +36,14 @@ def read_state(path: Path, cwd: str) -> dict[str, object]:
         raise ValueError("session state is a symlink")
     if path.is_file():
         state = json.loads(path.read_text(encoding="utf-8"))
-        if state.get("project") == str(Path(cwd).resolve()) and state.get("mode") in {"on", "off"}:
+        if isinstance(state, dict) and state.get("project") == str(Path(cwd).resolve()) and state.get("mode") in {"on", "off"}:
+            if state.get("adaptive") not in {"on", "off"}:
+                state["adaptive"] = "off"
+            if state.get("adaptive_provider") not in {"typesafe", "openrouter"}:
+                state["adaptive_provider"] = None
             return state
-    return {"project": str(Path(cwd).resolve()), "mode": "on" if project_default(cwd) else "off", "explicit": False}
+    return {"project": str(Path(cwd).resolve()), "mode": "on" if project_default(cwd) else "off", "explicit": False,
+            "adaptive": "off", "adaptive_provider": None}
 
 
 def save_state(path: Path, state: dict[str, object]) -> None:
@@ -72,9 +78,19 @@ def hook(event: dict[str, object]) -> dict[str, object]:
         if command and command.group(1).lower() != "status":
             state["mode"] = command.group(1).lower()
             state["explicit"] = True
+        adaptive = ADAPTIVE_COMMAND.fullmatch(prompt) if isinstance(prompt, str) else None
+        if adaptive:
+            value = adaptive.group(1).lower().split()
+            if value[0] == "off":
+                state["adaptive"] = "off"
+                state["adaptive_provider"] = None
+            elif value[0] == "on":
+                state["adaptive"] = "on"
+                state["adaptive_provider"] = value[1]
     save_state(path, state)
     return {"hookSpecificOutput": {"hookEventName": name,
-            "additionalContext": f"TypeSafe/Jev is {state['mode']} for session {session_id}. "
+            "additionalContext": f"TypeSafe/Jev is {state['mode']}; Adaptive is {state['adaptive']}"
+            f"{(' via ' + state['adaptive_provider']) if state['adaptive'] == 'on' else ''} for session {session_id}. "
             "Only use Jev for bounded semantic judgments; permissions and execution remain in code."}}
 
 

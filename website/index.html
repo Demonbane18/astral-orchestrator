@@ -60,7 +60,7 @@
       <section class="hero" aria-labelledby="home-title">
         <div class="shell hero-grid">
           <div>
-            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.12.1 · open-source · local plugin runtime</p>
+            <p class="hero-badge"><span class="pulse-dot" aria-hidden="true"></span>v3.13.0 · open-source · local plugin runtime</p>
             <h1 id="home-title">Turn a request into a <span class="gradient-text">checked result.</span></h1>
             <p class="hero-copy">
               Astral detects whether your current task uses <span class="hl">Sol, Luna, or Astra</span>
@@ -418,7 +418,7 @@
               </details>
             </div>
 
-            <p class="route-caption">This normal multi-agent route is a documented heuristic based on the work at hand. Every child runs its selected model at its configured effort, and a mismatched lane is blocked and explained instead of hidden. Singularity is the deliberate one-session exception.</p>
+            <p class="route-caption">This normal multi-agent route is a documented heuristic based on the work at hand. Every child runs its selected model at its configured or Adaptive-selected effort, and a mismatched lane is blocked and explained instead of hidden. Singularity is the deliberate one-session exception.</p>
           </div>
         </div>
       </section>
@@ -469,7 +469,7 @@
               OpenRouter’s <a href="https://openrouter.ai/ori/eval">Ori Eval</a> and
               its <a href="https://openrouter.ai/skills/spawn-ori-eval">reproducible evaluation skill</a>
               inspired the pinned/reproducible evaluation and state-tracking method.
-              Astral does not run Ori or OpenRouter and adds no OpenRouter runtime or API dependency.
+              Astral does not run Ori. OpenRouter is optional only when selected as the Adaptive Jev provider; the default plugin has no OpenRouter runtime or API dependency.
             </p>
           </aside>
         </div>
@@ -567,7 +567,7 @@
           </div>
 
           <p class="scope-note" data-reveal>
-            Optional TypeSafe Jev routing can choose among eligible GPT-6 workers when the session is on. It never changes the running primary or authorizes execution. The separate session plugin is off by default and needs a project-local key; see <a href="docs/routing/">routing setup</a>.
+            Optional Adaptive routing chooses an eligible GPT-6 worker model and effort once per delegated task, including tasks transported through OpenCodex. It never changes the running primary or authorizes execution. The separate session plugin starts off and uses an explicitly selected TypeSafe or OpenRouter Jev key; see <a href="docs/routing/">routing setup</a>.
           </p>
 
           <p class="scope-note" data-reveal>

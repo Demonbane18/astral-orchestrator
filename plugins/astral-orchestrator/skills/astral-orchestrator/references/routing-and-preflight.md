@@ -16,7 +16,7 @@ lives in primary-verification.md.
 | Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
 | Hypernova primary | Primary session | Current `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` | Observed session effort | Architecture, maximum-safe-wave planning, integration, and acceptance |
 | Hypernova implementation | Built-in `worker` only | `gpt-6-sol` by default or `gpt-6-astra` | `max` or configured Astra effort | Every independently owned ready implementation card |
-| Hypernova reviewer | Fresh built-in `default` only | Same selected child model | Same selected child effort | Mandatory exact-route review after integrated verification |
+| Hypernova reviewer | Fresh built-in `default` only | `gpt-6-sol` | `high` | Mandatory pinned review after integrated verification |
 
 The main session owns lane selection and remains accountable for the combined result.
 Do not silently substitute a model, effort, or differently configured custom role. On a
@@ -34,18 +34,44 @@ automatic candidates. The exact-process launcher exposes `legacy-luna`, `terra`,
 and `legacy-reviewer` for those older routes; native agents must explicitly pin
 the selected legacy model and effort. GPT-6 Sol and Luna do not support Ultra.
 
-## Optional TypeSafe judgment
+## Optional TypeSafe and Adaptive judgments
 
-The separate TypeSafe Session plugin keeps one task's on/off state. When it is on,
+The separate TypeSafe Session plugin keeps independent TypeSafe and Adaptive states
+for one task. When either is on,
 prepare a short non-sensitive task summary and observed model/effort availability,
 then run `../../scripts/choose-worker.py` with a private JSON input file. The selector
 first enforces mode, delegation permission, settled acceptance, exact user choices,
-and observed availability. Jev Choice selects only among eligible worker models;
-Jev Score may adjust a normal worker's effort within that model's supported range.
+and observed availability. `TypeSafe on` uses Jev Choice for the worker model and
+keeps configured effort. `Adaptive on typesafe` or `Adaptive on openrouter` uses
+Choice and Score in one request to select a worker model and valid effort per card.
+If both are on, make only that one Adaptive request. An explicit model remains fixed;
+an explicit effort remains fixed; the fresh Sol High reviewer never enters Jev's
+candidates. Adaptive may vary Hypernova's default worker effort. Do not adapt a
+older process launcher that cannot apply the selected effort.
+For OpenCodex transport, set `transport` to `opencodex` and pass the available
+models and efforts observed on the current Codex host. The selector additionally
+checks exact model IDs and efforts against the active Codex home's OpenCodex
+catalog. Use the compatible Codex runtime probe before any exact-process launch.
+OpenCodex remains model transport, not the Jev provider or routing authority.
+Non-OpenAI provider models remain explicit Morph selections.
+For Comet or Singularity, set `recommend_only: true` only to display a future-task
+recommendation; never use that result to spawn or change the current primary.
 The primary remains in charge of requirements, execution, and authorization. No
 worker is launched from a missing key, unavailable route, invalid answer, or uncertain
-choice; report the reason and continue independent work. When TypeSafe is off, use
-the deterministic lane rules below without an API call.
+choice; report the reason and continue independent work. When both toggles are off,
+use the deterministic lane rules below without an API call.
+
+If a separate Astra-Ares CLI is active, map only its documented `Astra-Jev`,
+`Sol-Jev`, or `Luna-Jev` selections to the corresponding GPT-6 model. Use
+`../../scripts/inspect-ares.py` with the observed primary model and effort and
+the selected Adaptive provider. A provider mismatch blocks the combined route.
+The provider checker reports compatibility, not native effort application;
+the primary checker requires Ares's applied checkpoint evidence for a logical
+selection whose rollout omits effort. Ares currently documents single-agent CLI
+checkpoints, not Desktop or multi-agent native adaptation. When the primary's
+evidence source is `ares-native-checkpoint`, use only Comet or Singularity; block
+delegated modes rather than claiming an untested Ares multi-agent path. Ordinary
+Codex CLI or Desktop remains the route for Adaptive delegated work.
 
 ## Live Astral status updates
 

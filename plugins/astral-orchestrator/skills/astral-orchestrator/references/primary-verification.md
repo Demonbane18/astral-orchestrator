@@ -11,6 +11,9 @@ Before execution:
    `../../scripts/check-primary.py` without a strict flag. It accepts an observed
    `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` primary at the effort already running in the session.
    It does not compare the session with the saved orchestrator value or mutate settings.
+   For an active Astra-Ares CLI task whose logical rollout selection omits the applied
+   effort, it accepts only a matching private Ares checkpoint decision plus native
+   effort acknowledgment for the same thread and turn, and labels that evidence source.
    Optional `--require-sol-ultra` and `--require-astra-ultra` flags are strict diagnostics;
    no mode requires them.
    The optional `--thread-id` defaults to `CODEX_THREAD_ID`. Use `--sessions-dir` only

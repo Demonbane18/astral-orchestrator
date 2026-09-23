@@ -512,7 +512,7 @@ class WebsiteContractTests(unittest.TestCase):
         for page in ("home", "install", "support", "docs"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.12.1", content)
+                self.assertIn("v3.13.0", content)
         for path in WEBSITE.rglob("*.html"):
             with self.subTest(no_stale_version=path.relative_to(WEBSITE)):
                 self.assertNotIn("v3.7.0", page_text(path))
@@ -1387,8 +1387,9 @@ class WebsiteContractTests(unittest.TestCase):
             "https://openrouter.ai/ori/eval",
             "https://openrouter.ai/skills/spawn-ori-eval",
             "inspired the pinned/reproducible evaluation and state-tracking method",
-            "does not run Ori or OpenRouter",
-            "no OpenRouter runtime or API dependency",
+            "does not run Ori",
+            "OpenRouter is optional only when selected as the Adaptive Jev provider",
+            "default plugin has no OpenRouter runtime or API dependency",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, home)

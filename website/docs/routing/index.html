@@ -27,7 +27,7 @@
               <tr><td>Fresh final review</td><td><code>gpt-6-sol</code></td><td><strong>Reviewer Sol High</strong></td></tr>
               <tr><td>Hypernova children</td><td><code>gpt-6-sol</code> by default, or <code>gpt-6-astra</code></td><td><strong>Sol Max</strong> or configured Astra effort</td></tr>
             </tbody></table></div>
-            <p>The model already running the task remains primary at its observed effort. Child effort comes from persisted per-lane settings. Primary effort never caps worker effort, and Astra is chosen only when its reasoning benefit justifies the added cost.</p>
+            <p>The model already running the task remains primary at its observed effort. Worker effort comes from persisted per-lane settings when Adaptive is off, or from a validated per-task choice when Adaptive is on. Primary effort never caps worker effort, and Astra is chosen only when its reasoning benefit justifies the added cost.</p>
           </section>
 
           <section aria-labelledby="effort-settings">
@@ -41,10 +41,11 @@ sh scripts/configure-effort.sh --reset</code></pre>
           </section>
 
           <section aria-labelledby="typesafe-routing">
-            <h2 id="typesafe-routing">Optional TypeSafe worker selection</h2>
-            <p>Install <code>typesafe-session@astral-orchestrator</code> separately and trust its hooks to keep one task's setting through compaction. Use the standalone commands <code>TypeSafe on</code>, <code>TypeSafe off</code>, or <code>TypeSafe status</code>. It starts off unless the project root's <code>AGENTS.md</code> contains <code>TypeSafe session: on</code>; an explicit off wins for the task.</p>
-            <p>When on, code filters routes by the chosen mode, observed model availability, exact user choices, delegation permission, and settled acceptance. TypeSafe Jev Choice selects only among eligible workers; Score may adjust effort within the selected model's supported values. The current primary, authorization, execution, and runtime proof remain under Codex control. An unavailable key or uncertain judgment blocks Jev selection visibly.</p>
-            <p>For local setup, copy the repository's <code>.env.example</code> to an owner-only, git-ignored <code>.env.local</code> in the active project and add <code>TYPESAFE_API_KEY</code>. The key stays local; the website never receives it.</p>
+            <h2 id="typesafe-routing">Optional TypeSafe and Adaptive worker selection</h2>
+            <p>Install <code>typesafe-session@astral-orchestrator</code> separately and trust its hooks to keep one task's settings through compaction. <code>TypeSafe on</code>, <code>TypeSafe off</code>, and <code>TypeSafe status</code> control optional worker-model advice at configured effort. TypeSafe starts off unless the project root's <code>AGENTS.md</code> contains <code>TypeSafe session: on</code>.</p>
+            <p><code>Adaptive on typesafe</code> or <code>Adaptive on openrouter</code> selects a Jev provider and enables per-task worker model and effort selection. <code>Adaptive off</code> and <code>Adaptive status</code> control that separate switch. Adaptive starts off each task; TypeSafe off does not disable it. If both switches are on, Astral makes one Jev request per worker card. Put the chosen provider's <code>TYPESAFE_API_KEY</code> or <code>OPENROUTER_API_KEY</code> in a private project <code>.env.local</code>. There is no automatic provider fallback.</p>
+            <p>Code first filters by mode, observed model and effort availability, exact choices, delegation permission, and settled acceptance. Jev Choice selects among eligible workers and Score selects a supported effort when Adaptive is on. Explicit choices and the fresh Sol High reviewer stay fixed. Comet and Singularity show only a recommendation for a future task. The current primary, authorization, execution, and runtime proof remain under Codex control. A missing key or uncertain judgment is reported visibly.</p>
+            <p>For local setup, copy the repository's <code>.env.example</code> to an owner-only, git-ignored <code>.env.local</code> in the active project and add the selected provider's key. The key stays local; the website never receives it.</p>
           </section>
 
           <section aria-labelledby="primary-proof">
@@ -73,13 +74,15 @@ sh scripts/configure-effort.sh --reset</code></pre>
             <h2 id="morph-provider">Morph and external-provider disclosure</h2>
             <p>Morph can use an OpenCodex-routed <code>provider/model</code> or another user-selected native model only for a bounded worker card. The provider may be external and may receive the bounded worker packet during inference.</p>
             <p>Astral <strong>does not install OpenCodex</strong>, change <code>~/.opencodex</code>, start a service, or install a provider package. Astral does not handle credentials. It does not claim that every provider supports native effort semantics. Provider support and effort semantics remain capability-dependent, and a failure blocks the worker rather than silently changing route.</p>
-            <p>The optional TypeSafe selector is the only bundled external judgment client and runs only when enabled with a project key. This does not imply provider traffic is local. Review the provider's terms and your workplace rules before sending sensitive material.</p>
+            <p>For an OpenCodex-routed Codex task, Astral intersects its GPT worker candidates with the active OpenCodex model catalog. OpenCodex carries model requests; it does not choose the Astral route. Its own sub-agent model and effort settings are guidance or defaults. The Jev key is separate from any model-provider credential.</p>
+            <p><a href="https://github.com/miuuyy/Astra-Ares">Astra-Ares</a> is an optional patched Codex CLI for within-task GPT-6 effort changes. Astral checks its selected provider and accepts an Ares primary only when its logical selection matches a private native checkpoint and applied-effort acknowledgment for the same task. A compatible configuration alone is not proof. The tested Ares path is single-agent CLI, including one OpenCodex-routed Luna Low task; ordinary Codex Desktop does not inherit Ares checkpoints. Adaptive per-worker routing works separately in CLI and Desktop.</p>
+            <p>The optional Jev selector runs only when enabled with a private project key. This does not imply provider traffic is local. Review the provider's terms and your workplace rules before sending sensitive material.</p>
           </section>
 
           <section aria-labelledby="capacity-routing">
             <h2 id="capacity-routing">Capacity, Constellation, and Hypernova</h2>
             <p>Constellation starts concurrent work only after Sol proves independent cards, non-overlapping ownership, suitable cost-aware workers, and host-advertised capacity after the primary consumes one slot. When capacity or independence is uncertain, Constellation may use serial Orbit-style routing.</p>
-            <p>Hypernova instead requires observed native capacity and exact Sol Max routes. It launches the maximum safe ready wave, recalculates capacity between waves, and blocks rather than treating a different route as equivalent. Dependent or safety-sensitive cards may be sequenced within the exact native contract.</p>
+            <p>Hypernova instead requires observed native capacity and exact worker routes: Sol Max by default, or a validated Adaptive model and effort for each card when enabled. Its fresh reviewer stays Sol High. It launches the maximum safe ready wave, recalculates capacity between waves, and blocks rather than treating a different route as equivalent. Dependent or safety-sensitive cards may be sequenced within the exact native contract.</p>
           </section>
         </article>
       </div></section>

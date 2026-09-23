@@ -1,6 +1,6 @@
 {
   "name": "astral-orchestrator",
-  "version": "3.12.1",
+  "version": "3.13.0",
   "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "JOHN PAUL FURIGAY FUSIN"

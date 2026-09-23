@@ -1,7 +1,7 @@
 {
   "name": "typesafe-session",
-  "version": "1.0.0",
-  "description": "Opt-in TypeSafe Jev judgments for one Codex session.",
+  "version": "1.1.0",
+  "description": "Independent TypeSafe and Adaptive Jev switches for one Codex session.",
   "author": {
     "name": "JOHN PAUL FURIGAY FUSIN"
   },
@@ -11,17 +11,21 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "TypeSafe Session",
-    "shortDescription": "Turn Jev judgments on or off per task",
+    "shortDescription": "Choose Jev model and effort routing per task",
     "developerName": "JOHN PAUL FURIGAY FUSIN",
     "category": "Productivity",
     "capabilities": [
       "Interactive"
     ],
-    "longDescription": "Turn TypeSafe Jev judgments on or off for the current Codex task. A trusted hook remembers the choice through compaction; project instructions may opt in by default.",
+    "longDescription": "Control TypeSafe model advice and independent Adaptive worker model and effort routing for the current Codex task. A trusted hook remembers both choices through compaction; Adaptive defaults off.",
     "defaultPrompt": [
       "TypeSafe on",
       "TypeSafe off",
-      "TypeSafe status"
+      "TypeSafe status",
+      "Adaptive on typesafe",
+      "Adaptive on openrouter",
+      "Adaptive off",
+      "Adaptive status"
     ]
   }
 }

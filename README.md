@@ -2,7 +2,7 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.12.1 is an installable, open-source Codex plugin that turns a goal
+Astral Orchestrator v3.13.0 is an installable, open-source Codex plugin that turns a goal
 into routed, verified work. The Sol, Luna, or Astra model already running your task remains the
 primary orchestrator. Astral selects bounded workers and checks the result before handoff.
 
@@ -78,13 +78,13 @@ Measured to Pulsar.
 - Risk can raise safeguards, but a mode name cannot lower required safeguards.
 - Astral runs without an API key, analytics, background service, or paid runtime dependency.
 - The optional TypeSafe Session companion sends a short non-sensitive task summary to
-  TypeSafe only when the current task is on and a project key is configured.
+  the explicitly selected Jev provider only when a task toggle is on and its key is configured.
 - External providers selected through Morph may process that bounded work under their own
   terms; Astral does not configure or operate them.
 
 Read the full [Safety and privacy guide](https://astral-orchestrator.vercel.app/docs/safety/).
 
-## Optional TypeSafe routing
+## Optional TypeSafe and Adaptive routing
 
 Install the companion only if you want Jev to choose among eligible worker routes:
 
@@ -92,14 +92,25 @@ Install the companion only if you want Jev to choose among eligible worker route
 codex plugin add typesafe-session@astral-orchestrator
 ```
 
-Trust its hooks in Codex for session persistence. In a task, say `TypeSafe on`,
-`TypeSafe off`, or `TypeSafe status`. It is off by default unless the project root's
-`AGENTS.md` contains the exact line `TypeSafe session: on`; an explicit off wins for
-that task. Jev never changes the current primary, authorizes an action, or launches
-a worker. To use it locally, copy `.env.example` to an owner-only `.env.local` in
-your active project and set `TYPESAFE_API_KEY` there. Never commit the key. If the
-key or exact route is unavailable, Astral reports the blockage rather than claiming
-a Jev decision.
+Trust its hooks in Codex for session persistence. `TypeSafe on`, `TypeSafe off`, and
+`TypeSafe status` control optional model advice; worker efforts stay configured.
+`Adaptive on typesafe`, `Adaptive on openrouter`, `Adaptive off`, and `Adaptive status`
+independently control per-task worker model **and effort** selection. Adaptive starts off
+for each task. TypeSafe starts off unless the project root's `AGENTS.md` contains the
+exact line `TypeSafe session: on`; an explicit off wins for that task. When both are on,
+Astral makes one Jev request per worker card. The primary session and fresh Sol High
+reviewer remain fixed. Comet and Singularity show only a future-task recommendation.
+
+Copy `.env.example` to an owner-only `.env.local` in your active project and fill
+`TYPESAFE_API_KEY` or `OPENROUTER_API_KEY` for the provider you select. Never commit
+the key. Missing keys, uncertain choices, or unavailable model/effort routes are
+reported. OpenCodex can transport the selected GPT worker model in Codex CLI or Desktop;
+it does not choose the Astral route. Other OpenCodex models remain explicit Morph choices.
+[Astra-Ares](https://github.com/miuuyy/Astra-Ares) is an optional, separate patched CLI
+for within-task GPT-6 effort changes. Its documented native checkpoint does not run
+inside ordinary Codex Desktop; Astral's per-worker Adaptive routing is separate from it.
+The [Ares and OpenCodex compatibility notes](docs/ASTRA-ARES-COMPATIBILITY.md) record
+the tested boundaries and remaining live checks.
 
 ## Update
 
