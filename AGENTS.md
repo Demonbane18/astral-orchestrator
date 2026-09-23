@@ -17,9 +17,9 @@ Keep the installed experience simple for people who do not write code.
 
 - Use plain language and explain unavoidable technical terms on first use.
 - Keep the core `SKILL.md` concise; put detailed templates in `references/`.
-- Require the exact Astra primary and selected child routes at their configured effort
-  for every mode, including the explicit Hypernova Ultra contract. Keep primary and
-  worker effort settings independent; never silently substitute a route.
+- Require the observed Sol or Astra primary at its current session effort and selected
+  child routes at their configured effort in every mode. Primary effort never caps
+  worker effort; never silently substitute a route.
 - Keep Comet mode as the explicit single-session option for tiny work.
 - Use only built-in local tools at runtime; do not add an API key or external service.
 - Preserve the original Sol Advisor MIT notice and attribution.

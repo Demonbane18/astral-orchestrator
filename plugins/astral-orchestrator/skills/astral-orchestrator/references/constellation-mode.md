@@ -1,16 +1,18 @@
 # Constellation mode
 
-Constellation is an explicit opt-in: use it only when the user explicitly names it. Constellation has one configured
-Astra primary and normally one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or hierarchical fan-out
-for independently owned cards, not a request to fill every available slot or to replace Astra’s integration role.
+Constellation is an explicit opt-in: use it only when the user explicitly names it.
+Constellation keeps the detected Sol or Astra primary at its observed effort and normally
+uses one fresh Sol reviewer on its exact route. It is a capacity-aware parallel or
+hierarchical fan-out for independently owned cards, not a request to fill every available slot.
 
 ## Model and effort contract
 
-The primary stays on `gpt-6-astra` at its configured effort. The fresh reviewer
+The primary stays on its detected model and observed effort. The fresh reviewer
 defaults to `gpt-5.6-sol` at High. **Sol High is sufficient** for review; **Sol Ultra is not required**. Primary and child
 efforts are independent. Never silently substitute a selected route.
 
-Ordinary fixed-route cards remain Luna or Terra at their configured efforts. A Constellation card may use a
+Ordinary fixed-route cards use Astra, Luna, or Terra at their configured efforts. Choose
+Astra only when a bounded card needs reasoning depth worth its added cost. A Constellation card may use a
 **custom worker model and effort only as an explicit Morph card**. That Morph card must record the exact model id,
 requested effort, route availability, and runtime evidence before its worker is accepted. Record requested and
 observed provider/model/effort separately: requested effort is not upstream-native unless that behavior is
@@ -27,7 +29,7 @@ than substituting a route.
 
 ## Prove that a concurrent first wave is safe
 
-Before launching, Astra must write a complete card for every candidate and prove all of the
+Before launching, the primary must write a complete card for every candidate and prove all of the
 following:
 
 - each ready card has an independent outcome and non-overlapping file and system ownership;
@@ -35,13 +37,13 @@ following:
 - every worker has an exact model and requested/configured effort route it can use; for any explicit Codex Morph card,
   successful Morph dry-run evidence is recorded before launch;
 - the host-advertised available slots are known; the primary consumes one slot;
-- the configured model roster has enough suitable, cost-aware non-Sol workers.
+- the configured model roster has enough suitable, cost-aware workers.
 
 Launch the first wave concurrently only after those facts are recorded. Its maximum worker
 count is the minimum of ready independent cards, suitable configured roster entries, and
 the host-advertised available slots minus the primary’s one slot. Do not hard-code four or
 five simultaneous children. Do not spawn extra Sol implementers by default; reserve Sol
-for fresh review, and prefer cost-aware non-Sol workers.
+for fresh review, and prefer cost-aware workers.
 
 If independence, ownership, ready status, model availability, or capacity cannot be
 proven, fall back to serial Orbit-style routing. The fallback keeps the same work cards,
@@ -49,10 +51,10 @@ exact routes, verification, and review; it merely removes unsupported concurrenc
 
 ## Routing and integration
 
-Use Luna or Terra for ordinary fixed-route cards. A card that explicitly needs a
+Use Astra, Luna, or Terra for ordinary fixed-route cards. A card that explicitly needs a
 user-selected routed model follows Morph mode and includes its exact model id and requested
 effort. Start only the first safe wave; inspect completed cards, resolve interfaces in the
-Astra primary, and then recalculate readiness and capacity before every later wave.
+detected primary, and then recalculate readiness and capacity before every later wave.
 
 Tell every worker it is not alone in the codebase, owns only its card, and must preserve
 other edits. A packet may authorize the worker to spawn bounded child workers with exact

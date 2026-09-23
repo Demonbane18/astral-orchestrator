@@ -49,9 +49,9 @@
               <h2 id="requirements">Requirements</h2>
               <ul>
                 <li>A current Codex CLI or desktop app with plugins enabled.</li>
-                <li>Access to <code>gpt-5.6-sol</code>, <code>gpt-5.6-luna</code>, and <code>gpt-5.6-terra</code> for their fixed routes.</li>
+                <li>Access to Sol or Astra for the primary and to each worker model selected for the run.</li>
                 <li>Python 3.11 or newer; the included local tools use only the standard library.</li>
-                <li>For Hypernova, native MultiAgentsV2 controls plus <code>gpt-5.6-sol</code> with Ultra effort for every lane.</li>
+                <li>For Hypernova, native MultiAgentsV2 controls plus a supported exact child route.</li>
               </ul>
               <p>Astral stops when an exact required model, effort, route, or review cannot be proven. It never silently substitutes another model or effort.</p>
             </section>
@@ -78,10 +78,10 @@ sh scripts/setup.sh</code></pre>
 
             <section aria-labelledby="first-use">
               <h2 id="first-use">First use</h2>
-              <p>Start a new Codex task with <code>gpt-5.6-sol</code> at your configured orchestrator effort—High by default—then say:</p>
+              <p>Start a new Codex task with Sol or Astra at the effort you want for the primary, then say:</p>
               <pre><code>Use Astral Orchestrator to add a search box and verify every lane.</code></pre>
               <p>Orbit is the default, so you do not need to name it. For a different contract, explicitly name <a href="../modes/">one of the other modes</a>. For example:</p>
-              <pre><code>Use Astral in Hypernova mode for high-speed all-Sol Ultra execution with exact-route checks.</code></pre>
+              <pre><code>Use Astral in Hypernova mode with the detected primary, configured workers, mandatory status, and exact-route checks.</code></pre>
               <p>Hypernova is never automatic. Morph is also user-owned: if you select an external provider, configure it separately and review its terms before sending a bounded worker packet.</p>
             </section>
           </article>

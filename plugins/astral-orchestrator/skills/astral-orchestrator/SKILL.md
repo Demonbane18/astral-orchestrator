@@ -1,11 +1,11 @@
 ---
 name: astral-orchestrator
-description: Run Astral Orchestrator when explicitly requested, when an Astral mode is selected, or when configuring Astral model/effort routes. Supports bounded delegation and explicit single-session modes.
+description: Run Astral Orchestrator when explicitly requested, when an Astral mode is selected, or when configuring Astral model/effort routes. Keeps the current Sol or Astra session primary, supports configurable Astra/Luna/Terra workers, and makes every active route visible.
 ---
 
 # Astral Orchestrator
 
-Own the requested result through verification and handoff. The Astra primary owns
+Own the requested result through verification and handoff. The detected Sol or Astra primary owns
 requirements, architecture, routing, integration, and acceptance. Workers own bounded
 execution. Keep the process understandable to a non-technical user.
 
@@ -18,14 +18,14 @@ explicit opt-ins.
 
 | Mode | Execution and review | Read when selected |
 |---|---|---|
-| Comet | Astra works directly and self-reviews; no worker is spawned | Primary verification and applicable risk gates below |
-| Orbit (default) | Delegate useful bounded work to Luna or Terra, then review the integrated change set | Child routing before delegation |
+| Comet | The detected primary works directly and self-reviews; no worker is spawned | Primary verification and applicable risk gates below |
+| Orbit (default) | Delegate useful bounded work to Astra, Luna, or Terra, then review the integrated change set | Child routing before delegation |
 | Event Horizon | Consequential or explicitly thorough work; delegated execution and concise Sol review-and-repair | Risk gates and child routing before delegation |
-| Singularity (explicit opt-in) | Meaningful low/medium-risk work in one verified Astra session; do not spawn subagents or a fresh reviewer | [Singularity](references/singularity-mode.md) when the user explicitly names Singularity |
+| Singularity (explicit opt-in) | Meaningful low/medium-risk work in one verified primary session; do not spawn subagents or a fresh reviewer | [Singularity](references/singularity-mode.md) when the user explicitly names Singularity |
 | Pulsar (explicit opt-in) | Deliberately slower evidence-oriented work with a frozen card and resumable state | [Pulsar](references/pulsar-mode.md) when the user explicitly names Pulsar |
 | Morph (explicit opt-in) | Exact user-selected worker model for bounded work | [Morph](references/morph-mode.md) when the user explicitly names Morph |
 | Constellation (explicit opt-in) | Capacity-aware parallel cards with independent ownership | [Constellation](references/constellation-mode.md) when the user explicitly names Constellation |
-| Hypernova (explicit opt-in) | Astra Ultra primary and maximum safe native concurrency with Sol Ultra workers and mandatory fresh Sol Ultra review | [Hypernova](references/hypernova-mode.md) when the user explicitly names Hypernova |
+| Hypernova (explicit opt-in) | Detected primary and maximum safe native concurrency with Sol Ultra workers by default or configured Astra workers, plus mandatory fresh review | [Hypernova](references/hypernova-mode.md) when the user explicitly names Hypernova |
 
 Legacy aliases remain advisory: Quick = Comet, Guided = Orbit, Careful = Event Horizon,
 Measured = Pulsar. They do not change routes or safeguards.
@@ -48,17 +48,17 @@ Measured = Pulsar. They do not change routes or safeguards.
 
 ## Model and effort boundaries
 
-The primary is `gpt-6-astra`, High by default. Normal modes require its observed effort
-to match the configured orchestrator effort. All host-supported configurable efforts
-remain available; never silently lower or substitute a selected effort. Primary and child
-settings are independent. Hypernova requires an observed Astra Ultra primary and exact
-Sol Ultra workers and fresh review, without changing normal saved settings. Comet and
+The primary is the current `gpt-5.6-sol` or `gpt-6-astra` session at its observed effort.
+Do not replace it, require a preferred lead, or compare it with the saved orchestrator
+effort. Primary and child settings are independent. An Astra worker uses the configured
+`astra` effort, including a higher effort than a Light or Medium primary. Hypernova uses
+Sol Ultra children by default or Astra at the configured Astra effort. Comet and
 Singularity never spawn.
 
 The bundled checker is authoritative for this version. Do not infer runtime support
 from another source version or change global settings automatically to resolve a mismatch.
 
-Normal child defaults are Luna Max for mechanical work, Terra High for context-heavy
+Normal child defaults are Astra Medium for selected difficult reasoning, Luna Max for mechanical work, Terra High for context-heavy
 implementation, and Sol High for fresh review. Resolve effective child settings before
 launch; distinguish package defaults, installed profiles, selected settings, and observed
 runtime evidence. Never silently substitute model or effort. Use a custom role only when
@@ -97,8 +97,10 @@ pauses. Do not turn technical acceptance into permission to publish or deploy.
 Orbit, Event Horizon, Pulsar, Morph, and Constellation use bounded parallel or hierarchical
 execution. Create a delegated card only when its independent work is substantial enough
 to justify context transfer and integration. Do not split tiny work to fill slots.
-Keep requirements and acceptance decisions in Astra; route mechanical execution to Luna
-and context-heavy implementation to Terra. Honor explicit Morph worker selections.
+Keep requirements and acceptance decisions in the detected primary; route selected
+difficult reasoning to Astra, mechanical execution to Luna, and context-heavy
+implementation to Terra. Use Astra only when its reasoning benefit justifies its cost.
+Honor explicit Morph worker selections.
 Answer-only, planning-only, and blocked requests need no worker.
 
 For actual ready cards, launch every ready independent card concurrently up to observed
@@ -133,16 +135,20 @@ independent review. Hypernova always needs its fresh exact selected reviewer.
 
 Use one concise review-and-repair pass in workspace-write for delegated changes. A
 reviewer may fix a bounded obvious issue and run its affected check. Return one verdict
-line, ship/fix-first/rethink, and at most three findings. Astra inspects repairs without
+line, ship/fix-first/rethink, and at most three findings. The primary inspects repairs without
 starting a second review cycle for a small fix. A rethink returns scope, architecture,
-or safety decisions to Astra. “Ship” means technical acceptance, not publication.
+or safety decisions to the primary. “Ship” means technical acceptance, not publication.
 
 ## Status and handoff
 
-Show compact Astral status only when the route or phase changes. Always use an actual
+The first user-facing progress update after Astral activates must show compact Astral
+status. Show it again immediately before each child launch, after launch returns a task or
+session id, whenever observed route or lifecycle state changes, and in the final handoff.
+Always use an actual
 GitHub-flavored Markdown table with a header separator row, never a fenced or plain pipe
 panel. Include lane, role, model, effort, state, and evidence; distinguish requested from
-observed values. Singularity needs only the Astra primary row. Do not invent activity,
+observed values. Singularity needs only the detected primary row. Include blocked, failed,
+discarded, and not-needed lanes when they affect the outcome. Do not invent activity,
 repeat unchanged panels, or expose packets/secrets. Detailed states and examples live in
 the routing and template references when needed.
 

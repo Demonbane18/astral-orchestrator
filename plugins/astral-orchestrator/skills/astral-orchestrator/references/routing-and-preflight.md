@@ -1,24 +1,26 @@
 # Routing and preflight
 
 Use this reference only before a Codex child launch or when its evidence needs inspection.
-Normal modes use configured primary/child efforts; Hypernova requires Astra Ultra primary
-and Sol Ultra children. Primary verification lives in primary-verification.md.
+Normal modes keep the detected primary effort and use configured child efforts. Hypernova
+uses Sol Ultra children by default or Astra at its configured effort. Primary verification
+lives in primary-verification.md.
 
 ## Exact route contract
 
 | Role | Native v2 agent type | Required model | Default effort | Best work |
 |---|---|---|---|---|
-| Orchestrator | Primary session | `gpt-6-astra` | `high` | Requirements, architecture, decomposition, cross-lane integration, acceptance |
+| Orchestrator | Primary session | Current `gpt-5.6-sol` or `gpt-6-astra` | Observed session effort | Requirements, architecture, decomposition, cross-lane integration, acceptance |
+| Deep-reasoning worker | Built-in `worker` | `gpt-6-astra` | `medium` | Bounded difficult diagnosis or synthesis whose benefit justifies the cost |
 | Focused worker | Built-in `worker`, or matching `astral_orchestrator_luna_implementer` | `gpt-5.6-luna` | `max` | Narrow, repeatable, fully specified, mechanical, or high-volume execution |
 | Context worker | Built-in `worker`, or matching `astral_orchestrator_terra_implementer` | `gpt-5.6-terra` | `high` | Context-heavy implementation, debugging, component/external integration, and moderate refactoring |
 | Reviewer | Built-in `default`, or matching `astral_orchestrator_sol_reviewer` | `gpt-5.6-sol` | `high` | Exact pinned Sol, concise workspace-write review-and-repair |
-| Hypernova primary | Primary session | `gpt-6-astra` | `ultra` | Architecture, maximum-safe-wave planning, integration, and acceptance |
-| Hypernova implementation | Built-in `worker` only | `gpt-5.6-sol` | `ultra` | Every independently owned ready implementation card |
-| Hypernova reviewer | Fresh built-in `default` only | `gpt-5.6-sol` | `ultra` | Mandatory exact-route review after integrated verification |
+| Hypernova primary | Primary session | Current `gpt-5.6-sol` or `gpt-6-astra` | Observed session effort | Architecture, maximum-safe-wave planning, integration, and acceptance |
+| Hypernova implementation | Built-in `worker` only | `gpt-5.6-sol` by default or `gpt-6-astra` | `ultra` or configured Astra effort | Every independently owned ready implementation card |
+| Hypernova reviewer | Fresh built-in `default` only | Same selected child model | Same selected child effort | Mandatory exact-route review after integrated verification |
 
 The main session owns lane selection and remains accountable for the combined result.
 Do not silently substitute a model, effort, or differently configured custom role. On a
-current v2 host, deliberately using the built-in native worker for Luna or Terra, or the
+current v2 host, deliberately using the built-in native worker for Astra, Luna, or Terra, or the
 built-in native default for a reviewer, with the exact requested model and effort is the
 standard route, not a substitution.
 
@@ -31,9 +33,10 @@ Never silently downgrade a value that Codex rejects.
 ## Live Astral status updates
 
 Codex plugins cannot pin a permanent native UI widget. Keep the user informed through a
-compact **Astral status** panel only when the route or phase changes. Use the reusable
-panel in `work-templates.md` for the Astra primary, each selected worker, and the fresh
-reviewer when review is required. For Singularity, use only the Astra primary row and do
+compact **Astral status** panel in the first user-facing progress update, before and after
+every child launch, when route evidence or state changes, and in the final handoff. Use the reusable
+panel in `work-templates.md` for the detected primary, each selected worker, and the fresh
+reviewer when review is required. For Singularity, use only the primary row and do
 not repeat unchanged updates. For Hypernova, label each row with its own observed model and effort and include the
 observed safe wave size without exposing packet contents. For Comet work, say that workers are not needed; for
 any reviewer that is not yet required, say so instead of implying it is running.
@@ -93,7 +96,7 @@ Before Orbit, Event Horizon, or Pulsar delegation:
 3. Optionally run `../../scripts/install-agents.sh --check` to record profile state. A
    matching custom role is usable only when its fixed model and effort equal the effective
    settings, because custom agent file values take precedence over explicit spawn values.
-   Otherwise choose the built-in native worker for Luna or Terra, or built-in native
+   Otherwise choose the built-in native worker for Astra, Luna, or Terra, or built-in native
    default for a reviewer, with explicit fields.
 4. Use the bundled launcher only as the legacy exact-process fallback when the host lacks
    one or more required v2 controls—`agent_type`, `task_name`, `model`,
@@ -103,7 +106,8 @@ Before Orbit, Event Horizon, or Pulsar delegation:
 Before Hypernova execution, instead require all five native MultiAgentsV2 controls in
 step 1, observed host-advertised capacity, and at least one safely usable child slot after
 the primary consumes one slot. Use only the built-in `worker` and built-in `default`
-routes with exact Sol Ultra children. Custom profiles are ineligible. Missing controls or
+routes with exact Sol Ultra children by default or Astra at the configured effort. Custom
+profiles with mismatched fixed values are ineligible. Missing controls or
 capacity block Hypernova; do not run setup, a launcher dry run, or another fallback.
 
 A failed child preflight blocks that lane and dependent work. Continue independent
@@ -115,8 +119,8 @@ matching profile or the exact built-in route.
 Hypernova uses [hypernova-mode.md](hypernova-mode.md) for its stricter capacity, selected
 child, and fresh-review requirements. Morph and Constellation use their own references
 only after explicit opt-in. Pulsar's frozen-card and resumption rules remain in its mode
-reference. These modes preserve the Astra primary and the configured child routes; Hypernova uses
-its explicit Ultra contract independently of normal settings.
+reference. These modes preserve the detected primary and the configured child routes;
+Hypernova uses its selected child contract independently of primary effort.
 
 ## Lane decision
 
@@ -135,22 +139,25 @@ true:
 - interfaces, integrations, or moderate refactors require careful judgment;
 - the change has a wider but still bounded regression surface.
 
-Keep the decision in the Astra primary session at the configured orchestrator effort when
-requirements, architecture, safety boundaries, public interfaces, or acceptance criteria
-are unsettled. Astra may settle the decision, then issue bounded execution to Luna or Terra.
-For Pulsar, Astra also retains decomposition, integration, and final route selection; use
+Choose Astra when the architecture and acceptance are settled and a bounded difficult
+diagnosis or deep cross-domain synthesis is worth its added cost.
+
+Keep the decision in the detected primary session at its observed effort when requirements,
+architecture, safety boundaries, public interfaces, or acceptance criteria are unsettled.
+The primary may settle the decision, then issue bounded execution to Astra, Luna, or Terra.
+For Pulsar, the primary also retains decomposition, integration, and final route selection; use
 its stricter deterministic selection rules rather than a general heuristic.
 
 ## Choose the execution mechanism
 
-On a current MultiAgentsV2 host, prefer native spawning. For standard Luna and Terra
+On a current MultiAgentsV2 host, prefer native spawning. For standard Astra, Luna, and Terra
 delegation, use the built-in native worker and explicitly pin every child:
 
 ```text
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-5.6-luna" or "gpt-5.6-terra",
+  model: "gpt-6-astra", "gpt-5.6-luna", or "gpt-5.6-terra",
   reasoning_effort: "<configured lane effort>",
   fork_turns: "none",
   message: "<complete standalone Astral packet>"
@@ -172,13 +179,13 @@ collaboration.spawn_agent({
 })
 ```
 
-For Hypernova's exact built-in Sol Ultra worker and reviewer examples, use
+For Hypernova's exact built-in Sol Ultra or configured Astra worker and reviewer examples, use
 [hypernova-mode.md](hypernova-mode.md#exact-native-route). Do not load or duplicate those
 launch recipes for an ordinary child. Its custom profiles remain ineligible.
 
 The packet must name the intended Astral role, model, effort, ownership, boundaries,
 checks, and whether downstream delegation is allowed. `agent_type: "worker"` is intentional for
-Luna and Terra implementation, while `agent_type: "default"` is intentional for a
+Astra, Luna, and Terra implementation, while `agent_type: "default"` is intentional for a
 reviewer without its matching custom profile. The explicit model and reasoning effort
 preserve Astral's configured route. Do not treat a task name as an agent type.
 
@@ -187,7 +194,7 @@ agent type only if its installed profile is byte-exact and its fixed model and e
 match the effective lane settings. It may then supply a fixed capability such as concise
 bounded review-and-repair. A custom profile that conflicts with a requested
 setting is not a reason to launch a nested process on a v2 host: use the appropriate
-built-in native agent with the explicit values instead (`worker` for Luna or Terra,
+built-in native agent with the explicit values instead (`worker` for Astra, Luna, or Terra,
 `default` for reviewer). A custom effort remains a per-lane setting, not a reason to use
 a conflicting profile. If that native spawn cannot provide the requested model or effort,
 block the lane; do not silently substitute.
@@ -225,7 +232,7 @@ temporary packet after the process exits. A non-zero exit blocks the lane.
 For a native v2 lane, immediately record the epoch seconds, choose a unique lowercase
 task name, and spawn with explicit `agent_type`, `task_name`, `model`,
 `reasoning_effort`, and `fork_turns: "none"`. Record whether it used the built-in worker
-(Luna/Terra), built-in default (reviewer), or a matching custom role; in every case the
+(Astra/Luna/Terra), built-in default (reviewer), or a matching custom role; in every case the
 packet is complete and standalone. For a legacy exact-process lane, launch a new process
 for every packet and capture its `ASTRAL_ORCHESTRATOR_ROUTE` header, Codex startup header,
 session id, final response, and exit status. Both mechanisms allow downstream delegation
@@ -245,10 +252,11 @@ After launch, collect runtime evidence showing:
 - `effort` equals the role's configured effort; and
 - for the reviewer, the requested sandbox is `workspace-write`.
 
-For Hypernova, require primary evidence to show `gpt-6-astra` at `ultra` and every child
-to show `gpt-5.6-sol` at `ultra`; require built-in `worker` for
-implementation and a fresh built-in `default` for review. The normal Sol High custom
-reviewer is a mismatch. Interrupt mismatched lanes when possible and discard their output.
+For Hypernova, require primary evidence to show supported Sol or Astra at its observed
+effort and every child to show the selected exact route: `gpt-5.6-sol` Ultra by default
+or `gpt-6-astra` at configured Astra effort. Require built-in `worker` for implementation
+and a fresh built-in `default` for review. Any conflicting custom profile is a mismatch.
+Interrupt mismatched lanes when possible and discard their output.
 
 Use trustworthy launch or startup metadata when it exposes all fields. If it omits a field, resolve
 the bundled `../../scripts/inspect-agent-runtime.sh` relative to this skill. When spawn
@@ -278,7 +286,7 @@ owner, and delegate other checks only when they do not compete for that session.
 This parallel rule applies without requiring Constellation; Constellation adds explicit
 capacity-aware model selection for larger fan-out.
 
-Hierarchical delegation is allowed when it is faster than routing every leaf through Astra.
+Hierarchical delegation is allowed when it is faster than routing every leaf through the primary.
 A packet that authorizes downstream delegation must name the child boundary, exact model
 and effort, checks, maximum scope, and non-overlapping ownership. The parent worker owns
 integration and evidence for its subtree and may spawn bounded child workers only while
@@ -289,7 +297,7 @@ rules and may delegate again only when their own packet explicitly authorizes it
 Comet (Quick) and Singularity never spawn workers. Reviewers and planning probes do not
 create implementation children; hierarchy is for bounded implementation only.
 
-Hypernova uses no hierarchy. Its Sol Ultra workers cannot delegate. For each wave, set
+Hypernova uses no hierarchy. Its selected workers cannot delegate. For each wave, set
 the worker count to `min(ready independent cards, observed available slots - 1 primary)`,
 launch every worker in that wave concurrently, then inspect, integrate, and recalculate
 readiness and observed capacity. Never invent work to fill a slot. A real dependency,
@@ -305,7 +313,7 @@ Serial execution is required only when:
 - verification of one card determines whether the next should run; or
 - observed capacity cannot fit another ready card.
 
-Tell each worker it is not alone and must preserve concurrent edits. Astra or the owning
+Tell each worker it is not alone and must preserve concurrent edits. The primary or the owning
 parent inspects every returned change before another dependent lane builds on it.
 
 ## Efficient review and repair
@@ -320,15 +328,15 @@ authorization, or turn review into a second documentation project.
 
 The reviewer may fix a small, obvious issue directly and run the smallest affected check.
 It returns one verdict line—`ship`, `fix-first`, or `rethink`—plus at most three findings.
-Do not launch a second reviewer for a bounded direct repair: Astra inspects the actual fix
+Do not launch a second reviewer for a bounded direct repair: the primary inspects the actual fix
 and reruns the affected check. A change that needs architecture, scope, or safety judgment
-returns to Astra as `rethink` instead of expanding the reviewer task.
+returns to the primary as `rethink` instead of expanding the reviewer task.
 
 High-risk Pulsar, Morph, and Constellation work inherits the same concise Event Horizon
 confirmation and review-and-repair rule. Sandbox mode is operational context, not an
 acceptance gate; report it only when it affected execution or remains uncertain.
 
-Hypernova always requires one fresh built-in Sol Ultra reviewer after integrated
+Hypernova always requires one fresh built-in selected-route reviewer after integrated
 verification, including when high-risk cards inherit Event Horizon confirmation gates.
 If the exact reviewer route cannot be proven, block completion; do not self-review or
 substitute the Sol High custom profile.

@@ -1,16 +1,16 @@
 # Morph mode
 
-Morph is an explicit opt-in: use it only when the user explicitly names it. Morph keeps the configured
-`gpt-6-astra` Astra primary responsible for requirements, architecture, decomposition,
+Morph is an explicit opt-in: use it only when the user explicitly names it. Morph keeps the detected
+Sol or Astra primary at its observed effort responsible for requirements, architecture, decomposition,
 integration, verification, and the final decision. The normal exact Sol review route
 applies, with availability handled by the common review rule below. Only a bounded worker
 card may use a user-selected model.
 
 ## Codex route: before launch
 
-1. Complete the normal primary preflight and prove the configured Astra primary. Morph does
-   not enable a non-Astra primary or substitute another reviewer model. The documented
-   Astra self-review fallback is not independent review.
+1. Complete the normal primary preflight and prove the detected Sol or Astra primary.
+   Morph does not replace the current primary or substitute another reviewer model. The
+   documented primary self-review fallback is not independent review.
 2. Record one private packet per worker card with exact ownership, exact `provider/model`
    or native model identifier, requested effort, and downstream-delegation permission.
    Launch ready cards with non-overlapping ownership in parallel up to observed capacity;
@@ -83,9 +83,9 @@ unobservable, stop rather than attempting a Codex fallback or claiming a fixed A
 
 ## Review and risk
 
-Morph participates in the normal parallel and hierarchical multi-agent graph. Astra or an
-authorized parent owns integration across every Morph subtree. After Morph workers change
-anything, Astra verifies the integrated change set, then starts one exact fresh Sol reviewer
+Morph participates in the normal parallel and hierarchical multi-agent graph. The primary
+or an authorized parent owns integration across every Morph subtree. After Morph workers change
+anything, the primary verifies the integrated change set, then starts one exact fresh Sol reviewer
 for a concise review-and-repair pass using the normal route. Event Horizon
 safeguards override Morph whenever risk requires confirmation or serial routing, while
 keeping the same concise workspace-write review. Morph never changes those requirements.

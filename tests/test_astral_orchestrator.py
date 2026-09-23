@@ -140,7 +140,7 @@ class MarketplaceTests(unittest.TestCase):
         manifest = load_json(MANIFEST)
 
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.9.0")
+        self.assertEqual(manifest["version"], "3.11.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertEqual(manifest["interface"]["displayName"], "Astral Orchestrator")
@@ -156,7 +156,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
-        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.9"))
+        self.assertTrue(read(SPEC).startswith("# Spec: Astral Orchestrator v3.11"))
 
         interface = manifest["interface"]
         self.assertEqual(interface["composerIcon"], "./skills/astral-orchestrator/assets/icon.png")
@@ -165,16 +165,12 @@ class MarketplaceTests(unittest.TestCase):
         self.assertLessEqual(len(interface["shortDescription"]), 30)
         description = interface["longDescription"].lower()
         for required_text in (
-            "automatically chooses",
-            "right gpt models",
-            "how much effort",
-            "coordinates them as a team",
-            "focused tasks",
-            "independent tasks",
-            "extra safeguards",
-            "risky changes",
-            "clear outcome",
-            "without managing multiple agents",
+            "current task is using sol or astra",
+            "keeps that session in charge",
+            "configurable astra, luna, or terra workers",
+            "actual model and effort",
+            "deeper reasoning",
+            "mandatory live status panel",
         ):
             self.assertIn(required_text, description)
         for jargon in (
@@ -211,7 +207,7 @@ class MarketplaceTests(unittest.TestCase):
             "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
         self.assertEqual(manifest["name"], "astral-orchestrator")
-        self.assertEqual(manifest["version"], "3.9.0")
+        self.assertEqual(manifest["version"], "3.11.0")
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             set(manifest),
@@ -266,6 +262,11 @@ class MarketplaceTests(unittest.TestCase):
             "portable-hosts.md",
         ):
             self.assertIn(required, skill)
+        for required in (
+            "observable evidence",
+            "never relabel an unknown actual value as a configured value",
+        ):
+            self.assertIn(required, portable_hosts)
         self.assertIn("reserve and count the primary as one occupied slot", portable_hosts)
         self.assertIn("regardless of whether the host advertises it", portable_hosts)
         for forbidden in (
@@ -351,7 +352,10 @@ class SkillContractTests(unittest.TestCase):
 
         for required in (
             "astral status",
-            "only when the route or phase changes",
+            "first user-facing progress update",
+            "immediately before each child launch",
+            "after launch returns a task or session id",
+            "final handoff",
             "requested",
             "observed",
             "model",
@@ -371,7 +375,7 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "astral status",
             "lane | role | model | effort | state | evidence",
-            "astra primary",
+            "primary",
             "fresh reviewer",
             "morph worker",
             "use `planned`",
@@ -395,7 +399,7 @@ class SkillContractTests(unittest.TestCase):
         status_block = status_section
         panel_rows = [
             line for line in status_block.splitlines()
-            if line.startswith(("| astra primary |", "| worker <card> |", "| fresh reviewer |"))
+            if line.startswith(("| primary |", "| worker <card> |", "| fresh reviewer |"))
         ]
         self.assertEqual(len(panel_rows), 3)
         role_cells = [row.split("|")[2].strip() for row in panel_rows]
@@ -518,7 +522,7 @@ class SkillContractTests(unittest.TestCase):
         singularity = " ".join(read(SINGULARITY).lower().split())
         for required in (
             "explicit opt-in",
-            "one verified astra primary",
+            "one verified sol or astra primary",
             "do not spawn",
             "smallest sufficient intervention",
             "no more than five active steps",
@@ -537,21 +541,25 @@ class SkillContractTests(unittest.TestCase):
 
         for required in (
             "never auto-select",
-            "configured orchestrator effort",
+            "observed session effort",
             "larger than comet",
             "no subagents",
             "no fresh reviewer",
-            "only the astra primary row",
+            "only the primary row",
             "higher-priority instruction",
         ):
             self.assertIn(required, singularity)
         self.assertIn("singularity", skill)
-        # Single-session instructions must be reachable without loading child recipes.
-        self.assertIn("references/primary-verification.md", skill)
-        self.assertIn("references/singularity-mode.md", skill)
+        loading_prefix = skill.split("## host boundary", 1)[0]
+        for required_reference in (
+            "routing-and-preflight.md",
+            "work-templates.md",
+            "singularity-mode.md",
+        ):
+            self.assertIn(required_reference, loading_prefix)
+        self.assertIn("before a codex child launch", loading_prefix)
+        self.assertIn("comet and singularity do not need child setup", loading_prefix)
         self.assertIn("primary-verification.md", singularity)
-        self.assertIn("do not load child routing or worker templates", singularity)
-        self.assertIn("do not change settings or restart solely to enter singularity", singularity)
         self.assertIn("event horizon overrides singularity", modes)
         self.assertIn("singularity", templates)
         self.assertNotIn("always use sol max", singularity)
@@ -578,7 +586,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("anecdotal", singularity)
         modes_docs = " ".join(read(WEBSITE_DOCS_MODES).lower().split())
         self.assertIn("singularity and hypernova are opposites", modes_docs)
-        self.assertIn("one verified sol primary", modes_docs)
+        self.assertIn("one verified sol or astra primary", modes_docs)
 
     def test_hypernova_is_the_sol_ultra_performance_first_opposite_of_singularity(self):
         hypernova = " ".join(read(HYPERNOVA).lower().split())
@@ -590,7 +598,6 @@ class SkillContractTests(unittest.TestCase):
         for required in (
             "explicit opt-in",
             "opposite of singularity",
-            "gpt-6-astra",
             "gpt-5.6-sol",
             "ultra",
             "every implementation lane",
@@ -612,11 +619,15 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("hypernova", surface)
             self.assertIn("sol ultra", surface)
 
-        self.assertIn("--require-sol-ultra", hypernova)
-        self.assertIn("--require-sol-ultra", read(SKILL.parent / "references/primary-verification.md"))
+        self.assertIn("without a strict flag", hypernova)
+        primary_verification = " ".join(
+            read(SKILL.parent / "references/primary-verification.md").lower().split()
+        )
+        self.assertIn("--require-sol-ultra", primary_verification)
+        self.assertIn("--require-astra-ultra", primary_verification)
         self.assertNotIn("luna", hypernova)
         self.assertNotIn("terra", hypernova)
-        self.assertNotIn("configured orchestrator effort", hypernova)
+        self.assertIn("configured `astra` effort", hypernova)
 
     def test_primary_checker_accepts_hypernova_astra_ultra_without_changing_normal_settings(self):
         thread_id = "87654321-4321-4321-4321-cba987654321"
@@ -673,8 +684,8 @@ class SkillContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            self.assertNotEqual(normal.returncode, 0)
-            self.assertEqual(json.loads(normal.stdout)["status"], "mismatch")
+            self.assertEqual(normal.returncode, 0)
+            self.assertEqual(json.loads(normal.stdout)["status"], "match")
 
             hypernova = subprocess.run(
                 [
@@ -686,7 +697,7 @@ class SkillContractTests(unittest.TestCase):
                     str(sessions),
                     "--settings-file",
                     str(settings),
-                    "--require-sol-ultra",
+                    "--require-astra-ultra",
                 ],
                 cwd=ROOT,
                 check=False,
@@ -707,6 +718,7 @@ class SkillContractTests(unittest.TestCase):
     def test_hypernova_requires_exact_native_spawns_capacity_and_fresh_review(self):
         documents = {
             "hypernova": " ".join(read(HYPERNOVA).lower().split()),
+            "routing": " ".join(read(ROUTING).lower().split()),
             "templates": " ".join(read(TEMPLATES).lower().split()),
             "spec": " ".join(read(SPEC).lower().split()),
         }
@@ -715,13 +727,14 @@ class SkillContractTests(unittest.TestCase):
                 'agent_type: "worker"',
                 'agent_type: "default"',
                 'model: "gpt-5.6-sol"',
-                'reasoning_effort: "ultra"',
                 'fork_turns: "none"',
                 "unique lowercase",
                 "built-in",
-                "sol ultra",
             ):
                 with self.subTest(document=label, required=required):
+                    self.assertIn(required, document)
+            for required in ("gpt-6-astra", "ultra", "configured astra effort"):
+                with self.subTest(document=label, selected_route=required):
                     self.assertIn(required, document)
 
         hypernova = documents["hypernova"]
@@ -730,8 +743,8 @@ class SkillContractTests(unittest.TestCase):
             "do not invent work",
             "recalculate",
             "discard its output",
-            "sol high",
             "custom profile",
+            "primary-session self-review",
             "user confirmation cannot",
             "unavailable",
             "mismatch",
@@ -799,7 +812,7 @@ class SkillContractTests(unittest.TestCase):
             "astral_orchestrator_terra_implementer",
             "astral_orchestrator_sol_reviewer",
         ):
-            self.assertIn(required, skill + routing)
+            self.assertIn(required, routing)
 
         self.assertIn("repeatable", routing)
         self.assertIn("context-heavy", routing)
@@ -819,6 +832,7 @@ class SkillContractTests(unittest.TestCase):
             "website/docs/routing/index.html": " ".join(
                 read(WEBSITE_DOCS_ROUTING).lower().split()
             ),
+            "SKILL.md": " ".join(read(SKILL).lower().split()),
             "routing-and-preflight.md": " ".join(read(ROUTING).lower().split()),
             "SPEC.md": " ".join(read(SPEC).lower().split()),
             "IMPROVEMENTS.md": " ".join(
@@ -826,7 +840,10 @@ class SkillContractTests(unittest.TestCase):
             ),
         }
 
-        for label, document in documents.items():
+        low_level_documents = {
+            label: document for label, document in documents.items() if label != "SKILL.md"
+        }
+        for label, document in low_level_documents.items():
             for required in (
                 "multiagentsv2",
                 "agent_type",
@@ -847,7 +864,10 @@ class SkillContractTests(unittest.TestCase):
                 document.find("legacy exact-process"),
             )
 
-        skill = " ".join(read(SKILL).lower().split())
+        self.assertIn("native multiagentsv2", documents["SKILL.md"])
+        self.assertIn("routing-and-preflight.md", documents["SKILL.md"])
+
+        skill = documents["SKILL.md"]
         routing = documents["routing-and-preflight.md"]
         spec = documents["SPEC.md"]
         improvements = documents["IMPROVEMENTS.md"]
@@ -883,13 +903,13 @@ class SkillContractTests(unittest.TestCase):
                 'agent_type: "default"',
                 'task_name: "<unique_lowercase_task_name>"',
                 'task_name: "<unique_lowercase_reviewer_task_name>"',
-                'model: "gpt-5.6-luna" or "gpt-5.6-terra"',
+                'model: "gpt-6-astra", "gpt-5.6-luna", or "gpt-5.6-terra"',
                 'reasoning_effort: "<configured lane effort>"',
                 'reasoning_effort: "<configured reviewer effort>"',
                 'fork_turns: "none"',
                 "luna max",
                 "terra high",
-                "configurable effort",
+                "configured effort",
                 "custom agent file values take precedence",
                 "legacy exact-process fallback",
                 "required v2 controls",
@@ -1349,7 +1369,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertEqual(matched.returncode, 0, matched.stdout + matched.stderr)
             evidence = json.loads(matched.stdout)
             self.assertEqual(evidence["status"], "match")
-            self.assertEqual(evidence["expected_model"], "gpt-6-astra")
+            self.assertEqual(evidence["expected_model"], "gpt-5.6-sol|gpt-6-astra")
             self.assertEqual(evidence["expected_effort"], "high")
             self.assertEqual(evidence["observed_model"], "gpt-6-astra")
             self.assertEqual(evidence["observed_effort"], "high")
@@ -1358,10 +1378,10 @@ class SkillContractTests(unittest.TestCase):
             self.assertNotIn("prompt", matched.stdout)
 
             rollout.write_text(
-                rollout.read_text(encoding="utf-8").replace('"high"', '"low"'),
+                rollout.read_text(encoding="utf-8").replace('"gpt-6-astra"', '"gpt-5.6-sol"'),
                 encoding="utf-8",
             )
-            mismatched = subprocess.run(
+            sol_primary = subprocess.run(
                 [
                     "python3",
                     str(CHECK_PRIMARY),
@@ -1377,8 +1397,8 @@ class SkillContractTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            self.assertNotEqual(mismatched.returncode, 0)
-            self.assertEqual(json.loads(mismatched.stdout)["status"], "mismatch")
+            self.assertEqual(sol_primary.returncode, 0, sol_primary.stdout + sol_primary.stderr)
+            self.assertEqual(json.loads(sol_primary.stdout)["status"], "match")
 
             unavailable = subprocess.run(
                 [
@@ -1968,6 +1988,7 @@ class SkillContractTests(unittest.TestCase):
                 json.loads(configured.stdout)["effort"],
                 {
                     "orchestrator": "medium",
+                    "astra": "medium",
                     "luna": "low",
                     "terra": "max",
                     "reviewer": "ultra",
@@ -1994,6 +2015,7 @@ class SkillContractTests(unittest.TestCase):
                 json.loads(partial.stdout)["effort"],
                 {
                     "orchestrator": "medium",
+                    "astra": "medium",
                     "luna": "xhigh",
                     "terra": "max",
                     "reviewer": "ultra",
@@ -2019,6 +2041,7 @@ class SkillContractTests(unittest.TestCase):
                 json.loads(reset.stdout)["effort"],
                 {
                     "orchestrator": "high",
+                    "astra": "medium",
                     "luna": "max",
                     "terra": "high",
                     "reviewer": "high",
@@ -2200,6 +2223,7 @@ reviewer = "xhigh"
             "comet and singularity never spawn",
         ):
             self.assertIn(required, skill)
+        self.assertIn("serial execution is required only when", routing)
 
         for required in (
             "dependency graph",
@@ -2849,7 +2873,8 @@ class UserExperienceTests(unittest.TestCase):
 
         routing = read(ROUTING).lower()
         self.assertIn("effort-levels.toml", routing)
-        self.assertIn("configured orchestrator effort", routing)
+        self.assertIn("observed effort", routing)
+        self.assertIn("astra at its configured effort", routing)
         self.assertIn("native profile", routing)
         self.assertIn("exact-process", routing)
         self.assertIn("custom effort", routing)
@@ -2903,7 +2928,7 @@ class UserExperienceTests(unittest.TestCase):
 
         self.assertIn("legacy exact-process fallback", routing)
         self.assertIn("required v2 controls", routing)
-        self.assertIn("do not justify a process fallback", routing)
+        self.assertIn("missing or customized optional profiles", routing)
         self.assertIn("do not silently substitute", routing)
 
         with tempfile.TemporaryDirectory() as directory:
@@ -2958,8 +2983,8 @@ class UserExperienceTests(unittest.TestCase):
         self.assertTrue(first_lines[0].startswith("![Animated outer-space Astral Orchestrator banner"))
         self.assertIn("(assets/brand/astral-orchestrator-banner.gif)", first_lines[0])
         for visible_element in (
-            "Sol at the center",
-            "Luna and Terra orbiting",
+            "bright primary star at the center",
+            "worker lanes orbiting",
             "twinkling stars",
             "passing comet",
         ):
@@ -2982,7 +3007,7 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("inspired by", attribution)
         self.assertIn("astral does not run ori or openrouter", attribution)
         routing = " ".join(read(WEBSITE_DOCS_ROUTING).lower().split())
-        for model in ("gpt-5.6-sol", "gpt-5.6-luna", "gpt-5.6-terra"):
+        for model in ("gpt-5.6-sol", "gpt-6-astra", "gpt-5.6-luna", "gpt-5.6-terra"):
             self.assertIn(model, routing)
 
     def test_editable_diagrams_preserve_rendered_labels_and_comet_handoff(self):
@@ -2993,7 +3018,7 @@ class UserExperienceTests(unittest.TestCase):
             ".//svg:path[@id='comet-to-handoff']", namespace
         )
         self.assertIsNotNone(routing_edge)
-        self.assertEqual(routing_edge.get("data-from"), "Sol primary + self-review")
+        self.assertEqual(routing_edge.get("data-from"), "Detected primary + self-review")
         self.assertEqual(routing_edge.get("data-to"), "Evidence-backed handoff")
         self.assertEqual(routing_edge.get("marker-end"), "url(#gold-arrow)")
 
@@ -3106,10 +3131,10 @@ class UserExperienceTests(unittest.TestCase):
         self.assertIn("benchmarks/context-footprint-2026-08-21.json", evidence_docs)
         self.assertIn("stable historical keys", evidence_docs)
 
-    def test_current_improvements_describe_all_eight_v380_modes(self):
+    def test_current_improvements_describe_all_eight_v311_modes(self):
         improvements = read(ROOT / "docs/IMPROVEMENTS.md")
 
-        self.assertIn("current Astral Orchestrator v3.8 design", improvements)
+        self.assertIn("current Astral Orchestrator v3.11 design", improvements)
         for mode in (
             "Comet",
             "Orbit",
@@ -3122,7 +3147,7 @@ class UserExperienceTests(unittest.TestCase):
         ):
             with self.subTest(mode=mode):
                 self.assertIn(mode, improvements)
-        self.assertIn("one verified Sol performs the work", improvements)
+        self.assertIn("one verified Sol or Astra primary performs the work", improvements)
         self.assertIn("no subagents are spawned", improvements)
         self.assertIn("no fresh reviewer is used", improvements)
         self.assertIn("one proportional self-review", improvements)

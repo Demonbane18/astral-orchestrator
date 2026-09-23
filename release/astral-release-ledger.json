@@ -583,6 +583,105 @@
       "evidence": "Opera GX upload confirmed version 3.9.0, developer JOHN PAUL FURIGAY FUSIN, Astra-led description and three prompts. Restored website/support/privacy/terms URLs; draft saved, skill Scanning. Uploaded published archive SHA256 9c389c89e3cce587335758efba5ee80d59a926bb276a8d59317a4b1d975904bd.",
       "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9b342cf5588191b7e9d12ba318968d",
       "commit": "79c3eb3fbfd30c577c95ad2a8eaeaad08275c47b"
+    },
+    {
+      "surface": "source",
+      "version": "3.10.0",
+      "status": "verified",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Commit 23c063e93298def2ad8c2f99d681dca40cafdde0 passed 169 tests, verify.sh, both skill validators and plugin validation. Exact-commit ZIP SHA256 00141a384e594f2c24aac87216905a4e0688a4fb11889cd94330fb63fa977a98. Local only; no GitHub push or website deployment.",
+      "commit": "23c063e93298def2ad8c2f99d681dca40cafdde0"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.9.0",
+      "status": "approved",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Opera GX portal shows released version 3.9.0 and plugin management lists 3.9.0 Published. Public directory not independently rechecked.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9b342cf5588191b7e9d12ba318968d"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "failed",
+      "observed_at": "2026-09-08T06:22:48.739061+00:00",
+      "evidence": "Upload attempt selected verified ZIP in Opera GX Open file dialog; subsequent computer-use calls failed with ScreenCaptureKit -3812 invalid parameter, including after reset. Upload acceptance and draft creation remain UNVERIFIED; inspect existing drafts before retrying.",
+      "url": "https://platform.openai.com/plugins"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "draft",
+      "observed_at": "2026-09-08T06:36:51.844132+00:00",
+      "evidence": "Opera GX refreshed draft confirms version 3.10.0 and updated Astra primary/worker independence content. Skill remains Scanning. Submit page explicitly says Skills is incomplete; Wait for scanning to complete; Confirm and submit is disabled. No scan error, ETA, or retry control shown. Existing policy checkboxes already checked; no attestation or submission performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "submitted",
+      "observed_at": "2026-09-13T01:58:39Z",
+      "evidence": "The user confirmed in this task that OpenAI accepted submission appsub_6a9faa1f1a508191b437109b0ce14ae0. Approval and public-directory publication remain unverified independent states.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "source",
+      "version": "3.11.0",
+      "status": "verified",
+      "observed_at": "2026-09-13T02:04:00Z",
+      "evidence": "Local commit 47461a2f4bad4feb40bea8adc389f91c8e5eefea passed all 169 tests, verify.sh, both official skill validators, plugin validation, setup dry-run, git diff checks, and Opera GX QA. Exact plugin upload ZIP SHA256 1393e2d5e17af72633dd8ec4d11036aed5f023c0729fbb8e0290ad1e4eadc113. Local release candidate only; GitHub, Vercel, and OpenAI 3.11 publication remain pending.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/47461a2f4bad4feb40bea8adc389f91c8e5eefea"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.10.0",
+      "status": "approved",
+      "observed_at": "2026-09-13T02:06:05Z",
+      "evidence": "Direct Opera GX inspection of submission appsub_6a9faa1f1a508191b437109b0ce14ae0 shows Viewing the released version and disabled released metadata for Astral Orchestrator 3.10.0.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6a9faa1f1a508191b437109b0ce14ae0"
+    },
+    {
+      "surface": "openai_directory",
+      "version": "3.10.0",
+      "status": "published",
+      "observed_at": "2026-09-13T02:06:05Z",
+      "evidence": "Direct Opera GX inspection of the public ChatGPT plugin page shows Astral Orchestrator version 3.10.0 with the released Astra-primary description and prompts.",
+      "url": "https://chatgpt.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "draft",
+      "observed_at": "2026-09-13T02:13:08Z",
+      "evidence": "Opera GX accepted the corrected 126 KB plugin-only ZIP after its Agent Plugins and Codex manifests were validated. The upload created submission appsub_6aa60657305c81918c11cc235288e0dd. Draft scan state and submission readiness remain to be verified; no attestations or review submission were performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60657305c81918c11cc235288e0dd"
+    },
+    {
+      "surface": "source",
+      "version": "3.11.0",
+      "status": "verified",
+      "observed_at": "2026-09-13T02:34:55Z",
+      "evidence": "Local merge commit 5f26eb5 integrates upstream PR #14 with the Sol-or-Astra primary and independent Astra worker-effort changes. All 170 tests, verify.sh, official skill and plugin validators, setup dry-run, and git diff checks passed. Integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/5f26eb5",
+      "commit": "5f26eb5"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "superseded",
+      "observed_at": "2026-09-13T02:38:19Z",
+      "evidence": "Superseded before submission because upstream PR #14 changed the packaged instruction structure after this draft was uploaded. Direct refreshed Opera GX inspection still showed it as Draft, not submitted.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60657305c81918c11cc235288e0dd",
+      "commit": "47461a2f4bad4feb40bea8adc389f91c8e5eefea"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.11.0",
+      "status": "draft",
+      "observed_at": "2026-09-13T02:38:20Z",
+      "evidence": "Opera GX accepted integrated plugin-only ZIP SHA256 4867c258f24f62613d4db2bb7ffcc25c458e76f7e9aac32609edefecb8ac05f0 and created a new Astral Orchestrator 3.11.0 draft. Imported Sol-or-Astra primary description is correct; skill scan is in progress. Public URLs and policy attestations remain incomplete; no final submission was performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6aa60c5da6e081918ccd71b1575495b5",
+      "commit": "5f26eb5"
     }
   ]
 }

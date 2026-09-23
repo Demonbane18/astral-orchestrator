@@ -8,10 +8,11 @@ import tomllib
 from pathlib import Path
 
 
-LANES = ("orchestrator", "luna", "terra", "reviewer")
+LANES = ("orchestrator", "astra", "luna", "terra", "reviewer")
 ALLOWED_EFFORTS = ("minimal", "low", "medium", "high", "xhigh", "max", "ultra")
 DEFAULT_EFFORTS = {
     "orchestrator": "high",
+    "astra": "medium",
     "luna": "max",
     "terra": "high",
     "reviewer": "high",

@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+## 3.11.0 - 2026-09-13
+
+### Added
+
+- Detect the current Sol or Astra session and keep its observed model and effort as the
+  primary orchestrator in every mode.
+- Add a configurable Astra worker lane, Medium by default, for bounded work whose
+  reasoning benefit justifies the added cost.
+- Require Astral status before work, around every child launch, when state changes, and
+  in the final handoff so agent activity cannot silently disappear.
+
+### Changed
+
+- Make primary selection independent of saved effort settings; strict Sol Ultra and
+  Astra Ultra checks remain optional diagnostics.
+- Update Hypernova to retain Sol Ultra as its default child route while permitting Astra
+  children at the configured Astra effort.
+
+## 3.10.0 - 2026-09-08
+
+### Changed
+
+- Allow any supported observed Astra primary effort in every mode, including Hypernova,
+  without requiring it to match the saved High default or changing the running session.
+- Let worker-capable modes use explicitly selected native Astra workers independently of
+  primary effort. Hypernova supports explicit Astra Max/Ultra workers and fresh review,
+  while retaining Sol Ultra as its default child route.
+- Keep strict Ultra checker flags as optional compatibility checks, not mode requirements.
+- Preserve runtime evidence, concurrency limits, fresh review, and authorization rules.
+
+
 ## 3.9.0 — 2026-09-05
 
 ### Changed

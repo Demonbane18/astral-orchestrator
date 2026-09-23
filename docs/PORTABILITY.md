@@ -1,6 +1,6 @@
 # Portability boundary
 
-Astral Orchestrator 3.9.0 ships two additive manifests in one package:
+Astral Orchestrator 3.11.0 ships two additive manifests in one package:
 
 - `plugin.json` is the root Agent Plugins 1.0 manifest. It supplies portable package
   identity and lets compatible hosts discover the `skills/astral-orchestrator/SKILL.md`
@@ -28,11 +28,12 @@ Orchestrator’s model routing or multi-worker workflow.
 On a non-Codex host, only an explicitly requested Morph or Constellation route may run.
 Comet, Orbit, Event Horizon, Pulsar, Singularity, and Hypernova do not acquire generic replacements
 for their fixed Codex contracts. Singularity is unavailable there because it requires one
-verified Sol primary at the configured orchestrator effort; it must not be relabeled as a
+verified Sol or Astra primary at its observed effort; it must not be relabeled as a
 generic single-agent route.
-Hypernova is **Codex-native only** because it requires an observed Sol Ultra primary, all
-five native MultiAgentsV2 controls, observed host-advertised capacity, built-in Sol Ultra
-workers, and a mandatory fresh built-in Sol Ultra reviewer. It has no legacy process,
+Hypernova is **Codex-native only** because it requires an observed Sol or Astra primary,
+all five native MultiAgentsV2 controls, observed host-advertised capacity, built-in Sol
+Ultra workers by default or selected Astra workers at the configured effort, and a
+mandatory fresh built-in selected reviewer. It has no legacy process,
 portable, serial, self-review, model, or effort fallback. There is **no portable
 fallback**, and generic multi-agent behavior must not be relabeled as Hypernova.
 Before doing so, Astral requires observable evidence of the capabilities the route needs:
@@ -49,6 +50,6 @@ are absent. An explicitly requested Constellation can instead use its documented
 portable fallback only when the other required capabilities are proven; it never pretends
 that serial work was concurrent.
 
-Codex remains the only route in this package with fixed Sol/Luna/Terra profiles and
+Codex remains the only route in this package with fixed Sol/Astra/Luna/Terra profiles and
 automatic local primary-route evidence. The portable package adds a discovery surface; it
 does not change, weaken, or generalize those Codex guarantees.

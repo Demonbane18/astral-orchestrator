@@ -1,24 +1,26 @@
 # Hypernova mode
 
 Hypernova is an **explicit opt-in**, Codex-native performance mode. It is the
-**opposite of Singularity**: Singularity minimizes coordination and token use in one Astra
+**opposite of Singularity**: Singularity minimizes coordination and token use in one primary
 session, while Hypernova favors **speed and throughput over token efficiency** by using
 the maximum safely available concurrency. Never auto-select Hypernova.
 
-The primary must be `gpt-6-astra` at **Ultra**. Every implementation lane and the
-mandatory fresh reviewer must be `gpt-5.6-sol` at **Ultra**. Hypernova is not permission
+The current `gpt-5.6-sol` or `gpt-6-astra` session remains primary at its observed effort.
+Every implementation lane and the mandatory fresh reviewer use one selected exact route:
+`gpt-5.6-sol` at **Ultra** by default or `gpt-6-astra` at the configured `astra` effort.
+Hypernova is not permission
 to widen the request, skip checks, or weaken confirmation boundaries.
 
 ## Blocking preflight
 
-Run the primary checker with its mode-specific flag:
+Run the normal primary checker without a strict flag:
 
 ```text
-python3 check-primary.py --require-sol-ultra
+python3 check-primary.py
 ```
 
-`--require-sol-ultra` checks the already-started primary against Astra Ultra without
-changing or persisting the normal orchestrator effort setting. Hypernova requires an
+The checker accepts the already-started supported primary and its observed effort without
+changing or persisting saved settings. Hypernova requires an
 **observed** primary match. `unavailable`, `mismatch`, or `invalid` evidence blocks the
 mode; user confirmation cannot replace runtime evidence.
 
@@ -45,8 +47,8 @@ worker profile. Every implementation spawn must use:
 collaboration.spawn_agent({
   agent_type: "worker",
   task_name: "<unique_lowercase_task_name>",
-  model: "gpt-5.6-sol",
-  reasoning_effort: "ultra",
+  model: "gpt-5.6-sol" or "gpt-6-astra",
+  reasoning_effort: "ultra" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova implementation packet>"
 })
@@ -81,11 +83,11 @@ dependency or safety gate can make a later wave smaller; that is safe scheduling
 Hypernova, not permission to switch to a serial fallback. If missing capacity is the
 reason concurrency cannot be proven, Hypernova blocks.
 
-The primary retains requirements, architecture, decomposition, cross-lane integration,
+The detected primary retains requirements, architecture, decomposition, cross-lane integration,
 and acceptance. It does not become an implementation fallback merely because a card is
 blocked or capacity changes.
 
-## Mandatory fresh Sol Ultra review
+## Mandatory fresh selected-route review
 
 After all accepted worker output is integrated and the focused checks pass, launch one
 fresh built-in native `default` reviewer:
@@ -94,16 +96,16 @@ fresh built-in native `default` reviewer:
 collaboration.spawn_agent({
   agent_type: "default",
   task_name: "<unique_lowercase_reviewer_task_name>",
-  model: "gpt-5.6-sol",
-  reasoning_effort: "ultra",
+  model: "gpt-5.6-sol" or "gpt-6-astra",
+  reasoning_effort: "ultra" or "<configured Astra effort>",
   fork_turns: "none",
   message: "<complete standalone Hypernova review packet>"
 })
 ```
 
-The reviewer task name must be distinct from every worker task name. The existing Sol
-High `astral_orchestrator_sol_reviewer` custom profile is ineligible: custom profile
-values take precedence and would violate the Ultra contract. The reviewer works directly
+The reviewer task name must be distinct from every worker task name. A custom profile
+whose fixed model or effort differs from the selected route is ineligible because custom
+profile values take precedence. The reviewer works directly
 and does not delegate. Require matching runtime evidence before accepting its verdict.
 Missing or mismatched reviewer evidence blocks completion; primary-session self-review
 cannot substitute for the mandatory fresh reviewer.
@@ -122,7 +124,7 @@ authorization, focused verification, exact runtime evidence, or the fresh review
 
 ## Handoff
 
-Report the observed primary as Astra Ultra, and every accepted worker and fresh reviewer
-as Sol Ultra. State the wave sizes and capacity evidence, checks run, review verdict, and
+Report the observed primary model and effort, and every accepted worker and fresh reviewer
+on the selected exact route. State the wave sizes and capacity evidence, checks run, review verdict, and
 any blocked or discarded lane. Never describe a requested route, mismatched output, or a
 fallback as successful Hypernova execution.

@@ -16,15 +16,14 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from effort_settings import (  # noqa: E402
-    ALLOWED_EFFORTS,
-    EffortSettingsError,
-    default_settings_path,
-    load_efforts,
-)
+from effort_settings import ALLOWED_EFFORTS  # noqa: E402
 
 
-EXPECTED_MODEL = "gpt-6-astra"
+SUPPORTED_PRIMARY_MODELS = {
+    "gpt-5.6-sol": "Sol",
+    "gpt-6-astra": "Astra",
+}
+PRIMARY_EFFORTS = ("none", "light", *ALLOWED_EFFORTS)
 THREAD_ID_PATTERN = re.compile(
     r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 )
@@ -39,7 +38,6 @@ ALLOWED_REASONS = {
     "rollout-unavailable",
     "rollout-ambiguous",
     "runtime-evidence-invalid",
-    "effort-settings-invalid",
 }
 
 
@@ -50,7 +48,7 @@ def fail(message: str) -> NoReturn:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Check whether the current primary is the configured Astral Astra route."
+        description="Detect whether the current Astral primary is a supported Sol or Astra route."
     )
     parser.add_argument(
         "--thread-id",
@@ -65,17 +63,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--settings-file",
         type=Path,
-        default=default_settings_path(),
         help=argparse.SUPPRESS,
     )
-    parser.add_argument(
+    strict = parser.add_mutually_exclusive_group()
+    strict.add_argument(
         "--require-sol-ultra",
+        action="store_true",
+        help="Optionally require a Sol Ultra primary. No mode requires this flag.",
+    )
+    strict.add_argument(
         "--require-astra-ultra",
         action="store_true",
-        help=(
-            "Require gpt-6-astra at Ultra for explicit Hypernova mode without "
-            "changing the persisted normal-mode effort settings."
-        ),
+        help="Optionally require an Astra Ultra primary. No mode requires this flag.",
     )
     return parser.parse_args()
 
@@ -108,6 +107,7 @@ def emit(
     status: str,
     reason: str,
     expected_effort: str,
+    expected_model: str,
     *,
     thread_id: str | None = None,
     observed_model: str | None = None,
@@ -118,7 +118,7 @@ def emit(
 
     evidence: dict[str, str] = {
         "expected_effort": expected_effort,
-        "expected_model": EXPECTED_MODEL,
+        "expected_model": expected_model,
         "reason": reason,
         "status": status,
     }
@@ -136,19 +136,20 @@ def main() -> int:
         fail("Python 3.11 or newer is required.")
 
     args = parse_args()
-    try:
-        efforts, _settings_file_present = load_efforts(args.settings_file)
-    except EffortSettingsError:
-        emit("invalid", "effort-settings-invalid", "unknown")
-        return 1
-    expected_effort = "ultra" if args.require_sol_ultra else efforts["orchestrator"]
+    strict_model = None
+    if args.require_sol_ultra:
+        strict_model = "gpt-5.6-sol"
+    elif args.require_astra_ultra:
+        strict_model = "gpt-6-astra"
+    expected_model = strict_model or "gpt-5.6-sol|gpt-6-astra"
+    expected_effort = "ultra" if strict_model else "any-supported"
 
     thread_id = args.thread_id
     if thread_id is None:
-        emit("unavailable", "thread-id-unavailable", expected_effort)
+        emit("unavailable", "thread-id-unavailable", expected_effort, expected_model)
         return 1
     if not isinstance(thread_id, str) or not THREAD_ID_PATTERN.fullmatch(thread_id):
-        emit("invalid", "thread-id-invalid", expected_effort)
+        emit("invalid", "thread-id-invalid", expected_effort, expected_model)
         return 1
 
     sessions_dir = resolve_sessions_dir(args.sessions_dir)
@@ -158,14 +159,15 @@ def main() -> int:
             "unavailable",
             "sessions-directory-unavailable",
             expected_effort,
+            expected_model,
             thread_id=thread_id,
         )
         return 1
     if not rollouts:
-        emit("unavailable", "rollout-unavailable", expected_effort, thread_id=thread_id)
+        emit("unavailable", "rollout-unavailable", expected_effort, expected_model, thread_id=thread_id)
         return 1
     if len(rollouts) != 1:
-        emit("invalid", "rollout-ambiguous", expected_effort, thread_id=thread_id)
+        emit("invalid", "rollout-ambiguous", expected_effort, expected_model, thread_id=thread_id)
         return 1
 
     command = [
@@ -182,6 +184,7 @@ def main() -> int:
             "invalid",
             "runtime-evidence-invalid",
             expected_effort,
+            expected_model,
             thread_id=thread_id,
         )
         return 1
@@ -193,6 +196,7 @@ def main() -> int:
             "invalid",
             "runtime-evidence-invalid",
             expected_effort,
+            expected_model,
             thread_id=thread_id,
         )
         return 1
@@ -202,6 +206,7 @@ def main() -> int:
             "invalid",
             "runtime-evidence-invalid",
             expected_effort,
+            expected_model,
             thread_id=thread_id,
         )
         return 1
@@ -214,21 +219,28 @@ def main() -> int:
         or not isinstance(observed_model, str)
         or not MODEL_PATTERN.fullmatch(observed_model)
         or not isinstance(observed_effort, str)
-        or observed_effort not in ALLOWED_EFFORTS
+        or observed_effort not in PRIMARY_EFFORTS
     ):
         emit(
             "invalid",
             "runtime-evidence-invalid",
             expected_effort,
+            expected_model,
             thread_id=thread_id,
         )
         return 1
 
-    matches = observed_model == EXPECTED_MODEL and observed_effort == expected_effort
+    if strict_model is None:
+        expected_effort = observed_effort
+    matches_model = observed_model in SUPPORTED_PRIMARY_MODELS
+    if strict_model is not None:
+        matches_model = observed_model == strict_model
+    matches = matches_model and observed_effort == expected_effort
     emit(
         "match" if matches else "mismatch",
         "primary-route-match" if matches else "primary-route-mismatch",
         expected_effort,
+        expected_model,
         thread_id=thread_id,
         observed_model=observed_model,
         observed_effort=observed_effort,

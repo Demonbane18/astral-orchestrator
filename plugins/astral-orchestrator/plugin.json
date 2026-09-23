@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "astral-orchestrator",
-  "version": "3.9.0",
+  "version": "3.11.0",
   "description": "Automatically chooses and coordinates GPT models for project tasks, with the right effort and safeguards for each job.",
   "author": {
     "name": "JOHN PAUL FURIGAY FUSIN"
