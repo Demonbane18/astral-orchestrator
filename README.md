@@ -2,7 +2,7 @@
 
 # Astral Orchestrator
 
-Astral Orchestrator v3.12.0 is an installable, open-source Codex plugin that turns a goal
+Astral Orchestrator v3.12.1 is an installable, open-source Codex plugin that turns a goal
 into routed, verified work. The Sol, Luna, or Astra model already running your task remains the
 primary orchestrator. Astral selects bounded workers and checks the result before handoff.
 

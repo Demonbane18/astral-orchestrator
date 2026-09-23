@@ -2,7 +2,7 @@
 
 ## Current primary and worker contract
 
-Version 3.12.0 supersedes older fixed-primary wording below. Every mode detects the current
+Version 3.12.1 supersedes older fixed-primary wording below. Every mode detects the current
 `gpt-6-sol`, `gpt-6-luna`, or `gpt-6-astra` session and keeps it as the primary at its observed effort.
 Worker effort is independent. Astra is a configurable worker lane, Medium by default,
 for bounded work whose reasoning benefit justifies its cost. Hypernova defaults to Sol
@@ -177,7 +177,7 @@ reviewer. The mode-specific primary checker flag leaves normal effort settings u
 Version 3.0.0 was the breaking identity migration from the former Project Pilot
 identifiers. Version 3.6.0 renames the primary modes to Comet, Orbit, Event Horizon, and
 Pulsar while retaining Quick, Guided, Careful, and Measured as advisory prompt aliases.
-The current product version is 3.12.0. The normalized plugin, marketplace,
+The current product version is 3.12.1. The normalized plugin, marketplace,
 skill, and profile prefix is
 astral-orchestrator; TOML agent names use astral_orchestrator. Route evidence begins
 with ASTRAL_ORCHESTRATOR_ROUTE, and persistent effort settings live at

@@ -751,6 +751,24 @@
       "evidence": "Final production deployment dpl_7wBZWbKjtkTQaVQnc6V4oGFgArqA is Ready and aliased to astral-orchestrator.vercel.app. Archive of merged main website tree was deployed; Opera GX fetched the alias with v3.12.0, TypeSafe copy, and corrected Pulsar sentence at HTTP 200.",
       "url": "https://astral-orchestrator.vercel.app/",
       "commit": "609f3f13417fb4eb8d3f0f5a6dcc4b182304a3c8"
+    },
+    {
+      "surface": "openai_submission",
+      "version": "3.12.0",
+      "status": "draft",
+      "observed_at": "2026-09-23T01:09:00Z",
+      "evidence": "OpenAI Platform in Opera GX accepted the published Astral v3.12.0 ZIP with SHA-256 cc73ce2a432d815d61964319eb7f8e353b4d3a055e5dfdf2439cafb6696e9044 and created draft appsub_6ab3267445c88191a9b8bf31596e656f. Plugin Info displays version 3.12.0 and GPT-6 Sol/Luna description. Public URLs and later draft sections still need review. No review submission or policy attestations were performed.",
+      "url": "https://platform.openai.com/plugins/plugins_6a702dc6da648191a24bb8b82093f3cc/submissions/appsub_6ab3267445c88191a9b8bf31596e656f",
+      "commit": "79f3e59abba65777ee7451456b75eb77d5783a33"
+    },
+    {
+      "surface": "source",
+      "version": "3.12.1",
+      "status": "verified",
+      "observed_at": "2026-09-23T01:15:00Z",
+      "evidence": "TypeSafe transport now sends an explicit Astral-Orchestrator/3.12.1 User-Agent after Python default was blocked by edge HTTP 403 code 1010. One live synthetic Jev request returned jev-1.13.0 Choice gpt-6-luna and Score 0.24 with confidences 0.82 and 0.64. All 180 unit tests, Astral verifier, direct skill/plugin validators, and diff checks pass. No key value was logged or committed.",
+      "url": "https://github.com/Demonbane18/astral-orchestrator/commit/c2de2fc",
+      "commit": "c2de2fc"
     }
   ]
 }

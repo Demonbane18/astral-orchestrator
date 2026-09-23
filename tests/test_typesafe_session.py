@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -126,6 +127,14 @@ class RouteSelectionTests(unittest.TestCase):
                 result = router.decide(self.packet(), project)
                 self.assertEqual(result["reason"], "typesafe-key-missing")
                 request.assert_not_called()
+
+    def test_jev_transport_identifies_client(self):
+        payload = io.BytesIO(json.dumps(self.response()).encode("utf-8"))
+        with mock.patch.object(router.urllib.request, "urlopen", return_value=payload) as urlopen:
+            self.assertEqual(router.typesafe_request("A synthetic bounded task", ["gpt-6-luna"], "test-only"), self.response())
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.get_header("User-agent"), "Astral-Orchestrator/3.12.1")
+        self.assertEqual(request.get_method(), "POST")
 
     def test_project_key_is_private_and_live_call_uses_typed_candidates(self):
         with tempfile.TemporaryDirectory() as directory:
