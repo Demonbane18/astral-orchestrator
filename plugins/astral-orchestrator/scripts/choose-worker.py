@@ -113,7 +113,7 @@ def typesafe_request(summary: str, candidates: list[str], key: str, timeout: flo
         },
     }
     body = json.dumps(request).encode("utf-8")
-    http = urllib.request.Request(ENDPOINT, data=body, headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, method="POST")
+    http = urllib.request.Request(ENDPOINT, data=body, headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": "Astral-Orchestrator/3.12.1"}, method="POST")
     with urllib.request.urlopen(http, timeout=timeout) as response:
         return json.load(response)
 

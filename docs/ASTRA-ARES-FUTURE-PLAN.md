@@ -1,6 +1,6 @@
 # Later: Astra-Ares with Astral Orchestrator
 
-This is a separate follow-up after Astral Orchestrator v3.12.0. It does not change the current release or its TypeSafe worker selector.
+This is a separate follow-up after Astral Orchestrator v3.12.1. It does not change the current release or its TypeSafe worker selector.
 
 ## What already exists
 

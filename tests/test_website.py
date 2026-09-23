@@ -512,7 +512,7 @@ class WebsiteContractTests(unittest.TestCase):
         for page in ("home", "install", "support", "docs"):
             with self.subTest(page=page):
                 content = page_text(PAGES[page])
-                self.assertIn("v3.12.0", content)
+                self.assertIn("v3.12.1", content)
         for path in WEBSITE.rglob("*.html"):
             with self.subTest(no_stale_version=path.relative_to(WEBSITE)):
                 self.assertNotIn("v3.7.0", page_text(path))

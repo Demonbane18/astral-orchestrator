@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 3.12.1 - 2026-09-23
+
+### Fixed
+
+- Identify Astral's TypeSafe HTTP client explicitly. TypeSafe's edge rejected Python's
+  default user agent, preventing live Jev worker choices even with a valid project key.
+
 ## 3.12.0 - 2026-09-23
 
 ### Added
