@@ -699,6 +699,14 @@
       "observed_at": "2026-09-23T00:42:20Z",
       "evidence": "Both plugin manifests are v3.12.0; 178 unit tests, Astral package verifier, and direct Python skill/plugin validators passed. Opera GX local pages inspected. GPT-6 Sol Max and Luna Max responded via existing configured Codex route; bare ChatGPT-account path rejected both.",
       "commit": "dfd7bfa1d159e8c43e40aab0ad879c5ab0826cd7"
+    },
+    {
+      "surface": "source",
+      "version": "3.12.0",
+      "status": "verified",
+      "observed_at": "2026-09-23T00:45:03Z",
+      "evidence": "Final v3.12 source: 179 unit tests pass; Astral verifier and direct plugin/skill validators pass; Opera GX local pages inspected. Exact GPT-6 Sol Max and Luna Max minimal responses observed through configured Codex route; bare ChatGPT-account route rejects both. TypeSafe live API check pending project key.",
+      "commit": "09f91e42eb3eece2643add53e7a407664c5ffd44"
     }
   ]
 }
